@@ -20,7 +20,7 @@ class _LoginFormState extends State<LoginForm> {
   void _trySubmit() {
     // Manually trigger validation and show errors in toast if any field is not valid
     final String? validateMessageUsername =
-        Validator.validateEmail(_usernameController.text);
+        Validator.validateUsername(_usernameController.text);
     if (validateMessageUsername != null) {
       ErrorDisplay.showErrorToast(validateMessageUsername, context);
       return;
@@ -66,7 +66,7 @@ class _LoginFormState extends State<LoginForm> {
             label: "Username",
             controller: _usernameController,
             placeholder: 'Enter your username',
-            keyboardType: TextInputType.emailAddress,
+            keyboardType: TextInputType.text,
             // validator: Validator
             //     .validateEmail, // only if want to validate email under the text field
           ),
@@ -76,6 +76,8 @@ class _LoginFormState extends State<LoginForm> {
             placeholder: 'Enter your password',
             controller: _passwordController,
             obscureText: true,
+            isPasswordField: true,
+            keyboardType: TextInputType.visiblePassword,
             // validator: Validator.validatePassword,
           ),
           const SizedBox(height: 20),
