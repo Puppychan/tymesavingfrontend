@@ -30,4 +30,18 @@ class AppTextStyles {
     fontFamily: 'Montserrat',
     fontWeight: FontWeight.w600,
   );
+  
+  static const TextStyle headingMedium = TextStyle(
+    color: AppColors.primaryText,
+    fontSize: 20,
+    fontFamily: 'Merriweather',
+    fontWeight: FontWeight.w700,
+  );
+
+  static const TextStyle subHeadingMedium = TextStyle(
+    color: AppColors.primaryText,
+    fontSize: 18,
+    fontFamily: 'Merriweather',
+    fontWeight: FontWeight.w700,
+  );
 }
