@@ -76,8 +76,8 @@ class _RowSettingTemplateState extends State<RowSettingTemplate> {
         Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(widget.label, style: AppTextStyles.subHeadingMedium,),
-              Text(widget.motto, style: AppTextStyles.headingSmall,),
+              Text(widget.label, style: AppTextStyles.headingMedium,),
+              Text(widget.motto, style: AppTextStyles.subHeadingSmall,),
            ],
           ),
           const Expanded(child: SizedBox()),
