@@ -11,7 +11,10 @@ class MoreMenuSetting extends StatefulWidget {
 
 class _MoreMenuSettingState extends State<MoreMenuSetting> {
 
-  //PlaceHolder function
+  /*
+  PlaceHolder function, when merge replace it with function to redirect to 
+  other screen (Settings, Wallet?, Help Center, Feedback, Contact us, About)
+  */
   void placeHolderFunction(){
     //Debug here
    debugPrint('function tapped!');
