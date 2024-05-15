@@ -18,6 +18,3 @@ class User{
   final String pin;
 
 } 
-
-User user = User(id: '1', role: 'user', username: 'test',password: 'password', email: 'email',
-phone: '0123456789', pin: '8888');

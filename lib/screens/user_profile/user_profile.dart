@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:tymesavingfrontend/common/app_color.dart';
+import 'package:tymesavingfrontend/components/app_bar_return.dart';
+import 'package:tymesavingfrontend/components/primary_button.dart';
+import 'package:tymesavingfrontend/components/secondary_button.dart';
+import 'package:tymesavingfrontend/screens/more_menu/more_page.dart';
 import 'package:tymesavingfrontend/screens/user_profile/build_info.dart';
 
 class UserProfile extends StatefulWidget {
@@ -10,21 +15,37 @@ class UserProfile extends StatefulWidget {
 }
 
 class _UserProfileState extends State<UserProfile> {
+
+  void returnSetting(){
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const MoreMenu()),);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
+      backgroundColor: AppColors.white,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(kToolbarHeight),
+        child: AppBarReturn('My Profile', returnSetting),
       ),
       body: Container(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            BuildInfo('test', 'test'),
-            BuildInfo('test', 'test'),
-            BuildInfo('test', 'test'),
-            BuildInfo('test', 'test'),
-
+            BuildInfo('Full name', 'Zang Zong Zuong',const Icon(Icons.badge_outlined)),
+            BuildInfo('User name', 'zinggiang',const Icon(Icons.alternate_email_outlined)),
+            BuildInfo('Email', 'test123@gmail.com',const Icon(Icons.email_outlined)),
+            BuildInfo('Phone', '0123456789',const Icon(Icons.contact_phone_outlined)),
+            const Expanded(child: SizedBox(),),
+            Card.filled(
+              color: AppColors.white,
+              margin: const EdgeInsetsDirectional.symmetric(horizontal: 50, vertical: 20),
+              child: Column(
+                children: [
+                  PrimaryButton(title: 'EDIT PROFILE', onPressed: (){}),
+                  const SizedBox(height: 5,),
+                  SecondaryButton(title: 'CHANGE PASSWORD', onPressed: (){})
+                ],),)
           ],
           ),
         ),

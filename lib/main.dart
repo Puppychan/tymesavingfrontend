@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/screens/more_menu/more.dart';
+import 'package:tymesavingfrontend/screens/more_menu/more_page.dart';
 import 'package:tymesavingfrontend/screens/user_profile/user_profile.dart';
 
 void main() {
@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: MoreMenu(),
+      home: UserProfile(),
     );
   }
 }
