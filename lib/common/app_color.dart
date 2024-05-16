@@ -58,7 +58,7 @@ class AppColors {
   static const Color primaryText = gray;
   // static const Color secondaryText =;
 
-  static const Color white = Color(0xFFFFFFFF);
-
+  // static const Color white = .white;
+static const Color white = Color(0xFFFFFFFF);
 
 }
