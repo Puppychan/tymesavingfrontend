@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/common/app_color.dart';
 import 'package:tymesavingfrontend/common/app_text_style.dart';
-import 'package:tymesavingfrontend/screens/user_profile/user_profile.dart';
+import 'package:tymesavingfrontend/screens/user_profile/user_profile_page.dart';
 
 class UserBox extends StatefulWidget {
   const UserBox({super.key});

@@ -36,6 +36,10 @@ class _UserProfileState extends State<UserProfile> {
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UpdateUserScreen(userInfo: valueList,)),);
   }
 
+  void openPasswordForm(){
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const UpdatePasswordScreen()),);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,7 +64,7 @@ class _UserProfileState extends State<UserProfile> {
                 children: [
                   PrimaryButton(title: 'EDIT PROFILE', onPressed: openUpdateForm),
                   const SizedBox(height: 5,),
-                  SecondaryButton(title: 'CHANGE PASSWORD', onPressed: (){})
+                  SecondaryButton(title: 'CHANGE PASSWORD', onPressed: openPasswordForm)
                 ],),)
           ],
           ),

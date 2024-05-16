@@ -20,66 +20,72 @@ class UpdateUserState extends State<UpdateUserForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
+    return Padding(
+      padding: EdgeInsets.all(20),
+      child: Form(
       key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          RoundTextField(
-            placeholder: widget.userInfo[0],
-            label: 'Full Name',
-            controller: _fullNameController,
-            validator: (value) {
-              if (value!.isEmpty) {
-                return 'Please enter your full name';
-              }
-              return null;
-            },
-          ),
-          RoundTextField(
-            placeholder: widget.userInfo[1],
-            label: 'Username',
-            controller: _usernameController,
-            validator: (value) {
-              if (value!.isEmpty) {
-                return 'Please enter your username';
-              }
-              return null;
-            },
-          ),
-          RoundTextField(
-            placeholder: widget.userInfo[2],
-            label: 'Phone Number',
-            controller: _phoneController,
-            validator: (value) {
-              if (value!.isEmpty) {
-                return 'Please enter your phone number';
-              }
-              return null;
-            },
-          ),
-          RoundTextField(
-            placeholder: widget.userInfo[3],
-            label: 'E-mail',
-            controller: _gmailController,
-            validator: (value) {
-              if (value!.isEmpty) {
-                return 'Please enter your Gmail';
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: 30),
-          PrimaryButton(
-            title: 'UPDATE',
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                // Submit form
-                _submitForm();
-              }
-            },
-          ),
-        ],
+          children: <Widget>[
+            RoundTextField(
+              placeholder: widget.userInfo[0],
+              label: 'Full Name',
+              controller: _fullNameController,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'Please enter your full name';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 10,),
+            RoundTextField(
+              placeholder: widget.userInfo[1],
+              label: 'Username',
+              controller: _usernameController,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'Please enter your username';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 10,),
+            RoundTextField(
+              placeholder: widget.userInfo[2],
+              label: 'Phone Number',
+              controller: _phoneController,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'Please enter your phone number';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 10,),
+            RoundTextField(
+              placeholder: widget.userInfo[3],
+              label: 'E-mail',
+              controller: _gmailController,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'Please enter your Gmail';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 30),
+            PrimaryButton(
+              title: 'UPDATE',
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  // Submit form
+                  _submitForm();
+                }
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
