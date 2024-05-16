@@ -63,7 +63,7 @@ class AppTextStyles {
     color: AppColors.primaryBlue,
     fontSize: 20,
     fontFamily: 'Merriweather',
-    fontWeight: FontWeight.w700,
+    fontWeight: FontWeight.w500,
   );
 
 }

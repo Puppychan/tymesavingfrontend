@@ -5,7 +5,7 @@ import 'package:tymesavingfrontend/components/app_bar_return.dart';
 import 'package:tymesavingfrontend/components/primary_button.dart';
 import 'package:tymesavingfrontend/components/secondary_button.dart';
 import 'package:tymesavingfrontend/screens/more_menu/more_page.dart';
-import 'package:tymesavingfrontend/screens/user_profile/build_info.dart';
+import 'package:tymesavingfrontend/screens/user_profile/build_info_template.dart';
 
 class UserProfile extends StatefulWidget {
   const UserProfile({super.key});
@@ -16,8 +16,23 @@ class UserProfile extends StatefulWidget {
 
 class _UserProfileState extends State<UserProfile> {
 
+  final String fullName = 'Zang Zuong';
+  final String userName = 'zinggiang';
+  final String phone = '0123456789';
+  final String email = 'c.test123@gmail.com';
+
   void returnSetting(){
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const MoreMenu()),);
+  }
+
+  List<String> openUpdateForm(){
+    List<String> valueList = [];
+    valueList.add(fullName);
+    valueList.add(userName);
+    valueList.add(phone);
+    valueList.add(email);
+
+    return valueList;
   }
 
   @override
@@ -25,17 +40,17 @@ class _UserProfileState extends State<UserProfile> {
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kToolbarHeight),
+        preferredSize: const Size.fromHeight(kToolbarHeight),
         child: AppBarReturn('My Profile', returnSetting),
       ),
       body: Container(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            BuildInfo('Full name', 'Zang Zong Zuong',const Icon(Icons.badge_outlined)),
-            BuildInfo('User name', 'zinggiang',const Icon(Icons.alternate_email_outlined)),
-            BuildInfo('Email', 'test123@gmail.com',const Icon(Icons.email_outlined)),
-            BuildInfo('Phone', '0123456789',const Icon(Icons.contact_phone_outlined)),
+            BuildInfo('Full name', fullName,const Icon(Icons.badge_outlined)),
+            BuildInfo('User name', userName,const Icon(Icons.alternate_email_outlined)),
+            BuildInfo('Phone', phone,const Icon(Icons.contact_phone_outlined)),
+            BuildInfo('Email', email,const Icon(Icons.email_outlined)),
             const Expanded(child: SizedBox(),),
             Card.filled(
               color: AppColors.white,
