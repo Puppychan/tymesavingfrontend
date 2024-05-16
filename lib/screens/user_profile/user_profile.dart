@@ -4,8 +4,10 @@ import 'package:tymesavingfrontend/common/app_color.dart';
 import 'package:tymesavingfrontend/components/app_bar_return.dart';
 import 'package:tymesavingfrontend/components/primary_button.dart';
 import 'package:tymesavingfrontend/components/secondary_button.dart';
+import 'package:tymesavingfrontend/layouts/update_user_form.dart';
 import 'package:tymesavingfrontend/screens/more_menu/more_page.dart';
 import 'package:tymesavingfrontend/screens/user_profile/build_info_template.dart';
+import 'package:tymesavingfrontend/screens/user_profile/update_user_widget.dart';
 
 class UserProfile extends StatefulWidget {
   const UserProfile({super.key});
@@ -25,14 +27,13 @@ class _UserProfileState extends State<UserProfile> {
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const MoreMenu()),);
   }
 
-  List<String> openUpdateForm(){
+  void openUpdateForm(){
     List<String> valueList = [];
     valueList.add(fullName);
     valueList.add(userName);
     valueList.add(phone);
-    valueList.add(email);
-
-    return valueList;
+    valueList.add(email); 
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UpdateUserScreen(userInfo: valueList,)),);
   }
 
   @override
@@ -57,7 +58,7 @@ class _UserProfileState extends State<UserProfile> {
               margin: const EdgeInsetsDirectional.symmetric(horizontal: 50, vertical: 20),
               child: Column(
                 children: [
-                  PrimaryButton(title: 'EDIT PROFILE', onPressed: (){}),
+                  PrimaryButton(title: 'EDIT PROFILE', onPressed: openUpdateForm),
                   const SizedBox(height: 5,),
                   SecondaryButton(title: 'CHANGE PASSWORD', onPressed: (){})
                 ],),)

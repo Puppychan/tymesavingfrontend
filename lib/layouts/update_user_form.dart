@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/components/round_text_field.dart';
 import 'package:tymesavingfrontend/components/primary_button.dart';
 
-class UpdateUser extends StatefulWidget {
-  const UpdateUser({super.key});
+class UpdateUserForm extends StatefulWidget {
+  const UpdateUserForm({super.key, required this.userInfo});
+
+  final List<String> userInfo;
 
   @override
-  _UpdateUserState createState() => _UpdateUserState();
+  UpdateUserState createState() => UpdateUserState();
 }
 
-class _UpdateUserState extends State<UpdateUser> {
+class UpdateUserState extends State<UpdateUserForm> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
@@ -24,7 +26,7 @@ class _UpdateUserState extends State<UpdateUser> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           RoundTextField(
-            placeholder: 'test',
+            placeholder: widget.userInfo[0],
             label: 'Full Name',
             controller: _fullNameController,
             validator: (value) {
@@ -35,7 +37,7 @@ class _UpdateUserState extends State<UpdateUser> {
             },
           ),
           RoundTextField(
-            placeholder: 'test',
+            placeholder: widget.userInfo[1],
             label: 'Username',
             controller: _usernameController,
             validator: (value) {
@@ -46,7 +48,7 @@ class _UpdateUserState extends State<UpdateUser> {
             },
           ),
           RoundTextField(
-            placeholder: 'test',
+            placeholder: widget.userInfo[2],
             label: 'Phone Number',
             controller: _phoneController,
             validator: (value) {
@@ -57,7 +59,7 @@ class _UpdateUserState extends State<UpdateUser> {
             },
           ),
           RoundTextField(
-            placeholder: 'test',
+            placeholder: widget.userInfo[3],
             label: 'E-mail',
             controller: _gmailController,
             validator: (value) {

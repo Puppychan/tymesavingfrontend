@@ -4,7 +4,9 @@ import 'package:tymesavingfrontend/layouts/update_user_form.dart';
 import 'package:tymesavingfrontend/screens/user_profile/user_profile.dart';
 
 class UpdateUserScreen extends StatefulWidget {
-  const UpdateUserScreen({super.key});
+  const UpdateUserScreen({super.key, required this.userInfo});
+
+  final List<String> userInfo;
 
   @override
   State<UpdateUserScreen> createState() => _UpdateUserScreenState();
@@ -23,9 +25,9 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
       preferredSize: const Size.fromHeight(kToolbarHeight),
       child: AppBarReturn('My Profile', returnProfile),
       ),
-      body: const Padding(
-        padding: EdgeInsets.all(16.0),
-        child: UpdateUser(),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: UpdateUserForm(userInfo: widget.userInfo,),
       ),
     );
   }
