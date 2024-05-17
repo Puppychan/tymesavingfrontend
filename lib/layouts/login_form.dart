@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/components/round_text_field.dart';
 import 'package:tymesavingfrontend/components/primary_button.dart';
 import 'package:tymesavingfrontend/screens/HomePage.dart';
+import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/utils/display_error.dart';
 import 'package:tymesavingfrontend/utils/validator.dart';
 
@@ -16,9 +17,10 @@ class _LoginFormState extends State<LoginForm> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final AuthService _authService = AuthService();
+  bool _isLoading = false;
 
-  void _trySubmit() {
-    // Manually trigger validation and show errors in toast if any field is not valid
+Future<void> _trySubmit() async {
     final String? validateMessageUsername =
         Validator.validateUsername(_usernameController.text);
     if (validateMessageUsername != null) {
@@ -32,13 +34,38 @@ class _LoginFormState extends State<LoginForm> {
       ErrorDisplay.showErrorToast(validateMessagePassword, context);
       return;
     }
-    // if all valid
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const HomePage(title: 'Home'),
-      ),
-    );
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final result = await _authService.signIn(
+        _usernameController.text,
+        _passwordController.text,
+      );
+
+      // if (!mounted) return;
+
+      // If successful, navigate to HomePage
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const HomePage(title: 'Home'),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+
+      // Display error message
+      ErrorDisplay.showErrorToast(e.toString(), context);
+    } finally {
+      // if (!mounted) return;
+      
+      setState(() {
+        _isLoading = false;
+      });
+    }
 
     // final isValid = _formKey.currentState?.validate();
     // if (isValid != null && isValid) {
