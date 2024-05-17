@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:tymesavingfrontend/services/utils/get_backend_endpoint.dart';
+import 'package:tymesavingfrontend/services/utils/network_service.dart';
 
 class AuthService {
   
@@ -11,19 +12,29 @@ class AuthService {
   // AuthService() {
 
   // }
-  Future<void> signIn(String username, String password) async {
-    final url = Uri.parse(BackendEndpoints.signin);
+  final NetworkService _client;
 
-    final response = await http.post(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'username': username,
-        'password': password,
-      }),
-    );
+  Future<void> signIn(String username, String password) async {
+    // final url = Uri.parse(BackendEndpoints.signin);
+
+    // final response = await http.post(
+    //   url,
+    //   headers: <String, String>{
+    //     'Content-Type': 'application/json; charset=UTF-8',
+    //   },
+    //   body: jsonEncode(<String, String>{
+    //     'username': username,
+    //     'password': password,
+    //   }),
+    // );
+
+    final response = await _client.post(
+        BackendEndpoints.signin,
+        body: {
+          'username': username,
+          'password': password,
+        },
+      );
 
     print("Response: ${response.body}");
 
