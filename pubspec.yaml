@@ -38,6 +38,10 @@ dependencies:
   http: ^1.2.1
   flutter_dotenv: ^5.1.0
   dio: ^5.4.3+1
+  mockito: ^5.4.4
+  build_runner: ^2.4.9
+  provider: ^6.1.2
+  flutter_svg: ^2.0.10+1
 
 dev_dependencies:
   flutter_test:
@@ -66,6 +70,7 @@ flutter:
     - .env
     - assets/img/app_logo_light.png
     - assets/img/app_logo_dark.png
+    - assets/img/error.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

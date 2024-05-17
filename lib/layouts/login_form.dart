@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/components/round_text_field.dart';
 import 'package:tymesavingfrontend/components/primary_button.dart';
 import 'package:tymesavingfrontend/screens/HomePage.dart';
+import 'package:tymesavingfrontend/screens/error_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/utils/display_error.dart';
 import 'package:tymesavingfrontend/utils/validator.dart';
@@ -20,7 +21,7 @@ class _LoginFormState extends State<LoginForm> {
   final AuthService _authService = AuthService();
   bool _isLoading = false;
 
-Future<void> _trySubmit() async {
+  Future<void> _trySubmit() async {
     final String? validateMessageUsername =
         Validator.validateUsername(_usernameController.text);
     if (validateMessageUsername != null) {
@@ -45,23 +46,31 @@ Future<void> _trySubmit() async {
         _passwordController.text,
       );
 
-      // if (!mounted) return;
+      if (!mounted) return;
 
-      // If successful, navigate to HomePage
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const HomePage(title: 'Home'),
-        ),
-      );
+      if (result['statusCode'] == 200) {
+        // If successful, navigate to HomePage
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const HomePage(title: 'Home'),
+          ),
+        );
+      } else if (result['statusCode'] == 401) {
+        // Display error message
+        ErrorDisplay.showErrorToast(
+            "Invalid username or password. Please try again.", context);
+      } else {
+        ErrorDisplay.navigateToErrorPage(result, context);
+      }
     } catch (e) {
       if (!mounted) return;
 
       // Display error message
-      ErrorDisplay.showErrorToast(e.toString(), context);
+      ErrorDisplay.navigateToErrorPage({'response': e.toString()}, context);
     } finally {
       // if (!mounted) return;
-      
+
       setState(() {
         _isLoading = false;
       });

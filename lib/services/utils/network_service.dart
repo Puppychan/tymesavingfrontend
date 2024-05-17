@@ -1,7 +1,48 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/services/utils/get_backend_endpoint.dart';
+
+const String APPLICATION_JSON = "application/json";
+const String CONTENT_TYPE = "content-type";
+const String ACCEPT = "accept";
+
+Map<String, dynamic> handleError(Object e) {
+  if (e is DioException) {
+    if (e.type == DioExceptionType.connectionTimeout ||
+        e.type == DioExceptionType.receiveTimeout ||
+        e.type == DioExceptionType.sendTimeout) {
+      // Network timeout error
+      return {
+        'response': "Network timeout. Please try again later.",
+        'statusCode': 408
+      };
+    } else if (e.type == DioExceptionType.connectionError) {
+      // No internet connection error
+      return {
+        'response': "No internet connection. Please check your connection.",
+        'statusCode': 503
+      };
+    } else if (e.type == DioExceptionType.badResponse) {
+      // Handle backend error response
+      return {
+        'response': e.response?.data['detail'] ??
+            "Server error. Please try again later.",
+        'statusCode': e.response?.statusCode ?? 500
+      };
+    } else {
+      // Other types of errors
+      return {
+        'response':
+            e.response?.data['response'] ?? "Oops. Something went wrong.",
+        'statusCode': e.response?.statusCode ?? 500
+      };
+    }
+  } else {
+    return {'response': "Oops. Something went wrong.", 'statusCode': 500};
+  }
+}
 
 class NetworkService {
   late final Dio _dio;
@@ -18,9 +59,12 @@ class NetworkService {
         baseUrl: BackendEndpoints.baseUrl,
         connectTimeout: const Duration(milliseconds: 6000),
         receiveTimeout: const Duration(milliseconds: 6000),
+        headers: {
+          CONTENT_TYPE: APPLICATION_JSON,
+          ACCEPT: APPLICATION_JSON,
+        },
       ),
     );
-// A place for interceptors. For example, for authentication and logging
   }
 
   Future<dynamic> get(
@@ -29,78 +73,63 @@ class NetworkService {
   }) async {
     try {
       final response = await _dio.get(url, queryParameters: queryParameters);
-      return response.data;
-    } on DioException catch (e) {
-      final data = Map<String, dynamic>.from(e.response?.data);
-      throw Exception(data['message'] ?? "Error while fetching data");
-    } catch (e) {
-      rethrow;
+      return {'response': response.data, 'statusCode': response.statusCode};
+    } catch (error) {
+      return handleError(error);
     }
   }
 
   Future<dynamic> download(String url, String path) async {
-    return _dio.download(url, path).then((Response response) {
-      if (response.statusCode! < 200 || response.statusCode! > 400) {
-        throw Exception("Error while fetching data");
-      }
-      return response.data;
-    }).onError((error, stackTrace) {
-      throw Exception(error);
-    });
+    try {
+      final response = await _dio.download(url, path);
+      return {'response': response.data, 'statusCode': response.statusCode};
+    } catch (error) {
+      return handleError(error);
+    }
   }
 
   Future<dynamic> delete(String url) async {
-    return _dio.delete(url).then((Response response) {
-      if (response.statusCode! < 200 || response.statusCode! > 400) {
-        throw Exception("Error while fetching data");
-      }
-      return response.data;
-    }).onError((DioException error, stackTrace) {
-      print(error.response);
-    });
+    try {
+      final response = await _dio.delete(url);
+      return {'response': response.data, 'statusCode': response.statusCode};
+    } catch (error) {
+      return handleError(error);
+    }
   }
 
   Future<dynamic> post(String url, {body, encoding}) async {
     try {
-      final response = await _dio.post(url, data: _encoder.convert(body), options: Options(contentType: Headers.jsonContentType));
-      return response.data;
-    } on DioException catch (e) {
-      throw Exception(e.response?.data['detail'] ?? e.toString());
-    } catch (e) {
-      rethrow;
+      final response = await _dio.post(url, data: _encoder.convert(body));
+      return {'response': response.data, 'statusCode': response.statusCode};
+    } catch (error) {
+      return handleError(error);
     }
   }
 
   Future<dynamic> postFormData(String url, {required FormData data}) async {
     try {
       final response = await _dio.post(url, data: data);
-      return response.data;
-    } on DioException catch (e) {
-      throw Exception(e.response?.data['detail'] ?? e.toString());
-    } catch (e) {
-      rethrow;
+      return {'response': response.data, 'statusCode': response.statusCode};
+    } catch (error) {
+      return handleError(error);
     }
   }
 
   Future<dynamic> patch(String url, {body, encoding}) async {
     try {
       final response = await _dio.patch(url, data: _encoder.convert(body));
-      return response.data;
-    } on DioException catch (e) {
-      throw Exception(e.response?.data['detail'] ?? e.toString());
-    } catch (e) {
-      rethrow;
+      return {'response': response.data, 'statusCode': response.statusCode};
+    } catch (error) {
+      return handleError(error);
     }
   }
 
   Future<dynamic> put(String url, {body, encoding}) async {
     try {
       final response = await _dio.put(url, data: _encoder.convert(body));
-      return response.data;
-    } on DioException catch (e) {
-      throw e.toString();
-    } catch (e) {
-      rethrow;
+      return {'response': response.data, 'statusCode': response.statusCode};
+    } catch (error) {
+      return handleError(error);
     }
   }
 }
