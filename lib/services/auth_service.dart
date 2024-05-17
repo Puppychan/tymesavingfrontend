@@ -12,7 +12,7 @@ class AuthService {
   // AuthService() {
 
   // }
-  final NetworkService _client;
+  late final NetworkService _client;
 
   Future<void> signIn(String username, String password) async {
     // final url = Uri.parse(BackendEndpoints.signin);
