@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:loader_overlay/loader_overlay.dart';
+import 'package:tymesavingfrontend/common/app_color.dart';
 import 'package:tymesavingfrontend/layouts/update_user_form.dart';
 import 'package:tymesavingfrontend/screens/more_menu/more_page.dart';
 import 'package:tymesavingfrontend/screens/sign_in_page.dart';
@@ -20,11 +21,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
+        theme: ThemeData(
+          progressIndicatorTheme:
+              const ProgressIndicatorThemeData(color: AppColors.primaryBlue),
+        ),
         // home: MoreMenu(),
         home: LoaderOverlay(
-      useDefaultLoading: true,
-      child: SignInView(),
-    ));
+          overlayColor: AppColors.cream.withAlpha(150),
+          useDefaultLoading: true,
+          child: const SignInView(),
+        ));
   }
 }
