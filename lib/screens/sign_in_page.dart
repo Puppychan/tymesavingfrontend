@@ -24,7 +24,7 @@ class _SignInViewState extends State<SignInView> {
 
   @override
   Widget build(BuildContext context) {
-    var media = MediaQuery.sizeOf(context);
+    // var media = MediaQuery.sizeOf(context);
     // Create the TapGestureRecognizer
     final TapGestureRecognizer signUpRecognizer = TapGestureRecognizer()
       ..onTap = () {
@@ -62,28 +62,13 @@ class _SignInViewState extends State<SignInView> {
                   children: [
                     const TextSpan(
                       text: 'New to brainy academy? ',
-                      style: TextStyle(
-                        color: AppColors.secondary,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        height: 1.5,
-                      ),
+                      style: AppTextStyles.paragraph,
                     ),
                     TextSpan(
                       text: ' Sign up here',
                       recognizer:
                           signUpRecognizer, // Attach the recognizer here
-                      style: const TextStyle(
-                        color: AppColors.primary,
-
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        height: 1.5,
-                        decoration: TextDecoration
-                            .underline, // Optionally add underline
-                        decorationColor:
-                            AppColors.primary, // Change the color of the underline
-                      ),
+                      style: AppTextStyles.paragraphLink,
                     ),
                   ],
                 ),
