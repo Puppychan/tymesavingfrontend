@@ -1,7 +1,9 @@
-import 'dart:convert'; // For jsonEncode
 // import 'package:http/http.dart' as http;
-import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:tymesavingfrontend/common/local_storage_key.constant.dart';
+import 'package:tymesavingfrontend/common/user_role.constant.dart';
 import 'package:tymesavingfrontend/services/utils/get_backend_endpoint.dart';
+import 'package:tymesavingfrontend/services/utils/local_storage_service.dart';
 import 'package:tymesavingfrontend/services/utils/network_service.dart';
 
 class AuthService {
@@ -12,7 +14,6 @@ class AuthService {
   // }
 
   Future<Map<String, dynamic>> signIn(String username, String password) async {
-
     final response = await NetworkService.instance.post(
       BackendEndpoints.signin,
       body: {
@@ -20,21 +21,43 @@ class AuthService {
         'password': password,
       },
     );
+
+    // Ensure response['response'] is a Map and contains the 'token'
+    if (response['response'] != null &&
+        response['response'] is Map<String, dynamic>) {
+      final responseBody = response['response'] as Map<String, dynamic>;
+      String? token = responseBody['token'] as String?;
+
+      if (token != null) {
+        // save token to local storage
+        await LocalStorageService.setString(LOCAL_AUTH_TOKEN, token);
+      } else {
+        print("Token is null");
+      }
+    } else {
+      print("Response body is null or not a Map");
+    }
     return response;
+  }
 
-    // print('Final signin: $response');
-
-    // if (response.statusCode == 200) {
-    //   // If the server returns an OK response, parse the JSON.
-    //   // final Map<String, dynamic> data = jsonDecode(response.body);
-    //   // Map<String, dynamic> data = jsonDecode(response.body);
-
-    //   print('Sign Sign-in successful: $response');
-    //   // Handle success (e.g., navigate to another page or store user data)
-    // } else {
-    //   // If the server returns an error response, throw an exception.
-    //   print('Failed to sign in: ${response.statusCode} - $response');
-    //   // Handle error (e.g., show error message to the user)
-    // }
+  Future<Map<String, dynamic>> signUp(
+    String username,
+    String email,
+    String phone,
+    String fullname,
+    String password,
+  ) async {
+    final response = await NetworkService.instance.post(
+      BackendEndpoints.signup,
+      body: {
+        'role': ROLE_CUSTOMER,
+        'username': username,
+        'email': email,
+        'phone': phone,
+        'fullname': fullname,
+        'password': password,
+      },
+    );
+    return response;
   }
 }

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:tymesavingfrontend/components/round_text_field.dart';
 import 'package:tymesavingfrontend/components/primary_button.dart';
 import 'package:tymesavingfrontend/screens/sign_in_page.dart';
+import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/utils/display_error.dart';
 import 'package:tymesavingfrontend/utils/validator.dart';
 
@@ -20,8 +22,10 @@ class _SignupFormState extends State<SignupForm> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final AuthService _authService = AuthService();
+  // bool _isLoading = false;
 
-  void _trySubmit() {
+  Future<void> _trySubmit() async {
     // Manually trigger validation and show errors in toast if any field is not valid
     final String? validateMessageUsername =
         Validator.validateUsername(_usernameController.text);
@@ -64,13 +68,50 @@ class _SignupFormState extends State<SignupForm> {
       ErrorDisplay.showErrorToast(validateMessageConfirmPassword, context);
       return;
     }
-    // if all valid
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const SignInView(),
-      ),
-    );
+
+    // Show loader overlay while waiting for the response
+    context.loaderOverlay.show();
+
+    // call api from backend to signup
+    try {
+      final result = await _authService.signIn(
+        _usernameController.text,
+        _passwordController.text,
+      );
+      print("After call api from backend to signin");
+      // detect before call navigation
+      if (!mounted) return;
+
+      print("From login_form.dart: $result");
+
+      if (result['statusCode'] == 200) {
+        // If successful, navigate to HomePage
+            // if all valid
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const SignInView(),
+          ),
+          (_) => false,
+        );
+
+      } else if (result['statusCode'] == 401) {
+        // Display error message
+        ErrorDisplay.showErrorToast(
+            "Invalid username or password. Please try again.", context);
+      } else {
+        ErrorDisplay.navigateToErrorPage(result, context);
+      }
+    } catch (e) {
+      if (!mounted) return;
+
+      // Display error message
+      ErrorDisplay.navigateToErrorPage({'response': e.toString()}, context);
+    } finally {
+      // if (!mounted) return;
+
+      context.loaderOverlay.hide();
+    }
 
   }
 

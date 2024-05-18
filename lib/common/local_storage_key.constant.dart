@@ -1,0 +1,1 @@
+const String LOCAL_AUTH_TOKEN = 'auth_token';

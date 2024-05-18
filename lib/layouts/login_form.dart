@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:tymesavingfrontend/components/round_text_field.dart';
 import 'package:tymesavingfrontend/components/primary_button.dart';
 import 'package:tymesavingfrontend/screens/HomePage.dart';
-import 'package:tymesavingfrontend/screens/error_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/utils/display_error.dart';
 import 'package:tymesavingfrontend/utils/validator.dart';
@@ -19,7 +19,6 @@ class _LoginFormState extends State<LoginForm> {
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final AuthService _authService = AuthService();
-  bool _isLoading = false;
 
   Future<void> _trySubmit() async {
     final String? validateMessageUsername =
@@ -36,26 +35,27 @@ class _LoginFormState extends State<LoginForm> {
       return;
     }
 
-    setState(() {
-      _isLoading = true;
-    });
+    // Show loader overlay while waiting for the response
+    context.loaderOverlay.show();
 
+    // call api from backend to signin
     try {
       final result = await _authService.signIn(
         _usernameController.text,
         _passwordController.text,
       );
 
+      // detect before call navigation
       if (!mounted) return;
 
       if (result['statusCode'] == 200) {
         // If successful, navigate to HomePage
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const HomePage(title: 'Home'),
-          ),
-        );
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const HomePage(title: 'Home'),
+            ),
+            (_) => false);
       } else if (result['statusCode'] == 401) {
         // Display error message
         ErrorDisplay.showErrorToast(
@@ -70,10 +70,8 @@ class _LoginFormState extends State<LoginForm> {
       ErrorDisplay.navigateToErrorPage({'response': e.toString()}, context);
     } finally {
       // if (!mounted) return;
-
-      setState(() {
-        _isLoading = false;
-      });
+      // Hide loader overlay after the response
+      context.loaderOverlay.hide();
     }
 
     // final isValid = _formKey.currentState?.validate();
