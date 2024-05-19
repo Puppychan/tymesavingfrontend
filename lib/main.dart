@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,7 +19,9 @@ import 'package:tymesavingfrontend/services/utils/network_service.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: ".env");
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
   // Initialize the NetworkService
   await NetworkService.instance.initClient();
   final token = await LocalStorageService.getString(LOCAL_AUTH_TOKEN);
@@ -72,3 +75,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+ 
