@@ -160,15 +160,16 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
 flutter_native_splash:
-  # color: "#FFFDF5"
-  background_image: assets/img/splash_light.png
-  # image: assets/img/app_logo_light.png
-  branding: assets/img/app_logo_light.png
-  # fullscreen: true
+  color: "#FFFDF5"
+  # background_image: assets/img/splash_light.png
+  image: assets/img/app_logo_light.png
+  # branding: assets/img/app_logo_light.png
+  fullscreen: true
 
   android_12:
-    # color: "#FFFDF5"
-    branding: assets/img/app_logo_light.png
+    color: "#FFFDF5"
+    image: assets/img/app_logo_light.png
+    # branding: assets/img/app_logo_light.png
     # fullscreen: true
   android_gravity: center
   ios_content_mode: center
