@@ -20,7 +20,7 @@ import 'package:tymesavingfrontend/services/utils/network_service.dart';
 Future<void> main() async {
   await dotenv.load(fileName: ".env");
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   // Initialize the NetworkService
   await NetworkService.instance.initClient();

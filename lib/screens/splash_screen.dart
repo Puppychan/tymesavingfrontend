@@ -46,46 +46,12 @@ class _SplashScreenState extends State<SplashScreen> {
     final double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      body: Stack(
-        children: [
-          // Top blue shape
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              height: screenHeight * 0.3,
-              width: screenWidth,
-              color: Colors.blue[900], // Adjust color as needed
-              transform: Matrix4.rotationZ(-13.48), // Adjust rotation as needed
-            ),
-          ),
-          // Bottom yellow shape
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              height: screenHeight * 0.3,
-              width: screenWidth,
-              color: Colors.yellow[700], // Adjust color as needed
-              transform: Matrix4.rotationZ(0.1), // Adjust rotation as needed
-            ),
-          ),
-          // Logo in the center
-          Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Image.asset(
-                  'assets/img/app_logo_light.png', // Replace with your logo image path
-                  width: screenWidth * 0.5, // Adjust logo size as needed
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+      body: Image.asset(
+        'assets/img/splash_light.png',
+        width: screenWidth,
+        height: screenHeight,
+        fit: BoxFit.cover,
+      )
     );
   }
 }
