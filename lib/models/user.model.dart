@@ -15,16 +15,16 @@ class User {
         email = user['email'],
         phone = user['phone'],
         username = user['username'],
-        role = user['role'];
+        role = UserRole.fromString(user['role']);
 
   Map<String, dynamic> toMap() {
     return {
-      "id": id,
+      "_id": id,
       "fullname": fullname,
       "email": email,
       "phone": phone,
       "username": username,
-      "role": role,
+      "role": role.toString(),
     };
   }
 }

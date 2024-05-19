@@ -18,13 +18,14 @@ class AuthService extends ChangeNotifier {
   // Create a private token variable to store user authentication token
   String? _token;
   // store the current user ID variable
-  String? _username;
+  // String? _username;
 
   // Since user variable is private, we need a getter to access it outside of this class
   User? get user => _user;
 
   Future<bool> isLoggedIn() async {
-    final Map<String, String> keyValues = await LocalStorageService.getStringList([
+    final Map<String, String> keyValues =
+        await LocalStorageService.getStringList([
       LOCAL_AUTH_TOKEN,
       TOKEN_EXPIRY_DATE,
       LOCAL_USER,
@@ -34,7 +35,9 @@ class AuthService extends ChangeNotifier {
     final String? expiry = keyValues[TOKEN_EXPIRY_DATE];
     final String? user = keyValues[LOCAL_USER];
 
-    print("Token: $token - Expiry: $expiry - User: $user -");
+    // print("Token: $token - Expiry: $expiry - User: $user -");
+    // await LoggerService.writeLog(
+    //     'Token: $token, Expiry: $expiry, User: $user');
 
     if (token!.isNotEmpty && expiry!.isNotEmpty && user!.isNotEmpty) {
       print("True");
@@ -44,10 +47,9 @@ class AuthService extends ChangeNotifier {
       _user = User.fromMap(parsedUser);
       _token = token;
       // _user = User.fromMap(user); // Assuming User has a fromJson constructor
-      _username = parsedUser['username'];
+      // _username = parsedUser['username'];
       return !isExpired(expiry);
     }
-    print("False");
     return false;
   }
 
@@ -63,22 +65,25 @@ class AuthService extends ChangeNotifier {
     // Ensure response['response'] is a Map and contains the 'token'
     if (response['response'] != null &&
         response['response'] is Map<String, dynamic>) {
-      final responseBody = response['response'] as Map<String, dynamic>;
+      final responseBody = response['response']['response'] as Map<String, dynamic>;
       String? token = responseBody['token'] as String?;
 
       if (token != null) {
         DateTime calculatedExpireDate =
             DateTime.now().add(const Duration(days: EXPIRE_TOKEN_DAYS));
         _token = token;
-        _username = username;
+        // _username = username;
+        _user = User.fromMap(responseBody['user']);
 
         // save token to local storage
         await LocalStorageService.setStringList({
           LOCAL_AUTH_TOKEN: token,
           TOKEN_EXPIRY_DATE: calculatedExpireDate.toIso8601String(),
+          LOCAL_USER: jsonEncode(_user?.toMap()),
         });
+        notifyListeners();
       } else {
-        print("Token is null");
+        print("Token is null in response body");
       }
     } else {
       print("Response body is null or not a Map");
@@ -110,7 +115,7 @@ class AuthService extends ChangeNotifier {
   // Create a network call to get user details and update the state
   Future<bool> getCurrentUserData() async {
     final response = await NetworkService.instance
-        .get("${BackendEndpoints.user}/$_username");
+        .get("${BackendEndpoints.user}/${_user!.username}");
     if (response != null && response.statusCode == 200) {
       _user = User.fromMap(response);
       await LocalStorageService.setString(
@@ -124,7 +129,8 @@ class AuthService extends ChangeNotifier {
   Future<void> signOut() async {
     _user = null;
     _token = null;
-    _username = null;
+    // _username = null;
+    _user = null;
     await LocalStorageService.removeStringList([
       LOCAL_AUTH_TOKEN,
       TOKEN_EXPIRY_DATE,

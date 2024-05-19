@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/screens/HomePage.dart';
 import 'package:tymesavingfrontend/screens/sign_in_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
+import 'package:tymesavingfrontend/utils/display_error.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -12,6 +13,8 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  bool isLoggedIn = false;
+  String name = '';
   @override
   void initState() {
     super.initState();
@@ -19,6 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
     // Add your initialization code here
     Future.delayed(const Duration(seconds: 2), () {
       authService.tryAutoLogin().then((isLoggedIn) {
+        ErrorDisplay.showErrorToast("Is Logged In: $isLoggedIn", context);
         if (isLoggedIn) {
           // Navigator.pushReplacementNamed(context, '/home');
           Navigator.pushReplacement(

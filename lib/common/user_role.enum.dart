@@ -12,4 +12,14 @@ enum UserRole {
 
   @override
   String toString() => name;
+
+  static UserRole fromString(String name) {
+    for (var role in UserRole.values) {
+      if (role.name == name) {
+        return role;
+      }
+    }
+    // default to customer
+    return UserRole.customer;
+  }
 }
