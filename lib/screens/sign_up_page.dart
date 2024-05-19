@@ -40,7 +40,7 @@ class _SignUpViewState extends State<SignUpView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Image.asset("assets/img/app_logo_light.png",
+            // Image.asset("assets/img/app_logo_light.svg",
             //     width: media.width * 0.5, fit: BoxFit.contain),
             //  const Heading(title: 'Sign Up', showBackButton: true),
             const CustomAlignText(

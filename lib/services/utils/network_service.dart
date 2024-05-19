@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:tymesavingfrontend/common/local_storage_key.constant.dart';
 import 'package:tymesavingfrontend/services/utils/get_backend_endpoint.dart';
+import 'package:tymesavingfrontend/services/utils/local_storage_service.dart';
 
 const String APPLICATION_JSON = "application/json";
 const String CONTENT_TYPE = "content-type";
@@ -43,6 +45,11 @@ Map<String, dynamic> handleError(Object e) {
   }
 }
 
+Future<String?> getToken() async {
+  // Replace this with your own logic to get the token
+  return await LocalStorageService.getString(LOCAL_AUTH_TOKEN);
+}
+
 class NetworkService {
   late final Dio _dio;
   final JsonEncoder _encoder = const JsonEncoder();
@@ -61,6 +68,22 @@ class NetworkService {
         headers: {
           CONTENT_TYPE: APPLICATION_JSON,
           ACCEPT: APPLICATION_JSON,
+        },
+      ),
+    );
+    // Add an interceptor that adds the Authorization header
+    _dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) async {
+          // Get the token from somewhere (e.g., shared preferences)
+          String? token = await getToken();
+
+          if (token != null) {
+            // Add the token to the request headers
+            options.headers['Authorization'] = 'Bearer $token';
+          }
+
+          return handler.next(options);
         },
       ),
     );

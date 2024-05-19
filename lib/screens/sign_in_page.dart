@@ -21,7 +21,6 @@ class _SignInViewState extends State<SignInView> {
   TextEditingController txtPassword = TextEditingController();
   bool isRemember = false;
 
-
   @override
   Widget build(BuildContext context) {
     // var media = MediaQuery.sizeOf(context);
@@ -34,49 +33,49 @@ class _SignInViewState extends State<SignInView> {
           MaterialPageRoute(builder: (context) => const SignUpView()),
         );
       };
-        return Scaffold(
+    return Scaffold(
       backgroundColor: AppColors.cream,
       appBar: const Heading(title: 'Sign In'),
       body: SingleChildScrollView(
         padding: AppPaddingStyles.pagePadding,
         child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // Image.asset("assets/img/app_logo_light.png",
-              //     width: media.width * 0.5, fit: BoxFit.contain),
-              const CustomAlignText(text: 'Login to manage your money!', style: AppTextStyles.subHeading),
-              const SizedBox(
-                height: 24,
-              ),
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // Image.asset("assets/img/app_logo_light.svg",
+            //     width: media.width * 0.5, fit: BoxFit.contain),
+            const CustomAlignText(
+                text: 'Login to manage your money!',
+                style: AppTextStyles.subHeading),
+            const SizedBox(
+              height: 24,
+            ),
 
-              const LoginForm(),
-              const SizedBox(
-                height: 20,
+            const LoginForm(),
+            const SizedBox(
+              height: 20,
+            ),
+            const DividerWithText(text: 'Or'),
+            const SizedBox(
+              height: 20,
+            ),
+            Text.rich(
+              TextSpan(
+                children: [
+                  const TextSpan(
+                    text: 'New to brainy academy? ',
+                    style: AppTextStyles.paragraph,
+                  ),
+                  TextSpan(
+                    text: ' Sign up here',
+                    recognizer: signUpRecognizer, // Attach the recognizer here
+                    style: AppTextStyles.paragraphLink,
+                  ),
+                ],
               ),
-              const DividerWithText(text: 'Or'),
-              const SizedBox(
-                height: 20,
-              ),
-              Text.rich(
-                TextSpan(
-                  children: [
-                    const TextSpan(
-                      text: 'New to brainy academy? ',
-                      style: AppTextStyles.paragraph,
-                    ),
-                    TextSpan(
-                      text: ' Sign up here',
-                      recognizer:
-                          signUpRecognizer, // Attach the recognizer here
-                      style: AppTextStyles.paragraphLink,
-                    ),
-                  ],
-                ),
-              ),
-
-            ],
-          ),
+            ),
+          ],
         ),
+      ),
     );
   }
 }

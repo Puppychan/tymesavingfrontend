@@ -49,6 +49,7 @@ class _LoginFormState extends State<LoginForm> {
       if (!mounted) return;
 
       if (result['statusCode'] == 200) {
+        context.loaderOverlay.hide();
         // If successful, navigate to HomePage
         Navigator.pushAndRemoveUntil(
             context,
@@ -68,10 +69,6 @@ class _LoginFormState extends State<LoginForm> {
 
       // Display error message
       ErrorDisplay.navigateToErrorPage({'response': e.toString()}, context);
-    } finally {
-      // if (!mounted) return;
-      // Hide loader overlay after the response
-      context.loaderOverlay.hide();
     }
 
     // final isValid = _formKey.currentState?.validate();

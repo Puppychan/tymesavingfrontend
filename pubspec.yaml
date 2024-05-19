@@ -44,6 +44,7 @@ dependencies:
   flutter_svg: ^2.0.10+1
   shared_preferences: ^2.2.3
   loader_overlay: ^4.0.0
+  flutter_native_splash: ^2.4.0
 
 dev_dependencies:
   flutter_test:
@@ -70,9 +71,12 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - .env
+    - assets/img/app_logo_light.svg
+    - assets/img/app_logo_dark.svg
     - assets/img/app_logo_light.png
     - assets/img/app_logo_dark.png
     - assets/img/error.svg
+    - assets/img/splash_light.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
@@ -156,3 +160,10 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+flutter_native_splash:
+  color: "#ffffff"  # Background color
+  image: assets/img/splash_light.png  # Path to your custom splash image
+  android: true
+  ios: true
+  android_gravity: fill  # Ensures the image fills the screen on Android
+  ios_content_mode: scaleAspectFill  # Ensures the image fills the screen on iOS
