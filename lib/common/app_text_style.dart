@@ -73,6 +73,14 @@ class AppTextStyles {
     fontWeight: FontWeight.w400,
   );
 
+  static const TextStyle paragraphBold = TextStyle(
+    color: AppColors.secondary,
+    fontSize: 14,
+    fontFamily: 'Monsterrat',
+    height: 1.5,
+    fontWeight: FontWeight.w600,
+  );
+
   static const TextStyle paragraphLink = TextStyle(
     color: AppColors.primary,
     fontSize: 14,
@@ -81,5 +89,13 @@ class AppTextStyles {
     fontWeight: FontWeight.w600,
     decoration: TextDecoration.underline,
     decorationColor: AppColors.primary,
+  );
+
+  static const TextStyle paragraphSmall = TextStyle(
+    color: AppColors.secondary,
+    fontSize: 12,
+    fontFamily: 'Monsterrat',
+    height: 1.5,
+    fontWeight: FontWeight.w400,
   );
 }

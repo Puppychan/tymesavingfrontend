@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tymesavingfrontend/pages/user_list_page.dart';
 import 'package:tymesavingfrontend/screens/HomePage.dart';
 import 'package:tymesavingfrontend/screens/sign_in_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
@@ -22,13 +23,14 @@ class _SplashScreenState extends State<SplashScreen> {
     // Add your initialization code here
     Future.delayed(const Duration(seconds: 2), () {
       authService.tryAutoLogin().then((isLoggedIn) {
-        ErrorDisplay.showErrorToast("Is Logged In: $isLoggedIn", context);
+        // ErrorDisplay.showErrorToast("Is Logged In: $isLoggedIn", context);
         if (isLoggedIn) {
           // Navigator.pushReplacementNamed(context, '/home');
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) => const HomePage(title: 'Home')));
+                  // builder: (context) => const HomePage(title: 'Home')));
+                  builder: (context) => const UserListPage()));
         } else {
           // Navigator.pushReplacementNamed(context, '/login');
           Navigator.pushReplacement(

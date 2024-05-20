@@ -48,7 +48,8 @@ class AuthService extends ChangeNotifier {
       _token = token;
       // _user = User.fromMap(user); // Assuming User has a fromJson constructor
       // _username = parsedUser['username'];
-      return !isExpired(expiry);
+      final isExpiredToken = isExpired(expiry);
+      return !isExpiredToken;
     }
     return false;
   }
