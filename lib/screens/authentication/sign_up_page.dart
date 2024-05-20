@@ -28,10 +28,7 @@ class _SignUpViewState extends State<SignUpView> {
     final TapGestureRecognizer signInRecognizer = TapGestureRecognizer()
       ..onTap = () {
         // Code to execute when "Sign up here" is tapped
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const SignInView()),
-        );
+        Navigator.pop(context);
       };
     return Scaffold(
       backgroundColor: AppColors.cream,

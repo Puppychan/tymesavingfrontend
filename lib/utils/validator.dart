@@ -16,8 +16,23 @@ class Validator {
     if (value == null || value.isEmpty) {
       return 'Please enter your password';
     }
-    if (value.length < 4) {
-      return 'Password must be at least 8 characters long';
+    if (value.length < 8 || value.length > 20) {
+      return "Password must be at least 8 characters and at most 20 characters";
+    }
+    if (!RegExp(r'[A-Z]').hasMatch(value)) {
+      return "Password must contain at least 1 uppercase letter";
+    }
+    if (!RegExp(r'[a-z]').hasMatch(value)) {
+      return "Password must contain at least 1 lowercase letter";
+    }
+    if (!RegExp(r'[0-9]').hasMatch(value)) {
+      return "Password must contain at least 1 digit";
+    }
+    if (!RegExp(r'[!@#\$%^&*]').hasMatch(value)) {
+      return "Password must contain at least 1 of the following characters !@#\$%^&*";
+    }
+    if (!RegExp(r'^[A-Za-z0-9!@#\$%^&*]*$').hasMatch(value)) {
+      return "Password can only be A-Z a-z 0-9 !@#\$%^&*";
     }
     return null;
   }
@@ -57,6 +72,19 @@ class Validator {
       return 'Username can only contain letters, numbers, and underscores';
     }
     return null;
+  }
+
+  static String? usernameValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter your username';
+    }
+    if (value.length >= 8 &&
+        value.length <= 15 &&
+        RegExp(r'^[A-Za-z0-9]*$').hasMatch(value)) {
+      return null;
+    } else {
+      return "Username must be 8-15 characters long and can only contain alphanumeric characters";
+    }
   }
 
   // Validate phone numbers
