@@ -65,8 +65,8 @@ class AuthService extends ChangeNotifier {
 
     // Ensure response['response'] is a Map and contains the 'token'
     if (response['response'] != null &&
-        response['response'] is Map<String, dynamic>) {
-      final responseBody = response['response']['response'] as Map<String, dynamic>;
+        response['response'] is Map<String, dynamic> && response['statusCode'] == 200) {
+      final responseBody = response['response'] as Map<String, dynamic>;
       String? token = responseBody['token'] as String?;
 
       if (token != null) {
@@ -113,18 +113,38 @@ class AuthService extends ChangeNotifier {
     return response;
   }
 
+  Future<Map<String, dynamic>> updateCurrentUser(
+    String username,
+    String email,
+    String phone,
+    String fullname,
+  ) async {
+    final response = await NetworkService.instance.put(
+      "${BackendEndpoints.user}/${_user!.username}/${BackendEndpoints.userUpdate}",
+      body: {
+        'username': username,
+        'email': email,
+        'phone': phone,
+        'fullname': fullname,
+      },
+    );
+    return response;
+  }
+
   // Create a network call to get user details and update the state
-  Future<bool> getCurrentUserData() async {
+  Future<dynamic> getCurrentUserData() async {
     final response = await NetworkService.instance
         .get("${BackendEndpoints.user}/${_user!.username}");
-    if (response != null && response.statusCode == 200) {
-      _user = User.fromMap(response);
+        debugPrint("Response in getCurrentUserData: $response");
+    if (response['response'] != null && response['statusCode'] == 200) {
+      _user = User.fromMap(response['response']);
       await LocalStorageService.setString(
           LOCAL_USER, jsonEncode(_user?.toMap()));
 
       notifyListeners();
     }
-    return response?.containsKey("id") ?? false;
+    // return response['response']?.containsKey("id") ?? false;
+    return response;
   }
 
   Future<void> signOut() async {

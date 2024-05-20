@@ -3,11 +3,13 @@ import 'package:tymesavingfrontend/common/app_color.dart';
 import 'package:tymesavingfrontend/common/app_padding.dart';
 import 'package:tymesavingfrontend/components/heading.dart';
 import 'package:tymesavingfrontend/layouts/update_user_form.dart';
+import 'package:tymesavingfrontend/models/user.model.dart';
 
 class UpdateUserScreen extends StatefulWidget {
-  const UpdateUserScreen({super.key, required this.userInfo});
+  const UpdateUserScreen({super.key, required this.user});
 
-  final List<String> userInfo;
+  final User? user;
+  // final List<String> userInfo;
 
   @override
   State<UpdateUserScreen> createState() => _UpdateUserScreenState();
@@ -25,7 +27,7 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
       body: SingleChildScrollView(
         padding: AppPaddingStyles.pagePadding,
         child: UpdateUserForm(
-          userInfo: widget.userInfo,
+          user: widget.user,
         ),
       ),
     );

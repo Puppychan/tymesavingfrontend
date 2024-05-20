@@ -89,17 +89,21 @@ class _RoundTextFieldState extends State<RoundTextField> {
               contentPadding: const EdgeInsets.symmetric(vertical: 10),
               errorStyle: const TextStyle(fontSize: 0, height: 0),
               // icon
-              suffixIcon:  widget.isPasswordField ? IconButton(
-                icon: Icon(
-                  _isObscure ? Icons.visibility_off : Icons.visibility, // Toggle the icon
-                  color: AppColors.primaryText,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _isObscure = !_isObscure;
-                  });
-                },
-              ) : null,
+              suffixIcon: widget.isPasswordField
+                  ? IconButton(
+                      icon: Icon(
+                        _isObscure
+                            ? Icons.visibility_off
+                            : Icons.visibility, // Toggle the icon
+                        color: AppColors.primaryText,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isObscure = !_isObscure;
+                        });
+                      },
+                    )
+                  : null,
             ),
             keyboardType: widget.keyboardType,
             obscureText: _isObscure,

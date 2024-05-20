@@ -95,7 +95,7 @@ class NetworkService {
   }) async {
     try {
       final response = await _dio.get(url, queryParameters: queryParameters);
-      return {'response': response.data, 'statusCode': response.statusCode};
+      return {'response': response.data?['response'], 'statusCode': response.statusCode};
     } catch (error) {
       return handleError(error);
     }
@@ -104,7 +104,7 @@ class NetworkService {
   Future<dynamic> download(String url, String path) async {
     try {
       final response = await _dio.download(url, path);
-      return {'response': response.data, 'statusCode': response.statusCode};
+      return {'response': response.data?['response'], 'statusCode': response.statusCode};
     } catch (error) {
       return handleError(error);
     }
@@ -113,7 +113,7 @@ class NetworkService {
   Future<dynamic> delete(String url) async {
     try {
       final response = await _dio.delete(url);
-      return {'response': response.data, 'statusCode': response.statusCode};
+      return {'response': response.data?['response'], 'statusCode': response.statusCode};
     } catch (error) {
       return handleError(error);
     }
@@ -122,7 +122,7 @@ class NetworkService {
   Future<dynamic> post(String url, {body, encoding}) async {
     try {
       final response = await _dio.post(url, data: _encoder.convert(body));
-      return {'response': response.data, 'statusCode': response.statusCode};
+      return {'response': response.data?['response'], 'statusCode': response.statusCode};
     } catch (error) {
       return handleError(error);
     }
@@ -131,7 +131,7 @@ class NetworkService {
   Future<dynamic> postFormData(String url, {required FormData data}) async {
     try {
       final response = await _dio.post(url, data: data);
-      return {'response': response.data, 'statusCode': response.statusCode};
+      return {'response': response.data?['response'], 'statusCode': response.statusCode};
     } catch (error) {
       return handleError(error);
     }
@@ -140,7 +140,7 @@ class NetworkService {
   Future<dynamic> patch(String url, {body, encoding}) async {
     try {
       final response = await _dio.patch(url, data: _encoder.convert(body));
-      return {'response': response.data, 'statusCode': response.statusCode};
+      return {'response': response.data?['response'], 'statusCode': response.statusCode};
     } catch (error) {
       return handleError(error);
     }
@@ -149,7 +149,7 @@ class NetworkService {
   Future<dynamic> put(String url, {body, encoding}) async {
     try {
       final response = await _dio.put(url, data: _encoder.convert(body));
-      return {'response': response.data, 'statusCode': response.statusCode};
+      return {'response': response.data?['response'], 'statusCode': response.statusCode};
     } catch (error) {
       return handleError(error);
     }

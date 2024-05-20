@@ -21,4 +21,6 @@ class BackendEndpoints {
   static String get user => "$baseUrl/user";
   static String get signin => "$baseUrl/user/signin";
   static String get signup => "$baseUrl/user/signup";
+  // if there is no $baseUrl, the URL will be concatenated with other endpoints
+  static String get userUpdate => "update/profile";
 }

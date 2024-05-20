@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:tymesavingfrontend/common/app_color.dart';
 import 'package:tymesavingfrontend/common/app_text_style.dart';
 import 'package:tymesavingfrontend/common/temp.constant.dart';
 import 'package:tymesavingfrontend/components/circle_network_image.dart';
+import 'package:tymesavingfrontend/models/user.model.dart';
 import 'package:tymesavingfrontend/screens/user_profile/user_profile_page.dart';
+import 'package:tymesavingfrontend/services/auth_service.dart';
+import 'package:tymesavingfrontend/utils/handling_error.dart';
 
 class UserBox extends StatefulWidget {
   const UserBox({super.key});
@@ -13,6 +18,24 @@ class UserBox extends StatefulWidget {
 }
 
 class _UserBoxState extends State<UserBox> {
+  User? user;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() async {
+      final authService = Provider.of<AuthService>(context, listen: false);
+      await handleMainPageError(context, () async {
+        return await authService.getCurrentUserData();
+        // return result;
+      }, () async {
+        setState(() {
+          user = authService.user;
+        });
+      });
+    });
+  }
+
   void goToProfile() {
     Navigator.push(
       context,
@@ -27,23 +50,28 @@ class _UserBoxState extends State<UserBox> {
         debugPrint('profile tapped');
         goToProfile();
       },
-      child: const Card.filled(
-        color: AppColors.cream,
-        elevation: 3.0,
-        child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ListTile(
-                  leading: CustomCircleAvatar(imagePath: TEMP_AVATAR_IMAGE),
-                  title:
-                      Text('Duong Zang', style: AppTextStyles.subHeadingMedium),
-                  subtitle: Text('placeholder123@gmail.com'),
-                )
-              ],
-            )),
-      ),
+      child: Skeletonizer(
+          enabled: user == null, // Show the skeleton if user is null
+          child: Card.filled(
+            color: AppColors.cream, // Change color if skeleton
+            elevation: 3.0,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ListTile(
+                    leading:
+                        const CustomCircleAvatar(imagePath: TEMP_AVATAR_IMAGE),
+                    title: Text(user?.fullname ?? 'Loading...',
+                        style: AppTextStyles.subHeadingMedium),
+                    subtitle: Text(user?.email ?? 'Loading mail...',
+                        style: AppTextStyles.subHeadingSmall),
+                  )
+                ],
+              ),
+            ),
+          )),
     );
   }
 }
