@@ -5,6 +5,7 @@ import 'package:tymesavingfrontend/common/app_padding.dart';
 import 'package:tymesavingfrontend/components/heading.dart';
 import 'package:tymesavingfrontend/components/primary_button.dart';
 import 'package:tymesavingfrontend/components/secondary_button.dart';
+import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/user.model.dart';
 import 'package:tymesavingfrontend/components/update_user_profile/build_info_template.dart';
 import 'package:tymesavingfrontend/screens/user_profile/update_user_page.dart';
@@ -19,12 +20,37 @@ class UserProfile extends StatefulWidget {
   State<UserProfile> createState() => _UserProfileState();
 }
 
-class _UserProfileState extends State<UserProfile> {
+class _UserProfileState extends State<UserProfile> with RouteAware {
   User? user;
 
   @override
   void initState() {
     super.initState();
+    Future.microtask(() async {
+      final authService = Provider.of<AuthService>(context, listen: false);
+      await handleMainPageError(context, () async {
+        return await authService.getCurrentUserData();
+        // return result;
+      }, () async {
+        setState(() {
+          user = authService.user;
+        });
+      });
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final route = ModalRoute.of(context);
+    if (route is PageRoute) {
+      routeObserver.subscribe(this, route);
+    }
+  }
+
+  @override
+  void didPopNext() {
+    // Called when the current route has been popped off, and the current route shows up.
     Future.microtask(() async {
       final authService = Provider.of<AuthService>(context, listen: false);
       await handleMainPageError(context, () async {

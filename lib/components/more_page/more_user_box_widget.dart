@@ -5,6 +5,7 @@ import 'package:tymesavingfrontend/common/app_color.dart';
 import 'package:tymesavingfrontend/common/app_text_style.dart';
 import 'package:tymesavingfrontend/common/temp.constant.dart';
 import 'package:tymesavingfrontend/components/circle_network_image.dart';
+import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/user.model.dart';
 import 'package:tymesavingfrontend/screens/user_profile/user_profile_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
@@ -17,12 +18,37 @@ class UserBox extends StatefulWidget {
   State<UserBox> createState() => _UserBoxState();
 }
 
-class _UserBoxState extends State<UserBox> {
+class _UserBoxState extends State<UserBox> with RouteAware {
   User? user;
 
   @override
   void initState() {
     super.initState();
+    Future.microtask(() async {
+      final authService = Provider.of<AuthService>(context, listen: false);
+      await handleMainPageError(context, () async {
+        return await authService.getCurrentUserData();
+        // return result;
+      }, () async {
+        setState(() {
+          user = authService.user;
+        });
+      });
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final route = ModalRoute.of(context);
+    if (route is PageRoute) {
+      routeObserver.subscribe(this, route);
+    }
+  }
+
+  @override
+  void didPopNext() {
+    // Called when the current route has been popped off, and the current route shows up.
     Future.microtask(() async {
       final authService = Provider.of<AuthService>(context, listen: false);
       await handleMainPageError(context, () async {

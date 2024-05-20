@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/app_color.dart';
 import 'package:tymesavingfrontend/common/user_role.enum.dart';
 import 'package:tymesavingfrontend/components/heading.dart';
+import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/user.model.dart';
 import 'package:tymesavingfrontend/screens/home_admin_page.dart';
 import 'package:tymesavingfrontend/screens/home_page.dart';
@@ -17,7 +18,7 @@ class MainPageLayout extends StatefulWidget {
   State<MainPageLayout> createState() => _MainPageLayoutState();
 }
 
-class _MainPageLayoutState extends State<MainPageLayout> {
+class _MainPageLayoutState extends State<MainPageLayout> with RouteAware {
   int _selectedIndex = 0;
   User? user;
   late PageController _pageController;
@@ -31,6 +32,31 @@ class _MainPageLayoutState extends State<MainPageLayout> {
       final authService = Provider.of<AuthService>(context, listen: false);
       await handleMainPageError(context, () async {
         return await authService.getCurrentUserData();
+      }, () async {
+        setState(() {
+          user = authService.user;
+        });
+      });
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final route = ModalRoute.of(context);
+    if (route is PageRoute) {
+      routeObserver.subscribe(this, route);
+    }
+  }
+
+  @override
+  void didPopNext() {
+    // Called when the current route has been popped off, and the current route shows up.
+    Future.microtask(() async {
+      final authService = Provider.of<AuthService>(context, listen: false);
+      await handleMainPageError(context, () async {
+        return await authService.getCurrentUserData();
+        // return result;
       }, () async {
         setState(() {
           user = authService.user;

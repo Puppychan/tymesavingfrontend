@@ -7,6 +7,8 @@ import 'package:tymesavingfrontend/screens/splash_screen.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/utils/network_service.dart';
 
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
+
 Future<void> main() async {
   await dotenv.load(fileName: ".env");
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,10 +33,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'My App',
       theme: ThemeData(
-          primarySwatch: Colors.blue,
-          progressIndicatorTheme:
-              const ProgressIndicatorThemeData(color: AppColors.primaryBlue),
+        primarySwatch: Colors.blue,
+        progressIndicatorTheme:
+            const ProgressIndicatorThemeData(color: AppColors.primaryBlue),
       ),
+      navigatorObservers: [routeObserver],
       home: LoaderOverlay(
         useDefaultLoading: true,
         overlayColor: AppColors.cream.withOpacity(0.7),
