@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/app_color.dart';
 import 'package:tymesavingfrontend/common/app_text_style.dart';
+import 'package:tymesavingfrontend/screens/authentication/sign_in_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 
 class MoreMenuSetting extends StatefulWidget {
@@ -26,6 +27,13 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
     debugPrint('logout tapped!');
     final authService = Provider.of<AuthService>(context, listen: false);
     await authService.signOut();
+    if (!mounted) return;
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const SignInView(),
+        ),
+        (route) => false);
   }
 
   @override

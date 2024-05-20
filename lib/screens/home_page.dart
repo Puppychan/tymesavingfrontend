@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/app_padding.dart';
 import 'package:tymesavingfrontend/common/app_text_style.dart';
+import 'package:tymesavingfrontend/components/chart/custom_bar_chart.dart';
 import 'package:tymesavingfrontend/components/text_align.dart';
 import 'package:tymesavingfrontend/models/user.model.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
@@ -45,7 +46,8 @@ class _HomePageState extends State<HomePage> {
           SizedBox(
             height: 24,
           ),
-          
+
+          CustomBarChart(),
         ]));
   }
 }
