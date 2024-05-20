@@ -7,6 +7,7 @@ import 'package:tymesavingfrontend/components/heading.dart';
 import 'package:tymesavingfrontend/components/text_align.dart';
 import 'package:tymesavingfrontend/common/app_text_style.dart';
 import 'package:tymesavingfrontend/layouts/signup_form.dart';
+import 'package:tymesavingfrontend/screens/authentication/sign_in_page.dart';
 
 class SignUpView extends StatefulWidget {
   const SignUpView({super.key});
@@ -29,7 +30,7 @@ class _SignUpViewState extends State<SignUpView> {
         // Code to execute when "Sign up here" is tapped
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const SignUpView()),
+          MaterialPageRoute(builder: (context) => const SignInView()),
         );
       };
     return Scaffold(
