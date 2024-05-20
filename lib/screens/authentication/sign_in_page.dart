@@ -5,7 +5,7 @@ import 'package:tymesavingfrontend/components/divider_with_text.dart';
 import 'package:tymesavingfrontend/components/heading.dart';
 import 'package:tymesavingfrontend/components/text_align.dart';
 import 'package:tymesavingfrontend/layouts/login_form.dart';
-import 'package:tymesavingfrontend/screens/sign_up_page.dart';
+import 'package:tymesavingfrontend/screens/authentication/sign_up_page.dart';
 import 'package:tymesavingfrontend/common/app_color.dart';
 import 'package:tymesavingfrontend/common/app_text_style.dart';
 

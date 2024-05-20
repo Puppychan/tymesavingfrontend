@@ -1,7 +1,7 @@
 // Function to handle errors during authentication
 import 'package:flutter/material.dart';
 import 'package:loader_overlay/loader_overlay.dart';
-import 'package:tymesavingfrontend/screens/sign_in_page.dart';
+import 'package:tymesavingfrontend/screens/authentication/sign_in_page.dart';
 import 'package:tymesavingfrontend/utils/display_error.dart';
 
 Future<void> handleAuthError(

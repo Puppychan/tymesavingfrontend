@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 import 'package:tymesavingfrontend/common/app_color.dart';
 import 'package:tymesavingfrontend/common/app_padding.dart';
-import 'package:tymesavingfrontend/components/app_bar_return.dart';
 import 'package:tymesavingfrontend/components/heading.dart';
 import 'package:tymesavingfrontend/components/primary_button.dart';
 import 'package:tymesavingfrontend/components/secondary_button.dart';
-import 'package:tymesavingfrontend/layouts/update_user_form.dart';
 import 'package:tymesavingfrontend/models/user.model.dart';
-import 'package:tymesavingfrontend/screens/more_menu/more_page.dart';
 import 'package:tymesavingfrontend/components/update_user_profile/build_info_template.dart';
 import 'package:tymesavingfrontend/screens/user_profile/update_user_page.dart';
 import 'package:tymesavingfrontend/screens/user_profile/update_user_password_page.dart';
@@ -26,10 +21,6 @@ class UserProfile extends StatefulWidget {
 
 class _UserProfileState extends State<UserProfile> {
   User? user;
-  final String fullName = 'Zang Zuong';
-  final String userName = 'zinggiang';
-  final String phone = '0123456789';
-  final String email = 'c.test123@gmail.com';
 
   @override
   void initState() {
@@ -49,11 +40,6 @@ class _UserProfileState extends State<UserProfile> {
 
   void openUpdateForm() {
     final authService = Provider.of<AuthService>(context, listen: false);
-    List<String> valueList = [];
-    valueList.add(fullName);
-    valueList.add(userName);
-    valueList.add(phone);
-    valueList.add(email);
     Navigator.push(
       context,
       MaterialPageRoute(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tymesavingfrontend/layouts/main_page_layout.dart';
 
 class InputPinPage extends StatefulWidget {
   const InputPinPage({super.key});
@@ -32,7 +33,7 @@ class _InputPinPageState extends State<InputPinPage> {
       if (_pinController.text == "1234") { // Replace this with your actual PIN validation logic
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => HomePage()), // Navigate to your desired page
+          MaterialPageRoute(builder: (context) => const MainPageLayout()), // Navigate to your desired page
         );
       } else {
         _errorMessage = "Invalid PIN. Please try again.";
@@ -97,22 +98,6 @@ class _InputPinPageState extends State<InputPinPage> {
               ),
             ),
         ],
-      ),
-    );
-  }
-}
-
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Home Page'),
-      ),
-      body: const Center(
-        child: Text('Welcome to the Home Page!'),
       ),
     );
   }

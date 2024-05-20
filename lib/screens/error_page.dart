@@ -4,7 +4,7 @@ import 'package:tymesavingfrontend/common/app_color.dart';
 import 'package:tymesavingfrontend/common/app_text_style.dart';
 import 'package:tymesavingfrontend/components/primary_button.dart';
 import 'package:tymesavingfrontend/enum/button_theme.dart';
-import 'package:tymesavingfrontend/screens/sign_in_page.dart';
+import 'package:tymesavingfrontend/screens/authentication/sign_in_page.dart';
 
 class ErrorPage extends StatelessWidget {
   final String errorMessage;

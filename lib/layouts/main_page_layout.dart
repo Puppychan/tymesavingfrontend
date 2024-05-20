@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/app_color.dart';
-import 'package:tymesavingfrontend/screens/HomePage.dart';
+import 'package:tymesavingfrontend/common/user_role.enum.dart';
+import 'package:tymesavingfrontend/components/heading.dart';
+import 'package:tymesavingfrontend/models/user.model.dart';
+import 'package:tymesavingfrontend/screens/home_admin_page.dart';
+import 'package:tymesavingfrontend/screens/home_page.dart';
 import 'package:tymesavingfrontend/screens/more_menu/more_page.dart';
+import 'package:tymesavingfrontend/services/auth_service.dart';
+import 'package:tymesavingfrontend/utils/handling_error.dart';
 
 class MainPageLayout extends StatefulWidget {
   const MainPageLayout({super.key});
@@ -12,12 +19,24 @@ class MainPageLayout extends StatefulWidget {
 
 class _MainPageLayoutState extends State<MainPageLayout> {
   int _selectedIndex = 0;
+  User? user;
   late PageController _pageController;
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: _selectedIndex);
+
+    Future.microtask(() async {
+      final authService = Provider.of<AuthService>(context, listen: false);
+      await handleMainPageError(context, () async {
+        return await authService.getCurrentUserData();
+      }, () async {
+        setState(() {
+          user = authService.user;
+        });
+      });
+    });
   }
 
   void _onItemTapped(int index) {
@@ -36,6 +55,7 @@ class _MainPageLayoutState extends State<MainPageLayout> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: _heading(index: _selectedIndex, user: user),
       backgroundColor: AppColors.cream,
       body: PageView(
         controller: _pageController,
@@ -44,11 +64,11 @@ class _MainPageLayoutState extends State<MainPageLayout> {
             _selectedIndex = index;
           });
         },
-        children: const <Widget>[
-          HomePage(title: "Home"),
-          Center(child: Text('Goals')),
-          Center(child: Text('Budgets')),
-          MoreMenuPage(),
+        children: <Widget>[
+          user?.role == UserRole.admin ? const HomeAdminPage() : const HomePage(),
+          const Center(child: Text('Goals')),
+          const Center(child: Text('Budgets')),
+          const MoreMenuPage(),
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -98,6 +118,30 @@ class _MainPageLayoutState extends State<MainPageLayout> {
         ),
       ),
     );
+  }
+
+  PreferredSizeWidget? _heading({required int index, User? user}) {
+    String displayTitle = '';
+
+    switch (index) {
+      case 0: // Home
+        displayTitle = user?.role == UserRole.admin
+            ? 'Users Management'
+            : 'Hi, ${user?.fullname}';
+        break;
+      case 1:
+        displayTitle = 'Goals';
+        break;
+      case 2:
+        displayTitle = 'Budgets';
+        break;
+    }
+
+    return displayTitle.isNotEmpty
+        ? Heading(
+            title: displayTitle,
+          )
+        : null;
   }
 
   Widget _buildTabItem({

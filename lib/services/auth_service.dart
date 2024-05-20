@@ -65,7 +65,8 @@ class AuthService extends ChangeNotifier {
 
     // Ensure response['response'] is a Map and contains the 'token'
     if (response['response'] != null &&
-        response['response'] is Map<String, dynamic> && response['statusCode'] == 200) {
+        response['response'] is Map<String, dynamic> &&
+        response['statusCode'] == 200) {
       final responseBody = response['response'] as Map<String, dynamic>;
       String? token = responseBody['token'] as String?;
 
@@ -128,6 +129,16 @@ class AuthService extends ChangeNotifier {
         'fullname': fullname,
       },
     );
+    if (response['response'] != null &&
+        response['response'] is Map<String, dynamic> &&
+        response['statusCode'] == 200) {
+      final responseBody = response['response'] as Map<String, dynamic>;
+      _user = User.fromMap(responseBody);
+      await LocalStorageService.setString(
+          LOCAL_USER, jsonEncode(_user?.toMap()));
+
+      notifyListeners();
+    }
     return response;
   }
 
@@ -149,7 +160,7 @@ class AuthService extends ChangeNotifier {
   Future<dynamic> getCurrentUserData() async {
     final response = await NetworkService.instance
         .get("${BackendEndpoints.user}/${_user!.username}");
-        debugPrint("Response in getCurrentUserData: $response");
+    debugPrint("Response in getCurrentUserData: $response");
     if (response['response'] != null && response['statusCode'] == 200) {
       _user = User.fromMap(response['response']);
       await LocalStorageService.setString(
