@@ -11,7 +11,6 @@ import 'package:tymesavingfrontend/screens/HomePage.dart';
 import 'package:tymesavingfrontend/screens/more_menu/more_page.dart';
 import 'package:tymesavingfrontend/screens/sign_in_page.dart';
 import 'package:tymesavingfrontend/screens/splash_screen.dart';
-import 'package:tymesavingfrontend/screens/user_profile/update_user_widget.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/utils/local_storage_service.dart';
 import 'package:tymesavingfrontend/services/utils/network_service.dart';
@@ -24,8 +23,6 @@ Future<void> main() async {
 
   // Initialize the NetworkService
   await NetworkService.instance.initClient();
-  final token = await LocalStorageService.getString(LOCAL_AUTH_TOKEN);
-  print("Token inside main: $token");
   // runApp(const MyApp());
   runApp(
     ChangeNotifierProvider(

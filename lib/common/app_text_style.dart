@@ -4,7 +4,7 @@ import 'package:tymesavingfrontend/common/app_color.dart';
 class AppTextStyles {
   static const TextStyle heading = TextStyle(
     color: AppColors.primaryText,
-    fontSize: 30,
+    fontSize: 28,
     fontFamily: 'Merriweather',
     fontWeight: FontWeight.w700,
   );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tymesavingfrontend/common/app_padding.dart';
 import 'package:tymesavingfrontend/components/round_text_field.dart';
 import 'package:tymesavingfrontend/components/primary_button.dart';
 
@@ -21,7 +22,7 @@ class UpdateUserState extends State<UpdateUserForm> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(20),
+      padding: AppPaddingStyles.pagePadding,
       child: Form(
       key: _formKey,
       child: Column(

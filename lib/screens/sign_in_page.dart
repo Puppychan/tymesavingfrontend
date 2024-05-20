@@ -37,7 +37,7 @@ class _SignInViewState extends State<SignInView> {
       backgroundColor: AppColors.cream,
       appBar: const Heading(title: 'Sign In'),
       body: SingleChildScrollView(
-        padding: AppPaddingStyles.pagePadding,
+        padding: AppPaddingStyles.pagePaddingIncludeSubText,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [

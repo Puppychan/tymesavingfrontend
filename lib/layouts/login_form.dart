@@ -19,7 +19,6 @@ class _LoginFormState extends State<LoginForm> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  // final AuthService _authService = AuthService();
 
   Future<void> _trySubmit() async {
       final authService = Provider.of<AuthService>(context, listen: false);

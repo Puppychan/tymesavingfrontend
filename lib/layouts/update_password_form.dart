@@ -39,7 +39,7 @@ class _UpdatePasswordFormState extends State<UpdatePasswordForm> {
                 return null;
               },
             ),
-            const SizedBox(height: 10,),
+            const SizedBox(height: 15),
             RoundTextField(
               placeholder: password,
               label: 'Re-enter Password',

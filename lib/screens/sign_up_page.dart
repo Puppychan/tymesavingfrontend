@@ -36,7 +36,7 @@ class _SignUpViewState extends State<SignUpView> {
       backgroundColor: AppColors.cream,
       appBar: const Heading(title: 'Sign Up', showBackButton: true),
       body: SingleChildScrollView(
-        padding: AppPaddingStyles.pagePadding,
+        padding: AppPaddingStyles.pagePaddingIncludeSubText,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [

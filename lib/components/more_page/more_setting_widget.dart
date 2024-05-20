@@ -19,11 +19,14 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
     //Debug here
    debugPrint('function tapped!');
   }
+  void logoutFunction(){
+    //Debug here
+   debugPrint('logout tapped!');
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Card.outlined(
+    return Card.outlined(
         color: AppColors.cream,
         margin: const EdgeInsets.all(0),
         child: Padding(
@@ -36,13 +39,12 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
               RowSettingTemplate('My Wallet', 'Access your wallet', const Icon(Icons.wallet),placeHolderFunction),
               RowSettingTemplate('Setting', 'Change setting and preference', const Icon(Icons.settings),placeHolderFunction),
               RowSettingTemplate('Help Center', 'Change setting', const Icon(Icons.help),placeHolderFunction),
-              RowSettingTemplate('Feedback', 'Voice your idea, opinion matter', const Icon(Icons.feedback_outlined),placeHolderFunction),
               RowSettingTemplate('Contact us', 'Send a email or direct hotline', const Icon(Icons.phone),placeHolderFunction),
               RowSettingTemplate('About', 'Change setting', const Icon(Icons.info),placeHolderFunction),
+              RowSettingTemplate('Logout', 'Logout your account here', const Icon(Icons.logout),placeHolderFunction),
             ],
           ),
         ),
-      ),
     );
   }
 }

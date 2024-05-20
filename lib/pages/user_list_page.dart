@@ -27,10 +27,11 @@ class _UserListPageState extends State<UserListPage> {
       backgroundColor: AppColors.cream,
       appBar: const Heading(title: 'Users'),
       body: Padding(
-        padding: AppPaddingStyles.pagePadding,
+        padding: AppPaddingStyles.pagePaddingIncludeSubText,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            // subtext here
             const CustomAlignText(
               text: 'Manage Users Here',
               style: AppTextStyles.subHeading,

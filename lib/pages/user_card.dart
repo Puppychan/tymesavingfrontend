@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/common/app_color.dart';
 import 'package:tymesavingfrontend/common/app_text_style.dart';
+import 'package:tymesavingfrontend/components/circle_network_image.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -70,10 +71,7 @@ class UserCard extends StatelessWidget {
               padding: const EdgeInsets.all(8),
               child: Row(
                 children: [
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundImage: NetworkImage(user.avatarPath),
-                  ),
+                  CustomCircleAvatar(imagePath: user.avatarPath),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
