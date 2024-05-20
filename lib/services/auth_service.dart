@@ -131,6 +131,20 @@ class AuthService extends ChangeNotifier {
     return response;
   }
 
+  Future<Map<String, dynamic>> changePassword(
+    String oldPassword,
+    String newPassword,
+  ) async {
+    final response = await NetworkService.instance.put(
+      "${BackendEndpoints.user}/${_user!.username}/${BackendEndpoints.userPasswordUpdate}",
+      body: {
+        'currentPassword': oldPassword,
+        'newPassword': newPassword,
+      },
+    );
+    return response;
+  }
+
   // Create a network call to get user details and update the state
   Future<dynamic> getCurrentUserData() async {
     final response = await NetworkService.instance

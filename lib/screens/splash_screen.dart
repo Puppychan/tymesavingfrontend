@@ -20,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     final authService = Provider.of<AuthService>(context, listen: false);
     // Add your initialization code here
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 1), () {
       authService.tryAutoLogin().then((isLoggedIn) {
         // ErrorDisplay.showErrorToast("Is Logged In: $isLoggedIn", context);
         if (isLoggedIn) {

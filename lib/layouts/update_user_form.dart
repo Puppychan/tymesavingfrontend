@@ -53,7 +53,7 @@ class UpdateUserState extends State<UpdateUserForm> {
               
             ),
             const SizedBox(
-              height: 10,
+              height: 20,
             ),
             RoundTextField(
               placeholder: widget.user?.username ?? 'Loading...',
@@ -61,7 +61,7 @@ class UpdateUserState extends State<UpdateUserForm> {
               controller: _usernameController,
             ),
             const SizedBox(
-              height: 10,
+              height: 20,
             ),
             RoundTextField(
               placeholder: widget.user?.phone ?? 'Loading...',
@@ -69,7 +69,7 @@ class UpdateUserState extends State<UpdateUserForm> {
               controller: _phoneController,
             ),
             const SizedBox(
-              height: 10,
+              height: 20,
             ),
             RoundTextField(
               placeholder: widget.user?.email ?? 'Loading...',
