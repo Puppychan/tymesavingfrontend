@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tymesavingfrontend/pages/user_list_page.dart';
-import 'package:tymesavingfrontend/screens/HomePage.dart';
+import 'package:tymesavingfrontend/layouts/main_page_layout.dart';
 import 'package:tymesavingfrontend/screens/sign_in_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/utils/display_error.dart';
@@ -30,7 +29,8 @@ class _SplashScreenState extends State<SplashScreen> {
               context,
               MaterialPageRoute(
                   // builder: (context) => const HomePage(title: 'Home')));
-                  builder: (context) => const UserListPage()));
+                  // builder: (context) => const UserListPage()));
+                  builder: (context) => const MainPageLayout()));
         } else {
           // Navigator.pushReplacementNamed(context, '/login');
           Navigator.pushReplacement(
