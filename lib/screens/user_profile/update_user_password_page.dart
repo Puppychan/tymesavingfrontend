@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/common/app_color.dart';
-import 'package:tymesavingfrontend/common/app_padding.dart';
-import 'package:tymesavingfrontend/components/heading.dart';
-import 'package:tymesavingfrontend/layouts/update_password_form.dart';
+import 'package:tymesavingfrontend/common/styles/app_color.dart';
+import 'package:tymesavingfrontend/common/styles/app_padding.dart';
+import 'package:tymesavingfrontend/components/common/heading.dart';
+import 'package:tymesavingfrontend/form/update_password_form.dart';
 import 'package:tymesavingfrontend/screens/user_profile/user_profile_page.dart';
 
 class UpdatePasswordScreen extends StatefulWidget {

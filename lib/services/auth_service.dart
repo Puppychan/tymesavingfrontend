@@ -2,8 +2,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/common/local_storage_key.constant.dart';
-import 'package:tymesavingfrontend/common/user_role.enum.dart';
+import 'package:tymesavingfrontend/common/constant/local_storage_key_constant.dart';
+import 'package:tymesavingfrontend/common/enum/user_role_enum.dart';
 import 'package:tymesavingfrontend/models/user.model.dart';
 import 'package:tymesavingfrontend/services/utils/get_backend_endpoint.dart';
 import 'package:tymesavingfrontend/services/utils/local_storage_service.dart';

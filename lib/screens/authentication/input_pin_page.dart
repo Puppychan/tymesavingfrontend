@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/layouts/main_page_layout.dart';
+import 'package:tymesavingfrontend/screens/main_page_layout.dart';
 
 class InputPinPage extends StatefulWidget {
   const InputPinPage({super.key});

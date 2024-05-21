@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/enum/button_theme.dart';
-import 'package:tymesavingfrontend/common/app_color.dart';
+import 'package:tymesavingfrontend/common/enum/button_theme_enum.dart';
+import 'package:tymesavingfrontend/common/styles/app_color.dart';
 // import 'package:tymesavingfrontend/enum/button_theme.dart';
 
 class AppButtonThemeData {

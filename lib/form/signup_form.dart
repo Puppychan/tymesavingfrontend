@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:provider/provider.dart';
-import 'package:tymesavingfrontend/components/round_text_field.dart';
-import 'package:tymesavingfrontend/components/primary_button.dart';
+import 'package:tymesavingfrontend/components/common/round_text_field.dart';
+import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
 import 'package:tymesavingfrontend/screens/authentication/sign_in_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/utils/display_error.dart';

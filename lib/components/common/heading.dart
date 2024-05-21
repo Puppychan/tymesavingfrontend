@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/common/app_color.dart';
-import 'package:tymesavingfrontend/common/app_text_style.dart';
-import 'package:tymesavingfrontend/components/text_align.dart';
+import 'package:tymesavingfrontend/common/styles/app_color.dart';
+import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
+import 'package:tymesavingfrontend/components/common/text_align.dart';
 
 class Heading extends StatelessWidget implements PreferredSizeWidget {
   final String title;

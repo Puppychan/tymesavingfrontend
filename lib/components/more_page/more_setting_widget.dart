@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tymesavingfrontend/common/app_color.dart';
-import 'package:tymesavingfrontend/common/app_text_style.dart';
+import 'package:tymesavingfrontend/common/styles/app_color.dart';
+import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 import 'package:tymesavingfrontend/screens/authentication/sign_in_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 

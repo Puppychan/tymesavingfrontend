@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/common/app_color.dart';
-import 'package:tymesavingfrontend/common/app_padding.dart';
-import 'package:tymesavingfrontend/common/app_text_style.dart';
-import 'package:tymesavingfrontend/components/heading.dart';
-import 'package:tymesavingfrontend/components/text_align.dart';
+import 'package:tymesavingfrontend/common/styles/app_color.dart';
+import 'package:tymesavingfrontend/common/styles/app_padding.dart';
+import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
+import 'package:tymesavingfrontend/components/common/heading.dart';
+import 'package:tymesavingfrontend/components/common/text_align.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
-import 'package:tymesavingfrontend/pages/user_card.dart';
+import 'package:tymesavingfrontend/components/user/user_card.dart';
 
 class UserListPage extends StatefulWidget {
   const UserListPage({super.key});

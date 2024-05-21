@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/common/app_text_style.dart';
-import 'package:tymesavingfrontend/enum/button_theme.dart';
-import 'package:tymesavingfrontend/common/button_theme_data.dart';
+import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
+import 'package:tymesavingfrontend/common/enum/button_theme_enum.dart';
+import 'package:tymesavingfrontend/common/styles/button_theme_data.dart';
 
 class SecondaryButton extends StatelessWidget {
   final String title;

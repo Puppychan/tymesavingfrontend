@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tymesavingfrontend/common/app_color.dart';
-import 'package:tymesavingfrontend/common/user_role.enum.dart';
-import 'package:tymesavingfrontend/components/heading.dart';
+import 'package:tymesavingfrontend/common/styles/app_color.dart';
+import 'package:tymesavingfrontend/common/enum/user_role_enum.dart';
+import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/user.model.dart';
-import 'package:tymesavingfrontend/screens/home_admin_page.dart';
-import 'package:tymesavingfrontend/screens/home_page.dart';
+import 'package:tymesavingfrontend/screens/home/home_admin_page.dart';
+import 'package:tymesavingfrontend/screens/home/home_page.dart';
 import 'package:tymesavingfrontend/screens/more_menu/more_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
