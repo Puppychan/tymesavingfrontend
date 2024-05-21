@@ -1,4 +1,4 @@
-Image.asset("assets/img/app_logo_light.png",
+Image.asset("assets/img/app_logo_light.svg",
                   width: media.width * 0.5, fit: BoxFit.contain),
 
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tymesavingfrontend/screens/error_page.dart';
 
 class ErrorDisplay {
   static void showErrorToast(String? message, BuildContext context) {
@@ -12,5 +13,19 @@ class ErrorDisplay {
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
-  // TODO: add a method to navigate to error page later
+
+  static void navigateToErrorPage(
+      Map<String, dynamic> errorResponse, BuildContext context) {
+    // Display error message
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ErrorPage(
+          errorMessage:
+              errorResponse['response'] ?? "Oops something went wrong",
+          statusCode: errorResponse['statusCode'] ?? 500,
+        ),
+      ),
+    );
+  }
 }

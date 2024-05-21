@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:loader_overlay/loader_overlay.dart';
+import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/components/round_text_field.dart';
 import 'package:tymesavingfrontend/components/primary_button.dart';
-import 'package:tymesavingfrontend/screens/HomePage.dart';
+import 'package:tymesavingfrontend/layouts/main_page_layout.dart';
+import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/utils/display_error.dart';
+import 'package:tymesavingfrontend/utils/handling_error.dart';
 import 'package:tymesavingfrontend/utils/validator.dart';
 
 class LoginForm extends StatefulWidget {
@@ -17,8 +21,15 @@ class _LoginFormState extends State<LoginForm> {
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  void _trySubmit() {
-    // Manually trigger validation and show errors in toast if any field is not valid
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _trySubmit() async {
+    final authService = Provider.of<AuthService>(context, listen: false);
     final String? validateMessageUsername =
         Validator.validateUsername(_usernameController.text);
     if (validateMessageUsername != null) {
@@ -32,13 +43,26 @@ class _LoginFormState extends State<LoginForm> {
       ErrorDisplay.showErrorToast(validateMessagePassword, context);
       return;
     }
-    // if all valid
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const HomePage(title: 'Home'),
-      ),
-    );
+
+    // Show loader overlay while waiting for the response
+    context.loaderOverlay.show();
+
+    await handleAuthError(context, () async {
+      final result = await authService.signIn(
+        _usernameController.text,
+        _passwordController.text,
+      );
+      return result;
+    }, () async {
+      context.loaderOverlay.hide();
+      // If successful, navigate to HomePage
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const MainPageLayout(),
+          ),
+          (_) => false);
+    });
 
     // final isValid = _formKey.currentState?.validate();
     // if (isValid != null && isValid) {

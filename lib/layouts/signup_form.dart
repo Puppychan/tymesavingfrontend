@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:loader_overlay/loader_overlay.dart';
+import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/components/round_text_field.dart';
 import 'package:tymesavingfrontend/components/primary_button.dart';
-import 'package:tymesavingfrontend/screens/sign_in_page.dart';
+import 'package:tymesavingfrontend/screens/authentication/sign_in_page.dart';
+import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/utils/display_error.dart';
+import 'package:tymesavingfrontend/utils/handling_error.dart';
 import 'package:tymesavingfrontend/utils/validator.dart';
 
 class SignupForm extends StatefulWidget {
@@ -18,10 +22,24 @@ class _SignupFormState extends State<SignupForm> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _fullnameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  // bool _isLoading = false;
 
-  void _trySubmit() {
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _mailController.dispose();
+    _phoneController.dispose();
+    _fullnameController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _trySubmit() async {
+    final authService = Provider.of<AuthService>(context, listen: false);
     // Manually trigger validation and show errors in toast if any field is not valid
     final String? validateMessageUsername =
         Validator.validateUsername(_usernameController.text);
@@ -59,19 +77,36 @@ class _SignupFormState extends State<SignupForm> {
     }
 
     final String? validateMessageConfirmPassword =
-        Validator.validateConfirmPassword(_passwordController.text, _confirmPasswordController.text);
+        Validator.validateConfirmPassword(
+            _passwordController.text, _confirmPasswordController.text);
     if (validateMessageConfirmPassword != null) {
       ErrorDisplay.showErrorToast(validateMessageConfirmPassword, context);
       return;
     }
-    // if all valid
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const SignInView(),
-      ),
-    );
 
+    // Show loader overlay while waiting for the response
+    context.loaderOverlay.show();
+
+    // Call the authentication service to sign up the user
+    await handleAuthError(context, () async {
+      final result = await authService.signUp(
+        _usernameController.text,
+        _mailController.text,
+        _phoneController.text,
+        _fullnameController.text,
+        _passwordController.text,
+      );
+      return result;
+    }, () async {
+      context.loaderOverlay.hide();
+      // If successful, navigate to SignInView
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const SignInView(),
+          ),
+          (_) => false);
+    });
   }
 
   @override

@@ -4,7 +4,7 @@ import 'package:tymesavingfrontend/common/app_color.dart';
 class AppTextStyles {
   static const TextStyle heading = TextStyle(
     color: AppColors.primaryText,
-    fontSize: 30,
+    fontSize: 28,
     fontFamily: 'Merriweather',
     fontWeight: FontWeight.w700,
   );
@@ -15,7 +15,6 @@ class AppTextStyles {
     fontFamily: 'Montserrat',
     fontWeight: FontWeight.w400,
   );
-
 
   static const TextStyle button = TextStyle(
     color: AppColors.primaryText,
@@ -30,7 +29,7 @@ class AppTextStyles {
     fontFamily: 'Montserrat',
     fontWeight: FontWeight.w600,
   );
-  
+
   static const TextStyle headingMedium = TextStyle(
     color: AppColors.primaryText,
     fontSize: 20,
@@ -66,4 +65,37 @@ class AppTextStyles {
     fontWeight: FontWeight.w500,
   );
 
+  static const TextStyle paragraph = TextStyle(
+    color: AppColors.secondary,
+    fontSize: 14,
+    fontFamily: 'Monsterrat',
+    height: 1.5,
+    fontWeight: FontWeight.w400,
+  );
+
+  static const TextStyle paragraphBold = TextStyle(
+    color: AppColors.secondary,
+    fontSize: 14,
+    fontFamily: 'Monsterrat',
+    height: 1.5,
+    fontWeight: FontWeight.w600,
+  );
+
+  static const TextStyle paragraphLink = TextStyle(
+    color: AppColors.primary,
+    fontSize: 14,
+    height: 1.5,
+    fontFamily: 'Monsterrat',
+    fontWeight: FontWeight.w600,
+    decoration: TextDecoration.underline,
+    decorationColor: AppColors.primary,
+  );
+
+  static const TextStyle paragraphSmall = TextStyle(
+    color: AppColors.secondary,
+    fontSize: 12,
+    fontFamily: 'Monsterrat',
+    height: 1.5,
+    fontWeight: FontWeight.w400,
+  );
 }
