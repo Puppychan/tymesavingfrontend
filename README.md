@@ -1,9 +1,19 @@
-# tymesavingfrontend
 
-A new Flutter project.
+# TymeX Project Front-end
+
+
+
+
+## Introduction
+Welcome to the TymeX Front-End repository! This repository contains the source code for the mobile finance application "TymeX," developed as part of a capstone project. TymeX aims to provide users with a seamless and intuitive financial management experience on their mobile devices.
+## Overview
+TymeX is built using Flutter and Dart, allowing for a cross-platform application that runs smoothly on both iOS and Android devices. This repository includes all the necessary files to build, run, and maintain the front-end of the application.
+## Team members/contributors
+- Tran Mai Nhung - Lead Front-end Developer
+- Vo Thanh Thong - Front-end Developer
+- Giang Trong Duong - Front-end Developer
 
 ## Getting Started
-
 This project is a starting point for a Flutter application.
 
 A few resources to get you started if this is your first Flutter project:
