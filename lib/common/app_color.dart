@@ -59,6 +59,8 @@ class AppColors {
   // static const Color secondaryText =;
 
   // static const Color white = .white;
-static const Color white = Color(0xFFFFFFFF);
+  static const Color white = Color(0xFFFFFFFF);
 
+  static const Color positive = Color.fromARGB(255, 131, 250, 135);
+  static const Color negative = Color.fromARGB(255, 214, 92, 84);
 }

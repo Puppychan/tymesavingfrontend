@@ -3,7 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/app_color.dart';
 import 'package:tymesavingfrontend/common/app_text_style.dart';
 import 'package:tymesavingfrontend/screens/authentication/sign_in_page.dart';
-import 'package:tymesavingfrontend/screens/report_page/report_page.dart';
+import 'package:tymesavingfrontend/screens/wallet_report_screens/mywallet_page.dart';
+import 'package:tymesavingfrontend/screens/wallet_report_screens/report_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 
 class MoreMenuSetting extends StatefulWidget {
@@ -23,7 +24,14 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
     debugPrint('function tapped!');
   }
 
-  Future<void> MyWalletRoute() async {
+  Future<void> myWalletRoute() async {
+    //Debug here
+    debugPrint('My Wallet tapped!');
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const MyWalletPage()));
+  }
+
+  Future<void> myReport() async {
     //Debug here
     debugPrint('My Wallet tapped!');
     Navigator.push(
@@ -57,11 +65,11 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
                 Containing place holder function for development! Do change it in merge !
               */
             RowSettingTemplate('My Wallet', 'Access your wallet',
-                const Icon(Icons.wallet), MyWalletRoute),
+                const Icon(Icons.wallet), myWalletRoute),
+            RowSettingTemplate('My Report', 'Understand your cashflow',
+                const Icon(Icons.help), myReport),
             RowSettingTemplate('Setting', 'Change setting and preference',
                 const Icon(Icons.settings), placeHolderFunction),
-            RowSettingTemplate('Help Center', 'Change setting',
-                const Icon(Icons.help), placeHolderFunction),
             RowSettingTemplate('Contact us', 'Send a email or direct hotline',
                 const Icon(Icons.phone), placeHolderFunction),
             RowSettingTemplate('About', 'Change setting',
