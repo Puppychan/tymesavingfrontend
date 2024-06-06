@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/app_color.dart';
 import 'package:tymesavingfrontend/common/app_text_style.dart';
 import 'package:tymesavingfrontend/screens/authentication/sign_in_page.dart';
+import 'package:tymesavingfrontend/screens/report_page/report_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 
 class MoreMenuSetting extends StatefulWidget {
@@ -20,6 +21,13 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
   Future<void> placeHolderFunction() async {
     //Debug here
     debugPrint('function tapped!');
+  }
+
+  Future<void> MyWalletRoute() async {
+    //Debug here
+    debugPrint('My Wallet tapped!');
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const ReportPage()));
   }
 
   Future<void> logoutFunction() async {
@@ -49,7 +57,7 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
                 Containing place holder function for development! Do change it in merge !
               */
             RowSettingTemplate('My Wallet', 'Access your wallet',
-                const Icon(Icons.wallet), placeHolderFunction),
+                const Icon(Icons.wallet), MyWalletRoute),
             RowSettingTemplate('Setting', 'Change setting and preference',
                 const Icon(Icons.settings), placeHolderFunction),
             RowSettingTemplate('Help Center', 'Change setting',
