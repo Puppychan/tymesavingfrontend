@@ -34,7 +34,7 @@ class _SignInViewState extends State<SignInView> {
         );
       };
     return Scaffold(
-      backgroundColor: AppColors.cream,
+      // backgroundColor: AppColors.cream,
       appBar: const Heading(title: 'Sign In'),
       body: SingleChildScrollView(
         padding: AppPaddingStyles.pagePaddingIncludeSubText,

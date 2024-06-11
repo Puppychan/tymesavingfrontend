@@ -4,7 +4,7 @@ import 'package:tymesavingfrontend/common/styles/app_padding.dart';
 import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/common/text_align.dart';
-import 'package:tymesavingfrontend/models/user_model.dart';
+import 'package:tymesavingfrontend/models/user_model.txt';
 import 'package:tymesavingfrontend/components/user/user_card.dart';
 
 class UserListPage extends StatefulWidget {

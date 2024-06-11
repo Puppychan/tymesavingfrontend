@@ -7,7 +7,7 @@ class AppButtonThemeData {
   static final Map<AppButtonTheme, ButtonStyle> themes = {
     AppButtonTheme.yellowBlack: ButtonStyle(
       backgroundColor: MaterialStateProperty.all<Color>(AppColors.primary),
-      foregroundColor: MaterialStateProperty.all<Color>(AppColors.gray),
+      foregroundColor: MaterialStateProperty.all<Color>(AppColors.black),
     ),
     AppButtonTheme.darkBlueWhite: ButtonStyle(
       backgroundColor: MaterialStateProperty.all<Color>(AppColors.primaryBlue),
@@ -19,7 +19,7 @@ class AppButtonThemeData {
     // ),
     AppButtonTheme.whiteBlack: ButtonStyle(
       backgroundColor: MaterialStateProperty.all<Color>(AppColors.cream),
-      foregroundColor: MaterialStateProperty.all<Color>(AppColors.gray),
+      foregroundColor: MaterialStateProperty.all<Color>(AppColors.black),
     ),
   };
 }

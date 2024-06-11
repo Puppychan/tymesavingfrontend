@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/common/styles/app_color.dart';
 import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 import 'package:tymesavingfrontend/components/common/circle_network_image.dart';
-import 'package:tymesavingfrontend/models/user_model.dart';
+import 'package:tymesavingfrontend/models/user_model.txt';
 import 'package:timeago/timeago.dart' as timeago;
 
 class UserCard extends StatelessWidget {

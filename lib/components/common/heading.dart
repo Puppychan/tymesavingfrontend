@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/styles/app_color.dart';
 import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 import 'package:tymesavingfrontend/components/common/text_align.dart';
+import 'package:tymesavingfrontend/services/theme_service.dart';
 
 class Heading extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -11,12 +13,15 @@ class Heading extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider =
+        Provider.of<ThemeService>(context); // Get your ThemeProvider
+
     return SafeArea(
         child: Padding(
             padding: const EdgeInsets.only(top: 30),
             child: AppBar(
-              backgroundColor: AppColors.cream,
-              surfaceTintColor: AppColors.cream, // when scroll
+              // backgroundColor: AppColors.cream,
+              // surfaceTintColor: AppColors.cream, // when scroll
               title: CustomAlignText(text: title, style: AppTextStyles.heading),
               leading: showBackButton
                   ? IconButton(
@@ -25,14 +30,23 @@ class Heading extends StatelessWidget implements PreferredSizeWidget {
                       },
                       icon: const Icon(
                         Icons.arrow_back_ios,
-                        color: AppColors
-                            .primaryText, // Ensure AppColors.primaryText is defined
+                        // color: AppColors.primaryText,
                         size: 24.0,
                         semanticLabel: 'Back to previous page',
                       ),
                     )
                   : null,
-                  
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(
+                      themeProvider.isDarkMode
+                          ? Icons.brightness_7
+                          : Icons.brightness_4),
+                  onPressed: () {
+                    themeProvider.toggleTheme();
+                  },
+                ),
+              ],
             )));
   }
 

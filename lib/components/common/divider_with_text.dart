@@ -28,7 +28,7 @@ class DividerWithText extends StatelessWidget {
         ),
         Text(
           text,
-          style: textStyle ?? const TextStyle(color: AppColors.gray),
+          style: textStyle ?? const TextStyle(color: AppColors.black),
         ),
         Expanded(
           child: Container(
