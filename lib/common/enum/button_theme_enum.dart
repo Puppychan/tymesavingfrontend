@@ -1,1 +1,1 @@
-enum AppButtonTheme { yellowBlack, darkBlueWhite, lightBlueWhite, whiteBlack }
+enum AppButtonTheme { yellowBlack, blueWhite, whiteBlack }

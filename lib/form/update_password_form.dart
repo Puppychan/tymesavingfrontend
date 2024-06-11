@@ -109,7 +109,7 @@ class _UpdatePasswordFormState extends State<UpdatePasswordForm> {
     Code for submitting and linkage with back-end to update user password here
     */
 
-    await handleMainPageError(context, () async {
+    await handleMainPageApi(context, () async {
       final authService = Provider.of<AuthService>(context, listen: false);
       return await authService.changePassword(newPassword, newPassword);
     }, () async {

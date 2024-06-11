@@ -6,7 +6,6 @@ import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/common/text_align.dart';
 import 'package:tymesavingfrontend/form/login_form.dart';
 import 'package:tymesavingfrontend/screens/authentication/sign_up_page.dart';
-import 'package:tymesavingfrontend/common/styles/app_color.dart';
 import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 
 class SignInView extends StatefulWidget {
@@ -34,7 +33,6 @@ class _SignInViewState extends State<SignInView> {
         );
       };
     return Scaffold(
-      // backgroundColor: AppColors.cream,
       appBar: const Heading(title: 'Sign In'),
       body: SingleChildScrollView(
         padding: AppPaddingStyles.pagePaddingIncludeSubText,

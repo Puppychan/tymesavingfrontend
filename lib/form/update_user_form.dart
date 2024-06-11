@@ -123,7 +123,7 @@ class UpdateUserState extends State<UpdateUserForm> {
       return;
     }
 
-    await handleMainPageError(context, () async {
+    await handleMainPageApi(context, () async {
       final authService = Provider.of<AuthService>(context, listen: false);
       return await authService.updateCurrentUser(
           username, gmail, phone, fullName);

@@ -1,13 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/common/styles/app_color.dart';
 import 'package:tymesavingfrontend/common/styles/app_padding.dart';
 import 'package:tymesavingfrontend/components/common/divider_with_text.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/common/text_align.dart';
 import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 import 'package:tymesavingfrontend/form/signup_form.dart';
-import 'package:tymesavingfrontend/screens/authentication/sign_in_page.dart';
 
 class SignUpView extends StatefulWidget {
   const SignUpView({super.key});
@@ -31,7 +29,6 @@ class _SignUpViewState extends State<SignUpView> {
         Navigator.pop(context);
       };
     return Scaffold(
-      backgroundColor: AppColors.cream,
       appBar: const Heading(title: 'Sign Up', showBackButton: true),
       body: SingleChildScrollView(
         padding: AppPaddingStyles.pagePaddingIncludeSubText,

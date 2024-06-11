@@ -47,13 +47,15 @@ class _LoginFormState extends State<LoginForm> {
     // Show loader overlay while waiting for the response
     context.loaderOverlay.show();
 
-    await handleAuthError(context, () async {
+    await handleAuthApi(context, () async {
       final result = await authService.signIn(
         _usernameController.text,
         _passwordController.text,
       );
       return result;
     }, () async {
+      // nếu success
+      // hiện loading
       context.loaderOverlay.hide();
       // If successful, navigate to HomePage
       Navigator.pushAndRemoveUntil(

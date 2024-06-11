@@ -21,10 +21,10 @@ class PrimaryButton extends StatelessWidget {
         width: double.infinity,
         child: ElevatedButton(
           onPressed: onPressed,
-          style: AppButtonThemeData.themes[theme]?.copyWith(
-            elevation: MaterialStateProperty.all(5), // Add shadow
+          style: AppButtonThemeData.getThemes(context)[theme]!.copyWith(
+            elevation: MaterialStateProperty.all(1), // Add shadow
             padding: MaterialStateProperty.all(
-              const EdgeInsets.symmetric(vertical: 10), // Adjust padding to your needs
+              const EdgeInsets.symmetric(vertical: 13), // Adjust padding to your needs
             ),
           ),
           child: Text(

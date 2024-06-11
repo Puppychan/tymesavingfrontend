@@ -21,7 +21,7 @@ class SecondaryButton extends StatelessWidget {
         width: double.infinity,
         child: ElevatedButton(
           onPressed: onPressed,
-          style: AppButtonThemeData.themes[theme]?.copyWith(
+          style: AppButtonThemeData.getThemes(context)[theme]!.copyWith(
             padding: MaterialStateProperty.all(
               const EdgeInsets.symmetric(vertical: 10),
             ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/common/styles/app_color.dart';
 import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 
 class RoundTextField extends StatefulWidget {
@@ -39,6 +38,8 @@ class _RoundTextFieldState extends State<RoundTextField> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -65,16 +66,14 @@ class _RoundTextFieldState extends State<RoundTextField> {
           alignment: Alignment.centerLeft,
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           decoration: BoxDecoration(
-            color: AppColors.tertiary,
+            color: colorScheme.tertiary,
             // border: Border.all(color: AppColors.divider),
             borderRadius: BorderRadius.circular(widget.componentHeight / 2),
             boxShadow: const [
               BoxShadow(
-                color: Color(0x19000000),
-                blurRadius: 10,
-                offset: Offset(0, 4),
-                spreadRadius: 1,
-              )
+                  color: Color.fromRGBO(0, 0, 0, 0.18),
+                  offset: Offset(0, 2),
+                  blurRadius: 4)
             ],
           ),
           child: TextFormField(
@@ -91,11 +90,11 @@ class _RoundTextFieldState extends State<RoundTextField> {
               // icon
               suffixIcon: widget.isPasswordField
                   ? IconButton(
+                      color: colorScheme.secondary,
                       icon: Icon(
                         _isObscure
                             ? Icons.visibility_off
                             : Icons.visibility, // Toggle the icon
-                        color: AppColors.primaryText,
                       ),
                       onPressed: () {
                         setState(() {
