@@ -9,7 +9,8 @@ const String APPLICATION_JSON = "application/json";
 const String CONTENT_TYPE = "content-type";
 const String ACCEPT = "accept";
 
-Map<String, dynamic> handleError(Object e) {
+dynamic handleError(Object e) {
+  print("Caught error: $e");
   if (e is DioException) {
     if (e.type == DioExceptionType.connectionTimeout ||
         e.type == DioExceptionType.receiveTimeout ||
@@ -28,7 +29,7 @@ Map<String, dynamic> handleError(Object e) {
     } else if (e.type == DioExceptionType.badResponse) {
       // Handle backend error response
       return {
-        'response': e.response?.data['detail'] ??
+        'response': e.response?.data['response'] ??
             "Server error. Please try again later.",
         'statusCode': e.response?.statusCode ?? 500
       };
