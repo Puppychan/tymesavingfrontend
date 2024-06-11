@@ -12,7 +12,7 @@ class ThemeToggleSwitch extends StatelessWidget {
     return Switch.adaptive(
       value: themeProvider.isDarkMode,
       onChanged: (value) {
-        themeProvider.toggleTheme(value);
+        themeProvider.toggleTheme();
       },
     );
   }

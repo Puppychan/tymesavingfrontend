@@ -87,8 +87,8 @@ class _UserBoxState extends State<UserBox> with RouteAware {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ListTile(
-                    leading:
-                        const CustomCircleAvatar(imagePath: TEMP_AVATAR_IMAGE),
+                    // leading:
+                        // const CustomCircleAvatar(imagePath: TEMP_AVATAR_IMAGE),
                     title: Text(user?.fullname ?? 'Loading...',
                         style: AppTextStyles.subHeadingMedium),
                     subtitle: Text(user?.email ?? 'Loading mail...',

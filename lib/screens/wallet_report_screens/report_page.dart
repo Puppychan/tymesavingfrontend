@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/common/app_color.dart';
-import 'package:tymesavingfrontend/components/heading.dart';
+import 'package:tymesavingfrontend/common/styles/app_color.dart';
+import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/report_page/outflow_detail.dart';
 import 'package:tymesavingfrontend/components/report_page/report_flow.dart';
 

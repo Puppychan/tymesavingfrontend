@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/common/app_color.dart';
-import 'package:tymesavingfrontend/common/app_text_style.dart';
+import 'package:tymesavingfrontend/common/styles/app_color.dart';
+import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 
 class TransactionItem extends StatefulWidget {
   const TransactionItem({
@@ -23,7 +23,7 @@ class _TransactionItemState extends State<TransactionItem> {
     return Card.filled(
       color: AppColors.primary.withOpacity(0.05 ),
       child: InkWell(
-        splashColor: AppColors.gray.withOpacity(0.1),
+        splashColor: AppColors.black.withOpacity(0.1),
         onTap:  () async {
           /*
           Cái này sẽ dùng để route khi onTap đến pages riêng của transaction đó
