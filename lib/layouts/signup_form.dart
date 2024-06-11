@@ -88,7 +88,7 @@ class _SignupFormState extends State<SignupForm> {
     context.loaderOverlay.show();
 
     // Call the authentication service to sign up the user
-    await handleAuthError(context, () async {
+    await handleAuthApi(context, () async {
       final result = await authService.signUp(
         _usernameController.text,
         _mailController.text,

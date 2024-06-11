@@ -22,7 +22,7 @@ class _HomeAdminPageState extends State<HomeAdminPage> with RouteAware {
     super.initState();
     Future.microtask(() async {
       final authService = Provider.of<AuthService>(context, listen: false);
-      await handleMainPageError(context, () async {
+      await handleMainPageApi(context, () async {
         return await authService.getCurrentUserData();
         // return result;
       }, () async {
@@ -47,7 +47,7 @@ class _HomeAdminPageState extends State<HomeAdminPage> with RouteAware {
     // Called when the current route has been popped off, and the current route shows up.
     Future.microtask(() async {
       final authService = Provider.of<AuthService>(context, listen: false);
-      await handleMainPageError(context, () async {
+      await handleMainPageApi(context, () async {
         return await authService.getCurrentUserData();
         // return result;
       }, () async {
