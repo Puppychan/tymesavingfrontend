@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/common/app_color.dart';
+import 'package:tymesavingfrontend/common/styles/app_color.dart';
 
 class DividerWithText extends StatelessWidget {
   final String text;
@@ -28,7 +28,7 @@ class DividerWithText extends StatelessWidget {
         ),
         Text(
           text,
-          style: textStyle ?? const TextStyle(color: AppColors.gray),
+          style: textStyle ?? const TextStyle(color: AppColors.black),
         ),
         Expanded(
           child: Container(

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:tymesavingfrontend/common/app_color.dart';
-import 'package:tymesavingfrontend/common/app_text_style.dart';
-import 'package:tymesavingfrontend/components/primary_button.dart';
-import 'package:tymesavingfrontend/enum/button_theme.dart';
+import 'package:tymesavingfrontend/common/styles/app_color.dart';
+import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
+import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
+import 'package:tymesavingfrontend/common/enum/button_theme_enum.dart';
 import 'package:tymesavingfrontend/screens/authentication/sign_in_page.dart';
 
 class ErrorPage extends StatelessWidget {

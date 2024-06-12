@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:provider/provider.dart';
-import 'package:tymesavingfrontend/components/round_text_field.dart';
-import 'package:tymesavingfrontend/components/primary_button.dart';
-import 'package:tymesavingfrontend/layouts/main_page_layout.dart';
+import 'package:tymesavingfrontend/components/common/round_text_field.dart';
+import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
+import 'package:tymesavingfrontend/screens/main_page_layout.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/utils/display_error.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
@@ -54,6 +54,8 @@ class _LoginFormState extends State<LoginForm> {
       );
       return result;
     }, () async {
+      // nếu success
+      // hiện loading
       context.loaderOverlay.hide();
       // If successful, navigate to HomePage
       Navigator.pushAndRemoveUntil(

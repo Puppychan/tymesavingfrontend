@@ -2,14 +2,14 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/common/local_storage_key.constant.dart';
-import 'package:tymesavingfrontend/common/user_role.enum.dart';
+import 'package:tymesavingfrontend/common/constant/local_storage_key_constant.dart';
+import 'package:tymesavingfrontend/common/enum/user_role_enum.dart';
 import 'package:tymesavingfrontend/models/user.model.dart';
 import 'package:tymesavingfrontend/services/utils/get_backend_endpoint.dart';
 import 'package:tymesavingfrontend/services/utils/local_storage_service.dart';
 import 'package:tymesavingfrontend/services/utils/network_service.dart';
 
-const EXPIRE_TOKEN_DAYS = 5;
+const EXPIRE_TOKEN_DAYS = 3;
 
 class AuthService extends ChangeNotifier {
   // Create a private user variable to store user data in this provider
@@ -65,9 +65,8 @@ class AuthService extends ChangeNotifier {
 
     // Ensure response['response'] is a Map and contains the 'token'
     if (response['response'] != null &&
-        response['response'] is Map<String, dynamic> &&
         response['statusCode'] == 200) {
-      final responseBody = response['response'] as Map<String, dynamic>;
+      final responseBody = response['response'];
       String? token = responseBody['token'] as String?;
 
       if (token != null) {

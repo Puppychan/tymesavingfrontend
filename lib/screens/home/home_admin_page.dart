@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tymesavingfrontend/common/app_padding.dart';
-import 'package:tymesavingfrontend/common/app_text_style.dart';
-import 'package:tymesavingfrontend/components/chart/custom_bar_chart.dart';
-import 'package:tymesavingfrontend/components/text_align.dart';
+import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
+import 'package:tymesavingfrontend/components/common/text_align.dart';
 import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/user.model.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class HomeAdminPage extends StatefulWidget {
+  const HomeAdminPage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomeAdminPage> createState() => _HomeAdminPageState();
 }
 
-class _HomePageState extends State<HomePage> with RouteAware {
+class _HomeAdminPageState extends State<HomeAdminPage> with RouteAware {
   late User? user; // Assuming User is a defined model
 
   @override
@@ -62,18 +60,14 @@ class _HomePageState extends State<HomePage> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
-    return const SingleChildScrollView(
-        padding: AppPaddingStyles.pagePaddingIncludeSubText,
-        child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-          // Image.asset("assets/img/app_logo_light.svg",
-          //     width: media.width * 0.5, fit: BoxFit.contain),
-          CustomAlignText(
-              text: 'Have a nice day!', style: AppTextStyles.subHeading),
-          SizedBox(
-            height: 24,
-          ),
-
-          CustomBarChart(),
-        ]));
+    return const Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+      // Image.asset("assets/img/app_logo_light.svg",
+      //     width: media.width * 0.5, fit: BoxFit.contain),
+      CustomAlignText(
+          text: 'View our user list here!', style: AppTextStyles.subHeading),
+      SizedBox(
+        height: 24,
+      ),
+    ]);
   }
 }

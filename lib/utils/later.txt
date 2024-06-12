@@ -20,14 +20,14 @@ Row(
                               ? Icons.check_box_rounded
                               : Icons.check_box_outline_blank_rounded,
                           size: 25,
-                          color: AppColors.gray50,
+                          color: AppColors.black50,
                         ),
                         const SizedBox(
                           width: 8,
                         ),
                         Text(
                           "Remember me",
-                          style: TextStyle(color: AppColors.gray50, fontSize: 14),
+                          style: TextStyle(color: AppColors.black50, fontSize: 14),
                         ),
                       ],
                     ),
@@ -36,7 +36,7 @@ Row(
                     onPressed: () {},
                     child: Text(
                       "Forgot password",
-                      style: TextStyle(color: AppColors.gray50, fontSize: 14),
+                      style: TextStyle(color: AppColors.black50, fontSize: 14),
                     ),
                   ),
                 ],

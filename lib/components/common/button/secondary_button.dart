@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/common/app_text_style.dart';
-import 'package:tymesavingfrontend/enum/button_theme.dart';
-import 'package:tymesavingfrontend/common/button_theme_data.dart';
+import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
+import 'package:tymesavingfrontend/common/enum/button_theme_enum.dart';
+import 'package:tymesavingfrontend/common/styles/button_theme_data.dart';
 
-class PrimaryButton extends StatelessWidget {
+class SecondaryButton extends StatelessWidget {
   final String title;
   final VoidCallback onPressed;
   final AppButtonTheme theme;
 
-  const PrimaryButton({
+  const SecondaryButton({
     super.key,
     required this.title,
     required this.onPressed,
-    this.theme = AppButtonTheme.yellowBlack,
+    this.theme = AppButtonTheme.whiteBlack,
   });
 
   @override
@@ -21,10 +21,9 @@ class PrimaryButton extends StatelessWidget {
         width: double.infinity,
         child: ElevatedButton(
           onPressed: onPressed,
-          style: AppButtonThemeData.themes[theme]?.copyWith(
-            elevation: MaterialStateProperty.all(5), // Add shadow
+          style: AppButtonThemeData.getThemes(context)[theme]!.copyWith(
             padding: MaterialStateProperty.all(
-              const EdgeInsets.symmetric(vertical: 10), // Adjust padding to your needs
+              const EdgeInsets.symmetric(vertical: 10),
             ),
           ),
           child: Text(
