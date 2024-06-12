@@ -1,7 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/common/app_color.dart';
-import 'package:tymesavingfrontend/common/app_text_style.dart';
+import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 
 class CustomLineChart extends StatefulWidget {
   const CustomLineChart({

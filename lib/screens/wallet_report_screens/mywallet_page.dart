@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/common/app_color.dart';
-import 'package:tymesavingfrontend/common/app_padding.dart';
-import 'package:tymesavingfrontend/common/app_text_style.dart';
-import 'package:tymesavingfrontend/components/chart/custom_bar_chart.dart';
-import 'package:tymesavingfrontend/components/chart/custom_line_chart.dart';
-import 'package:tymesavingfrontend/components/heading.dart';
+import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
+import 'package:tymesavingfrontend/components/common/chart/custom_line_chart.dart';
+import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/mywallet_page/mywallet_transaction.dart';
 
 class MyWalletPage extends StatelessWidget {

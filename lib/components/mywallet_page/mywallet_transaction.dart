@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:tymesavingfrontend/common/app_text_style.dart';
 import 'package:tymesavingfrontend/components/mywallet_page/transaction_item.dart';
 
 class MyWalletTransaction extends StatefulWidget {
