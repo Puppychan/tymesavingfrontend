@@ -1,16 +1,60 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/app_color.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/report_page/outflow_detail.dart';
 import 'package:tymesavingfrontend/components/report_page/report_flow.dart';
+import 'package:tymesavingfrontend/models/transaction_report.model.dart';
+import 'package:tymesavingfrontend/models/user.model.dart';
+import 'package:tymesavingfrontend/services/auth_service.dart';
+import 'package:tymesavingfrontend/services/transaction_service.dart';
+import 'package:tymesavingfrontend/utils/handling_error.dart';
 
-class ReportPage extends StatelessWidget {
+class ReportPage extends StatefulWidget {
   const ReportPage({super.key});
 
   @override
+  State<ReportPage> createState() => _ReportPageState();
+}
+
+class _ReportPageState extends State<ReportPage> {
+  CompareToLastMonth? compareToLastMonth;
+
+  @override
+  void initState() {
+    super.initState();
+    User? user;
+    Future.microtask(() async {
+      final authService = Provider.of<AuthService>(context, listen: false);
+      await handleMainPageApi(context, () async {
+        return await authService.getCurrentUserData();
+        // return result;
+      }, () async {
+        setState(() {
+          user = authService.user;
+        });
+      });
+    });
+
+    Future.microtask(() async {
+      final transactionService =
+          Provider.of<TransactionService>(context, listen: false);
+      await handleMainPageApi(context, () async {
+        return await transactionService.getLastMonth(user);
+        // return result;
+      }, () async {
+        setState(() {
+          // Compare to last month
+          compareToLastMonth = transactionService.compareToLastMonth;
+        });
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      appBar: Heading(
+    return Scaffold(
+      appBar: const Heading(
         title: 'Reports',
         showBackButton: true,
       ),
@@ -18,13 +62,14 @@ class ReportPage extends StatelessWidget {
       body: Column(
         children: [
           ReportFlow(
-            inflowCurrent: 250000, 
-            inflowPrevious: 278000, 
-            outflowCurrent: 180000, 
-            outflowPrevious: 190000
+              inflowCurrent: compareToLastMonth!.currentIncome,
+              inflowPercentage: compareToLastMonth!.incomePercentage,
+              outflowCurrent: compareToLastMonth!.currentExpense,
+              outflowPercentage: compareToLastMonth!.expensePercentage),
+          const SizedBox(
+            height: 20,
           ),
-          SizedBox(height: 20,),
-          OutflowDetail(),
+          const OutflowDetail(),
         ],
       ),
     );

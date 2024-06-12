@@ -6,47 +6,20 @@ class ReportFlow extends StatefulWidget {
   const ReportFlow(
       {super.key,
       required this.inflowCurrent,
-      required this.inflowPrevious,
+      required this.inflowPercentage,
       required this.outflowCurrent,
-      required this.outflowPrevious});
+      required this.outflowPercentage});
 
-  final double inflowCurrent;
-  final double inflowPrevious;
-  final double outflowCurrent;
-  final double outflowPrevious;
+  final int inflowCurrent;
+  final int inflowPercentage;
+  final int outflowCurrent;
+  final int outflowPercentage;
 
   @override
   State<ReportFlow> createState() => _ReportFlowState();
 }
 
 class _ReportFlowState extends State<ReportFlow> {
-  late final String percentageChangeInflowFinal;
-  late final String percentageChangeOutflowFinal;
-
-  /*
-  Logic để tính inflow và outflow percentages dựa trên history và current!
-  */
-
-  @override
-  void initState() {
-    final double percentageChangeInflow;
-    final double percentageChangeOutflow;
-    percentageChangeInflow = ((widget.inflowCurrent - widget.inflowPrevious) /
-            widget.inflowPrevious) *
-        100;
-
-    percentageChangeOutflow =
-        ((widget.outflowCurrent - widget.outflowPrevious) /
-                widget.outflowPrevious) *
-            100;
-
-    percentageChangeInflowFinal =
-        percentageChangeInflow.toStringAsFixed(2);
-    percentageChangeOutflowFinal =
-        percentageChangeOutflow.toStringAsFixed(2);
-
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +48,7 @@ class _ReportFlowState extends State<ReportFlow> {
                       style: AppTextStyles.headingMedium,
                     ),
                     Text(
-                      '$percentageChangeInflowFinal% from previous month',
+                      '${widget.inflowPercentage}% from previous month',
                       style: AppTextStyles.subHeadingSmall,
                     ),
                   ],
@@ -107,7 +80,7 @@ class _ReportFlowState extends State<ReportFlow> {
                       style: AppTextStyles.headingMedium,
                     ),
                     Text(
-                      '$percentageChangeOutflowFinal% from previous month',
+                      '${widget.outflowPercentage}% from previous month',
                       style: AppTextStyles.subHeadingSmall,
                     ),
                   ],
