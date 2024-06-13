@@ -11,12 +11,14 @@ class TransactionService extends ChangeNotifier {
   ChartReport? _chartReportSecondary;
   CompareToLastMonth? _compareToLastMonth;
   CurrentMonthReport? _currentMonthReport;
+  TopCategoriesList? _topCategoriesList;
 
   // Getter to access outside of this class
   CompareToLastMonth? get compareToLastMonth => _compareToLastMonth;
   ChartReport? get chartReport => _chartReport;
   ChartReport? get chartReportSecondary => _chartReportSecondary;
   CurrentMonthReport? get currrentMonthReport => _currentMonthReport;
+  TopCategoriesList? get topCategoriesList => _topCategoriesList;
 
   Future<Map<String, dynamic>> getChartReport(userid) async {
     final response = await NetworkService.instance.get(
@@ -47,14 +49,15 @@ class TransactionService extends ChangeNotifier {
     return expenseResponse;
   }
 
-  Future<Map<String, dynamic>> getLastMonth(userid) async {
+  Future<Map<String, dynamic>> getReportDetail(userid) async {
     final response = await NetworkService.instance.get(
         "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReport}?transactionType=Expense&userId=$userid");
     if (response['response'] != null &&
-        response['response']['compareToLastMonth'] != null) {
+        response['response']['compareToLastMonth'] != null &&
+        response['response']['topCategories'] != null) {
       final responseData =
           response['response']['compareToLastMonth'] as Map<String, dynamic>;
-
+      final responseCategoryData = response['response']['topCategories'];
       // Type checking, since percentages is String but current is int
       // debugPrint(responseData['currentIncome'].runtimeType.toString());
       // debugPrint(responseData['incomePercentage'].runtimeType.toString());
@@ -62,9 +65,14 @@ class TransactionService extends ChangeNotifier {
       // debugPrint(responseData['expensePercentage'].runtimeType.toString());
 
       _compareToLastMonth = CompareToLastMonth.fromJson(responseData);
+      _topCategoriesList = TopCategoriesList.fromJson(responseCategoryData);
       notifyListeners();
     } else {
-      debugPrint('Invalid response structure');
+      final responseData =
+          response['response']['compareToLastMonth'] as Map<String, dynamic>;
+      _compareToLastMonth = CompareToLastMonth.fromJson(responseData);
+      _topCategoriesList = null;
+      notifyListeners();
     }
     return response;
   }

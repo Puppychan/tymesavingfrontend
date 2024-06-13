@@ -20,6 +20,7 @@ class ReportPage extends StatefulWidget {
 
 class _ReportPageState extends State<ReportPage> {
   CompareToLastMonth? compareToLastMonth;
+  TopCategoriesList? topCategoriesList;
 
   @override
   void initState() {
@@ -39,12 +40,13 @@ class _ReportPageState extends State<ReportPage> {
       final transactionService =
           Provider.of<TransactionService>(context, listen: false);
       await handleMainPageApi(context, () async {
-        return await transactionService.getLastMonth(user?.id);
+        return await transactionService.getReportDetail(user?.id);
         // return result;
       }, () async {
         setState(() {
           // Compare to last month
           compareToLastMonth = transactionService.compareToLastMonth;
+          topCategoriesList = transactionService.topCategoriesList;
         });
       });
     });
@@ -58,8 +60,7 @@ class _ReportPageState extends State<ReportPage> {
         showBackButton: true,
       ),
       backgroundColor: AppColors.cream,
-      body: 
-      Skeletonizer(
+      body: Skeletonizer(
         enabled: compareToLastMonth == null, // Show skeleton if user is null
         child: Column(
           children: [
@@ -67,11 +68,16 @@ class _ReportPageState extends State<ReportPage> {
                 inflowCurrent: compareToLastMonth?.currentIncome ?? 0,
                 inflowPercentage: compareToLastMonth?.incomePercentage ?? '0',
                 outflowCurrent: compareToLastMonth?.currentExpense ?? 0,
-                outflowPercentage: compareToLastMonth?.expensePercentage ?? '0'),
+                outflowPercentage:
+                    compareToLastMonth?.expensePercentage ?? '0'),
             const SizedBox(
               height: 20,
             ),
             const OutflowDetail(),
+            if (topCategoriesList == null) 
+            Text('No data!')
+            else
+            Text('?'),
           ],
         ),
       ),

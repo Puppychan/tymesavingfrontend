@@ -65,3 +65,33 @@ class CurrentMonthReport {
         totalAmount: json['totalAmount'], currentMonth: fullMonthValue);
   }
 }
+
+class TopCategory {
+  final String category;
+  final int totalAmount;
+  final String percentages;
+
+  TopCategory(
+      {required this.category,
+      required this.totalAmount,
+      required this.percentages});
+
+  factory TopCategory.fromJson(Map<String, dynamic> json) {
+    return TopCategory(
+        category: json['category'],
+        totalAmount: json['totalAmount'],
+        percentages: json['percentage']);
+  }
+}
+
+class TopCategoriesList {
+  final List<TopCategory> topCategory;
+
+  TopCategoriesList({required this.topCategory});
+
+  factory TopCategoriesList.fromJson(List<dynamic> json) {
+    List<TopCategory> categoryList =
+        json.map((e) => TopCategory.fromJson(e)).toList();
+    return TopCategoriesList(topCategory: categoryList);
+  }
+}
