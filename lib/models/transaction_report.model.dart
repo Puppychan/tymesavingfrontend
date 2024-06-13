@@ -12,9 +12,9 @@ class ChartReport {
 
 class CompareToLastMonth {
   final int currentIncome;
-  final int incomePercentage;
+  final String incomePercentage;
   final int currentExpense;
-  final int expensePercentage;
+  final String expensePercentage;
 
   CompareToLastMonth({
     required this.currentIncome,
@@ -25,10 +25,10 @@ class CompareToLastMonth {
 
   factory CompareToLastMonth.fromJson(Map<String, dynamic> json) {
     return CompareToLastMonth(
-      currentIncome: json['compareToLastMonth']['Income']['currentIncome'] as int,
-      incomePercentage: json['compareToLastMonth']['Income']['incomePercentage'] as int,
-      currentExpense: json['compareToLastMonth']['Expense']['currentExpense'] as int,
-      expensePercentage: json['compareToLastMonth']['Expense']['expensePercentage'] as int,
+      currentIncome: json['currentIncome'] as int,
+      incomePercentage: json['incomePercentage'],
+      currentExpense: json['currentExpense'] as int,
+      expensePercentage: json['expensePercentage'],
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:tymesavingfrontend/common/app_color.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/report_page/outflow_detail.dart';
@@ -36,6 +37,8 @@ class _ReportPageState extends State<ReportPage> {
       });
     });
 
+    debugPrint('User from reportPage ${user?.id}');
+
     Future.microtask(() async {
       final transactionService =
           Provider.of<TransactionService>(context, listen: false);
@@ -59,18 +62,21 @@ class _ReportPageState extends State<ReportPage> {
         showBackButton: true,
       ),
       backgroundColor: AppColors.cream,
-      body: Column(
-        children: [
-          ReportFlow(
-              inflowCurrent: compareToLastMonth!.currentIncome,
-              inflowPercentage: compareToLastMonth!.incomePercentage,
-              outflowCurrent: compareToLastMonth!.currentExpense,
-              outflowPercentage: compareToLastMonth!.expensePercentage),
-          const SizedBox(
-            height: 20,
-          ),
-          const OutflowDetail(),
-        ],
+      body: Skeletonizer(
+        enabled: compareToLastMonth == null, // Show skeleton if user is null
+        child: Column(
+          children: [
+            ReportFlow(
+                inflowCurrent: compareToLastMonth?.currentIncome ?? 0,
+                inflowPercentage: compareToLastMonth?.incomePercentage ?? '0',
+                outflowCurrent: compareToLastMonth?.currentExpense ?? 0,
+                outflowPercentage: compareToLastMonth?.expensePercentage ?? '0'),
+            const SizedBox(
+              height: 20,
+            ),
+            const OutflowDetail(),
+          ],
+        ),
       ),
     );
   }

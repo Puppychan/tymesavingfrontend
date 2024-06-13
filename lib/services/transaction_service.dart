@@ -14,23 +14,35 @@ class TransactionService extends ChangeNotifier {
   CompareToLastMonth? get compareToLastMonth => _compareToLastMonth;
   ChartReport? get chartReport => _chartReport;
 
-  Future<ChartReport> getChartReport(user) async {
+  Future<Map<String, dynamic>> getChartReport(user) async {
     final response = await NetworkService.instance.get(
         "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReport}?transactionType=Expense&userId=${user?.id}");
-      final responseData = response['response'] as Map<String, dynamic>;
-      // _transactionReport = TransactionReport.fromJson(responseData);
-      notifyListeners();
-      _chartReport = ChartReport.fromJson(responseData);
+    final responseData = response['response'] as Map<String, dynamic>;
+    notifyListeners();
+    _chartReport = ChartReport.fromJson(responseData);
     return response;
   }
 
-  Future<CompareToLastMonth> getLastMonth(user) async {
-    final response = await NetworkService.instance.get(
-        "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReport}?transactionType=Expense&userId=${user?.id}");
-      debugPrint(response);
-      final responseData = response['response'] as Map<String, dynamic>;
-      _compareToLastMonth = CompareToLastMonth.fromJson(responseData);
-      notifyListeners();
-    return response;
+  Future<Map<String, dynamic>> getLastMonth(user) async {
+      final response = await NetworkService.instance.get(
+          "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReport}?transactionType=Expense&userId=${user?.id}");
+      debugPrint(user?.id);
+      if (response['response'] != null &&
+          response['response']['compareToLastMonth'] != null) {
+        final responseData =
+            response['response']['compareToLastMonth'] as Map<String, dynamic>;
+
+        // Type checking, since percentages is String but current is int
+        // debugPrint(responseData['currentIncome'].runtimeType.toString());
+        // debugPrint(responseData['incomePercentage'].runtimeType.toString());
+        // debugPrint(responseData['currentExpense'].runtimeType.toString());
+        // debugPrint(responseData['expensePercentage'].runtimeType.toString());
+
+        _compareToLastMonth = CompareToLastMonth.fromJson(responseData);
+        notifyListeners();
+      } else {
+        debugPrint('Invalid response structure');
+      }
+      return response;
   }
 }

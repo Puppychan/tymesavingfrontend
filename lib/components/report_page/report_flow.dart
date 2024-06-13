@@ -11,9 +11,9 @@ class ReportFlow extends StatefulWidget {
       required this.outflowPercentage});
 
   final int inflowCurrent;
-  final int inflowPercentage;
+  final String inflowPercentage;
   final int outflowCurrent;
-  final int outflowPercentage;
+  final String outflowPercentage;
 
   @override
   State<ReportFlow> createState() => _ReportFlowState();
