@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/models/user_model.dart';
+import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
+import 'package:tymesavingfrontend/components/common/circle_network_image.dart';
+import 'package:tymesavingfrontend/models/user_model.txt';
+import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class UserCard extends StatelessWidget {
@@ -15,20 +18,46 @@ class UserCard extends StatelessWidget {
     required this.onDelete,
   });
 
+  void _showDeleteConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Delete Confirmation'),
+          content: const Text('Are you sure you want to delete this user?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                onDelete();
+              },
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    double progress = user.contribution /
-        maxContribution; // Calculate the progress as a fraction
+    double progress = user.contribution / maxContribution; // Calculate the progress as a fraction
     String formattedDate = timeago.format(DateTime.parse(user.date));
-
+    final colorScheme = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: Container(
         decoration: BoxDecoration(
-          color: Color(0xFFFFF8EC), // Hex color for the background
+          color: colorScheme.tertiary, // Hex color for the background
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
+              color: colorScheme.secondary.withOpacity(0.2),
               spreadRadius: 1,
               blurRadius: 6,
               offset: const Offset(0, 3),
@@ -42,10 +71,7 @@ class UserCard extends StatelessWidget {
               padding: const EdgeInsets.all(8),
               child: Row(
                 children: [
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundImage: AssetImage(user.avatarPath),
-                  ),
+                  CustomCircleAvatar(imagePath: user.avatarPath),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
@@ -57,12 +83,12 @@ class UserCard extends StatelessWidget {
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.edit, color: Color(0xFF4E4E53)),
+                    icon: Icon(Icons.edit, color: colorScheme.secondary),
                     onPressed: onEdit,
                   ),
                   IconButton(
-                    icon: const Icon(Icons.delete, color: Color(0xFF4E4E53)),
-                    onPressed: onDelete,
+                    icon: Icon(Icons.delete, color: colorScheme.secondary),
+                    onPressed: () => _showDeleteConfirmationDialog(context),
                   ),
                 ],
               ),
@@ -75,26 +101,18 @@ class UserCard extends StatelessWidget {
                   RichText(
                     text: TextSpan(
                       text: 'Contribute ',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey[600],
-                        fontWeight: FontWeight.normal,
-                      ),
+                      style: Theme.of(context).textTheme.bodyMedium!,
                       children: <TextSpan>[
                         TextSpan(
                           text: '\$${user.contribution.toStringAsFixed(2)}',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, color: Colors.black),
+                          style: AppTextStyles.paragraphBold(context),
                         ),
                       ],
                     ),
                   ),
                   Text(
                     formattedDate,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[500],
-                    ),
+                    style: Theme.of(context).textTheme.bodySmall!,
                   ),
                 ],
               ),
@@ -104,11 +122,9 @@ class UserCard extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(4),
                 child: LinearProgressIndicator(
-                  value: progress.clamp(
-                      0.0, 1.0), // Ensuring the value is between 0 and 1
-                  backgroundColor: Color(0xFFC6C0B4),
-                  valueColor:
-                      const AlwaysStoppedAnimation<Color>(Color(0xFF1C406E)),
+                  value: progress.clamp(0.0, 1.0), // Ensuring the value is between 0 and 1
+                  backgroundColor: colorScheme.quaternary,
+                  valueColor: AlwaysStoppedAnimation<Color>(colorScheme.primary),
                   minHeight: 8,
                 ),
               ),

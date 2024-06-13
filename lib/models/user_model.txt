@@ -26,31 +26,31 @@ class UserModel {
       UserModel(
         name: 'Alice Johnson',
         date: '2024-05-01',
-        avatarPath: 'assets/avatars/alice.png',
+        avatarPath: 'https://source.unsplash.com/random/?person&1',
         contribution: 150.0,
       ),
       UserModel(
         name: 'Bob Smith',
         date: '2024-04-15',
-        avatarPath: 'assets/avatars/bob.png',
+        avatarPath: 'https://source.unsplash.com/random/?person&2',
         contribution: 200.0,
       ),
       UserModel(
         name: 'Charlie Brown',
         date: '2024-03-30',
-        avatarPath: 'assets/avatars/charlie.png',
+        avatarPath: 'https://source.unsplash.com/random/?person&3',
         contribution: 180.0,
       ),
       UserModel(
         name: 'Diana Prince',
         date: '2024-02-20',
-        avatarPath: 'assets/avatars/diana.png',
+        avatarPath: 'https://source.unsplash.com/random/?person&4',
         contribution: 220.0,
       ),
       UserModel(
         name: 'Evan Wright',
         date: '2024-01-10',
-        avatarPath: 'assets/avatars/evan.png',
+        avatarPath: 'https://source.unsplash.com/random/?person&5',
         contribution: 160.0,
       ),
     ];

@@ -1,0 +1,43 @@
+Image.asset("assets/img/app_logo_light.svg",
+                  width: media.width * 0.5, fit: BoxFit.contain),
+
+
+
+Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        isRemember = !isRemember;
+                      });
+                    },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          isRemember
+                              ? Icons.check_box_rounded
+                              : Icons.check_box_outline_blank_rounded,
+                          size: 25,
+                          color: AppColors.black50,
+                        ),
+                        const SizedBox(
+                          width: 8,
+                        ),
+                        Text(
+                          "Remember me",
+                          style: TextStyle(color: AppColors.black50, fontSize: 14),
+                        ),
+                      ],
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {},
+                    child: Text(
+                      "Forgot password",
+                      style: TextStyle(color: AppColors.black50, fontSize: 14),
+                    ),
+                  ),
+                ],
+              ),
