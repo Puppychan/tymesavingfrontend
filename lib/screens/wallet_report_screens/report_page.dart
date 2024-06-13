@@ -35,15 +35,11 @@ class _ReportPageState extends State<ReportPage> {
           user = authService.user;
         });
       });
-    });
 
-    debugPrint('User from reportPage ${user?.id}');
-
-    Future.microtask(() async {
       final transactionService =
           Provider.of<TransactionService>(context, listen: false);
       await handleMainPageApi(context, () async {
-        return await transactionService.getLastMonth(user);
+        return await transactionService.getLastMonth(user?.id);
         // return result;
       }, () async {
         setState(() {

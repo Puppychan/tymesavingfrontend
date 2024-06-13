@@ -1,8 +1,15 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-class CustomBarChart extends StatelessWidget {
+class CustomBarChart extends StatefulWidget {
   const CustomBarChart({super.key});
+
+  @override
+  State<CustomBarChart> createState() => _CustomBarChartState();
+}
+
+class _CustomBarChartState extends State<CustomBarChart> {
+
 
   @override
   Widget build(BuildContext context) {
@@ -10,54 +17,27 @@ class CustomBarChart extends StatelessWidget {
       aspectRatio: 1.7,
       child: Container(
         decoration: const BoxDecoration(
-          color: const Color(0xFFFFFBE6),
           borderRadius: BorderRadius.all(Radius.circular(18)),
         ),
         child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: BarChart(BarChartData(
+            child: BarChart(
+              swapAnimationCurve: Curves.linear,
+              swapAnimationDuration: const Duration(milliseconds: 150),
+              BarChartData(
+                gridData: const FlGridData(show: false),
                 borderData: FlBorderData(
                     border: const Border(
                   top: BorderSide.none,
                   right: BorderSide.none,
-                  left: BorderSide(width: 1),
+                  left: BorderSide.none,
                   bottom: BorderSide(width: 1),
                 )),
                 groupsSpace: 10,
-                barGroups: [
-                  BarChartGroupData(x: 1, barRods: [
-                    BarChartRodData(
-                        fromY: 0, toY: 10, width: 15, color: Colors.amber),
-                  ]),
-                  BarChartGroupData(x: 2, barRods: [
-                    BarChartRodData(
-                        fromY: 0, toY: 10, width: 15, color: Colors.amber),
-                  ]),
-                  BarChartGroupData(x: 3, barRods: [
-                    BarChartRodData(
-                        fromY: 0, toY: 15, width: 15, color: Colors.amber),
-                  ]),
-                  BarChartGroupData(x: 4, barRods: [
-                    BarChartRodData(
-                        fromY: 0, toY: 10, width: 15, color: Colors.amber),
-                  ]),
-                  BarChartGroupData(x: 5, barRods: [
-                    BarChartRodData(
-                        fromY: 0, toY: 11, width: 15, color: Colors.amber),
-                  ]),
-                  BarChartGroupData(x: 6, barRods: [
-                    BarChartRodData(
-                        fromY: 0, toY: 10, width: 15, color: Colors.amber),
-                  ]),
-                  BarChartGroupData(x: 7, barRods: [
-                    BarChartRodData(
-                        fromY: 0, toY: 10, width: 15, color: Colors.amber),
-                  ]),
-                  BarChartGroupData(x: 8, barRods: [
-                    BarChartRodData(
-                        fromY: 0, toY: 10, width: 15, color: Colors.amber),
-                  ]),
-                ]))),
+                barGroups: []
+              )
+            )
+          ),
       ),
     );
   }

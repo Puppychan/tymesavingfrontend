@@ -9,27 +9,30 @@ class TransactionService extends ChangeNotifier {
   // Create a private transaction report variable to store report received
   ChartReport? _chartReport;
   CompareToLastMonth? _compareToLastMonth;
+  CurrentMonthReport? _currentMonthReport;
 
   // Getter to access outside of this class
   CompareToLastMonth? get compareToLastMonth => _compareToLastMonth;
   ChartReport? get chartReport => _chartReport;
+  CurrentMonthReport? get currrentMonthReport => _currentMonthReport;
 
-  Future<Map<String, dynamic>> getChartReport() async {
+  Future<Map<String, dynamic>> getChartReport(userid) async {
     final response = await NetworkService.instance.get(
-        "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReport}?transactionType=Expense&userId=2eff0eddee0b8c9a2601fead");
+        "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReport}?transactionType=Expense&userId=$userid");
     final responseData = response['response'] as Map<String, dynamic>;
 
-    debugPrint("Debuging check for getChartReport $responseData");
+    // debugPrint("Debuging check for getChartReport $responseData");
 
     notifyListeners();
     _chartReport = ChartReport.fromJson(responseData);
+    _currentMonthReport =
+        CurrentMonthReport.fromJson(responseData['currentMonthTotal']);
     return response;
   }
 
-  Future<Map<String, dynamic>> getLastMonth(user) async {
+  Future<Map<String, dynamic>> getLastMonth(userid) async {
     final response = await NetworkService.instance.get(
-        "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReport}?transactionType=Expense&userId=${user?.id}");
-    debugPrint(user?.id);
+        "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReport}?transactionType=Expense&userId=$userid");
     if (response['response'] != null &&
         response['response']['compareToLastMonth'] != null) {
       final responseData =
