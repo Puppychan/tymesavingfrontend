@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:tymesavingfrontend/common/styles/app_color.dart';
 import 'package:tymesavingfrontend/common/constant/temp_constant.dart';
 import 'package:tymesavingfrontend/components/common/circle_network_image.dart';
 import 'package:tymesavingfrontend/main.dart';
@@ -70,6 +69,7 @@ class _UserBoxState extends State<UserBox> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return GestureDetector(
       onTap: () {
         debugPrint('profile tapped');
@@ -78,7 +78,7 @@ class _UserBoxState extends State<UserBox> with RouteAware {
       child: Skeletonizer(
           enabled: user == null, // Show the skeleton if user is null
           child: Card.filled(
-            color: AppColors.cream, // Change color if skeleton
+            color: colorScheme.background, // Change color if skeleton
             elevation: 3.0,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),

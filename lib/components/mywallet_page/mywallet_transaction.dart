@@ -15,27 +15,27 @@ class _MyWalletTransactionState extends State<MyWalletTransaction> {
   Widget build(BuildContext context) {
     return ListView(
       scrollDirection: Axis.vertical,
-      children: [
+      children: const [
         /*
           Data để test, sẽ thay đổi khi merge!
         */
-        const TransactionItem(
+        TransactionItem(
             title: 'Domino Pizza', amount: '2000', date: '18 March 2024'),
-        const TransactionItem(
+        TransactionItem(
             title: 'Domino Pizza', amount: '2000', date: '18 March 2024'),
-        const TransactionItem(
+        TransactionItem(
             title: 'Domino Pizza', amount: '2000', date: '18 March 2024'),
-        const TransactionItem(
+        TransactionItem(
             title: 'Domino Pizza', amount: '2000', date: '18 March 2024'),
-        const TransactionItem(
+        TransactionItem(
             title: 'Domino Pizza', amount: '2000', date: '18 March 2024'),
-        const TransactionItem(
+        TransactionItem(
             title: 'Domino Pizza', amount: '2000', date: '18 March 2024'),
-        const TransactionItem(
+        TransactionItem(
             title: 'Domino Pizza', amount: '2000', date: '18 March 2024'),
-        const TransactionItem(
+        TransactionItem(
             title: 'Domino Pizza', amount: '2000', date: '18 March 2024'),
-        const TransactionItem(
+        TransactionItem(
             title: 'Domino Pizza', amount: '2000', date: '18 March 2024'),
       ],
     );

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:tymesavingfrontend/common/styles/app_color.dart';
 import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
 import 'package:tymesavingfrontend/common/enum/button_theme_enum.dart';
 import 'package:tymesavingfrontend/screens/authentication/sign_in_page.dart';
@@ -17,7 +16,6 @@ class ErrorPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         // appBar: const Heading(title: 'Error'),
-        backgroundColor: AppColors.cream,
         body: Center(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),

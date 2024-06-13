@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/common/styles/app_color.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/report_page/outflow_detail.dart';
 import 'package:tymesavingfrontend/components/report_page/report_flow.dart';
@@ -14,7 +13,6 @@ class ReportPage extends StatelessWidget {
         title: 'Reports',
         showBackButton: true,
       ),
-      backgroundColor: AppColors.cream,
       body: Column(
         children: [
           ReportFlow(

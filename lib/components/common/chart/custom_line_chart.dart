@@ -1,6 +1,5 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/common/styles/app_color.dart';
 
 class CustomLineChart extends StatefulWidget {
   const CustomLineChart({
@@ -39,6 +38,7 @@ class CustomLineChart extends StatefulWidget {
 class _CustomLineChartState extends State<CustomLineChart> {
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: SizedBox(
@@ -91,7 +91,7 @@ class _CustomLineChartState extends State<CustomLineChart> {
                     FlSpot(11, widget.nov),
                     FlSpot(12, widget.dec),
                   ],
-                  color: AppColors.primary,
+                  color: colorScheme.inversePrimary,
                   barWidth: 5,
                   isCurved: true,
                   curveSmoothness: 0.55,

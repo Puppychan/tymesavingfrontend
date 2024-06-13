@@ -47,15 +47,17 @@ class _HomePageState extends State<HomePage> with RouteAware {
   void didPopNext() {
     // Called when the current route has been popped off, and the current route shows up.
     Future.microtask(() async {
-      final authService = Provider.of<AuthService>(context, listen: false);
-      await handleMainPageApi(context, () async {
-        return await authService.getCurrentUserData();
-        // return result;
-      }, () async {
-        setState(() {
-          user = authService.user;
+      if (mounted) {
+        final authService = Provider.of<AuthService>(context, listen: false);
+        await handleMainPageApi(context, () async {
+          return await authService.getCurrentUserData();
+          // return result;
+        }, () async {
+          setState(() {
+            user = authService.user;
+          });
         });
-      });
+      }
     });
   }
 
@@ -67,7 +69,8 @@ class _HomePageState extends State<HomePage> with RouteAware {
           // Image.asset("assets/img/app_logo_light.svg",
           //     width: media.width * 0.5, fit: BoxFit.contain),
           CustomAlignText(
-              text: 'Have a nice day!', style: Theme.of(context).textTheme.headlineMedium!),
+              text: 'Have a nice day!',
+              style: Theme.of(context).textTheme.headlineMedium!),
           const SizedBox(
             height: 24,
           ),

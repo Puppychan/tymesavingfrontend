@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 
 class AppTextStyles {
   //   static const TextStyle heading = TextStyle(

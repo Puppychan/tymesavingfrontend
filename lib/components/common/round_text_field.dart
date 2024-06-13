@@ -66,7 +66,6 @@ class _RoundTextFieldState extends State<RoundTextField> {
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           decoration: BoxDecoration(
             color: colorScheme.tertiary,
-            // border: Border.all(color: AppColors.divider),
             borderRadius: BorderRadius.circular(widget.componentHeight / 2),
             boxShadow: const [
               BoxShadow(

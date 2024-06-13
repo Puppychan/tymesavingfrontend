@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/common/styles/app_color.dart';
 
+// ensure to call
+// import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
+// before using any custom theme: quaternary, onQuaternary, success
+
 class AppThemes {
   static final ThemeData lightTheme = ThemeData(
     // primaryColor: AppColors.primary,
@@ -25,7 +29,6 @@ class AppThemes {
       // secondary: AppColors.primaryBlue,
       secondary: AppColors.secondary,
       tertiary: AppColors.tertiary,
-      surface: AppColors.quaternary,
       background: AppColors.cream,
       error: AppColors.error,
 
@@ -34,10 +37,9 @@ class AppThemes {
       onInverseSurface: AppColors.black,
       onSecondary: AppColors.cream,
       onBackground: AppColors.black,
-      onSurface: AppColors.black,
       onError: AppColors.errorText,
 
-      shadow: AppColors.secondary,
+      // shadow: AppColors.secondary,
     ),
     appBarTheme: const AppBarTheme(
       color: AppColors.cream, // background color of the app bar
@@ -109,11 +111,16 @@ class AppThemes {
     iconTheme: const IconThemeData(color: AppColors.black),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: AppColors.primaryBlue,
+      foregroundColor: AppColors.cream,
     ),
-    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-      backgroundColor: AppColors.navBackground,
-      selectedItemColor: AppColors.primary,
-      unselectedItemColor: AppColors.secondary,
+    bottomAppBarTheme: const BottomAppBarTheme(
+      surfaceTintColor: AppColors.navBackground,
+      color: AppColors.navBackground,
+      shadowColor: AppColors.navBackgroundShadow,
+    ),
+    dividerTheme: const DividerThemeData(
+      color: AppColors.divider,
+      thickness: 1.5,
     ),
   );
 
@@ -141,7 +148,6 @@ class AppThemes {
       // secondary: AppColors.primaryBlue,
       secondary: AppColors.secondaryDark,
       tertiary: AppColors.tertiaryDark,
-      surface: AppColors.quaternaryDark,
       background: AppColors.black,
       error: AppColors.errorDark,
 
@@ -150,10 +156,9 @@ class AppThemes {
       onInverseSurface: AppColors.black,
       onSecondary: AppColors.black,
       onBackground: AppColors.cream,
-      onSurface: AppColors.cream,
       onError: AppColors.errorTextDark,
 
-      shadow: AppColors.secondaryDark,
+      // shadow: AppColors.secondaryDark,
     ),
     appBarTheme: const AppBarTheme(
       color: AppColors.black, // background color of the app bar
@@ -224,12 +229,16 @@ class AppThemes {
     ),
     iconTheme: const IconThemeData(color: AppColors.white),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
-      backgroundColor: AppColors.primary,
+      backgroundColor: AppColors.primaryBlueDark,
+      foregroundColor: AppColors.black,
     ),
-    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-      backgroundColor: AppColors.navBackgroundDark  ,
-      selectedItemColor: AppColors.primary,
-      unselectedItemColor: AppColors.secondaryDark,
+    bottomAppBarTheme: const BottomAppBarTheme(
+        surfaceTintColor: AppColors.navBackgroundDark,
+        color: AppColors.navBackgroundDark,
+        shadowColor: AppColors.navBackgroundShadowDark),
+    dividerTheme: const DividerThemeData(
+      color: AppColors.dividerDark,
+      thickness: 1,
     ),
   );
 }

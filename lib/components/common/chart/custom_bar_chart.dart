@@ -10,7 +10,7 @@ class CustomBarChart extends StatelessWidget {
       aspectRatio: 1.7,
       child: Container(
         decoration: const BoxDecoration(
-          color: const Color(0xFFFFFBE6),
+          color: Color(0xFFFFFBE6),
           borderRadius: BorderRadius.all(Radius.circular(18)),
         ),
         child: Padding(

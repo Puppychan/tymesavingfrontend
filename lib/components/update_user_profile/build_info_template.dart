@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/common/styles/app_color.dart';
 
 class BuildInfo extends StatelessWidget {
   const BuildInfo(this.label, this.value, this.icon, {super.key});
@@ -10,6 +9,7 @@ class BuildInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Card.filled(
       margin: const EdgeInsets.fromLTRB(5, 5, 5, 10),
       color: Colors.transparent,
@@ -36,11 +36,10 @@ class BuildInfo extends StatelessWidget {
                 const Expanded(
                   child: SizedBox(),
                 ),
-                Icon(icon.icon, color: AppColors.primaryBlue, size: 25),
+                Icon(icon.icon, color: colorScheme.primary, size: 25),
               ],
             ),
             const Divider(
-              color: Colors.grey,
               thickness: 1,
               height: 20,
             ),

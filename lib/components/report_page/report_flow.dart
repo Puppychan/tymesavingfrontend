@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/common/styles/app_color.dart';
+import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
+
 
 class ReportFlow extends StatefulWidget {
   const ReportFlow(
@@ -47,16 +48,17 @@ class _ReportFlowState extends State<ReportFlow> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Column(
       children: [
         Card.filled(
           margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          color: AppColors.primary.withOpacity(0.05),
+          color: colorScheme.primary.withOpacity(0.05),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             child: Row(
               children: [
-                const Icon(Icons.arrow_upward, color: AppColors.positive),
+                Icon(Icons.arrow_upward, color: colorScheme.success),
                 Text(
                   'Inflow',
                   style: Theme.of(context).textTheme.titleSmall!,
@@ -83,13 +85,12 @@ class _ReportFlowState extends State<ReportFlow> {
         ),
         Card.filled(
           margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          color: AppColors.primary.withOpacity(0.05),
+          color: colorScheme.primary.withOpacity(0.05),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             child: Row(
               children: [
-                const Icon(Icons.arrow_downward_rounded,
-                    color: AppColors.negative),
+                Icon(Icons.arrow_downward_rounded, color: colorScheme.error),
                 Text(
                   'Outflow',
                   style: Theme.of(context).textTheme.titleSmall!,

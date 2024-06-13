@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tymesavingfrontend/common/styles/app_color.dart';
 import 'package:tymesavingfrontend/common/enum/user_role_enum.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/main.dart';
@@ -33,6 +32,7 @@ class _MainPageLayoutState extends State<MainPageLayout> with RouteAware {
       await handleMainPageApi(context, () async {
         return await authService.getCurrentUserData();
       }, () async {
+        if (!mounted) return;
         setState(() {
           user = authService.user;
         });
@@ -52,12 +52,15 @@ class _MainPageLayoutState extends State<MainPageLayout> with RouteAware {
   @override
   void didPopNext() {
     // Called when the current route has been popped off, and the current route shows up.
+    // Future.delayed(Duration(seconds: 1));
+    // if (!mounted) return;m
     Future.microtask(() async {
       final authService = Provider.of<AuthService>(context, listen: false);
       await handleMainPageApi(context, () async {
         return await authService.getCurrentUserData();
         // return result;
       }, () async {
+        if (!mounted) return;
         setState(() {
           user = authService.user;
         });
@@ -74,6 +77,7 @@ class _MainPageLayoutState extends State<MainPageLayout> with RouteAware {
 
   @override
   void dispose() {
+    routeObserver.unsubscribe(this);
     _pageController.dispose();
     super.dispose();
   }
@@ -82,7 +86,6 @@ class _MainPageLayoutState extends State<MainPageLayout> with RouteAware {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _heading(index: _selectedIndex, user: user),
-      backgroundColor: AppColors.cream,
       body: PageView(
         controller: _pageController,
         onPageChanged: (index) {
@@ -91,7 +94,9 @@ class _MainPageLayoutState extends State<MainPageLayout> with RouteAware {
           });
         },
         children: <Widget>[
-          user?.role == UserRole.admin ? const HomeAdminPage() : const HomePage(),
+          user?.role == UserRole.admin
+              ? const HomeAdminPage()
+              : const HomePage(),
           const Center(child: Text('Goals')),
           const Center(child: Text('Budgets')),
           const MoreMenuPage(),
@@ -101,17 +106,11 @@ class _MainPageLayoutState extends State<MainPageLayout> with RouteAware {
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
         shape: const CircleBorder(),
-        // backgroundColor: AppColors.primaryBlue,
-        child: const Icon(
-          Icons.add,
-          color: AppColors.cream,
-        ),
+        child: const Icon(Icons.add),
       ),
       bottomNavigationBar: BottomAppBar(
         shape: const CircularNotchedRectangle(),
-        surfaceTintColor: AppColors.navBackground,
-        color: AppColors.navBackground,
-        shadowColor: AppColors.secondary.withOpacity(0.4),
+        elevation: 10.0,
         notchMargin: 12.0,
         child: SizedBox(
           height: 60.0,
@@ -119,22 +118,26 @@ class _MainPageLayoutState extends State<MainPageLayout> with RouteAware {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               _buildTabItem(
+                context: context,
                 index: 0,
                 icon: Icons.home,
                 label: 'Home',
               ),
               _buildTabItem(
+                context: context,
                 index: 1,
                 icon: Icons.assessment,
                 label: 'Goals',
               ),
               const SizedBox(width: 40.0), // The dummy child
               _buildTabItem(
+                context: context,
                 index: 2,
                 icon: Icons.savings,
                 label: 'Budgets',
               ),
               _buildTabItem(
+                context: context,
                 index: 3,
                 icon: Icons.menu,
                 label: 'More',
@@ -171,10 +174,12 @@ class _MainPageLayoutState extends State<MainPageLayout> with RouteAware {
   }
 
   Widget _buildTabItem({
+    required BuildContext context,
     required int index,
     required IconData icon,
     required String label,
   }) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return GestureDetector(
       onTap: () => _onItemTapped(index),
       child: Container(
@@ -186,15 +191,15 @@ class _MainPageLayoutState extends State<MainPageLayout> with RouteAware {
             Icon(
               icon,
               color: _selectedIndex == index
-                  ? AppColors.primary
-                  : AppColors.secondary,
+                  ? colorScheme.inversePrimary
+                  : colorScheme.secondary,
             ),
             Text(
               label,
               style: TextStyle(
                 color: _selectedIndex == index
-                    ? AppColors.primary
-                    : AppColors.secondary,
+                    ? colorScheme.inversePrimary
+                    : colorScheme.secondary,
                 fontSize: 12.0,
               ),
             ),

@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/common/styles/app_color.dart';
 
 class DividerWithText extends StatelessWidget {
   final String text;
   final TextStyle? textStyle;
-  final Color lineColor;
+  final Color? lineColor;
 
   const DividerWithText({
-    Key? key,
+    super.key,
     required this.text,
     this.textStyle,
-    this.lineColor = AppColors.divider,
-  }) : super(key: key);
+    this.lineColor,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,15 +27,12 @@ class DividerWithText extends StatelessWidget {
         ),
         Text(
           text,
-          style: textStyle ?? const TextStyle(color: AppColors.black),
+          style: textStyle,
         ),
         Expanded(
           child: Container(
             margin: const EdgeInsets.only(left: 10.0),
-            child: Divider(
-              color: lineColor,
-              height: 1.5,
-            ),
+            child: Divider(color: lineColor),
           ),
         ),
       ],

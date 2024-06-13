@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/common/styles/app_color.dart';
 import 'package:tymesavingfrontend/components/common/chart/custom_line_chart.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/mywallet_page/mywallet_transaction.dart';
@@ -36,7 +35,6 @@ class MyWalletPage extends StatelessWidget {
           const Expanded(child: MyWalletTransaction(),),
           ]
       ),
-      backgroundColor: AppColors.cream,
     );
   }
 }

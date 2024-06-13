@@ -7,7 +7,7 @@ class PrimaryButton extends StatelessWidget {
   final VoidCallback onPressed;
   final AppButtonTheme theme;
 
-  const PrimaryButton({
+  const PrimaryButton({super.key, 
     required this.title,
     required this.onPressed,
     this.theme = AppButtonTheme.yellowBlack,

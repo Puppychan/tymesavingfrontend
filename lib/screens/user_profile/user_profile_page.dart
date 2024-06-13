@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tymesavingfrontend/common/styles/app_color.dart';
 import 'package:tymesavingfrontend/common/styles/app_padding.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
@@ -84,8 +83,8 @@ class _UserProfileState extends State<UserProfile> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-      backgroundColor: AppColors.cream,
       appBar: const Heading(
         title: "My Profile",
         showBackButton: true,
@@ -109,7 +108,7 @@ class _UserProfileState extends State<UserProfile> with RouteAware {
               height: 30,
             ),
             Card.filled(
-              color: AppColors.white,
+              color: colorScheme.background,
               margin: const EdgeInsetsDirectional.symmetric(
                   horizontal: 50, vertical: 20),
               child: Column(
