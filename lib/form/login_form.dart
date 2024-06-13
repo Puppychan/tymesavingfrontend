@@ -30,20 +30,24 @@ class _LoginFormState extends State<LoginForm> {
 
   Future<void> _trySubmit() async {
     final authService = Provider.of<AuthService>(context, listen: false);
-    final String? validateMessageUsername =
-        Validator.validateUsername(_usernameController.text);
-    if (validateMessageUsername != null) {
-      ErrorDisplay.showErrorToast(validateMessageUsername, context);
-      return;
-    }
+    final isValid = _formKey.currentState?.validate();
+    // If the form is not valid, show an error
+    if (isValid == null || !isValid) {
+      final String? validateMessageUsername =
+          Validator.validateUsername(_usernameController.text);
+      if (validateMessageUsername != null) {
+        ErrorDisplay.showErrorToast(validateMessageUsername, context);
+        return;
+      }
 
-    final String? validateMessagePassword =
-        Validator.validatePassword(_passwordController.text);
-    if (validateMessagePassword != null) {
-      ErrorDisplay.showErrorToast(validateMessagePassword, context);
-      return;
+      final String? validateMessagePassword =
+          Validator.validatePassword(_passwordController.text);
+      if (validateMessagePassword != null) {
+        ErrorDisplay.showErrorToast(validateMessagePassword, context);
+        return;
+      }
     }
-
+    // If the form is valid, proceed with the login process
     // Show loader overlay while waiting for the response
     context.loaderOverlay.show();
 
@@ -65,20 +69,6 @@ class _LoginFormState extends State<LoginForm> {
           ),
           (_) => false);
     });
-
-    // final isValid = _formKey.currentState?.validate();
-    // if (isValid != null && isValid) {
-    //   // Perform login actions
-    //   print(
-    //       "Username: ${_usernameController.text}, Password: ${_passwordController.text}");
-    //   // You can also navigate or do other actions here
-    //   Navigator.push(
-    //     context,
-    //     MaterialPageRoute(
-    //       builder: (context) => const HomePage(title: 'Home'),
-    //     ),
-    //   );
-    // } else {}
   }
 
   @override
@@ -93,8 +83,8 @@ class _LoginFormState extends State<LoginForm> {
             controller: _usernameController,
             placeholder: 'Enter your username',
             keyboardType: TextInputType.text,
-            // validator: Validator
-            //     .validateEmail, // only if want to validate email under the text field
+            validator: Validator
+                .validateUsername, // only if want to validate email under the text field
           ),
           const SizedBox(height: 20),
           RoundTextField(
@@ -104,7 +94,7 @@ class _LoginFormState extends State<LoginForm> {
             obscureText: true,
             isPasswordField: true,
             keyboardType: TextInputType.visiblePassword,
-            // validator: Validator.validatePassword,
+            validator: Validator.validatePassword,
           ),
           const SizedBox(height: 20),
           PrimaryButton(

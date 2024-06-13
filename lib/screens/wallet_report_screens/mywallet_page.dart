@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/common/styles/app_color.dart';
-import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 import 'package:tymesavingfrontend/components/common/chart/custom_line_chart.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/mywallet_page/mywallet_transaction.dart';
@@ -10,15 +9,15 @@ class MyWalletPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      appBar: Heading(
+    return Scaffold(
+      appBar: const Heading(
         title: 'Wallet',
         showBackButton: true,
       ),
       body: Column(
         children: [
-          SizedBox(height: 50,),
-          CustomLineChart(
+          const SizedBox(height: 50,),
+          const CustomLineChart(
             jan: 1236,
             feb: 1222,
             mar: 4812,
@@ -32,9 +31,9 @@ class MyWalletPage extends StatelessWidget {
             nov: 2222,
             dec: 1334,
           ),
-          SizedBox(height: 20,),
-          Text('Transaction',style: AppTextStyles.headingMedium,),
-          Expanded(child: MyWalletTransaction(),),
+          const SizedBox(height: 20,),
+          Text('Transaction',style: Theme.of(context).textTheme.titleLarge!,),
+          const Expanded(child: MyWalletTransaction(),),
           ]
       ),
       backgroundColor: AppColors.cream,

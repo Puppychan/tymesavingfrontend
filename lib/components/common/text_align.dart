@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 class CustomAlignText extends StatelessWidget {
   final String text;
   final TextAlign alignment;
-  final TextStyle style;
+  final TextStyle? style;
 
   const CustomAlignText(
-      {super.key, required this.text, this.alignment = TextAlign.left, required this.style});
+      {super.key, required this.text, this.alignment = TextAlign.left, this.style});
 
   @override
   Widget build(BuildContext context) {

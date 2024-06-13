@@ -1,11 +1,10 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/common/styles/app_color.dart';
-import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 
 class CustomLineChart extends StatefulWidget {
   const CustomLineChart({
-    super.key, 
+    super.key,
     required this.jan,
     required this.feb,
     required this.mar,
@@ -17,7 +16,8 @@ class CustomLineChart extends StatefulWidget {
     required this.sep,
     required this.oct,
     required this.nov,
-    required this.dec,});
+    required this.dec,
+  });
 
   final double jan;
   final double feb;
@@ -52,15 +52,15 @@ class _CustomLineChartState extends State<CustomLineChart> {
               borderData: FlBorderData(
                 show: false,
               ),
-              titlesData: const FlTitlesData(
+              titlesData: FlTitlesData(
                 show: true,
-                topTitles: AxisTitles(
+                topTitles: const AxisTitles(
                   sideTitles: SideTitles(showTitles: false),
                 ),
-                leftTitles: AxisTitles(
+                leftTitles: const AxisTitles(
                   sideTitles: SideTitles(showTitles: false),
                 ),
-                rightTitles: AxisTitles(
+                rightTitles: const AxisTitles(
                   sideTitles: SideTitles(showTitles: false),
                 ),
                 bottomTitles: AxisTitles(
@@ -68,7 +68,9 @@ class _CustomLineChartState extends State<CustomLineChart> {
                     showTitles: true,
                     reservedSize: 30,
                     interval: 1,
-                    getTitlesWidget: bottomTitleWidgets,
+                    // getTitlesWidget: bottomTitleWidgets,
+                    getTitlesWidget: (value, meta) =>
+                        bottomTitleWidgets(context, value, meta),
                   ),
                 ),
               ),
@@ -102,34 +104,31 @@ class _CustomLineChartState extends State<CustomLineChart> {
   }
 }
 
-Widget bottomTitleWidgets(double value, TitleMeta meta) {
-  const style = TextStyle(
-    fontWeight: FontWeight.bold,
-    fontSize: 16,
-  );
+Widget bottomTitleWidgets(BuildContext context, double value, TitleMeta meta) {
+  final style = Theme.of(context).textTheme.bodyMedium!;
 
   Widget text;
   switch (value.toInt()) {
     case 2:
-      text = const Text('FEB', style: AppTextStyles.subHeadingSmall);
+      text = Text('FEB', style: style);
       break;
     case 4:
-      text = const Text('APR', style: AppTextStyles.subHeadingSmall);
+      text = Text('APR', style: style);
       break;
     case 6:
-      text = const Text('JUN', style: AppTextStyles.subHeadingSmall);
+      text = Text('JUN', style: style);
       break;
     case 8:
-      text = const Text('AUG', style: AppTextStyles.subHeadingSmall);
+      text = Text('AUG', style: style);
       break;
     case 10:
-      text = const Text('OCT', style: AppTextStyles.subHeadingSmall);
+      text = Text('OCT', style: style);
       break;
     case 12:
-      text = const Text('DEC', style: AppTextStyles.subHeadingSmall);
+      text = Text('DEC', style: style);
       break;
     default:
-      text = const Text('', style: style);
+      text = Text('', style: style);
       break;
   }
 

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 import 'package:tymesavingfrontend/components/common/text_align.dart';
 import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/user.model.dart';
@@ -60,12 +59,13 @@ class _HomeAdminPageState extends State<HomeAdminPage> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+    return Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
       // Image.asset("assets/img/app_logo_light.svg",
       //     width: media.width * 0.5, fit: BoxFit.contain),
       CustomAlignText(
-          text: 'View our user list here!', style: AppTextStyles.subHeading),
-      SizedBox(
+          text: 'View our user list here!',
+          style: Theme.of(context).textTheme.headlineMedium!),
+      const SizedBox(
         height: 24,
       ),
     ]);

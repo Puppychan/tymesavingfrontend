@@ -11,7 +11,7 @@ class ErrorDisplay {
     // if message is not null or empty, show snackbar
     final snackBar = SnackBar(
       backgroundColor: colorScheme.error,
-      content: Text(message),
+      content: Text(message, style: TextStyle(color: colorScheme.onError)),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }

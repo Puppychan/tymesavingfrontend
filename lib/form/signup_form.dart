@@ -41,48 +41,52 @@ class _SignupFormState extends State<SignupForm> {
 
   Future<void> _trySubmit() async {
     final authService = Provider.of<AuthService>(context, listen: false);
-    // Manually trigger validation and show errors in toast if any field is not valid
-    final String? validateMessageUsername =
-        Validator.validateUsername(_usernameController.text);
-    if (validateMessageUsername != null) {
-      ErrorDisplay.showErrorToast(validateMessageUsername, context);
-      return;
-    }
+    final isValid = _formKey.currentState?.validate();
+    // If the form is not valid, show an error
+    if (isValid == null || !isValid) {
+      // Manually trigger validation and show errors in toast if any field is not valid
+      final String? validateMessageUsername =
+          Validator.validateUsername(_usernameController.text);
+      if (validateMessageUsername != null) {
+        ErrorDisplay.showErrorToast(validateMessageUsername, context);
+        return;
+      }
 
-    final String? validateMessageEmail =
-        Validator.validateEmail(_mailController.text);
-    if (validateMessageEmail != null) {
-      ErrorDisplay.showErrorToast(validateMessageEmail, context);
-      return;
-    }
+      final String? validateMessageEmail =
+          Validator.validateEmail(_mailController.text);
+      if (validateMessageEmail != null) {
+        ErrorDisplay.showErrorToast(validateMessageEmail, context);
+        return;
+      }
 
-    final String? validateMessagePhone =
-        Validator.validatePhone(_phoneController.text);
-    if (validateMessagePhone != null) {
-      ErrorDisplay.showErrorToast(validateMessagePhone, context);
-      return;
-    }
+      final String? validateMessagePhone =
+          Validator.validatePhone(_phoneController.text);
+      if (validateMessagePhone != null) {
+        ErrorDisplay.showErrorToast(validateMessagePhone, context);
+        return;
+      }
 
-    final String? validateMessageFullname =
-        Validator.validateFullName(_fullnameController.text);
-    if (validateMessageFullname != null) {
-      ErrorDisplay.showErrorToast(validateMessageFullname, context);
-      return;
-    }
+      final String? validateMessageFullname =
+          Validator.validateFullName(_fullnameController.text);
+      if (validateMessageFullname != null) {
+        ErrorDisplay.showErrorToast(validateMessageFullname, context);
+        return;
+      }
 
-    final String? validateMessagePassword =
-        Validator.validatePassword(_passwordController.text);
-    if (validateMessagePassword != null) {
-      ErrorDisplay.showErrorToast(validateMessagePassword, context);
-      return;
-    }
+      final String? validateMessagePassword =
+          Validator.validatePassword(_passwordController.text);
+      if (validateMessagePassword != null) {
+        ErrorDisplay.showErrorToast(validateMessagePassword, context);
+        return;
+      }
 
-    final String? validateMessageConfirmPassword =
-        Validator.validateConfirmPassword(
-            _passwordController.text, _confirmPasswordController.text);
-    if (validateMessageConfirmPassword != null) {
-      ErrorDisplay.showErrorToast(validateMessageConfirmPassword, context);
-      return;
+      final String? validateMessageConfirmPassword =
+          Validator.validateConfirmPassword(
+              _passwordController.text, _confirmPasswordController.text);
+      if (validateMessageConfirmPassword != null) {
+        ErrorDisplay.showErrorToast(validateMessageConfirmPassword, context);
+        return;
+      }
     }
 
     // Show loader overlay while waiting for the response
@@ -118,6 +122,7 @@ class _SignupFormState extends State<SignupForm> {
         mainAxisSize: MainAxisSize.min,
         children: [
           RoundTextField(
+            validator: Validator.validateUsername,
             label: "Username",
             controller: _usernameController,
             placeholder: 'Enter your username',
@@ -125,6 +130,7 @@ class _SignupFormState extends State<SignupForm> {
           ),
           const SizedBox(height: 20),
           RoundTextField(
+            validator: Validator.validateEmail,
             label: "Email",
             controller: _mailController,
             placeholder: 'Enter your email',
@@ -132,6 +138,7 @@ class _SignupFormState extends State<SignupForm> {
           ),
           const SizedBox(height: 20),
           RoundTextField(
+            validator: Validator.validatePhone,
             label: "Your phone number",
             controller: _phoneController,
             placeholder: '+123456789',
@@ -139,6 +146,7 @@ class _SignupFormState extends State<SignupForm> {
           ),
           const SizedBox(height: 20),
           RoundTextField(
+            validator: Validator.validateFullName,
             label: "Your full name",
             controller: _fullnameController,
             placeholder: 'John Doe',
@@ -146,6 +154,7 @@ class _SignupFormState extends State<SignupForm> {
           ),
           const SizedBox(height: 20),
           RoundTextField(
+            validator: Validator.validatePassword,
             label: "Password",
             placeholder: 'Enter your password',
             controller: _passwordController,
@@ -155,6 +164,7 @@ class _SignupFormState extends State<SignupForm> {
           ),
           const SizedBox(height: 20),
           RoundTextField(
+            validator: (value) => Validator.validateConfirmPassword(_passwordController.text, value),
             label: "Confirm Password",
             placeholder: 'Enter your provided password',
             controller: _confirmPasswordController,

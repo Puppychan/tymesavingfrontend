@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 import 'package:tymesavingfrontend/common/enum/button_theme_enum.dart';
 import 'package:tymesavingfrontend/common/styles/button_theme_data.dart';
 
@@ -28,7 +27,7 @@ class SecondaryButton extends StatelessWidget {
           ),
           child: Text(
             title,
-            style: AppTextStyles.button,
+            style: Theme.of(context).textTheme.labelLarge!,
           ),
         ));
   }

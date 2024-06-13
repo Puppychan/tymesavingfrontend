@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/common/styles/app_color.dart';
 import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 
 class MoreMenuChallenge extends StatelessWidget {
@@ -7,20 +6,21 @@ class MoreMenuChallenge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Card(
-      color: AppColors.cream,
+      color: colorScheme.background,
       child: InkWell(
-          splashColor: AppColors.tertiary,
+          splashColor: colorScheme.tertiary,
           onTap: () {
             debugPrint('Challenge tapped.');
           },
-          child: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 25),
+          child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
               child: Row(
                 children: [
                   Icon(Icons.emoji_events,
-                      color: AppColors.primaryBlue, size: 30),
-                  SizedBox(
+                      color: colorScheme.primary, size: 30),
+                  const SizedBox(
                     width: 20,
                   ),
                   Column(
@@ -28,9 +28,10 @@ class MoreMenuChallenge extends StatelessWidget {
                     children: [
                       Text(
                         'Challenge your saving skills now',
-                        style: AppTextStyles.headingSmall,
+                        style: Theme.of(context).textTheme.titleSmall!,
                       ),
-                      Text('Let\'s go!', style: AppTextStyles.boldHeadingBlue),
+                      Text('Let\'s go!',
+                          style: AppTextStyles.titleLargeBlue(context)),
                     ],
                   )
                 ],

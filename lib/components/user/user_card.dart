@@ -71,7 +71,7 @@ class UserCard extends StatelessWidget {
               padding: const EdgeInsets.all(8),
               child: Row(
                 children: [
-                  // CustomCircleAvatar(imagePath: user.avatarPath),
+                  CustomCircleAvatar(imagePath: user.avatarPath),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
@@ -101,18 +101,18 @@ class UserCard extends StatelessWidget {
                   RichText(
                     text: TextSpan(
                       text: 'Contribute ',
-                      style: AppTextStyles.paragraph,
+                      style: Theme.of(context).textTheme.bodyMedium!,
                       children: <TextSpan>[
                         TextSpan(
                           text: '\$${user.contribution.toStringAsFixed(2)}',
-                          style: AppTextStyles.paragraphBold,
+                          style: AppTextStyles.paragraphBold(context),
                         ),
                       ],
                     ),
                   ),
                   Text(
                     formattedDate,
-                    style: AppTextStyles.paragraphSmall,
+                    style: Theme.of(context).textTheme.bodySmall!,
                   ),
                 ],
               ),

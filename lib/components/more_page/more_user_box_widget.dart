@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:tymesavingfrontend/common/styles/app_color.dart';
-import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 import 'package:tymesavingfrontend/common/constant/temp_constant.dart';
 import 'package:tymesavingfrontend/components/common/circle_network_image.dart';
 import 'package:tymesavingfrontend/main.dart';
@@ -87,12 +86,12 @@ class _UserBoxState extends State<UserBox> with RouteAware {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ListTile(
-                    // leading:
-                        // const CustomCircleAvatar(imagePath: TEMP_AVATAR_IMAGE),
+                    leading:
+                        const CustomCircleAvatar(imagePath: TEMP_AVATAR_IMAGE),
                     title: Text(user?.fullname ?? 'Loading...',
-                        style: AppTextStyles.subHeadingMedium),
+                        style: Theme.of(context).textTheme.titleMedium!),
                     subtitle: Text(user?.email ?? 'Loading mail...',
-                        style: AppTextStyles.subHeadingSmall),
+                        style: Theme.of(context).textTheme.bodyMedium!),
                   )
                 ],
               ),

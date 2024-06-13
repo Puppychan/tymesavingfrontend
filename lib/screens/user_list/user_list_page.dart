@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/common/styles/app_color.dart';
 import 'package:tymesavingfrontend/common/styles/app_padding.dart';
-import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/common/text_align.dart';
 import 'package:tymesavingfrontend/models/user_model.txt';
@@ -32,9 +31,9 @@ class _UserListPageState extends State<UserListPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // subtext here
-            const CustomAlignText(
+            CustomAlignText(
               text: 'Manage Users Here',
-              style: AppTextStyles.subHeading,
+              style: Theme.of(context).textTheme.headlineMedium!,
             ),
             const SizedBox(height: 30),
             Expanded(

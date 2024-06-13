@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/styles/app_color.dart';
-import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 import 'package:tymesavingfrontend/screens/authentication/sign_in_page.dart';
 import 'package:tymesavingfrontend/screens/wallet_report_screens/mywallet_page.dart';
 import 'package:tymesavingfrontend/screens/wallet_report_screens/report_page.dart';
@@ -116,11 +115,11 @@ class _RowSettingTemplateState extends State<RowSettingTemplate> {
                       children: [
                         Text(
                           widget.label,
-                          style: AppTextStyles.headingMedium,
+                          style: Theme.of(context).textTheme.titleLarge!,
                         ),
                         Text(
                           widget.motto,
-                          style: AppTextStyles.subHeadingSmall,
+                          style: Theme.of(context).textTheme.bodyMedium!,
                         ),
                       ],
                     ),

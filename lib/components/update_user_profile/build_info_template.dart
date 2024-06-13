@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/common/styles/app_color.dart';
-import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 
 class BuildInfo extends StatelessWidget {
   const BuildInfo(this.label, this.value, this.icon, {super.key});
@@ -27,10 +26,10 @@ class BuildInfo extends StatelessWidget {
                       width: 5,
                       height: 10,
                     ),
-                    Text(label, style: AppTextStyles.headingSmall),
+                    Text(label, style: Theme.of(context).textTheme.titleSmall!),
                     Text(
                       value,
-                      style: AppTextStyles.subHeadingSmall,
+                      style: Theme.of(context).textTheme.bodyMedium!,
                     ),
                   ],
                 ),

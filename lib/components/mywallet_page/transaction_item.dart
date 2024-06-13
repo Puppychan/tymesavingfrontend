@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/common/styles/app_color.dart';
-import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 
 class TransactionItem extends StatefulWidget {
   const TransactionItem({
@@ -37,11 +36,11 @@ class _TransactionItemState extends State<TransactionItem> {
                 Row(
                 children: [
                   Column(children: [
-                    Text(widget.title, style: AppTextStyles.headingSmall,),
-                    Text(widget.date, style: AppTextStyles.subHeadingSmall,),
+                    Text(widget.title, style: Theme.of(context).textTheme.titleSmall!,),
+                    Text(widget.date, style: Theme.of(context).textTheme.bodyMedium!,),
                   ],),
                   const Expanded(child: SizedBox()),
-                  Text(widget.amount, style: AppTextStyles.subHeadingMedium,),
+                  Text(widget.amount, style: Theme.of(context).textTheme.titleMedium!,),
                 ],
               ),
             const Divider(color: AppColors.border,height: 2,)

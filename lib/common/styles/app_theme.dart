@@ -3,9 +3,20 @@ import 'package:tymesavingfrontend/common/styles/app_color.dart';
 
 class AppThemes {
   static final ThemeData lightTheme = ThemeData(
-    primaryColor: AppColors.primary,
+    // primaryColor: AppColors.primary,
     scaffoldBackgroundColor: AppColors.cream,
     brightness: Brightness.light,
+    snackBarTheme: SnackBarThemeData(
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      contentTextStyle: const TextStyle(
+        color: AppColors.secondary,
+      ),
+      backgroundColor: AppColors.quaternary,
+      // Adjust the top margin as needed
+    ),
     colorScheme: const ColorScheme.light(
       // primary: AppColors.primary,
       primary: AppColors.primaryBlue,
@@ -16,6 +27,7 @@ class AppThemes {
       tertiary: AppColors.tertiary,
       surface: AppColors.quaternary,
       background: AppColors.cream,
+      error: AppColors.error,
 
       onPrimary: AppColors.cream,
       onPrimaryContainer: AppColors.black,
@@ -23,20 +35,76 @@ class AppThemes {
       onSecondary: AppColors.cream,
       onBackground: AppColors.black,
       onSurface: AppColors.black,
-      error: AppColors.error,
+      onError: AppColors.errorText,
 
       shadow: AppColors.secondary,
-
     ),
     appBarTheme: const AppBarTheme(
       color: AppColors.cream, // background color of the app bar
       surfaceTintColor: AppColors.cream, // color of the app bar when scrolling
       iconTheme: IconThemeData(color: AppColors.black),
-      titleTextStyle: TextStyle(color: AppColors.black, fontSize: 20),
+      titleTextStyle: TextStyle(
+          // display
+          fontSize: 28,
+          color: AppColors.black,
+          fontFamily: 'Merriweather',
+          fontWeight: FontWeight.w700),
     ),
     textTheme: const TextTheme(
-      bodyLarge: TextStyle(color: AppColors.black),
-      bodyMedium: TextStyle(color: AppColors.secondary),
+      headlineLarge: TextStyle(
+          // display
+          fontSize: 28,
+          color: AppColors.black,
+          fontFamily: 'Merriweather',
+          fontWeight: FontWeight.w700),
+      headlineMedium: TextStyle(
+          // sub display
+          fontSize: 22,
+          color: AppColors.black,
+          fontFamily: 'Montserrat',
+          fontWeight: FontWeight.w400),
+      titleLarge: TextStyle(
+          // heading medium
+          color: AppColors.black,
+          fontFamily: 'Merriweather',
+          fontWeight: FontWeight.w700),
+      titleMedium: TextStyle(
+          // sub heading medium
+          fontSize: 18,
+          color: AppColors.black,
+          fontFamily: 'Merriweather',
+          fontWeight: FontWeight.w700),
+      titleSmall: TextStyle(
+          // heading small
+          fontSize: 15,
+          color: AppColors.black,
+          fontFamily: 'Merriweather',
+          fontWeight: FontWeight.w700),
+      // bodyLarge: TextStyle(color: AppColors.black),
+      bodyLarge: TextStyle(
+          // body as input
+          color: AppColors.secondary,
+          fontFamily: 'Montserrat',
+          fontWeight: FontWeight.w400),
+      bodyMedium: TextStyle(
+          // body
+          color: AppColors.secondary,
+          fontFamily: 'Montserrat',
+          fontWeight: FontWeight.w400),
+
+      bodySmall: TextStyle(
+          // sub body
+          fontSize: 14,
+          color: AppColors.secondary,
+          fontFamily: 'Montserrat',
+          fontWeight: FontWeight.w400),
+      labelLarge: TextStyle(
+        // input label
+        fontSize: 16,
+        fontWeight: FontWeight.w600,
+        color: AppColors.secondary,
+        fontFamily: 'Montserrat',
+      ),
     ),
     iconTheme: const IconThemeData(color: AppColors.black),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
@@ -50,9 +118,21 @@ class AppThemes {
   );
 
   static final ThemeData darkTheme = ThemeData(
-    primaryColor: AppColors.primaryBlue,
+    // primaryColor: AppColors.primaryBlue,
+    // primaryColor: AppColors.primary,
     scaffoldBackgroundColor: AppColors.black,
     brightness: Brightness.dark,
+    snackBarTheme: SnackBarThemeData(
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      contentTextStyle: const TextStyle(
+        color: AppColors.secondaryDark,
+      ),
+      backgroundColor: AppColors.quaternaryDark,
+      // Adjust the top margin as needed
+    ),
     colorScheme: const ColorScheme.dark(
       // primary: AppColors.primary,
       primary: AppColors.primaryBlueDark,
@@ -63,38 +143,93 @@ class AppThemes {
       tertiary: AppColors.tertiaryDark,
       surface: AppColors.quaternaryDark,
       background: AppColors.black,
-      error: AppColors.error,
+      error: AppColors.errorDark,
 
-      onPrimary: AppColors.cream,
+      onPrimary: AppColors.black,
       onPrimaryContainer: AppColors.black,
+      onInverseSurface: AppColors.black,
       onSecondary: AppColors.black,
       onBackground: AppColors.cream,
       onSurface: AppColors.cream,
+      onError: AppColors.errorTextDark,
 
-      // shadow: BoxShadow(
-      //   color: AppColors.secondary.withOpacity(0.16),
-      //   offset: Offset(0, 4),
-      //   blurRadius: 4,
-      // ),
+      shadow: AppColors.secondaryDark,
     ),
     appBarTheme: const AppBarTheme(
       color: AppColors.black, // background color of the app bar
       surfaceTintColor: AppColors.black, // color of the app bar when scrolling
-      iconTheme: IconThemeData(color: AppColors.white),
-      titleTextStyle: TextStyle(color: AppColors.white, fontSize: 20),
+      iconTheme: IconThemeData(color: AppColors.cream),
+      titleTextStyle: TextStyle(
+          // display
+          fontSize: 28,
+          color: AppColors.cream,
+          fontFamily: 'Merriweather',
+          fontWeight: FontWeight.w700),
     ),
     textTheme: const TextTheme(
-      bodyLarge: TextStyle(color: AppColors.white),
-      bodyMedium: TextStyle(color: AppColors.quaternary),
+      headlineLarge: TextStyle(
+          // display
+          fontSize: 28,
+          color: AppColors.cream,
+          fontFamily: 'Merriweather',
+          fontWeight: FontWeight.w700),
+      headlineMedium: TextStyle(
+          // sub display
+          fontSize: 22,
+          color: AppColors.cream,
+          fontFamily: 'Montserrat',
+          fontWeight: FontWeight.w400),
+      titleLarge: TextStyle(
+          // heading medium
+          color: AppColors.cream,
+          fontFamily: 'Merriweather',
+          fontWeight: FontWeight.w700),
+      titleMedium: TextStyle(
+          // sub heading medium
+          fontSize: 18,
+          color: AppColors.cream,
+          fontFamily: 'Merriweather',
+          fontWeight: FontWeight.w700),
+      titleSmall: TextStyle(
+          // heading small
+          fontSize: 15,
+          color: AppColors.cream,
+          fontFamily: 'Merriweather',
+          fontWeight: FontWeight.w700),
+      // bodyLarge: TextStyle(color: AppColors.cream),
+      bodyLarge: TextStyle(
+          // body as input
+          color: AppColors.secondaryDark,
+          fontFamily: 'Montserrat',
+          fontWeight: FontWeight.w400),
+      bodyMedium: TextStyle(
+          // body
+          color: AppColors.secondaryDark,
+          fontFamily: 'Montserrat',
+          fontWeight: FontWeight.w400),
+
+      bodySmall: TextStyle(
+          // sub body
+          fontSize: 14,
+          color: AppColors.secondaryDark,
+          fontFamily: 'Montserrat',
+          fontWeight: FontWeight.w400),
+      labelLarge: TextStyle(
+        // input label
+        fontSize: 16,
+        fontWeight: FontWeight.w600,
+        color: AppColors.secondaryDark,
+        fontFamily: 'Montserrat',
+      ),
     ),
     iconTheme: const IconThemeData(color: AppColors.white),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: AppColors.primary,
     ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-      backgroundColor: AppColors.black,
+      backgroundColor: AppColors.navBackgroundDark  ,
       selectedItemColor: AppColors.primary,
-      unselectedItemColor: AppColors.tertiary,
+      unselectedItemColor: AppColors.secondaryDark,
     ),
   );
 }

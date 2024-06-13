@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 import 'package:tymesavingfrontend/components/mywallet_page/transaction_item.dart';
 
 class MyWalletTransaction extends StatefulWidget {
@@ -20,23 +19,23 @@ class _MyWalletTransactionState extends State<MyWalletTransaction> {
         /*
           Data để test, sẽ thay đổi khi merge!
         */
-        TransactionItem(
+        const TransactionItem(
             title: 'Domino Pizza', amount: '2000', date: '18 March 2024'),
-        TransactionItem(
+        const TransactionItem(
             title: 'Domino Pizza', amount: '2000', date: '18 March 2024'),
-        TransactionItem(
+        const TransactionItem(
             title: 'Domino Pizza', amount: '2000', date: '18 March 2024'),
-        TransactionItem(
+        const TransactionItem(
             title: 'Domino Pizza', amount: '2000', date: '18 March 2024'),
-        TransactionItem(
+        const TransactionItem(
             title: 'Domino Pizza', amount: '2000', date: '18 March 2024'),
-        TransactionItem(
+        const TransactionItem(
             title: 'Domino Pizza', amount: '2000', date: '18 March 2024'),
-        TransactionItem(
+        const TransactionItem(
             title: 'Domino Pizza', amount: '2000', date: '18 March 2024'),
-        TransactionItem(
+        const TransactionItem(
             title: 'Domino Pizza', amount: '2000', date: '18 March 2024'),
-        TransactionItem(
+        const TransactionItem(
             title: 'Domino Pizza', amount: '2000', date: '18 March 2024'),
       ],
     );

@@ -101,7 +101,7 @@ class _MainPageLayoutState extends State<MainPageLayout> with RouteAware {
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
         shape: const CircleBorder(),
-        backgroundColor: AppColors.primaryBlue,
+        // backgroundColor: AppColors.primaryBlue,
         child: const Icon(
           Icons.add,
           color: AppColors.cream,

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tymesavingfrontend/common/styles/app_color.dart';
-import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 import 'package:tymesavingfrontend/components/common/text_align.dart';
 import 'package:tymesavingfrontend/services/theme_service.dart';
 
@@ -22,7 +20,7 @@ class Heading extends StatelessWidget implements PreferredSizeWidget {
             child: AppBar(
               // backgroundColor: AppColors.cream,
               // surfaceTintColor: AppColors.cream, // when scroll
-              title: CustomAlignText(text: title, style: AppTextStyles.heading),
+              title: CustomAlignText(text: title),
               leading: showBackButton
                   ? IconButton(
                       onPressed: () {

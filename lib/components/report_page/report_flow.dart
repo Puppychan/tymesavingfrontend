@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/common/styles/app_color.dart';
-import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 
 class ReportFlow extends StatefulWidget {
   const ReportFlow(
@@ -40,10 +39,8 @@ class _ReportFlowState extends State<ReportFlow> {
                 widget.outflowPrevious) *
             100;
 
-    percentageChangeInflowFinal =
-        percentageChangeInflow.toStringAsFixed(2);
-    percentageChangeOutflowFinal =
-        percentageChangeOutflow.toStringAsFixed(2);
+    percentageChangeInflowFinal = percentageChangeInflow.toStringAsFixed(2);
+    percentageChangeOutflowFinal = percentageChangeOutflow.toStringAsFixed(2);
 
     super.initState();
   }
@@ -60,9 +57,9 @@ class _ReportFlowState extends State<ReportFlow> {
             child: Row(
               children: [
                 const Icon(Icons.arrow_upward, color: AppColors.positive),
-                const Text(
+                Text(
                   'Inflow',
-                  style: AppTextStyles.headingSmall,
+                  style: Theme.of(context).textTheme.titleSmall!,
                 ),
                 const Expanded(
                   child: SizedBox(),
@@ -72,11 +69,11 @@ class _ReportFlowState extends State<ReportFlow> {
                   children: [
                     Text(
                       widget.inflowCurrent.toString(),
-                      style: AppTextStyles.headingMedium,
+                      style: Theme.of(context).textTheme.titleLarge!,
                     ),
                     Text(
                       '$percentageChangeInflowFinal% from previous month',
-                      style: AppTextStyles.subHeadingSmall,
+                      style: Theme.of(context).textTheme.bodyMedium!,
                     ),
                   ],
                 )
@@ -91,10 +88,11 @@ class _ReportFlowState extends State<ReportFlow> {
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             child: Row(
               children: [
-                const Icon(Icons.arrow_downward_rounded, color: AppColors.negative),
-                const Text(
+                const Icon(Icons.arrow_downward_rounded,
+                    color: AppColors.negative),
+                Text(
                   'Outflow',
-                  style: AppTextStyles.headingSmall,
+                  style: Theme.of(context).textTheme.titleSmall!,
                 ),
                 const Expanded(
                   child: SizedBox(),
@@ -104,11 +102,11 @@ class _ReportFlowState extends State<ReportFlow> {
                   children: [
                     Text(
                       widget.outflowCurrent.toString(),
-                      style: AppTextStyles.headingMedium,
+                      style: Theme.of(context).textTheme.titleLarge!,
                     ),
                     Text(
                       '$percentageChangeOutflowFinal% from previous month',
-                      style: AppTextStyles.subHeadingSmall,
+                      style: Theme.of(context).textTheme.bodyMedium!,
                     ),
                   ],
                 )

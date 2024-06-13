@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/styles/app_padding.dart';
-import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 import 'package:tymesavingfrontend/components/common/chart/custom_bar_chart.dart';
 import 'package:tymesavingfrontend/components/common/text_align.dart';
 import 'package:tymesavingfrontend/main.dart';
@@ -62,18 +61,18 @@ class _HomePageState extends State<HomePage> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
-    return const SingleChildScrollView(
+    return SingleChildScrollView(
         padding: AppPaddingStyles.pagePaddingIncludeSubText,
         child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
           // Image.asset("assets/img/app_logo_light.svg",
           //     width: media.width * 0.5, fit: BoxFit.contain),
           CustomAlignText(
-              text: 'Have a nice day!', style: AppTextStyles.subHeading),
-          SizedBox(
+              text: 'Have a nice day!', style: Theme.of(context).textTheme.headlineMedium!),
+          const SizedBox(
             height: 24,
           ),
 
-          CustomBarChart(),
+          const CustomBarChart(),
         ]));
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 import 'package:tymesavingfrontend/common/enum/button_theme_enum.dart';
 import 'package:tymesavingfrontend/common/styles/button_theme_data.dart';
 
@@ -9,7 +8,6 @@ class PrimaryButton extends StatelessWidget {
   final AppButtonTheme theme;
 
   const PrimaryButton({
-    super.key,
     required this.title,
     required this.onPressed,
     this.theme = AppButtonTheme.yellowBlack,
@@ -24,13 +22,11 @@ class PrimaryButton extends StatelessWidget {
           style: AppButtonThemeData.getThemes(context)[theme]!.copyWith(
             elevation: MaterialStateProperty.all(1), // Add shadow
             padding: MaterialStateProperty.all(
-              const EdgeInsets.symmetric(vertical: 13), // Adjust padding to your needs
+              const EdgeInsets.symmetric(
+                  vertical: 13), // Adjust padding to your needs
             ),
           ),
-          child: Text(
-            title,
-            style: AppTextStyles.button,
-          ),
+          child: Text(title),
         ));
   }
 }
