@@ -6,8 +6,6 @@ import 'package:tymesavingfrontend/components/common/chart/custom_line_chart.dar
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/mywallet_page/mywallet_transaction.dart';
 import 'package:tymesavingfrontend/models/transaction_report.model.dart';
-import 'package:tymesavingfrontend/models/user.model.dart';
-import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/transaction_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
@@ -19,34 +17,23 @@ class MywalletPage extends StatefulWidget {
 }
 
 class _MywalletPageState extends State<MywalletPage> {
-  ChartReport? chartReport;
+  late ChartReport chartReport;
 
   @override
   void initState() {
     super.initState();
-    User? user;
-    Future.microtask(() async {
-      final authService = Provider.of<AuthService>(context, listen: false);
-      await handleMainPageApi(context, () async {
-        return await authService.getCurrentUserData();
-        // return result;
-      }, () async {
-        setState(() {
-          user = authService.user;
-        });
-      });
-    });
 
     Future.microtask(() async {
       final transactionService =
           Provider.of<TransactionService>(context, listen: false);
       await handleMainPageApi(context, () async {
-        return await transactionService.getChartReport(user);
+        return await transactionService.getChartReport();
         // return result;
       }, () async {
         setState(() {
           // Create the transaction
-          chartReport = transactionService.chartReport;
+          chartReport = transactionService.chartReport!;
+          debugPrint(chartReport.totals.toString());
         });
       });
     });
@@ -54,26 +41,26 @@ class _MywalletPageState extends State<MywalletPage> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      appBar: Heading(
+    return Scaffold(
+      appBar: const Heading(
         title: 'Wallet',
         showBackButton: true,
       ),
       body: Column(children: [
-        SizedBox(
+        const SizedBox(
           height: 50,
         ),
         CustomLineChart(
-              
+          totals: chartReport.totals,
         ),
-        SizedBox(
+        const SizedBox(
           height: 20,
         ),
-        Text(
+        const Text(
           'Transaction',
           style: AppTextStyles.headingMedium,
         ),
-        Expanded(
+        const Expanded(
           child: MyWalletTransaction(),
         ),
       ]),
