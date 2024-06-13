@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/common/styles/app_color.dart';
 import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 import 'package:tymesavingfrontend/components/common/circle_network_image.dart';
 import 'package:tymesavingfrontend/models/user_model.txt';
+import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class UserCard extends StatelessWidget {
@@ -12,11 +12,11 @@ class UserCard extends StatelessWidget {
   final double maxContribution = 500.0; // Example maximum contribution value
 
   const UserCard({
-    Key? key,
+    super.key,
     required this.user,
     required this.onEdit,
     required this.onDelete,
-  }) : super(key: key);
+  });
 
   void _showDeleteConfirmationDialog(BuildContext context) {
     showDialog(
@@ -49,15 +49,15 @@ class UserCard extends StatelessWidget {
   Widget build(BuildContext context) {
     double progress = user.contribution / maxContribution; // Calculate the progress as a fraction
     String formattedDate = timeago.format(DateTime.parse(user.date));
-
+    final colorScheme = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.tertiary, // Hex color for the background
+          color: colorScheme.tertiary, // Hex color for the background
           boxShadow: [
             BoxShadow(
-              color: AppColors.secondary.withOpacity(0.2),
+              color: colorScheme.secondary.withOpacity(0.2),
               spreadRadius: 1,
               blurRadius: 6,
               offset: const Offset(0, 3),
@@ -83,11 +83,11 @@ class UserCard extends StatelessWidget {
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.edit, color: AppColors.secondary),
+                    icon: Icon(Icons.edit, color: colorScheme.secondary),
                     onPressed: onEdit,
                   ),
                   IconButton(
-                    icon: const Icon(Icons.delete, color: AppColors.secondary),
+                    icon: Icon(Icons.delete, color: colorScheme.secondary),
                     onPressed: () => _showDeleteConfirmationDialog(context),
                   ),
                 ],
@@ -101,18 +101,18 @@ class UserCard extends StatelessWidget {
                   RichText(
                     text: TextSpan(
                       text: 'Contribute ',
-                      style: AppTextStyles.paragraph,
+                      style: Theme.of(context).textTheme.bodyMedium!,
                       children: <TextSpan>[
                         TextSpan(
                           text: '\$${user.contribution.toStringAsFixed(2)}',
-                          style: AppTextStyles.paragraphBold,
+                          style: AppTextStyles.paragraphBold(context),
                         ),
                       ],
                     ),
                   ),
                   Text(
                     formattedDate,
-                    style: AppTextStyles.paragraphSmall,
+                    style: Theme.of(context).textTheme.bodySmall!,
                   ),
                 ],
               ),
@@ -123,8 +123,8 @@ class UserCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(4),
                 child: LinearProgressIndicator(
                   value: progress.clamp(0.0, 1.0), // Ensuring the value is between 0 and 1
-                  backgroundColor: AppColors.quaternary,
-                  valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primaryBlue),
+                  backgroundColor: colorScheme.quaternary,
+                  valueColor: AlwaysStoppedAnimation<Color>(colorScheme.primary),
                   minHeight: 8,
                 ),
               ),

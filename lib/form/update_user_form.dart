@@ -47,6 +47,7 @@ class UpdateUserState extends State<UpdateUserForm> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             RoundTextField(
+              validator: Validator.validateFullName,
               placeholder: widget.user?.fullname ?? 'Loading...',
               label: 'Full Name',
               controller: _fullNameController,
@@ -56,6 +57,7 @@ class UpdateUserState extends State<UpdateUserForm> {
               height: 20,
             ),
             RoundTextField(
+              validator: Validator.validateUsername,
               placeholder: widget.user?.username ?? 'Loading...',
               label: 'Username',
               controller: _usernameController,
@@ -64,6 +66,7 @@ class UpdateUserState extends State<UpdateUserForm> {
               height: 20,
             ),
             RoundTextField(
+              validator: Validator.validatePhone,
               placeholder: widget.user?.phone ?? 'Loading...',
               label: 'Phone Number',
               controller: _phoneController,
@@ -72,6 +75,7 @@ class UpdateUserState extends State<UpdateUserForm> {
               height: 20,
             ),
             RoundTextField(
+              validator: Validator.validateEmail,
               placeholder: widget.user?.email ?? 'Loading...',
               label: 'E-mail',
               controller: _gmailController,

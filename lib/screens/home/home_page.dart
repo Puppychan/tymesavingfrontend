@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/styles/app_padding.dart';
-import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 import 'package:tymesavingfrontend/components/common/chart/custom_bar_chart.dart';
 import 'package:tymesavingfrontend/components/common/text_align.dart';
 import 'package:tymesavingfrontend/main.dart';
@@ -27,6 +26,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
   void initState() {
     super.initState();
     Future.microtask(() async {
+      if (!mounted) return;
       final authService = Provider.of<AuthService>(context, listen: false);
       await handleMainPageApi(context, () async {
         return await authService.getCurrentUserData();
@@ -37,6 +37,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
       });
 
       // Start the second task only after the first one completes
+      if (!mounted) return;
       final transactionService =
           Provider.of<TransactionService>(context, listen: false);
       await handleMainPageApi(context, () async {
@@ -63,15 +64,17 @@ class _HomePageState extends State<HomePage> with RouteAware {
   void didPopNext() {
     // Called when the current route has been popped off, and the current route shows up.
     Future.microtask(() async {
-      final authService = Provider.of<AuthService>(context, listen: false);
-      await handleMainPageApi(context, () async {
-        return await authService.getCurrentUserData();
-        // return result;
-      }, () async {
-        setState(() {
-          user = authService.user;
+      if (mounted) {
+        final authService = Provider.of<AuthService>(context, listen: false);
+        await handleMainPageApi(context, () async {
+          return await authService.getCurrentUserData();
+          // return result;
+        }, () async {
+          setState(() {
+            user = authService.user;
+          });
         });
-      });
+      }
     });
   }
 
@@ -82,8 +85,9 @@ class _HomePageState extends State<HomePage> with RouteAware {
         child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
           // Image.asset("assets/img/app_logo_light.svg",
           //     width: media.width * 0.5, fit: BoxFit.contain),
-          const CustomAlignText(
-              text: 'Have a nice day!', style: AppTextStyles.subHeading),
+          CustomAlignText(
+              text: 'Have a nice day!',
+              style: Theme.of(context).textTheme.headlineMedium!),
           const SizedBox(
             height: 24,
           ),

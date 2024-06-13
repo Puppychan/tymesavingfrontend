@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tymesavingfrontend/common/styles/app_color.dart';
-import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 import 'package:tymesavingfrontend/screens/authentication/sign_in_page.dart';
 import 'package:tymesavingfrontend/screens/wallet_report_screens/mywallet_page.dart';
 import 'package:tymesavingfrontend/screens/wallet_report_screens/report_page.dart';
@@ -26,6 +24,7 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
 
   Future<void> myWalletRoute() async {
     //Debug here
+    if (!mounted) return;
     debugPrint('My Wallet tapped!');
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => const MywalletPage()));
@@ -54,8 +53,9 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Card.outlined(
-      color: AppColors.cream,
+      color: colorScheme.background,
       margin: const EdgeInsets.all(0),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 15),
@@ -99,11 +99,13 @@ class RowSettingTemplate extends StatefulWidget {
 class _RowSettingTemplateState extends State<RowSettingTemplate> {
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Card.filled(
-        color: AppColors.cream,
+        color: colorScheme.background,
         child: InkWell(
-            splashColor: Colors.blue.withAlpha(50),
+            splashColor: colorScheme.primary.withAlpha(50),
             onTap: () async {
+              if (!mounted) return;
               await widget.function();
             },
             child: Padding(
@@ -116,11 +118,11 @@ class _RowSettingTemplateState extends State<RowSettingTemplate> {
                       children: [
                         Text(
                           widget.label,
-                          style: AppTextStyles.headingMedium,
+                          style: Theme.of(context).textTheme.titleLarge!,
                         ),
                         Text(
                           widget.motto,
-                          style: AppTextStyles.subHeadingSmall,
+                          style: Theme.of(context).textTheme.bodyMedium!,
                         ),
                       ],
                     ),

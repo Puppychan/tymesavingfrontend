@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/common/styles/app_color.dart';
 import 'package:tymesavingfrontend/common/styles/app_padding.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/form/update_user_form.dart';
@@ -19,7 +18,6 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.cream,
       appBar: const Heading(
         title: 'Update User',
         showBackButton: true,

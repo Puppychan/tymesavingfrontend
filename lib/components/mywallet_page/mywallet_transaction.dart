@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/common/app_color.dart';
-import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
-import 'package:tymesavingfrontend/components/mywallet_page/transaction_item.dart';
 
 class MyWalletTransaction extends StatefulWidget {
   const MyWalletTransaction({super.key, required this.month, required this.expense});
@@ -16,14 +13,16 @@ class MyWalletTransaction extends StatefulWidget {
 class _MyWalletTransactionState extends State<MyWalletTransaction> {
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Card(
-      color: AppColors.cream,
+      color: colorScheme.background,
       child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
           child: Row(
             children: [
-              const Icon(Icons.money_off,
-                  color: AppColors.negative, size: 30),
+              Icon(Icons.money_off,
+                  color: colorScheme.error, size: 30),
               const SizedBox(
                 width: 20,
               ),
@@ -33,15 +32,15 @@ class _MyWalletTransactionState extends State<MyWalletTransaction> {
                   Text.rich(
                     TextSpan(
                       text: '${widget.month} expense is at ',
-                      style: AppTextStyles.headingSmall, // Default style for the first part
+                      style: textTheme.titleSmall!, // Default style for the first part
                       children: <TextSpan>[
                         TextSpan(
                           text: '${widget.expense} ',
-                          style: AppTextStyles.headingSmall.copyWith(color: AppColors.primaryBlue), // Same style for the expense value
+                          style: textTheme.titleSmall!.copyWith(color: colorScheme.primary), // Same style for the expense value
                         ),
                         TextSpan(
                           text: 'vnd',
-                          style: AppTextStyles.headingSmall.copyWith(color: AppColors.primaryBlue), // Different color for "vnd"
+                          style: textTheme.titleSmall!.copyWith(color: colorScheme.primary), // Different color for "vnd"
                         ),
                       ],
                     ),

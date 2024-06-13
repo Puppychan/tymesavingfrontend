@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 
 class RoundTextField extends StatefulWidget {
   final String label;
@@ -50,7 +49,7 @@ class _RoundTextFieldState extends State<RoundTextField> {
               child: Text(
                 widget.label,
                 textAlign: TextAlign.left,
-                style: AppTextStyles.inputLabel,
+                style: Theme.of(context).textTheme.labelLarge!,
               ),
             )
           ],
@@ -67,7 +66,6 @@ class _RoundTextFieldState extends State<RoundTextField> {
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           decoration: BoxDecoration(
             color: colorScheme.tertiary,
-            // border: Border.all(color: AppColors.divider),
             borderRadius: BorderRadius.circular(widget.componentHeight / 2),
             boxShadow: const [
               BoxShadow(
@@ -78,6 +76,10 @@ class _RoundTextFieldState extends State<RoundTextField> {
           ),
           child: TextFormField(
             controller: widget.controller,
+            style: Theme.of(context)
+                .textTheme
+                .bodyLarge!
+                .copyWith(fontWeight: FontWeight.w500),
             // autovalidateMode:AutovalidateMode.onUserInteraction,
             decoration: InputDecoration(
               focusedBorder: InputBorder.none,
@@ -108,7 +110,25 @@ class _RoundTextFieldState extends State<RoundTextField> {
             obscureText: _isObscure,
             // validator: validator, // Use the validator
           ),
-        )
+        ),
+        const SizedBox(height: 5),
+
+        FormField<String>(
+          validator: widget.validator,
+          builder: (FormFieldState<String> state) {
+            return state.hasError
+                ? Padding(
+                    padding: const EdgeInsets.only(left: 20),
+                    child: Text(
+                      state.errorText ?? '',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onError,
+                      ),
+                    ),
+                  )
+                : const SizedBox.shrink();
+          },
+        ),
       ],
     );
   }

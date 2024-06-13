@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:tymesavingfrontend/common/styles/app_color.dart';
-import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 import 'package:tymesavingfrontend/common/constant/temp_constant.dart';
 import 'package:tymesavingfrontend/components/common/circle_network_image.dart';
 import 'package:tymesavingfrontend/main.dart';
@@ -50,15 +48,17 @@ class _UserBoxState extends State<UserBox> with RouteAware {
   void didPopNext() {
     // Called when the current route has been popped off, and the current route shows up.
     Future.microtask(() async {
-      final authService = Provider.of<AuthService>(context, listen: false);
-      await handleMainPageApi(context, () async {
-        return await authService.getCurrentUserData();
-        // return result;
-      }, () async {
-        setState(() {
-          user = authService.user;
+      if (mounted) {
+        final authService = Provider.of<AuthService>(context, listen: false);
+        await handleMainPageApi(context, () async {
+          return await authService.getCurrentUserData();
+          // return result;
+        }, () async {
+          setState(() {
+            user = authService.user;
+          });
         });
-      });
+      }
     });
   }
 
@@ -71,6 +71,7 @@ class _UserBoxState extends State<UserBox> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return GestureDetector(
       onTap: () {
         debugPrint('profile tapped');
@@ -79,7 +80,7 @@ class _UserBoxState extends State<UserBox> with RouteAware {
       child: Skeletonizer(
           enabled: user == null, // Show the skeleton if user is null
           child: Card.filled(
-            color: AppColors.cream, // Change color if skeleton
+            color: colorScheme.background, // Change color if skeleton
             elevation: 3.0,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),
@@ -90,9 +91,9 @@ class _UserBoxState extends State<UserBox> with RouteAware {
                     leading:
                         const CustomCircleAvatar(imagePath: TEMP_AVATAR_IMAGE),
                     title: Text(user?.fullname ?? 'Loading...',
-                        style: AppTextStyles.subHeadingMedium),
+                        style: Theme.of(context).textTheme.titleMedium!),
                     subtitle: Text(user?.email ?? 'Loading mail...',
-                        style: AppTextStyles.subHeadingSmall),
+                        style: Theme.of(context).textTheme.bodyMedium!),
                   )
                 ],
               ),
