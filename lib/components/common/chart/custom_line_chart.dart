@@ -1,7 +1,5 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/common/app_color.dart';
-import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 
 class CustomLineChart extends StatefulWidget {
   const CustomLineChart({
@@ -40,6 +38,7 @@ class _CustomLineChartState extends State<CustomLineChart> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: SizedBox(
@@ -79,7 +78,7 @@ class _CustomLineChartState extends State<CustomLineChart> {
               lineBarsData: [
                 LineChartBarData(
                   spots: flSpots,
-                  color: AppColors.primary,
+                  color: colorScheme.inversePrimary,
                   barWidth: 5,
                   isCurved: true,
                   curveSmoothness: 0.55,
@@ -93,37 +92,33 @@ class _CustomLineChartState extends State<CustomLineChart> {
   }
 
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
-    const style = TextStyle(
-      fontWeight: FontWeight.bold,
-      fontSize: 16,
-    );
+    final style = Theme.of(context).textTheme.bodyMedium;
 
     Widget text;
     switch (value.toInt()) {
       case 0:
-        text = Text(keyValuePairs[0].key, style: AppTextStyles.subHeadingSmall);
+        text = Text(keyValuePairs[0].key, style: style);
         break;
       case 2:
-        text = Text(keyValuePairs[2].key, style: AppTextStyles.subHeadingSmall);
+        text = Text(keyValuePairs[2].key, style: style);
         break;
       case 4:
-        text = Text(keyValuePairs[4].key, style: AppTextStyles.subHeadingSmall);
+        text = Text(keyValuePairs[4].key, style: style);
         break;
       case 6:
-        text = Text(keyValuePairs[6].key, style: AppTextStyles.subHeadingSmall);
+        text = Text(keyValuePairs[6].key, style: style);
         break;
       case 8:
-        text = Text(keyValuePairs[8].key, style: AppTextStyles.subHeadingSmall);
+        text = Text(keyValuePairs[8].key, style: style);
         break;
       case 10:
-        text = Text(keyValuePairs[10].key, style: AppTextStyles.subHeadingSmall);
+        text = Text(keyValuePairs[10].key, style: style);
         break;
       case 12:
-        text =
-            Text(keyValuePairs[12].key, style: AppTextStyles.subHeadingSmall);
+        text = Text(keyValuePairs[12].key, style: style);
         break;
       default:
-        text = const Text('', style: style);
+        text = Text('', style: style);
         break;
     }
 

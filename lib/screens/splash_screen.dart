@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/screens/main_page_layout.dart';
 import 'package:tymesavingfrontend/screens/authentication/sign_in_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
-import 'package:tymesavingfrontend/utils/display_error.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

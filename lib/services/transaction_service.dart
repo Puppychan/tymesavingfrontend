@@ -23,7 +23,7 @@ class TransactionService extends ChangeNotifier {
   Future<Map<String, dynamic>> getChartReport(userid) async {
     final response = await NetworkService.instance.get(
         "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReport}?transactionType=Expense&userId=$userid");
-    final responseData = response['response'] as Map<String, dynamic>;
+    final responseData = response['response'];
 
     // debugPrint("Debuging check for getChartReport $responseData");
 
@@ -35,17 +35,22 @@ class TransactionService extends ChangeNotifier {
   }
 
   Future<Map<String, dynamic>> getBothChartReport(userid) async {
+    print("getBothChartReport ${userid}");
     final expenseResponse = await NetworkService.instance.get(
         "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReport}?transactionType=Expense&userId=$userid");
+    print("getBothChartReport after expenseResponse");
     final incomeResponse = await NetworkService.instance.get(
         "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReport}?transactionType=Income&userId=$userid");
-    final responseDataExpense =
-        expenseResponse['response'] as Map<String, dynamic>;
-    final responseDataIncome =
-        incomeResponse['response'] as Map<String, dynamic>;
+    print("getBothChartReport after incomeResponse");
+    final responseDataExpense = expenseResponse['response'];
+    print("getBothChartReport after responseDataExpense");
+    final responseDataIncome = incomeResponse['response'];
+    print("getBothChartReport after responseDataIncome");
     notifyListeners();
     _chartReport = ChartReport.fromJson(responseDataExpense);
+    print("getBothChartReport after _chartReport");
     _chartReportSecondary = ChartReport.fromJson(responseDataIncome);
+    print("getBothChartReport after _chartReportSecondary");
     return expenseResponse;
   }
 
@@ -55,8 +60,7 @@ class TransactionService extends ChangeNotifier {
     if (response['response'] != null &&
         response['response']['compareToLastMonth'] != null &&
         response['response']['topCategories'] != null) {
-      final responseData =
-          response['response']['compareToLastMonth'] as Map<String, dynamic>;
+      final responseData = response['response']['compareToLastMonth'];
       final responseCategoryData = response['response']['topCategories'];
       // Type checking, since percentages is String but current is int
       // debugPrint(responseData['currentIncome'].runtimeType.toString());
@@ -68,8 +72,7 @@ class TransactionService extends ChangeNotifier {
       _topCategoriesList = TopCategoriesList.fromJson(responseCategoryData);
       notifyListeners();
     } else {
-      final responseData =
-          response['response']['compareToLastMonth'] as Map<String, dynamic>;
+      final responseData = response['response']['compareToLastMonth'];
       _compareToLastMonth = CompareToLastMonth.fromJson(responseData);
       _topCategoriesList = null;
       notifyListeners();

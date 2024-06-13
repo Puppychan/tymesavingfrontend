@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tymesavingfrontend/common/styles/app_color.dart';
 import 'package:tymesavingfrontend/common/styles/app_padding.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
@@ -52,16 +51,19 @@ class _UserProfileState extends State<UserProfile> with RouteAware {
   void didPopNext() {
     // Called when the current route has been popped off, and the current route shows up.
     Future.microtask(() async {
-      final authService = Provider.of<AuthService>(context, listen: false);
-      await handleMainPageApi(context, () async {
-        return await authService.getCurrentUserData();
-        // return result;
-      }, () async {
-        setState(() {
-          user = authService.user;
+      if (mounted) {
+        final authService = Provider.of<AuthService>(context, listen: false);
+        await handleMainPageApi(context, () async {
+          return await authService.getCurrentUserData();
+          // return result;
+        }, () async {
+          setState(() {
+            user = authService.user;
+          });
         });
-      });
+      }
     });
+    super.didPopNext();
   }
 
   void openUpdateForm() {
@@ -84,8 +86,8 @@ class _UserProfileState extends State<UserProfile> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-      backgroundColor: AppColors.cream,
       appBar: const Heading(
         title: "My Profile",
         showBackButton: true,
@@ -109,7 +111,7 @@ class _UserProfileState extends State<UserProfile> with RouteAware {
               height: 30,
             ),
             Card.filled(
-              color: AppColors.white,
+              color: colorScheme.background,
               margin: const EdgeInsetsDirectional.symmetric(
                   horizontal: 50, vertical: 20),
               child: Column(
@@ -117,7 +119,7 @@ class _UserProfileState extends State<UserProfile> with RouteAware {
                   PrimaryButton(
                       title: 'EDIT PROFILE', onPressed: openUpdateForm),
                   const SizedBox(
-                    height: 5,
+                    height: 15,
                   ),
                   SecondaryButton(
                       title: 'CHANGE PASSWORD', onPressed: openPasswordForm)

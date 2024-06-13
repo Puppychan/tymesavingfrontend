@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 
 class OutflowDetail extends StatefulWidget {
   const OutflowDetail({super.key});
@@ -14,8 +13,8 @@ class _OutflowDetailState extends State<OutflowDetail> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Outflow detail', style: AppTextStyles.headingMedium,),
-        const Text('Check where your money has gone to here!', style: AppTextStyles.subHeadingSmall,),
+        Text('Outflow detail', style: Theme.of(context).textTheme.titleLarge!,),
+        Text('Check where your money has gone to here!', style: Theme.of(context).textTheme.bodyMedium!,),
       ],
     );
   }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:tymesavingfrontend/common/app_color.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/report_page/outflow_detail.dart';
 import 'package:tymesavingfrontend/components/report_page/report_flow.dart';
@@ -27,28 +26,32 @@ class _ReportPageState extends State<ReportPage> {
     super.initState();
     User? user;
     Future.microtask(() async {
-      final authService = Provider.of<AuthService>(context, listen: false);
-      await handleMainPageApi(context, () async {
-        return await authService.getCurrentUserData();
-        // return result;
-      }, () async {
-        setState(() {
-          user = authService.user;
-        });
-      });
+      if (mounted) {
+        final authService = Provider.of<AuthService>(context, listen: false);
 
-      final transactionService =
-          Provider.of<TransactionService>(context, listen: false);
-      await handleMainPageApi(context, () async {
-        return await transactionService.getReportDetail(user?.id);
-        // return result;
-      }, () async {
-        setState(() {
-          // Compare to last month
-          compareToLastMonth = transactionService.compareToLastMonth;
-          topCategoriesList = transactionService.topCategoriesList;
+        await handleMainPageApi(context, () async {
+          return await authService.getCurrentUserData();
+          // return result;
+        }, () async {
+          setState(() {
+            user = authService.user;
+          });
         });
-      });
+      }
+      if (mounted) {
+        final transactionService =
+            Provider.of<TransactionService>(context, listen: false);
+        await handleMainPageApi(context, () async {
+          return await transactionService.getReportDetail(user?.id);
+          // return result;
+        }, () async {
+          setState(() {
+            // Compare to last month
+            compareToLastMonth = transactionService.compareToLastMonth;
+            topCategoriesList = transactionService.topCategoriesList;
+          });
+        });
+      }
     });
   }
 
@@ -59,7 +62,6 @@ class _ReportPageState extends State<ReportPage> {
         title: 'Reports',
         showBackButton: true,
       ),
-      backgroundColor: AppColors.cream,
       body: Skeletonizer(
         enabled: compareToLastMonth == null, // Show skeleton if user is null
         child: Column(
@@ -74,10 +76,10 @@ class _ReportPageState extends State<ReportPage> {
               height: 20,
             ),
             const OutflowDetail(),
-            if (topCategoriesList == null) 
-            Text('No data!')
+            if (topCategoriesList == null)
+              const Text('No data!')
             else
-            Text('?'),
+              const Text('?'),
           ],
         ),
       ),

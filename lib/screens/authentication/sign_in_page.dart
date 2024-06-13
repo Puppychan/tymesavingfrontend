@@ -41,9 +41,9 @@ class _SignInViewState extends State<SignInView> {
           children: [
             // Image.asset("assets/img/app_logo_light.svg",
             //     width: media.width * 0.5, fit: BoxFit.contain),
-            const CustomAlignText(
+            CustomAlignText(
                 text: 'Login to manage your money!',
-                style: AppTextStyles.subHeading),
+                style: Theme.of(context).textTheme.headlineMedium!),
             const SizedBox(
               height: 24,
             ),
@@ -59,14 +59,14 @@ class _SignInViewState extends State<SignInView> {
             Text.rich(
               TextSpan(
                 children: [
-                  const TextSpan(
+                  TextSpan(
                     text: 'New to brainy academy? ',
-                    style: AppTextStyles.paragraph,
+                    style: Theme.of(context).textTheme.bodyMedium!,
                   ),
                   TextSpan(
                     text: ' Sign up here',
                     recognizer: signUpRecognizer, // Attach the recognizer here
-                    style: AppTextStyles.paragraphLink,
+                    style: AppTextStyles.paragraphLinkYellow(context),
                   ),
                 ],
               ),

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:tymesavingfrontend/common/app_color.dart';
-import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 import 'package:tymesavingfrontend/components/common/chart/custom_line_chart.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/mywallet_page/mywallet_transaction.dart';
@@ -28,6 +26,7 @@ class _MywalletPageState extends State<MywalletPage> {
     User? user;
     super.initState();
     Future.microtask(() async {
+      if (!mounted) return;
       final authService = Provider.of<AuthService>(context, listen: false);
       await handleMainPageApi(context, () async {
         return await authService.getCurrentUserData();
@@ -37,6 +36,7 @@ class _MywalletPageState extends State<MywalletPage> {
         });
       });
 
+      if (!mounted) return;
       // Start the second task only after the first one completes
       final transactionService =
           Provider.of<TransactionService>(context, listen: false);
@@ -53,6 +53,7 @@ class _MywalletPageState extends State<MywalletPage> {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return Scaffold(
       appBar: const Heading(
         title: 'Wallet',
@@ -62,9 +63,9 @@ class _MywalletPageState extends State<MywalletPage> {
         const SizedBox(
           height: 50,
         ),
-        const Text(
+        Text(
           'Spending habit (past 12 month)',
-          style: AppTextStyles.headingMedium,
+          style: textTheme.titleMedium,
           textAlign: TextAlign.start,
         ),
         const SizedBox(
@@ -81,18 +82,17 @@ class _MywalletPageState extends State<MywalletPage> {
           height: 20,
         ),
         if (currentMonthReport == null)
-            // Display a loading indicator or placeholder widget
-            const CircularProgressIndicator()
+          // Display a loading indicator or placeholder widget
+          const CircularProgressIndicator()
         else
-        MyWalletTransaction(
-            month: currentMonthReport?.currentMonth ?? '',
-            expense: currentMonthReport?.totalAmount ?? 0),
-        const Text(
+          MyWalletTransaction(
+              month: currentMonthReport?.currentMonth ?? '',
+              expense: currentMonthReport?.totalAmount ?? 0),
+        Text(
           '',
-          style: AppTextStyles.headingMedium,
+          style: textTheme.titleMedium,
         ),
       ]),
-      backgroundColor: AppColors.cream,
     );
   }
 }
