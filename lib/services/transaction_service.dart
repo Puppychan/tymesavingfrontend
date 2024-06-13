@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/models/transaction_report.model.dart';
+import 'package:tymesavingfrontend/models/transaction_report_model.dart';
 import 'package:tymesavingfrontend/services/utils/get_backend_endpoint.dart';
 import 'package:tymesavingfrontend/services/utils/network_service.dart';
 

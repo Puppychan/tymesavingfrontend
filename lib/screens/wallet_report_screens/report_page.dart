@@ -4,7 +4,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/report_page/outflow_detail.dart';
 import 'package:tymesavingfrontend/components/report_page/report_flow.dart';
-import 'package:tymesavingfrontend/models/transaction_report.model.dart';
+import 'package:tymesavingfrontend/models/transaction_report_model.dart';
 import 'package:tymesavingfrontend/models/user.model.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/transaction_service.dart';
