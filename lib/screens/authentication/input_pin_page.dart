@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/layouts/main_page_layout.dart';
+import 'package:tymesavingfrontend/screens/main_page_layout.dart';
 
 class InputPinPage extends StatefulWidget {
   const InputPinPage({super.key});
@@ -43,6 +43,7 @@ class _InputPinPageState extends State<InputPinPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Enter PIN'),
@@ -92,7 +93,7 @@ class _InputPinPageState extends State<InputPinPage> {
           ),
           if (_isLoading)
             Container(
-              color: Colors.black54,
+              color: colorScheme.onBackground,
               child: const Center(
                 child: CircularProgressIndicator(),
               ),

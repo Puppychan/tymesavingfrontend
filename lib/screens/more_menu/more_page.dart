@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/common/app_padding.dart';
+import 'package:tymesavingfrontend/common/styles/app_padding.dart';
 import 'package:tymesavingfrontend/components/more_page/more_challenge_widget.dart';
 import 'package:tymesavingfrontend/components/more_page/more_setting_widget.dart';
 import 'package:tymesavingfrontend/components/more_page/more_user_box_widget.dart';

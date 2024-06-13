@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tymesavingfrontend/common/app_color.dart';
-import 'package:tymesavingfrontend/common/app_text_style.dart';
 import 'package:tymesavingfrontend/screens/authentication/sign_in_page.dart';
+import 'package:tymesavingfrontend/screens/wallet_report_screens/mywallet_page.dart';
+import 'package:tymesavingfrontend/screens/wallet_report_screens/report_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 
 class MoreMenuSetting extends StatefulWidget {
@@ -22,6 +22,21 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
     debugPrint('function tapped!');
   }
 
+  Future<void> myWalletRoute() async {
+    //Debug here
+    if (!mounted) return;
+    debugPrint('My Wallet tapped!');
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const MywalletPage()));
+  }
+
+  Future<void> myReport() async {
+    //Debug here
+    debugPrint('My Wallet tapped!');
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const ReportPage()));
+  }
+
   Future<void> logoutFunction() async {
     //Debug here
     debugPrint('logout tapped!');
@@ -38,8 +53,9 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Card.outlined(
-      color: AppColors.cream,
+      color: colorScheme.background,
       margin: const EdgeInsets.all(0),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 15),
@@ -49,11 +65,11 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
                 Containing place holder function for development! Do change it in merge !
               */
             RowSettingTemplate('My Wallet', 'Access your wallet',
-                const Icon(Icons.wallet), placeHolderFunction),
+                const Icon(Icons.wallet), myWalletRoute),
+            RowSettingTemplate('My Report', 'Understand your cashflow',
+                const Icon(Icons.help), myReport),
             RowSettingTemplate('Setting', 'Change setting and preference',
                 const Icon(Icons.settings), placeHolderFunction),
-            RowSettingTemplate('Help Center', 'Change setting',
-                const Icon(Icons.help), placeHolderFunction),
             RowSettingTemplate('Contact us', 'Send a email or direct hotline',
                 const Icon(Icons.phone), placeHolderFunction),
             RowSettingTemplate('About', 'Change setting',
@@ -83,11 +99,13 @@ class RowSettingTemplate extends StatefulWidget {
 class _RowSettingTemplateState extends State<RowSettingTemplate> {
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Card.filled(
-        color: AppColors.cream,
+        color: colorScheme.background,
         child: InkWell(
-            splashColor: Colors.blue.withAlpha(50),
+            splashColor: colorScheme.primary.withAlpha(50),
             onTap: () async {
+              if (!mounted) return;
               await widget.function();
             },
             child: Padding(
@@ -100,11 +118,11 @@ class _RowSettingTemplateState extends State<RowSettingTemplate> {
                       children: [
                         Text(
                           widget.label,
-                          style: AppTextStyles.headingMedium,
+                          style: Theme.of(context).textTheme.titleLarge!,
                         ),
                         Text(
                           widget.motto,
-                          style: AppTextStyles.subHeadingSmall,
+                          style: Theme.of(context).textTheme.bodyMedium!,
                         ),
                       ],
                     ),

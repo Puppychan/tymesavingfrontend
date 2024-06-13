@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:tymesavingfrontend/common/local_storage_key.constant.dart';
+import 'package:tymesavingfrontend/common/constant/local_storage_key_constant.dart';
 import 'package:tymesavingfrontend/services/utils/get_backend_endpoint.dart';
 import 'package:tymesavingfrontend/services/utils/local_storage_service.dart';
 
@@ -9,7 +9,8 @@ const String APPLICATION_JSON = "application/json";
 const String CONTENT_TYPE = "content-type";
 const String ACCEPT = "accept";
 
-Map<String, dynamic> handleError(Object e) {
+dynamic handleError(Object e) {
+  print("Caught error: $e");
   if (e is DioException) {
     if (e.type == DioExceptionType.connectionTimeout ||
         e.type == DioExceptionType.receiveTimeout ||
@@ -28,7 +29,7 @@ Map<String, dynamic> handleError(Object e) {
     } else if (e.type == DioExceptionType.badResponse) {
       // Handle backend error response
       return {
-        'response': e.response?.data['detail'] ??
+        'response': e.response?.data['response'] ??
             "Server error. Please try again later.",
         'statusCode': e.response?.statusCode ?? 500
       };
@@ -94,6 +95,7 @@ class NetworkService {
     Map<String, dynamic>? queryParameters,
   }) async {
     try {
+      print("URL is $url");
       final response = await _dio.get(url, queryParameters: queryParameters);
       return {'response': response.data?['response'], 'statusCode': response.statusCode};
     } catch (error) {

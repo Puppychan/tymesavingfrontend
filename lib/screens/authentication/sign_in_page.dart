@@ -1,13 +1,12 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/common/app_padding.dart';
-import 'package:tymesavingfrontend/components/divider_with_text.dart';
-import 'package:tymesavingfrontend/components/heading.dart';
-import 'package:tymesavingfrontend/components/text_align.dart';
-import 'package:tymesavingfrontend/layouts/login_form.dart';
+import 'package:tymesavingfrontend/common/styles/app_padding.dart';
+import 'package:tymesavingfrontend/components/common/divider_with_text.dart';
+import 'package:tymesavingfrontend/components/common/heading.dart';
+import 'package:tymesavingfrontend/components/common/text_align.dart';
+import 'package:tymesavingfrontend/form/login_form.dart';
 import 'package:tymesavingfrontend/screens/authentication/sign_up_page.dart';
-import 'package:tymesavingfrontend/common/app_color.dart';
-import 'package:tymesavingfrontend/common/app_text_style.dart';
+import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 
 class SignInView extends StatefulWidget {
   const SignInView({super.key});
@@ -34,7 +33,6 @@ class _SignInViewState extends State<SignInView> {
         );
       };
     return Scaffold(
-      backgroundColor: AppColors.cream,
       appBar: const Heading(title: 'Sign In'),
       body: SingleChildScrollView(
         padding: AppPaddingStyles.pagePaddingIncludeSubText,
@@ -43,9 +41,9 @@ class _SignInViewState extends State<SignInView> {
           children: [
             // Image.asset("assets/img/app_logo_light.svg",
             //     width: media.width * 0.5, fit: BoxFit.contain),
-            const CustomAlignText(
+            CustomAlignText(
                 text: 'Login to manage your money!',
-                style: AppTextStyles.subHeading),
+                style: Theme.of(context).textTheme.headlineMedium!),
             const SizedBox(
               height: 24,
             ),
@@ -61,14 +59,14 @@ class _SignInViewState extends State<SignInView> {
             Text.rich(
               TextSpan(
                 children: [
-                  const TextSpan(
+                  TextSpan(
                     text: 'New to brainy academy? ',
-                    style: AppTextStyles.paragraph,
+                    style: Theme.of(context).textTheme.bodyMedium!,
                   ),
                   TextSpan(
                     text: ' Sign up here',
                     recognizer: signUpRecognizer, // Attach the recognizer here
-                    style: AppTextStyles.paragraphLink,
+                    style: AppTextStyles.paragraphLinkYellow(context),
                   ),
                 ],
               ),

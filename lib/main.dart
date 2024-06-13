@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:provider/provider.dart';
-import 'package:tymesavingfrontend/common/app_color.dart';
+import 'package:tymesavingfrontend/common/styles/app_color.dart';
+import 'package:tymesavingfrontend/common/styles/app_theme.dart';
 import 'package:tymesavingfrontend/screens/splash_screen.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
+import 'package:tymesavingfrontend/services/theme_service.dart';
+import 'package:tymesavingfrontend/services/transaction_service.dart';
 import 'package:tymesavingfrontend/services/utils/network_service.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
@@ -18,8 +21,12 @@ Future<void> main() async {
   await NetworkService.instance.initClient();
   // runApp(const MyApp());
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => AuthService(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthService()),
+        ChangeNotifierProvider(create: (_) => ThemeService()),
+        ChangeNotifierProvider(create: (_) => TransactionService())
+      ],
       child: const MyApp(),
     ),
   );
@@ -31,12 +38,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'My App',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        progressIndicatorTheme:
-            const ProgressIndicatorThemeData(color: AppColors.primaryBlue),
-      ),
+      title: 'My App', 
+      theme: AppThemes.lightTheme,
+      darkTheme: AppThemes.darkTheme,
+      themeMode: Provider.of<ThemeService>(context).themeMode,
       navigatorObservers: [routeObserver],
       home: LoaderOverlay(
         useDefaultLoading: true,

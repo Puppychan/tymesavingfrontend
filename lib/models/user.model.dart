@@ -1,4 +1,4 @@
-import 'package:tymesavingfrontend/common/user_role.enum.dart';
+import 'package:tymesavingfrontend/common/enum/user_role_enum.dart';
 
 class User {
   // please note that we get all these data from the API we are using
