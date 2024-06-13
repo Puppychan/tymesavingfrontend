@@ -46,12 +46,10 @@ class _UpdatePasswordFormState extends State<UpdatePasswordForm> {
             ),
             const SizedBox(height: 15),
             const Divider(
-              color: Colors.grey,
               height: 20,
               thickness: 1,
-              indent: 0,
-              endIndent: 0,
             ),
+            const SizedBox(height: 35),
             RoundTextField(
               placeholder: password,
               label: 'Your new password',

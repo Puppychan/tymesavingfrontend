@@ -25,11 +25,12 @@ class AppButtonThemeData {
       ),
       AppButtonTheme.whiteBlack: ButtonStyle(
         backgroundColor:
-            MaterialStateProperty.all<Color>(colorScheme.background),
+            MaterialStateProperty.all<Color>(colorScheme.tertiary),
         foregroundColor:
-            MaterialStateProperty.all<Color>(colorScheme.onBackground),
+            MaterialStateProperty.all<Color>(colorScheme.onTertiary),
+        // overlayColor: MaterialStateProperty.all<Color>(colorScheme.primary),
         textStyle: MaterialStateProperty.all<TextStyle>(
-          textStyle.copyWith(color: colorScheme.onBackground),
+          textStyle.copyWith(color: colorScheme.onTertiary),
         ),
       ),
     };

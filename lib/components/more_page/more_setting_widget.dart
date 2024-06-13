@@ -104,7 +104,7 @@ class _RowSettingTemplateState extends State<RowSettingTemplate> {
     return Card.filled(
         color: colorScheme.background,
         child: InkWell(
-            splashColor: Colors.blue.withAlpha(50),
+            splashColor: colorScheme.primary.withAlpha(50),
             onTap: () async {
               if (!mounted) return;
               await widget.function();

@@ -51,16 +51,19 @@ class _UserProfileState extends State<UserProfile> with RouteAware {
   void didPopNext() {
     // Called when the current route has been popped off, and the current route shows up.
     Future.microtask(() async {
-      final authService = Provider.of<AuthService>(context, listen: false);
-      await handleMainPageApi(context, () async {
-        return await authService.getCurrentUserData();
-        // return result;
-      }, () async {
-        setState(() {
-          user = authService.user;
+      if (mounted) {
+        final authService = Provider.of<AuthService>(context, listen: false);
+        await handleMainPageApi(context, () async {
+          return await authService.getCurrentUserData();
+          // return result;
+        }, () async {
+          setState(() {
+            user = authService.user;
+          });
         });
-      });
+      }
     });
+    super.didPopNext();
   }
 
   void openUpdateForm() {
@@ -116,7 +119,7 @@ class _UserProfileState extends State<UserProfile> with RouteAware {
                   PrimaryButton(
                       title: 'EDIT PROFILE', onPressed: openUpdateForm),
                   const SizedBox(
-                    height: 5,
+                    height: 15,
                   ),
                   SecondaryButton(
                       title: 'CHANGE PASSWORD', onPressed: openPasswordForm)

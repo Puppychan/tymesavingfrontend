@@ -6,12 +6,13 @@ class CustomBarChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return AspectRatio(
       aspectRatio: 1.7,
       child: Container(
-        decoration: const BoxDecoration(
-          color: Color(0xFFFFFBE6),
-          borderRadius: BorderRadius.all(Radius.circular(18)),
+        decoration: BoxDecoration(
+          color: colorScheme.background,
+          borderRadius: const BorderRadius.all(Radius.circular(18)),
         ),
         child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -27,35 +28,35 @@ class CustomBarChart extends StatelessWidget {
                 barGroups: [
                   BarChartGroupData(x: 1, barRods: [
                     BarChartRodData(
-                        fromY: 0, toY: 10, width: 15, color: Colors.amber),
+                        fromY: 0, toY: 10, width: 15, color: colorScheme.inversePrimary),
                   ]),
                   BarChartGroupData(x: 2, barRods: [
                     BarChartRodData(
-                        fromY: 0, toY: 10, width: 15, color: Colors.amber),
+                        fromY: 0, toY: 10, width: 15, color: colorScheme.inversePrimary),
                   ]),
                   BarChartGroupData(x: 3, barRods: [
                     BarChartRodData(
-                        fromY: 0, toY: 15, width: 15, color: Colors.amber),
+                        fromY: 0, toY: 15, width: 15, color: colorScheme.inversePrimary),
                   ]),
                   BarChartGroupData(x: 4, barRods: [
                     BarChartRodData(
-                        fromY: 0, toY: 10, width: 15, color: Colors.amber),
+                        fromY: 0, toY: 10, width: 15, color: colorScheme.inversePrimary),
                   ]),
                   BarChartGroupData(x: 5, barRods: [
                     BarChartRodData(
-                        fromY: 0, toY: 11, width: 15, color: Colors.amber),
+                        fromY: 0, toY: 11, width: 15, color: colorScheme.inversePrimary),
                   ]),
                   BarChartGroupData(x: 6, barRods: [
                     BarChartRodData(
-                        fromY: 0, toY: 10, width: 15, color: Colors.amber),
+                        fromY: 0, toY: 10, width: 15, color: colorScheme.inversePrimary),
                   ]),
                   BarChartGroupData(x: 7, barRods: [
                     BarChartRodData(
-                        fromY: 0, toY: 10, width: 15, color: Colors.amber),
+                        fromY: 0, toY: 10, width: 15, color: colorScheme.inversePrimary),
                   ]),
                   BarChartGroupData(x: 8, barRods: [
                     BarChartRodData(
-                        fromY: 0, toY: 10, width: 15, color: Colors.amber),
+                        fromY: 0, toY: 10, width: 15, color: colorScheme.inversePrimary),
                   ]),
                 ]))),
       ),

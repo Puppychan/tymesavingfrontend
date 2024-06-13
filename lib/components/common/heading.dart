@@ -18,9 +18,6 @@ class Heading extends StatelessWidget implements PreferredSizeWidget {
       leading: showBackButton
           ? IconButton(
               onPressed: () {
-                // Navigator.pop(context);
-                print("Back button pressed ${Navigator.canPop(context)}");
-                // Navigator.of(context).pop();
                 Navigator.of(context, rootNavigator: true).pop();
               },
               icon: const Icon(

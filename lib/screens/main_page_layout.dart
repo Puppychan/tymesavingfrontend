@@ -55,16 +55,18 @@ class _MainPageLayoutState extends State<MainPageLayout> with RouteAware {
     // Future.delayed(Duration(seconds: 1));
     // if (!mounted) return;m
     Future.microtask(() async {
-      final authService = Provider.of<AuthService>(context, listen: false);
-      await handleMainPageApi(context, () async {
-        return await authService.getCurrentUserData();
-        // return result;
-      }, () async {
-        if (!mounted) return;
-        setState(() {
-          user = authService.user;
+      if (mounted) {
+        final authService = Provider.of<AuthService>(context, listen: false);
+        await handleMainPageApi(context, () async {
+          return await authService.getCurrentUserData();
+          // return result;
+        }, () async {
+          if (!mounted) return;
+          setState(() {
+            user = authService.user;
+          });
         });
-      });
+      }
     });
   }
 

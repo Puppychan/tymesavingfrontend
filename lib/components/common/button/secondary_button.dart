@@ -22,13 +22,11 @@ class SecondaryButton extends StatelessWidget {
           onPressed: onPressed,
           style: AppButtonThemeData.getThemes(context)[theme]!.copyWith(
             padding: MaterialStateProperty.all(
-              const EdgeInsets.symmetric(vertical: 10),
+              const EdgeInsets.symmetric(vertical: 13),
             ),
+            elevation: MaterialStateProperty.all(5),
           ),
-          child: Text(
-            title,
-            style: Theme.of(context).textTheme.labelLarge!,
-          ),
+          child: Text(title),
         ));
   }
 }

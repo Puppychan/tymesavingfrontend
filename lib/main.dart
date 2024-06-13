@@ -37,11 +37,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'My App', 
-      // theme: ThemeData(
-      //   primarySwatch: Colors.blue,
-      //   progressIndicatorTheme:
-      //       const ProgressIndicatorThemeData(color: AppColors.primaryBlue),
-      // ),
       theme: AppThemes.lightTheme,
       darkTheme: AppThemes.darkTheme,
       themeMode: Provider.of<ThemeService>(context).themeMode,
