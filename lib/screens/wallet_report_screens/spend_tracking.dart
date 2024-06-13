@@ -12,14 +12,14 @@ import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/transaction_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
-class MywalletPage extends StatefulWidget {
-  const MywalletPage({super.key});
+class SpendTracking extends StatefulWidget {
+  const SpendTracking({super.key});
 
   @override
-  State<MywalletPage> createState() => _MywalletPageState();
+  State<SpendTracking> createState() => _SpendTrackingState();
 }
 
-class _MywalletPageState extends State<MywalletPage> {
+class _SpendTrackingState extends State<SpendTracking> {
   ChartReport? chartReport;
   CurrentMonthReport? currentMonthReport;
   NetSpend? netSpend;
@@ -60,7 +60,7 @@ class _MywalletPageState extends State<MywalletPage> {
     final textTheme = Theme.of(context).textTheme;
     return Scaffold(
       appBar: const Heading(
-        title: 'Wallet',
+        title: 'Tracking',
         showBackButton: true,
       ),
       body: Column(children: [
@@ -68,7 +68,7 @@ class _MywalletPageState extends State<MywalletPage> {
           height: 50,
         ),
         Text(
-          'Spending habit (past 12 month)',
+          'Spending trend (past 12 month)',
           style: textTheme.titleMedium,
           textAlign: TextAlign.start,
         ),
