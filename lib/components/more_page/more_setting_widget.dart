@@ -27,8 +27,7 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
     if (!mounted) return;
     debugPrint('My Wallet tapped!');
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const MyWalletPage()));
-
+        context, MaterialPageRoute(builder: (context) => const MywalletPage()));
   }
 
   Future<void> myReport() async {

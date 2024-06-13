@@ -4,8 +4,10 @@ import 'package:tymesavingfrontend/common/styles/app_padding.dart';
 import 'package:tymesavingfrontend/components/common/chart/custom_bar_chart.dart';
 import 'package:tymesavingfrontend/components/common/text_align.dart';
 import 'package:tymesavingfrontend/main.dart';
+import 'package:tymesavingfrontend/models/transaction_report.model.dart';
 import 'package:tymesavingfrontend/models/user.model.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
+import 'package:tymesavingfrontend/services/transaction_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
 class HomePage extends StatefulWidget {
@@ -17,18 +19,33 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with RouteAware {
   late User? user; // Assuming User is a defined model
+  ChartReport? chartReport;
+  ChartReport? chartReportSecondary;
 
   @override
   void initState() {
     super.initState();
     Future.microtask(() async {
+      if (!mounted) return;
       final authService = Provider.of<AuthService>(context, listen: false);
       await handleMainPageApi(context, () async {
         return await authService.getCurrentUserData();
-        // return result;
       }, () async {
         setState(() {
           user = authService.user;
+        });
+      });
+
+      // Start the second task only after the first one completes
+      if (!mounted) return;
+      final transactionService =
+          Provider.of<TransactionService>(context, listen: false);
+      await handleMainPageApi(context, () async {
+        return await transactionService.getBothChartReport(user?.id);
+      }, () async {
+        setState(() {
+          chartReport = transactionService.chartReport!;
+          chartReportSecondary = transactionService.chartReportSecondary!;
         });
       });
     });
@@ -74,8 +91,14 @@ class _HomePageState extends State<HomePage> with RouteAware {
           const SizedBox(
             height: 24,
           ),
-
-          const CustomBarChart(),
+          if (chartReport == null || chartReportSecondary == null)
+            // Display a loading indicator or placeholder widget
+            const CircularProgressIndicator()
+          else
+            CustomBarChart(
+              totalsExpense: chartReport!.totals,
+              totalsIncome: chartReportSecondary!.totals,
+            ),
         ]));
   }
 }

@@ -4,46 +4,47 @@ import 'package:flutter/material.dart';
 class CustomLineChart extends StatefulWidget {
   const CustomLineChart({
     super.key,
-    required this.jan,
-    required this.feb,
-    required this.mar,
-    required this.apr,
-    required this.may,
-    required this.jun,
-    required this.jul,
-    required this.aug,
-    required this.sep,
-    required this.oct,
-    required this.nov,
-    required this.dec,
+    required this.totals,
   });
 
-  final double jan;
-  final double feb;
-  final double mar;
-  final double apr;
-  final double may;
-  final double jun;
-  final double jul;
-  final double aug;
-  final double sep;
-  final double oct;
-  final double nov;
-  final double dec;
+  final Map<String, int> totals;
 
   @override
   State<CustomLineChart> createState() => _CustomLineChartState();
 }
 
 class _CustomLineChartState extends State<CustomLineChart> {
+  late List<MapEntry<String, int>> keyValuePairs;
+  late List<FlSpot> flSpots = [];
+
+  @override
+  void initState() {
+    // List to hold key-value pairs as tuples
+    keyValuePairs = [];
+
+    // Extract and insert key-value pairs into the list
+    widget.totals.forEach((key, value) {
+      keyValuePairs.add(MapEntry(key, value));
+    });
+
+    for (int i = 0; i < keyValuePairs.length; i++) {
+      var entry = keyValuePairs[i];
+      debugPrint('Month: ${entry.key}, Value: ${entry.value}');
+      flSpots.add(FlSpot(i.toDouble(), entry.value.toDouble()));
+    }
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: SizedBox(
-        height: 250,
+        height: 300,
         child: LineChart(
+          duration: const Duration(milliseconds: 300),
           curve: Curves.linear,
           LineChartData(
               gridData: const FlGridData(
@@ -66,35 +67,22 @@ class _CustomLineChartState extends State<CustomLineChart> {
                 bottomTitles: AxisTitles(
                   sideTitles: SideTitles(
                     showTitles: true,
-                    reservedSize: 30,
+                    reservedSize: 90,
                     interval: 1,
-                    // getTitlesWidget: bottomTitleWidgets,
                     getTitlesWidget: (value, meta) =>
-                        bottomTitleWidgets(context, value, meta),
+                        bottomTitleWidgets(value, meta),
                   ),
                 ),
               ),
               minY: 0,
               lineBarsData: [
                 LineChartBarData(
-                  spots: [
-                    FlSpot(1, widget.jan),
-                    FlSpot(2, widget.feb),
-                    FlSpot(3, widget.mar),
-                    FlSpot(4, widget.apr),
-                    FlSpot(5, widget.may),
-                    FlSpot(6, widget.jun),
-                    FlSpot(7, widget.jul),
-                    FlSpot(8, widget.aug),
-                    FlSpot(9, widget.sep),
-                    FlSpot(10, widget.oct),
-                    FlSpot(11, widget.nov),
-                    FlSpot(12, widget.dec),
-                  ],
+                  spots: flSpots,
                   color: colorScheme.inversePrimary,
                   barWidth: 5,
                   isCurved: true,
                   curveSmoothness: 0.55,
+                  preventCurveOverShooting: true,
                   dotData: const FlDotData(show: false),
                 )
               ]),
@@ -102,38 +90,41 @@ class _CustomLineChartState extends State<CustomLineChart> {
       ),
     );
   }
-}
 
-Widget bottomTitleWidgets(BuildContext context, double value, TitleMeta meta) {
-  final style = Theme.of(context).textTheme.bodyMedium!;
+  Widget bottomTitleWidgets(double value, TitleMeta meta) {
+    final style = Theme.of(context).textTheme.bodyMedium;
 
-  Widget text;
-  switch (value.toInt()) {
-    case 2:
-      text = Text('FEB', style: style);
-      break;
-    case 4:
-      text = Text('APR', style: style);
-      break;
-    case 6:
-      text = Text('JUN', style: style);
-      break;
-    case 8:
-      text = Text('AUG', style: style);
-      break;
-    case 10:
-      text = Text('OCT', style: style);
-      break;
-    case 12:
-      text = Text('DEC', style: style);
-      break;
-    default:
-      text = Text('', style: style);
-      break;
+    Widget text;
+    switch (value.toInt()) {
+      case 0:
+        text = Text(keyValuePairs[0].key, style: style);
+        break;
+      case 2:
+        text = Text(keyValuePairs[2].key, style: style);
+        break;
+      case 4:
+        text = Text(keyValuePairs[4].key, style: style);
+        break;
+      case 6:
+        text = Text(keyValuePairs[6].key, style: style);
+        break;
+      case 8:
+        text = Text(keyValuePairs[8].key, style: style);
+        break;
+      case 10:
+        text = Text(keyValuePairs[10].key, style: style);
+        break;
+      case 12:
+        text = Text(keyValuePairs[12].key, style: style);
+        break;
+      default:
+        text = Text('', style: style);
+        break;
+    }
+
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      child: Container(padding: const EdgeInsets.only(top: 30), child: text),
+    );
   }
-
-  return SideTitleWidget(
-    axisSide: meta.axisSide,
-    child: text,
-  );
 }
