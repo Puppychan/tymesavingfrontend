@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 
-class MyWalletTransaction extends StatefulWidget {
-  const MyWalletTransaction({super.key, required this.month, required this.expense});
+class ExpenseCard extends StatefulWidget {
+  const ExpenseCard({super.key, required this.month, required this.expense});
   
   final String month;
   final int expense;
   
   @override
-  State<MyWalletTransaction> createState() => _MyWalletTransactionState();
+  State<ExpenseCard> createState() => _ExpenseCardState();
 }
 
-class _MyWalletTransactionState extends State<MyWalletTransaction> {
+class _ExpenseCardState extends State<ExpenseCard> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     return Card(
-      color: colorScheme.background,
+      color: colorScheme.surface,
+      margin: const EdgeInsets.symmetric(horizontal: 20,vertical: 5),
       child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
           child: Row(

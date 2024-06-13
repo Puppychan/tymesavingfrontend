@@ -12,6 +12,7 @@ class TransactionService extends ChangeNotifier {
   CompareToLastMonth? _compareToLastMonth;
   CurrentMonthReport? _currentMonthReport;
   TopCategoriesList? _topCategoriesList;
+  NetSpend? _netSpend;
 
   // Getter to access outside of this class
   CompareToLastMonth? get compareToLastMonth => _compareToLastMonth;
@@ -19,6 +20,7 @@ class TransactionService extends ChangeNotifier {
   ChartReport? get chartReportSecondary => _chartReportSecondary;
   CurrentMonthReport? get currrentMonthReport => _currentMonthReport;
   TopCategoriesList? get topCategoriesList => _topCategoriesList;
+  NetSpend? get netSpend => _netSpend;
 
   Future<Map<String, dynamic>> getChartReport(userid) async {
     final response = await NetworkService.instance.get(
@@ -31,6 +33,7 @@ class TransactionService extends ChangeNotifier {
     _chartReport = ChartReport.fromJson(responseData);
     _currentMonthReport =
         CurrentMonthReport.fromJson(responseData['currentMonthTotal']);
+    _netSpend = NetSpend.fromJson(responseData['netSpend']);
     return response;
   }
 

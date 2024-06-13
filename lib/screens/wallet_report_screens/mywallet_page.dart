@@ -3,7 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:tymesavingfrontend/components/common/chart/custom_line_chart.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
-import 'package:tymesavingfrontend/components/mywallet_page/mywallet_transaction.dart';
+import 'package:tymesavingfrontend/components/mywallet_page/expense_card.dart';
+import 'package:tymesavingfrontend/components/mywallet_page/income_card.dart';
+import 'package:tymesavingfrontend/components/mywallet_page/tip_card.dart';
 import 'package:tymesavingfrontend/models/transaction_report_model.dart';
 import 'package:tymesavingfrontend/models/user.model.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
@@ -20,6 +22,7 @@ class MywalletPage extends StatefulWidget {
 class _MywalletPageState extends State<MywalletPage> {
   ChartReport? chartReport;
   CurrentMonthReport? currentMonthReport;
+  NetSpend? netSpend;
 
   @override
   void initState() {
@@ -46,6 +49,7 @@ class _MywalletPageState extends State<MywalletPage> {
         setState(() {
           chartReport = transactionService.chartReport!;
           currentMonthReport = transactionService.currrentMonthReport;
+          netSpend = transactionService.netSpend;
         });
       });
     });
@@ -83,15 +87,21 @@ class _MywalletPageState extends State<MywalletPage> {
         ),
         if (currentMonthReport == null)
           // Display a loading indicator or placeholder widget
-          const CircularProgressIndicator()
-        else
-          MyWalletTransaction(
-              month: currentMonthReport?.currentMonth ?? '',
-              expense: currentMonthReport?.totalAmount ?? 0),
-        Text(
-          '',
-          style: textTheme.titleMedium,
-        ),
+          const CircularProgressIndicator(),
+          Skeletonizer(
+            enabled: chartReport == null,
+            child: ExpenseCard(
+                month: currentMonthReport?.currentMonth ?? '',
+                expense: currentMonthReport?.totalAmount ?? 0),
+          ),
+          Skeletonizer(
+            enabled: chartReport == null,
+            child: IncomeCard(currentMonthIncome: netSpend?.currentMonthIncome ?? 0, currentNetSpend: netSpend?.currentNetSpend ?? 0)
+          ),
+          Skeletonizer(
+            enabled: chartReport == null,
+            child: TipCard(netSpend: netSpend?.currentNetSpend ?? 0)
+          ),
       ]),
     );
   }

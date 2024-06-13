@@ -95,3 +95,16 @@ class TopCategoriesList {
     return TopCategoriesList(topCategory: categoryList);
   }
 }
+
+class NetSpend {
+  final int currentMonthIncome;
+  final int currentNetSpend;
+
+  NetSpend({required this.currentMonthIncome, required this.currentNetSpend});
+
+  factory NetSpend.fromJson(Map<String, dynamic> json) {
+    return NetSpend(
+        currentMonthIncome: json['currentMonthIncome'],
+        currentNetSpend: json['netSpend']);
+  }
+}
