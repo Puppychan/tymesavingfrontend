@@ -84,10 +84,10 @@ class AuthService extends ChangeNotifier {
         });
         notifyListeners();
       } else {
-        print("Token is null in response body");
+        debugPrint("Token is null in response body");
       }
     } else {
-      print("Response body is null or not a Map");
+      debugPrint("Response body is null or not a Map");
     }
     return response;
   }

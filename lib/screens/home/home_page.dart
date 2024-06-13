@@ -20,7 +20,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with RouteAware {
   late User? user; // Assuming User is a defined model
-  late ChartReport? chartReport;
+  ChartReport? chartReport;
+  ChartReport? chartReportSecondary;
 
   @override
   void initState() {
@@ -39,11 +40,11 @@ class _HomePageState extends State<HomePage> with RouteAware {
       final transactionService =
           Provider.of<TransactionService>(context, listen: false);
       await handleMainPageApi(context, () async {
-        return await transactionService.getChartReport(user?.id);
+        return await transactionService.getBothChartReport(user?.id);
       }, () async {
         setState(() {
           chartReport = transactionService.chartReport!;
-          debugPrint(chartReport?.totals.toString());
+          chartReportSecondary = transactionService.chartReportSecondary!;
         });
       });
     });
@@ -76,18 +77,24 @@ class _HomePageState extends State<HomePage> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
-    return const SingleChildScrollView(
+    return SingleChildScrollView(
         padding: AppPaddingStyles.pagePaddingIncludeSubText,
         child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
           // Image.asset("assets/img/app_logo_light.svg",
           //     width: media.width * 0.5, fit: BoxFit.contain),
-          CustomAlignText(
+          const CustomAlignText(
               text: 'Have a nice day!', style: AppTextStyles.subHeading),
-          SizedBox(
+          const SizedBox(
             height: 24,
           ),
-
-          CustomBarChart(),
+          if (chartReport == null || chartReportSecondary == null)
+            // Display a loading indicator or placeholder widget
+            const CircularProgressIndicator()
+          else
+            CustomBarChart(
+              totalsExpense: chartReport!.totals,
+              totalsIncome: chartReportSecondary!.totals,
+            ),
         ]));
   }
 }

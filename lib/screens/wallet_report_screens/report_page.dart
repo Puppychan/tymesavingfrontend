@@ -58,7 +58,8 @@ class _ReportPageState extends State<ReportPage> {
         showBackButton: true,
       ),
       backgroundColor: AppColors.cream,
-      body: Skeletonizer(
+      body: 
+      Skeletonizer(
         enabled: compareToLastMonth == null, // Show skeleton if user is null
         child: Column(
           children: [

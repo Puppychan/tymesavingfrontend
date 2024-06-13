@@ -80,6 +80,10 @@ class _MywalletPageState extends State<MywalletPage> {
         const SizedBox(
           height: 20,
         ),
+        if (currentMonthReport == null)
+            // Display a loading indicator or placeholder widget
+            const CircularProgressIndicator()
+        else
         MyWalletTransaction(
             month: currentMonthReport?.currentMonth ?? '',
             expense: currentMonthReport?.totalAmount ?? 0),
