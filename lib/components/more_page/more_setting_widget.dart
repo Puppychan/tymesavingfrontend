@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/screens/authentication/sign_in_page.dart';
-import 'package:tymesavingfrontend/screens/wallet_report_screens/mywallet_page.dart';
+import 'package:tymesavingfrontend/screens/wallet_report_screens/spend_tracking.dart';
 import 'package:tymesavingfrontend/screens/wallet_report_screens/report_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 
@@ -27,7 +27,7 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
     if (!mounted) return;
     debugPrint('My Wallet tapped!');
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const MywalletPage()));
+        context, MaterialPageRoute(builder: (context) => const SpendTracking()));
   }
 
   Future<void> myReport() async {
@@ -64,7 +64,7 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
             /*
                 Containing place holder function for development! Do change it in merge !
               */
-            RowSettingTemplate('My Wallet', 'Access your wallet',
+            RowSettingTemplate('Spending tracking', 'Analytic of your expense & income',
                 const Icon(Icons.wallet), myWalletRoute),
             RowSettingTemplate('My Report', 'Understand your cashflow',
                 const Icon(Icons.help), myReport),
