@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/styles/app_padding.dart';
 import 'package:tymesavingfrontend/components/common/chart/custom_bar_chart.dart';
 import 'package:tymesavingfrontend/components/common/text_align.dart';
+import 'package:tymesavingfrontend/components/transaction/transaction_screen.dart';
 import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/transaction_report_model.dart';
 import 'package:tymesavingfrontend/models/user.model.dart';
@@ -99,6 +100,11 @@ class _HomePageState extends State<HomePage> with RouteAware {
               totalsExpense: chartReport!.totals,
               totalsIncome: chartReportSecondary!.totals,
             ),
+          const SizedBox(height: 24), // Add some spacing between sections
+          SizedBox(
+            height: 500, // Adjust height as needed
+            child: TransactionScreen(),
+          ),
         ]));
   }
 }

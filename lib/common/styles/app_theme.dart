@@ -98,7 +98,7 @@ class AppThemes {
       bodySmall: TextStyle(
           // sub body
           fontSize: 14,
-          color: AppColors.secondary,
+          color: Color.fromRGBO(78, 78, 83, 1),
           fontFamily: 'Montserrat',
           fontWeight: FontWeight.w400),
       labelLarge: TextStyle(
