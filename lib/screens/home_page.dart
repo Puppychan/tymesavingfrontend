@@ -8,6 +8,7 @@ import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/user.model.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
+import 'package:tymesavingfrontend/components/recent_transaction/transaction_month_tabs.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -74,6 +75,10 @@ class _HomePageState extends State<HomePage> with RouteAware {
           ),
 
           CustomBarChart(),
+          Padding(
+            padding: EdgeInsets.only(top: 40),
+            child: TransactionMonthTabs(),
+          ),
         ]));
   }
 }
