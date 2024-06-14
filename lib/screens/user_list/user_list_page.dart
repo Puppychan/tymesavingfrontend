@@ -11,12 +11,13 @@ class UserListPage extends StatefulWidget {
   State<UserListPage> createState() => _UserListPageState();
 }
 
-class _UserListPageState extends State<UserListPage> {
+class _UserListPageState extends State<UserListPage> with RouteAware {
   late final List<UserModel> users;
   @override
   void initState() {
     super.initState();
-    users = UserModel.getUsers(); // This fetches the user data once during initialization
+    // users = UserModel.getUsers(); // This fetches the user data once during initialization
+    
   }
 
   @override

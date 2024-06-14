@@ -5,7 +5,7 @@ import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
 import 'package:tymesavingfrontend/components/common/button/secondary_button.dart';
 import 'package:tymesavingfrontend/main.dart';
-import 'package:tymesavingfrontend/models/user.model.dart';
+import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/components/update_user_profile/build_info_template.dart';
 import 'package:tymesavingfrontend/screens/user_profile/update_user_page.dart';
 import 'package:tymesavingfrontend/screens/user_profile/update_user_password_page.dart';
