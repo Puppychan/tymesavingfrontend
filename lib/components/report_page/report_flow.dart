@@ -29,7 +29,7 @@ class _ReportFlowState extends State<ReportFlow> {
       children: [
         Card.filled(
           margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          color: colorScheme.primary.withOpacity(0.05),
+          color: colorScheme.surface,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             child: Row(
@@ -61,7 +61,7 @@ class _ReportFlowState extends State<ReportFlow> {
         ),
         Card.filled(
           margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          color: colorScheme.primary.withOpacity(0.05),
+          color: colorScheme.surface,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             child: Row(

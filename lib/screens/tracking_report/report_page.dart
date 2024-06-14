@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:tymesavingfrontend/components/common/chart/custom_pie_chart.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
-import 'package:tymesavingfrontend/components/report_page/outflow_detail.dart';
+import 'package:tymesavingfrontend/components/report_page/empty_case_outflow.dart';
+import 'package:tymesavingfrontend/components/report_page/outflow_header.dart';
+import 'package:tymesavingfrontend/components/report_page/report_detail.dart';
 import 'package:tymesavingfrontend/components/report_page/report_flow.dart';
 import 'package:tymesavingfrontend/models/transaction_report_model.dart';
 import 'package:tymesavingfrontend/models/user.model.dart';
@@ -75,11 +78,16 @@ class _ReportPageState extends State<ReportPage> {
             const SizedBox(
               height: 20,
             ),
-            const OutflowDetail(),
+            const OutflowHeader(),
             if (topCategoriesList == null)
-              const Text('No data!')
+              const EmptyCaseOutFlow()
             else
-              const Text('?'),
+              CustomPieChart(topCategories: topCategoriesList!.topCategory),
+
+            if (topCategoriesList == null)
+              const SizedBox()
+            else
+              ReportDetail(topCategories: topCategoriesList!.topCategory),
           ],
         ),
       ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/models/transaction_report_model.dart';
 
 class TipCard extends StatefulWidget {
   const TipCard({super.key, required this.netSpend});
