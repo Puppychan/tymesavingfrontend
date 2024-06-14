@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/common/app_color.dart';
-import 'package:tymesavingfrontend/common/app_text_style.dart';
+import 'package:tymesavingfrontend/common/styles/app_color.dart';
+import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 import 'month_tab.dart'; // Import the new MonthTab widget
 
 class TransactionMonthTabs extends StatelessWidget {

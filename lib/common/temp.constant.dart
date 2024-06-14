@@ -1,1 +1,0 @@
-const TEMP_AVATAR_IMAGE = 'https://source.unsplash.com/random/?person&1';

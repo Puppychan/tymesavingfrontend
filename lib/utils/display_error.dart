@@ -3,13 +3,15 @@ import 'package:tymesavingfrontend/screens/error_page.dart';
 
 class ErrorDisplay {
   static void showErrorToast(String? message, BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     // handle null or empty message
     if (message == null || message.isEmpty == true) {
       return;
     }
     // if message is not null or empty, show snackbar
     final snackBar = SnackBar(
-      content: Text(message),
+      backgroundColor: colorScheme.error,
+      content: Text(message, style: TextStyle(color: colorScheme.onError)),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }

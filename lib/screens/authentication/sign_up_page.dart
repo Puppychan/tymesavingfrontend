@@ -1,13 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/common/app_color.dart';
-import 'package:tymesavingfrontend/common/app_padding.dart';
-import 'package:tymesavingfrontend/components/divider_with_text.dart';
-import 'package:tymesavingfrontend/components/heading.dart';
-import 'package:tymesavingfrontend/components/text_align.dart';
-import 'package:tymesavingfrontend/common/app_text_style.dart';
-import 'package:tymesavingfrontend/layouts/signup_form.dart';
-import 'package:tymesavingfrontend/screens/authentication/sign_in_page.dart';
+import 'package:tymesavingfrontend/common/styles/app_padding.dart';
+import 'package:tymesavingfrontend/components/common/divider_with_text.dart';
+import 'package:tymesavingfrontend/components/common/heading.dart';
+import 'package:tymesavingfrontend/components/common/text_align.dart';
+import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
+import 'package:tymesavingfrontend/form/signup_form.dart';
 
 class SignUpView extends StatefulWidget {
   const SignUpView({super.key});
@@ -31,7 +29,6 @@ class _SignUpViewState extends State<SignUpView> {
         Navigator.pop(context);
       };
     return Scaffold(
-      backgroundColor: AppColors.cream,
       appBar: const Heading(title: 'Sign Up', showBackButton: true),
       body: SingleChildScrollView(
         padding: AppPaddingStyles.pagePaddingIncludeSubText,
@@ -41,9 +38,9 @@ class _SignUpViewState extends State<SignUpView> {
             // Image.asset("assets/img/app_logo_light.svg",
             //     width: media.width * 0.5, fit: BoxFit.contain),
             //  const Heading(title: 'Sign Up', showBackButton: true),
-            const CustomAlignText(
+            CustomAlignText(
                 text: 'Become a part to use this app',
-                style: AppTextStyles.subHeading),
+                style: Theme.of(context).textTheme.headlineMedium!),
             const SizedBox(
               height: 24,
             ),
@@ -59,14 +56,14 @@ class _SignUpViewState extends State<SignUpView> {
             Text.rich(
               TextSpan(
                 children: [
-                  const TextSpan(
+                  TextSpan(
                     text: 'Already Have an Account? ',
-                    style: AppTextStyles.paragraph,
+                    style: Theme.of(context).textTheme.bodyMedium!,
                   ),
                   TextSpan(
                     text: ' Login Here',
                     recognizer: signInRecognizer, // Attach the recognizer here
-                    style: AppTextStyles.paragraphLink,
+                    style: AppTextStyles.paragraphLinkBlue(context),
                   ),
                 ],
               ),
