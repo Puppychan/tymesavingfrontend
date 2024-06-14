@@ -36,6 +36,5 @@ class _EmptyCaseOutFlowState extends State<EmptyCaseOutFlow> {
             ],
           )),
     );
-    ;
   }
 }

@@ -13,6 +13,23 @@ class CustomPieChart extends StatefulWidget {
 
 class _CustomPieChartState extends State<CustomPieChart> {
   late List<PieChartSectionData> pieChartData;
+  final Map<String, Color> categoryColors = {
+    'Dine out': Colors.red,
+    'Shopping': Colors.blue,
+    'Travel': Colors.orange,
+    'Entertainment': Colors.purple,
+    'Personal': Colors.teal,
+    'Transportation': Colors.green,
+    'Rent/Mortgage': Colors.brown,
+    'Utilities': Colors.yellow,
+    'Bills & Fees': Colors.grey,
+    'Health': Colors.pink,
+    'Education': Colors.indigo,
+    'Groceries': Colors.lime,
+    'Gifts': Colors.redAccent,
+    'Work': Colors.blueAccent,
+    'Other expenses': Colors.black,
+  };
 
   @override
   void initState() {
@@ -20,6 +37,7 @@ class _CustomPieChartState extends State<CustomPieChart> {
     for (int i = 0; i < widget.topCategories.length; i++) {
       pieChartData.add(PieChartSectionData(
         value: double.parse(widget.topCategories[i].percentages),
+        color: categoryColors[widget.topCategories[i].category],
       ));
     }
 
