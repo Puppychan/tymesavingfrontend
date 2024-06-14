@@ -26,23 +26,13 @@ class _MainPageLayoutState extends State<MainPageLayout> with RouteAware {
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: _selectedIndex);
-
-    Future.microtask(() async {
-      final authService = Provider.of<AuthService>(context, listen: false);
-      await handleMainPageApi(context, () async {
-        return await authService.getCurrentUserData();
-      }, () async {
-        if (!mounted) return;
-        setState(() {
-          user = authService.user;
-        });
-      });
-    });
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    if (!mounted) return;
+    user = Provider.of<AuthService>(context).user;
     final route = ModalRoute.of(context);
     if (route is PageRoute) {
       routeObserver.subscribe(this, route);

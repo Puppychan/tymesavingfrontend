@@ -1,52 +1,67 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
-import 'package:tymesavingfrontend/components/common/circle_network_image.dart';
 import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
-import 'package:timeago/timeago.dart' as timeago;
 import 'package:tymesavingfrontend/models/user_model.dart';
+import 'package:tymesavingfrontend/screens/user_profile/update_user_page.dart';
+import 'package:tymesavingfrontend/services/user_service.dart';
+import 'package:tymesavingfrontend/utils/handling_error.dart';
 
 class UserCard extends StatelessWidget {
   final User user;
-  final VoidCallback onEdit;
-  final VoidCallback onDelete;
   final double maxContribution = 500.0; // Example maximum contribution value
 
   const UserCard({
     super.key,
     required this.user,
-    required this.onEdit,
-    required this.onDelete,
   });
-
-  void _showDeleteConfirmationDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Delete Confirmation'),
-          content: const Text('Are you sure you want to delete this user?'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                onDelete();
-              },
-              child: const Text('Delete'),
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
+    void onEdit() {
+      // Implement the edit functionality
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => UpdateUserScreen(user: user)),
+      );
+    }
+
+    Future showDeleteConfirmationDialog() async {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Delete Confirmation'),
+            content: const Text('Are you sure you want to delete this user?'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Future.microtask(() async {
+                    final userService =
+                        Provider.of<UserService>(context, listen: false);
+                    await handleMainPageApi(context, () async {
+                      return await userService.deleteUser(user.username);
+                      // return result;
+                    }, () async {
+                      Navigator.of(context).pop();
+                    });
+                  });
+                  // onDelete();
+                },
+                child: const Text('Delete'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     // double progress = user.contribution / maxContribution; // Calculate the progress as a fraction
     // String formattedDate = timeago.format(DateTime.parse(user.date));
     final colorScheme = Theme.of(context).colorScheme;
@@ -88,7 +103,9 @@ class UserCard extends StatelessWidget {
                   ),
                   IconButton(
                     icon: Icon(Icons.delete, color: colorScheme.secondary),
-                    onPressed: () => _showDeleteConfirmationDialog(context),
+                    onPressed: () async {
+                      await showDeleteConfirmationDialog();
+                    },
                   ),
                 ],
               ),
@@ -111,11 +128,10 @@ class UserCard extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Text(
-                    'Joined 3 days'
-                    // formattedDate,
-                    // style: Theme.of(context).textTheme.bodySmall!,
-                  ),
+                  Text('Joined 3 days'
+                      // formattedDate,
+                      // style: Theme.of(context).textTheme.bodySmall!,
+                      ),
                 ],
               ),
             ),
@@ -127,7 +143,8 @@ class UserCard extends StatelessWidget {
                   // value: progress.clamp(0.0, 1.0), // Ensuring the value is between 0 and 1
                   value: 0.4, // Ensuring the value is between 0 and 1
                   backgroundColor: colorScheme.quaternary,
-                  valueColor: AlwaysStoppedAnimation<Color>(colorScheme.primary),
+                  valueColor:
+                      AlwaysStoppedAnimation<Color>(colorScheme.primary),
                   minHeight: 8,
                 ),
               ),

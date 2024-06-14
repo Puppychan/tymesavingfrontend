@@ -60,6 +60,7 @@ class UpdateUserState extends State<UpdateUserForm> {
               validator: Validator.validateUsername,
               placeholder: widget.user?.username ?? 'Loading...',
               label: 'Username',
+              enabled: false,
               controller: _usernameController,
             ),
             const SizedBox(
