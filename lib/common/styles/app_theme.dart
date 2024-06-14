@@ -61,7 +61,7 @@ class AppThemes {
           fontFamily: 'Merriweather',
           fontWeight: FontWeight.w700),
       headlineMedium: TextStyle(
-          // sub display
+          // sub display - subheading
           fontSize: 22,
           color: AppColors.black,
           fontFamily: 'Montserrat',
