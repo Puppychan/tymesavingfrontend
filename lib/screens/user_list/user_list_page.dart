@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/common/styles/app_padding.dart';
-import 'package:tymesavingfrontend/components/common/heading.dart';
+import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/components/common/text_align.dart';
-import 'package:tymesavingfrontend/models/user_model.txt';
+import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/components/user/user_card.dart';
+import 'package:tymesavingfrontend/services/user_service.dart';
+import 'package:tymesavingfrontend/utils/handling_error.dart';
 
 class UserListPage extends StatefulWidget {
   const UserListPage({super.key});
@@ -11,53 +12,50 @@ class UserListPage extends StatefulWidget {
   State<UserListPage> createState() => _UserListPageState();
 }
 
-class _UserListPageState extends State<UserListPage> with RouteAware {
-  late final List<UserModel> users;
+class _UserListPageState extends State<UserListPage> {
+  late List<User> users = [];
   @override
   void initState() {
     super.initState();
-    // users = UserModel.getUsers(); // This fetches the user data once during initialization
-    
+    Future.microtask(() async {
+      if (!mounted) return;
+      final userService = Provider.of<UserService>(context, listen: false);
+      await handleMainPageApi(context, () async {
+        return await userService.fetchUserList();
+      }, () async {
+        setState(() {
+          users = userService.users;
+        });
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const Heading(title: 'Users'),
-      body: Padding(
-        padding: AppPaddingStyles.pagePaddingIncludeSubText,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // subtext here
-            CustomAlignText(
-              text: 'Manage Users Here',
-              style: Theme.of(context).textTheme.headlineMedium!,
+    return users.isNotEmpty
+        ? Expanded(
+            child: ListView.separated(
+              itemCount: users.length,
+              separatorBuilder: (context, index) => const SizedBox(height: 15),
+              itemBuilder: (context, index) {
+                return UserCard(
+                  user: users[index],
+                  onEdit: () {
+                    // Implement your edit functionality
+                    print('Edit ${users[index].fullname}');
+                  },
+                  onDelete: () {
+                    // Implement your delete functionality
+                    print('Delete ${users[index].fullname}');
+                  },
+                );
+              },
             ),
-            const SizedBox(height: 30),
-            Expanded(
-              child: ListView.separated(
-                itemCount: users.length,
-                separatorBuilder: (context, index) => const SizedBox(height: 15),
-                // padding: const EdgeInsets.symmetric(horizontal: 15),
-                itemBuilder: (context, index) {
-                  return UserCard(
-                    user: users[index],
-                    onEdit: () {
-                      // Implement your edit functionality
-                      print('Edit ${users[index].name}');
-                    },
-                    onDelete: () {
-                      // Implement your delete functionality
-                      print('Delete ${users[index].name}');
-                    },
-                  );
-                },
-              ),
+          )
+        : const Expanded(
+            child: Center(
+              child: CircularProgressIndicator(),
             ),
-          ],
-        ),
-      ),
-    );
+          );
   }
 }

@@ -40,7 +40,6 @@ class AuthService extends ChangeNotifier {
     //     'Token: $token, Expiry: $expiry, User: $user');
 
     if (token!.isNotEmpty && expiry!.isNotEmpty && user!.isNotEmpty) {
-      print("True");
       final parsedUser = jsonDecode(user);
       // _token = token;
       // _username = parsedUser['username'];

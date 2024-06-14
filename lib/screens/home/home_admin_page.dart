@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/components/common/text_align.dart';
 import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
+import 'package:tymesavingfrontend/screens/user_list/user_list_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
@@ -20,6 +21,7 @@ class _HomeAdminPageState extends State<HomeAdminPage> with RouteAware {
   void initState() {
     super.initState();
     Future.microtask(() async {
+      if (!mounted) return;
       final authService = Provider.of<AuthService>(context, listen: false);
       await handleMainPageApi(context, () async {
         return await authService.getCurrentUserData();
@@ -70,7 +72,7 @@ class _HomeAdminPageState extends State<HomeAdminPage> with RouteAware {
       const SizedBox(
         height: 24,
       ),
-      
+      const UserListPage(),
     ]);
   }
 }

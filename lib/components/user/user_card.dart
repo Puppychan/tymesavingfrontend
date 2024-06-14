@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 import 'package:tymesavingfrontend/components/common/circle_network_image.dart';
-import 'package:tymesavingfrontend/models/user_model.txt';
 import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:tymesavingfrontend/models/user_model.dart';
 
 class UserCard extends StatelessWidget {
-  final UserModel user;
+  final User user;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
   final double maxContribution = 500.0; // Example maximum contribution value
@@ -47,8 +47,8 @@ class UserCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double progress = user.contribution / maxContribution; // Calculate the progress as a fraction
-    String formattedDate = timeago.format(DateTime.parse(user.date));
+    // double progress = user.contribution / maxContribution; // Calculate the progress as a fraction
+    // String formattedDate = timeago.format(DateTime.parse(user.date));
     final colorScheme = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -71,11 +71,11 @@ class UserCard extends StatelessWidget {
               padding: const EdgeInsets.all(8),
               child: Row(
                 children: [
-                  CustomCircleAvatar(imagePath: user.avatarPath),
+                  // CustomCircleAvatar(imagePath: user.avatarPath),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      user.name,
+                      user.fullname,
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -104,15 +104,17 @@ class UserCard extends StatelessWidget {
                       style: Theme.of(context).textTheme.bodyMedium!,
                       children: <TextSpan>[
                         TextSpan(
-                          text: '\$${user.contribution.toStringAsFixed(2)}',
+                          // text: '\$${user.contribution.toStringAsFixed(2)}',
+                          text: "User Contribution",
                           style: AppTextStyles.paragraphBold(context),
                         ),
                       ],
                     ),
                   ),
                   Text(
-                    formattedDate,
-                    style: Theme.of(context).textTheme.bodySmall!,
+                    'Joined 3 days'
+                    // formattedDate,
+                    // style: Theme.of(context).textTheme.bodySmall!,
                   ),
                 ],
               ),
@@ -122,7 +124,8 @@ class UserCard extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(4),
                 child: LinearProgressIndicator(
-                  value: progress.clamp(0.0, 1.0), // Ensuring the value is between 0 and 1
+                  // value: progress.clamp(0.0, 1.0), // Ensuring the value is between 0 and 1
+                  value: 0.4, // Ensuring the value is between 0 and 1
                   backgroundColor: colorScheme.quaternary,
                   valueColor: AlwaysStoppedAnimation<Color>(colorScheme.primary),
                   minHeight: 8,

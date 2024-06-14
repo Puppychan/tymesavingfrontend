@@ -95,7 +95,6 @@ class NetworkService {
     Map<String, dynamic>? queryParameters,
   }) async {
     try {
-      print("URL is $url");
       final response = await _dio.get(url, queryParameters: queryParameters);
       return {'response': response.data?['response'], 'statusCode': response.statusCode};
     } catch (error) {
