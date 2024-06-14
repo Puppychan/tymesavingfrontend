@@ -72,6 +72,14 @@ class AppTextStyles {
   //   fontWeight: FontWeight.w400,
   // );
 
+  static const TextStyle graphData = TextStyle(
+    // color: AppColors.secondary,
+    fontSize: 11,
+    fontFamily: 'Monsterrat',
+    height: 1,
+    fontWeight: FontWeight.w400,
+  );
+
   static TextStyle titleLargeBlue(BuildContext context) {
     return Theme.of(context).textTheme.titleLarge!.copyWith(
           color: Theme.of(context).colorScheme.primary,
