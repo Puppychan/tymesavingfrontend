@@ -10,6 +10,7 @@ import 'package:tymesavingfrontend/models/user.model.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/transaction_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
+import 'package:tymesavingfrontend/models/transaction.model.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -22,6 +23,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
   late User? user; // Assuming User is a defined model
   ChartReport? chartReport;
   ChartReport? chartReportSecondary;
+  Map<String, List<Transaction>>? transactions;
 
   @override
   void initState() {
@@ -48,6 +50,15 @@ class _HomePageState extends State<HomePage> with RouteAware {
           chartReport = transactionService.chartReport!;
           chartReportSecondary = transactionService.chartReportSecondary!;
         });
+      });
+
+      // Fetch transactions
+      // Fetch transactions
+      if (!mounted) return;
+      final transactionData =
+          await transactionService.fetchTransactions(user?.id);
+      setState(() {
+        transactions = transactionData;
       });
     });
   }
@@ -102,8 +113,10 @@ class _HomePageState extends State<HomePage> with RouteAware {
             ),
           const SizedBox(height: 24), // Add some spacing between sections
           SizedBox(
-            height: 500, // Adjust height as needed
-            child: TransactionScreen(),
+            height: 500,
+            child: transactions == null
+                ? const CircularProgressIndicator()
+                : TransactionScreen(transactions: transactions!),
           ),
         ]));
   }

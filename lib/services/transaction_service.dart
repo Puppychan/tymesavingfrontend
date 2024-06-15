@@ -85,30 +85,58 @@ class TransactionService extends ChangeNotifier {
   }
 
   Future<Map<String, List<Transaction>>> fetchTransactions(userid) async {
-    // "https://tyme-saving-backend.vercel.app/api/transaction/byUser/72e4b93000be75dd6e367723"
+    String normalizeMonthName(String month) {
+      switch (month.toUpperCase()) {
+        case 'JAN':
+          return 'Jan';
+        case 'FEB':
+          return 'Feb';
+        case 'MAR':
+          return 'Mar';
+        case 'APR':
+          return 'Apr';
+        case 'MAY':
+          return 'May';
+        case 'JUN':
+          return 'Jun';
+        case 'JUL':
+          return 'Jul';
+        case 'AUG':
+          return 'Aug';
+        case 'SEP':
+          return 'Sep';
+        case 'OCT':
+          return 'Oct';
+        case 'NOV':
+          return 'Nov';
+        case 'DEC':
+          return 'Dec';
+        default:
+          return month;
+      }
+    }
+
     final response = await NetworkService.instance.get(
         "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReportByUser}/$userid");
 
+    if (response['response'] != null && response['statusCode'] == 200) {
+      final responseData = response['response'] as Map<String, dynamic>;
 
-    if (response['response'] != null &&
-        response['statusCode'] == 200) {
-      // final data = json.decode(response.body);
-      // print('Raw JSON response: $data');
+      final transactions =
+          responseData.map<String, List<Transaction>>((month, transactions) {
+        final transactionList = (transactions['transactions'] as List<dynamic>)
+            .map((transaction) => Transaction.fromJson(transaction))
+            .toList();
+        return MapEntry(normalizeMonthName(month), transactionList);
+      });
 
-      // final responseData = data['response'] as Map<String, dynamic>;
-      // print('Parsed response data: $responseData');
+      print('Parsed transactions: $transactions');
 
-      // return responseData.map((month, transactions) {
-      //   final transactionList = (transactions['transactions'] as List<dynamic>)
-      //       .map((transaction) => Transaction.fromJson(transaction))
-      //       .toList();
-
-      //   print('Transactions for $month: $transactionList');
-        
-      // });
-      return response['response'];
+      notifyListeners();
+      return transactions;
     } else {
-      print('Failed to load transactions. Status code: ${response.statusCode}');
+      print(
+          'Failed to load transactions. Status code: ${response['statusCode']}');
       throw Exception('Failed to load transactions');
     }
   }
