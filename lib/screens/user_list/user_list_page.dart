@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tymesavingfrontend/components/common/bottom_sheet.dart';
 import 'package:tymesavingfrontend/components/common/text_align.dart';
+import 'package:tymesavingfrontend/components/user/user_sort_filter.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/components/user/user_card.dart';
 import 'package:tymesavingfrontend/screens/user_profile/update_user_page.dart';
@@ -13,11 +15,14 @@ class UserListPage extends StatefulWidget {
   State<UserListPage> createState() => _UserListPageState();
 }
 
+Widget buildFood(String foodName) => ListTile(
+      title: Text(foodName),
+      onTap: () {},
+    );
+
 class _UserListPageState extends State<UserListPage> {
   late List<User> users = [];
-  @override
-  void initState() {
-    super.initState();
+  void _fetchUsers() async {
     Future.microtask(() async {
       if (!mounted) return;
       final userService = Provider.of<UserService>(context, listen: false);
@@ -30,6 +35,13 @@ class _UserListPageState extends State<UserListPage> {
       });
     });
   }
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUsers();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +61,14 @@ class _UserListPageState extends State<UserListPage> {
                 child: CircularProgressIndicator(),
               ),
             );
+      // return ElevatedButton(
+      //   onPressed: () => showStyledBottomSheet(
+      //     context: context,
+      //     title: "Filter",
+      //     contentWidget: UserSortFilter(updateUserList: _fetchUsers),
+      //   ),
+      //   child: const Text('Show Filter'),
+      // );
     });
   }
 }

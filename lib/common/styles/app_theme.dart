@@ -21,6 +21,17 @@ class AppThemes {
       backgroundColor: AppColors.quaternary,
       // Adjust the top margin as needed
     ),
+    toggleButtonsTheme: ToggleButtonsThemeData(
+        borderRadius: BorderRadius.circular(10),
+
+        fillColor: AppColors.primary, // background color when selected
+        selectedBorderColor: AppColors.quaternary, // border color when selected
+        selectedColor: AppColors.black, // text color when selected
+        splashColor: AppColors.tertiary
+            .withOpacity(0.5), // color when pressed - animated color
+        borderColor: AppColors.quaternary, // border color when not selected
+        color: AppColors.secondary // text color when not selected
+        ),
     colorScheme: const ColorScheme.light(
       // primary: AppColors.primary,
       primary: AppColors.primaryBlue,
@@ -141,6 +152,17 @@ class AppThemes {
       backgroundColor: AppColors.quaternaryDark,
       // Adjust the top margin as needed
     ),
+    toggleButtonsTheme: ToggleButtonsThemeData(
+        borderRadius: BorderRadius.circular(10),
+
+        fillColor: AppColors.primaryBlueDark, // background color when selected
+        selectedBorderColor: AppColors.quaternaryDark, // border color when selected
+        selectedColor: AppColors.black, // text color when selected
+        splashColor: AppColors.tertiaryDark
+            .withOpacity(0.5), // color when pressed - animated color
+        borderColor: AppColors.quaternaryDark, // border color when not selected
+        color: AppColors.secondaryDark // text color when not selected
+        ),
     colorScheme: const ColorScheme.dark(
       // primary: AppColors.primary,
       primary: AppColors.primaryBlueDark,
