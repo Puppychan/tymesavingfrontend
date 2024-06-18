@@ -1,62 +1,92 @@
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/components/common/bottom_sheet.dart';
 
+ListTile makeListTile({
+  required IconData leadingIcon,
+  required String title,
+  required Function() onTap,
+  required ColorScheme colorScheme,
+  required TextTheme textTheme,
+}) {
+  const borderRadius = BorderRadius.horizontal(
+      left: Radius.circular(10), right: Radius.circular(50));
+  return ListTile(
+    tileColor: colorScheme.tertiary,
+    textColor: colorScheme.onTertiary,
+    iconColor: colorScheme.primary,
+    contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 3),
+    shape: const RoundedRectangleBorder(borderRadius: borderRadius),
+    leading: Icon(leadingIcon, size: 30),
+    title: Text(title,
+        style: textTheme.bodyLarge?.copyWith(
+            fontWeight: FontWeight.w500, fontFamily: 'Merriweather')),
+    onTap: onTap,
+  );
+}
+
 void showAddOptions(BuildContext context) {
+  final colorScheme = Theme.of(context).colorScheme;
+  final textTheme = Theme.of(context).textTheme;
+  const defaultGap = SizedBox(height: 20);
   showStyledBottomSheet(
+    initialChildSize: 0.6,
+    isTransparentBackground: true,
     context: context,
-    title: "Add options",
     contentWidget: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        ListTile(
-          leading: Icon(Icons.account_balance_wallet),
-          title: Text('Add new budget plan'),
+        makeListTile(
+          leadingIcon: Icons.account_balance_wallet,
+          title: 'Add new budget plan',
           onTap: () {
             // Handle add new budget plan
           },
+          textTheme: textTheme,
+          colorScheme: colorScheme,
         ),
-        ListTile(
-          leading: Icon(Icons.attach_money),
-          title: Text('Add new income'),
+        defaultGap,
+        makeListTile(
+          leadingIcon: Icons.attach_money,
+          title: 'Add new income',
           onTap: () {
-            // Handle add new income
+            // Handle add new budget plan
           },
+          textTheme: textTheme,
+          colorScheme: colorScheme,
         ),
-        ListTile(
-          leading: Icon(Icons.money_off),
-          title: Text('Add new expense'),
+        defaultGap,
+        makeListTile(
+          leadingIcon: Icons.money_off,
+          title: 'Add new expense',
           onTap: () {
-            // Handle add new expense
+            // Handle add new budget plan
           },
+          textTheme: textTheme,
+          colorScheme: colorScheme,
         ),
-        ListTile(
-          leading: Icon(Icons.savings),
-          title: Text('Add new saving goal'),
+        defaultGap,
+        makeListTile(
+          leadingIcon: Icons.savings,
+          title: 'Add new saving goal',
           onTap: () {
-            // Handle add new saving goal
+            // Handle add new budget plan
           },
+          textTheme: textTheme,
+          colorScheme: colorScheme,
         ),
+        defaultGap,
+        IconButton(
+            // Close button
+            iconSize: 33.0,
+            color: colorScheme.onInverseSurface,
+            style: IconButton.styleFrom(
+              backgroundColor: colorScheme.inversePrimary,
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            icon: const Icon(Icons.close))
       ],
     ),
   );
-  // showModalBottomSheet(
-  //   context: context,
-  //   isScrollControlled: true,
-  //   backgroundColor: Colors.transparent,
-  //   builder: (BuildContext modalContext) {
-  //     return DraggableScrollableSheet(
-  //       initialChildSize: 0.4,
-  //       minChildSize: 0.1,
-  //       maxChildSize: 1,
-  //       builder: (_, controller) => Container(
-  //         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-  //         decoration: BoxDecoration(
-  //           color: Theme.of(context).colorScheme.background,
-  //           borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
-  //         ),
-  //         child: ,
-  //       ),
-  //     );
-  //   },
-  // );
 }
