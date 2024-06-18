@@ -11,16 +11,18 @@ class UserService extends ChangeNotifier {
   //   'filterRole': 'All',
   // };
 
-  String _roleFilter = '';
+  String _roleFilter = 'All';
   Map<String, String> _sortOption = {"sortUsername": 'ascending'};
 
   // user list
   List<User> _users = [];
+  User? _currentFetchUser;
 
   // List<String> get filterData => _filterData;
   String get roleFilter => _roleFilter;
   String get sortOption => _convertSortOptionToString();
   List<User> get users => _users;
+  User? get currentFetchUser => _currentFetchUser;
 
   String _convertSortOptionToString() {
     final tempSortValue = _sortOption.keys.first;
@@ -109,6 +111,47 @@ class UserService extends ChangeNotifier {
     };
 
     notifyListeners();
+  }
+
+    Future<dynamic> getCurrentUserData(username) async {
+    final response = await NetworkService.instance
+        .get("${BackendEndpoints.user}/$username");
+    debugPrint("Response in getCurrentUserData: $response");
+    if (response['response'] != null && response['statusCode'] == 200) {
+      _currentFetchUser = User.fromMap(response['response']);
+      notifyListeners();
+    }
+    // return response['response']?.containsKey("id") ?? false;
+    return response;
+  }
+
+    Future<Map<String, dynamic>> updateUser(
+    String username,
+    String email,
+    String phone,
+    String fullname,
+  ) async {
+    final response = await NetworkService.instance.put(
+      "${BackendEndpoints.user}/$username/${BackendEndpoints.userUpdate}",
+      body: {
+        // 'username': username, 
+        'email': email,
+        'phone': phone,
+        'fullname': fullname,
+      },
+    );
+    if (response['response'] != null &&
+        response['response'] is Map<String, dynamic> &&
+        response['statusCode'] == 200) {
+      final responseBody = response['response'] as Map<String, dynamic>;
+      final updatedUser = User.fromMap(responseBody);
+      // update the user in the list
+      final index = _users.indexWhere((element) => element.username == username);
+      _users[index] = updatedUser;
+
+      notifyListeners();
+    }
+    return response;
   }
 
   Future<dynamic> deleteUser(username) async {

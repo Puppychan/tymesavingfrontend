@@ -3,13 +3,16 @@ import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
+import 'package:tymesavingfrontend/screens/user_list/user_detail_page.dart';
 import 'package:tymesavingfrontend/screens/user_profile/update_user_page.dart';
+import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/user_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class UserCard extends StatelessWidget {
   final User user;
-  final double maxContribution = 500.0; // Example maximum contribution value
+  final double maxContribution = 100.0; // Example maximum contribution value
 
   const UserCard({
     super.key,
@@ -18,6 +21,10 @@ class UserCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // TODO: Implement user's contribution inside shared budget  and saving group
+    final bool isHaveContribution = user.contribution != null;
+    final currentUser = Provider.of<AuthService>(context).user;
+
     void onEdit() {
       // Implement the edit functionality
       Navigator.push(
@@ -63,23 +70,21 @@ class UserCard extends StatelessWidget {
     }
 
     // double progress = user.contribution / maxContribution; // Calculate the progress as a fraction
-    // String formattedDate = timeago.format(DateTime.parse(user.date));
+    String formattedDate = timeago.format(DateTime.parse(user.creationDate));
     final colorScheme = Theme.of(context).colorScheme;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      child: Container(
-        decoration: BoxDecoration(
-          color: colorScheme.tertiary, // Hex color for the background
-          boxShadow: [
-            BoxShadow(
-              color: colorScheme.secondary.withOpacity(0.2),
-              spreadRadius: 1,
-              blurRadius: 6,
-              offset: const Offset(0, 3),
-            ),
-          ],
-          borderRadius: BorderRadius.circular(16),
-        ),
+    return Card(
+      color: colorScheme.tertiary,
+      shadowColor: colorScheme.secondary.withOpacity(0.5),
+      elevation: 5,
+      child: InkWell(
+        splashColor: colorScheme.quaternary,
+        onTap: () {
+          // debugPrint('Challenge tapped.');
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return UserDetail(user: user);
+          }));
+        },
+        borderRadius: BorderRadius.circular(16),
         child: Column(
           children: [
             Padding(
@@ -90,7 +95,7 @@ class UserCard extends StatelessWidget {
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      user.fullname,
+                      "${user.username} ${currentUser?.username == user.username ? '(You)' : ''}",
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -114,24 +119,41 @@ class UserCard extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  RichText(
-                    text: TextSpan(
-                      text: 'Contribute ',
-                      style: Theme.of(context).textTheme.bodyMedium!,
-                      children: <TextSpan>[
+                  Expanded(
+                      flex: 6,
+                      child: Text.rich(
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                         TextSpan(
-                          // text: '\$${user.contribution.toStringAsFixed(2)}',
-                          text: "User Contribution",
-                          style: AppTextStyles.paragraphBold(context),
+                          children: isHaveContribution
+                              ? <TextSpan>[
+                                  TextSpan(
+                                    text: 'Contribute ',
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium!,
+                                  ),
+                                  TextSpan(
+                                    // text: '\$${user.contribution.toStringAsFixed(2)}',
+                                    text: "User Contribution",
+                                    style: AppTextStyles.paragraphBold(context),
+                                  ),
+                                ]
+                              : <TextSpan>[
+                                  TextSpan(
+                                    // text: '\$${user.contribution.toStringAsFixed(2)}',
+                                    text: user.fullname,
+                                    style: AppTextStyles.paragraphBold(context),
+                                  )
+                                ],
                         ),
-                      ],
-                    ),
+                      )),
+                  const SizedBox(width: 3),
+                  Text(
+                    "Joined $formattedDate",
+                    style: Theme.of(context).textTheme.bodySmall!,
                   ),
-                  Text('Joined 3 days'
-                      // formattedDate,
-                      // style: Theme.of(context).textTheme.bodySmall!,
-                      ),
                 ],
               ),
             ),
@@ -139,14 +161,16 @@ class UserCard extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(4),
-                child: LinearProgressIndicator(
-                  // value: progress.clamp(0.0, 1.0), // Ensuring the value is between 0 and 1
-                  value: 0.4, // Ensuring the value is between 0 and 1
-                  backgroundColor: colorScheme.quaternary,
-                  valueColor:
-                      AlwaysStoppedAnimation<Color>(colorScheme.primary),
-                  minHeight: 8,
-                ),
+                child: isHaveContribution
+                    ? LinearProgressIndicator(
+                        // value: progress.clamp(0.0, 1.0), // Ensuring the value is between 0 and 1
+                        value: 0.4, // Ensuring the value is between 0 and 1
+                        backgroundColor: colorScheme.quaternary,
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(colorScheme.primary),
+                        minHeight: 8,
+                      )
+                    : Container(),
               ),
             ),
           ],

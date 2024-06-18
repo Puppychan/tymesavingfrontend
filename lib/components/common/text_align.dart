@@ -2,20 +2,20 @@ import 'package:flutter/material.dart';
 
 class CustomAlignText extends StatelessWidget {
   final String text;
-  final TextAlign alignment;
+  final Alignment alignment;
   final TextStyle? style;
 
   const CustomAlignText(
-      {super.key, required this.text, this.alignment = TextAlign.left, this.style});
+      {super.key, required this.text, this.alignment = Alignment.centerLeft, this.style});
 
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: Alignment.centerLeft,
+      alignment: alignment,
       child: Text(
         text,
         style: style,
-        textAlign: alignment,
+        // textAlign: alignment,
         textWidthBasis: TextWidthBasis.longestLine,
       ),
     );

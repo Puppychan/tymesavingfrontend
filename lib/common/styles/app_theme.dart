@@ -23,7 +23,6 @@ class AppThemes {
     ),
     toggleButtonsTheme: ToggleButtonsThemeData(
         borderRadius: BorderRadius.circular(10),
-
         fillColor: AppColors.primary, // background color when selected
         selectedBorderColor: AppColors.quaternary, // border color when selected
         selectedColor: AppColors.black, // text color when selected
@@ -59,6 +58,7 @@ class AppThemes {
       iconTheme: IconThemeData(color: AppColors.black),
       titleTextStyle: TextStyle(
           // display
+          overflow: TextOverflow.ellipsis,
           fontSize: 28,
           color: AppColors.black,
           fontFamily: 'Merriweather',
@@ -67,6 +67,7 @@ class AppThemes {
     textTheme: const TextTheme(
       headlineLarge: TextStyle(
           // display
+          overflow: TextOverflow.ellipsis,
           fontSize: 28,
           color: AppColors.black,
           fontFamily: 'Merriweather',
@@ -74,22 +75,26 @@ class AppThemes {
       headlineMedium: TextStyle(
           // sub display - subheading
           fontSize: 22,
+          overflow: TextOverflow.ellipsis,
           color: AppColors.black,
           fontFamily: 'Montserrat',
           fontWeight: FontWeight.w400),
       titleLarge: TextStyle(
           // heading medium
+          overflow: TextOverflow.ellipsis,
           color: AppColors.black,
           fontFamily: 'Merriweather',
           fontWeight: FontWeight.w700),
       titleMedium: TextStyle(
           // sub heading medium
+          overflow: TextOverflow.ellipsis,
           fontSize: 18,
           color: AppColors.black,
           fontFamily: 'Merriweather',
           fontWeight: FontWeight.w700),
       titleSmall: TextStyle(
           // heading small
+          overflow: TextOverflow.ellipsis,
           fontSize: 15,
           color: AppColors.black,
           fontFamily: 'Merriweather',
@@ -97,23 +102,27 @@ class AppThemes {
       // bodyLarge: TextStyle(color: AppColors.black),
       bodyLarge: TextStyle(
           // body as input
+          overflow: TextOverflow.ellipsis,
           color: AppColors.secondary,
           fontFamily: 'Montserrat',
           fontWeight: FontWeight.w400),
       bodyMedium: TextStyle(
           // body
+          overflow: TextOverflow.ellipsis,
           color: AppColors.secondary,
           fontFamily: 'Montserrat',
           fontWeight: FontWeight.w400),
 
       bodySmall: TextStyle(
           // sub body
+          overflow: TextOverflow.ellipsis,
           fontSize: 14,
           color: Color.fromRGBO(78, 78, 83, 1),
           fontFamily: 'Montserrat',
           fontWeight: FontWeight.w400),
       labelLarge: TextStyle(
         // input label
+        overflow: TextOverflow.ellipsis,
         fontSize: 16,
         fontWeight: FontWeight.w600,
         color: AppColors.secondary,
@@ -154,9 +163,9 @@ class AppThemes {
     ),
     toggleButtonsTheme: ToggleButtonsThemeData(
         borderRadius: BorderRadius.circular(10),
-
         fillColor: AppColors.primaryBlueDark, // background color when selected
-        selectedBorderColor: AppColors.quaternaryDark, // border color when selected
+        selectedBorderColor:
+            AppColors.quaternaryDark, // border color when selected
         selectedColor: AppColors.black, // text color when selected
         splashColor: AppColors.tertiaryDark
             .withOpacity(0.5), // color when pressed - animated color
@@ -190,6 +199,7 @@ class AppThemes {
       iconTheme: IconThemeData(color: AppColors.cream),
       titleTextStyle: TextStyle(
           // display
+          overflow: TextOverflow.ellipsis,
           fontSize: 28,
           color: AppColors.cream,
           fontFamily: 'Merriweather',
@@ -198,29 +208,34 @@ class AppThemes {
     textTheme: const TextTheme(
       headlineLarge: TextStyle(
           // display
+          overflow: TextOverflow.ellipsis,
           fontSize: 28,
           color: AppColors.cream,
           fontFamily: 'Merriweather',
           fontWeight: FontWeight.w700),
       headlineMedium: TextStyle(
           // sub display
+          overflow: TextOverflow.ellipsis,
           fontSize: 22,
           color: AppColors.cream,
           fontFamily: 'Montserrat',
           fontWeight: FontWeight.w400),
       titleLarge: TextStyle(
           // heading medium
+          overflow: TextOverflow.ellipsis,
           color: AppColors.cream,
           fontFamily: 'Merriweather',
           fontWeight: FontWeight.w700),
       titleMedium: TextStyle(
           // sub heading medium
+          overflow: TextOverflow.ellipsis,
           fontSize: 18,
           color: AppColors.cream,
           fontFamily: 'Merriweather',
           fontWeight: FontWeight.w700),
       titleSmall: TextStyle(
           // heading small
+          overflow: TextOverflow.ellipsis,
           fontSize: 15,
           color: AppColors.cream,
           fontFamily: 'Merriweather',
@@ -228,23 +243,27 @@ class AppThemes {
       // bodyLarge: TextStyle(color: AppColors.cream),
       bodyLarge: TextStyle(
           // body as input
+          overflow: TextOverflow.ellipsis,
           color: AppColors.secondaryDark,
           fontFamily: 'Montserrat',
           fontWeight: FontWeight.w400),
       bodyMedium: TextStyle(
           // body
+          overflow: TextOverflow.ellipsis,
           color: AppColors.secondaryDark,
           fontFamily: 'Montserrat',
           fontWeight: FontWeight.w400),
 
       bodySmall: TextStyle(
           // sub body
+          overflow: TextOverflow.ellipsis,
           fontSize: 14,
           color: AppColors.secondaryDark,
           fontFamily: 'Montserrat',
           fontWeight: FontWeight.w400),
       labelLarge: TextStyle(
         // input label
+        overflow: TextOverflow.ellipsis,
         fontSize: 16,
         fontWeight: FontWeight.w600,
         color: AppColors.secondaryDark,
