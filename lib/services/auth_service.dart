@@ -53,9 +53,10 @@ class AuthService extends ChangeNotifier {
         final isExpiredToken = isExpired(expiry);
         return !isExpiredToken;
       } catch (e) {
-        // debugPrint("Error in isLoggedIn: $e");
+        debugPrint("Error in isLoggedIn: $e");
         // in case there is change in User Model type and cannot login
-        signOut();
+        // signOut();
+        // throw e;
       }
     }
     return false;
@@ -121,17 +122,14 @@ class AuthService extends ChangeNotifier {
 
   Future<Map<String, dynamic>> updateCurrentUser(
     // String username,
-    BuildContext context, 
+    BuildContext context,
     String email,
     String phone,
     String fullname,
   ) async {
     final userProvider = Provider.of<UserService>(context, listen: false);
-    final response = await userProvider.updateUser(
-      _user!.username,
-      email,
-      phone,
-      fullname);
+    final response =
+        await userProvider.updateUser(_user!.username, email, phone, fullname);
 
     if (response['response'] != null &&
         response['response'] is Map<String, dynamic> &&
