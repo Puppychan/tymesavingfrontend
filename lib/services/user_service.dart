@@ -12,24 +12,56 @@ class UserService extends ChangeNotifier {
   // };
 
   String _roleFilter = '';
-  String _sortUser = '';
+  Map<String, String> _sortOption = {"sortUsername": 'ascending'};
 
+  // user list
   List<User> _users = [];
 
   // List<String> get filterData => _filterData;
   String get roleFilter => _roleFilter;
+  String get sortOption => _convertSortOptionToString();
   List<User> get users => _users;
+
+  String _convertSortOptionToString() {
+    final tempSortValue = _sortOption.keys.first;
+    String sortValue = '';
+    switch (tempSortValue) {
+      case 'sortUsername':
+        sortValue = 'Username';
+        break;
+      case 'sortCreation':
+        sortValue = 'Created Date';
+        break;
+      case 'sortRole':
+        sortValue = 'Role';
+        break;
+    }
+    return '$sortValue in ${_sortOption.values.first} order';
+  }
 
   Future<dynamic> fetchUserList() async {
     String endpoint = BackendEndpoints.user;
+
+    bool hasQuery = false; // check if there is a query in the endpoint
     // add the filter options to the endpoint
     if (_roleFilter.isNotEmpty && _roleFilter != 'All') {
       endpoint += "?filterRole=$_roleFilter";
+      hasQuery = true;
+    }
+    // add the sort options to the endpoint
+    if (_sortOption.isNotEmpty) {
+      String sortParam =
+          "${_sortOption.keys.first}=${_sortOption.values.first}";
+      if (hasQuery) {
+        endpoint += "&$sortParam";
+      } else {
+        endpoint += "?$sortParam";
+        hasQuery = true;
+      }
     }
 
     // make the API call
-    final response =
-        await NetworkService.instance.get(endpoint);
+    final response = await NetworkService.instance.get(endpoint);
     debugPrint("Response from fetchUserList: $response");
     if (response['response'] != null && response['statusCode'] == 200) {
       final responseBody = response['response'];
@@ -42,20 +74,42 @@ class UserService extends ChangeNotifier {
     return response;
   }
 
-    void updateFilterOptions(String key, String value) {
+  void updateFilterOptions(String key, String value) {
     // _filterOptions[key] = value;
-    if (key == 'role') { // in case having multiple filter options
+    if (key == 'role') {
+      // in case having multiple filter options
       _roleFilter = value;
     }
     notifyListeners();
   }
-  //   void updateSortOptions(String newSortValue) {
-  //   if (key == 'role') {
-  //     _roleFilter = value;
-      
-  //   }
-  //   notifyListeners();
-  // }
+
+  void updateSortOptions(String newSortValue) {
+    // separate the sort value and the order
+    // format: 'Username in Ascending order'
+    final tempSortValue = newSortValue.split(' ')[0];
+    final order = newSortValue.split(' ')[2];
+
+    String sortValue = '';
+
+    switch (tempSortValue) {
+      case 'Username':
+        sortValue = 'sortUsername';
+        break;
+      case 'Created Date':
+        sortValue = 'sortCreation';
+        break;
+      case 'Role':
+        sortValue = 'sortRole';
+        break;
+    }
+
+    // update the sort option
+    _sortOption = {
+      sortValue: order,
+    };
+
+    notifyListeners();
+  }
 
   Future<dynamic> deleteUser(username) async {
     final response = await NetworkService.instance
@@ -72,6 +126,7 @@ class UserService extends ChangeNotifier {
 
   void clearFilter() {
     _roleFilter = '';
+    _sortOption = {};
     // _filteredUsers.clear();
     notifyListeners();
   }

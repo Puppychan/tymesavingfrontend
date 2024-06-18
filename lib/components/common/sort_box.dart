@@ -5,13 +5,13 @@ class SortBox extends StatefulWidget {
   final String label;
   final List<String> options;
   final ValueChanged<String> onSelected;
-  final String? selectedOption;
+  final String selectedOption;
 
   const SortBox({
     required this.label,
     required this.options,
     required this.onSelected,
-    this.selectedOption, 
+    required this.selectedOption, 
     super.key,
   });
 
@@ -24,8 +24,8 @@ class _SortBoxState extends State<SortBox> {
 
   @override
   void initState() {
+    _selectedOption = widget.selectedOption;
     super.initState();
-    _selectedOption = widget.selectedOption!;
   }
 
   void _onOptionSelected(String? value) {
@@ -44,10 +44,10 @@ class _SortBoxState extends State<SortBox> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(widget.label, style: textTheme.headlineSmall),
+        Text(widget.label, style: textTheme.bodyLarge),
         const SizedBox(height: 10),
         ...widget.options.map((option) => RadioListTile<String>(
-              title: Text(option, style: textTheme.bodyMedium),
+              title: Text(option, style: textTheme.bodyLarge),
               value: option,
               groupValue: _selectedOption,
               onChanged: _onOptionSelected,

@@ -19,7 +19,7 @@ void showStyledBottomSheet({
         context: modalContext,
         child: DraggableScrollableSheet(
           initialChildSize: 0.4,
-          minChildSize: 0.1,
+          // minChildSize: 0.1,
           maxChildSize: 1,
           builder: (_, controller) => Container(
               padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 20),
