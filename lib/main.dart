@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
       title: 'My App', 
       theme: AppThemes.lightTheme,
       darkTheme: AppThemes.darkTheme,
-      themeMode: Provider.of<ThemeService>(context).themeMode,
+      themeMode: Provider.of<ThemeService>(context, listen: false).themeMode,
       navigatorObservers: [routeObserver],
       home: LoaderOverlay(
         useDefaultLoading: true,

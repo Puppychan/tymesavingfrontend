@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
     super.initState();
     Future.microtask(() async {
       if (!mounted) return;
-      final authService = Provider.of<AuthService>(context);
+      final authService = Provider.of<AuthService>(context, listen: false);
       await handleMainPageApi(context, () async {
         return await authService.getCurrentUserData();
       }, () async {
