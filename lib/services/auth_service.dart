@@ -140,6 +140,10 @@ class AuthService extends ChangeNotifier {
     return response;
   }
 
+  UserRole getCurrentUserDataRole() {
+    return _user?.role ?? UserRole.customer;
+  }
+
   Future<Map<String, dynamic>> changePassword(
     String oldPassword,
     String newPassword,

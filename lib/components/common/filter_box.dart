@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/styles/app_padding.dart';
-import 'package:tymesavingfrontend/services/user_service.dart';
 
 class FilterBox extends StatefulWidget {
   // final Map<String, dynamic> filterData;

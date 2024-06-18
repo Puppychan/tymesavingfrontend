@@ -1,36 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:tymesavingfrontend/components/common/bottom_sheet.dart';
 import 'package:tymesavingfrontend/components/common/text_align.dart';
-import 'package:tymesavingfrontend/components/user/user_sort_filter.dart';
-import 'package:tymesavingfrontend/services/theme_service.dart';
-import 'package:tymesavingfrontend/services/user_service.dart';
-import 'package:tymesavingfrontend/utils/handling_error.dart';
 
 class Heading extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final bool showBackButton;
+  final List<Widget>? actions;
 
-  const Heading({super.key, required this.title, this.showBackButton = false});
+  const Heading(
+      {super.key,
+      required this.title,
+      this.showBackButton = false,
+      this.actions});
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeService>(context);
-
-    void _fetchUsers() async {
-      Future.microtask(() async {
-        // if (!mounted) return;
-        final userService = Provider.of<UserService>(context, listen: false);
-        await handleMainPageApi(context, () async {
-          return await userService.fetchUserList();
-        }, () async {
-          // setState(() {
-          //   users = userService.users;
-          // });
-        });
-      });
-    }
-
     return AppBar(
       title: CustomAlignText(text: title),
       leading: showBackButton
@@ -45,22 +28,7 @@ class Heading extends StatelessWidget implements PreferredSizeWidget {
               ),
             )
           : null,
-      actions: <Widget>[
-        IconButton(
-          icon: Icon(
-            themeProvider.isDarkMode ? Icons.brightness_7 : Icons.brightness_4,
-          ),
-          onPressed: () {
-            themeProvider.toggleTheme();
-          },
-        ),
-        IconButton(
-            onPressed: () => showStyledBottomSheet(
-                context: context,
-                title: "Filter",
-                contentWidget: UserSortFilter(updateUserList: _fetchUsers)),
-            icon: Icon(Icons.filter_outlined))
-      ],
+      actions: actions,
     );
   }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/components/common/filter_box.dart';
+import 'package:tymesavingfrontend/components/common/sort_box.dart';
 import 'package:tymesavingfrontend/services/user_service.dart';
 
 class UserSortFilter extends StatefulWidget {
@@ -26,7 +27,8 @@ class _UserSortFilterState extends State<UserSortFilter> {
           userService.updateFilterOptions('role', filterRoleData[index]);
           widget.updateUserList();
         },
-      )
+      ),
+      // SortBox(label: "Sort Options", options: options, onSelected: onSelected)
     ]);
   }
 }

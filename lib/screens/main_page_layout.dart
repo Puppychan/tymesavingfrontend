@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tymesavingfrontend/common/enum/page_location_enum.dart';
 import 'package:tymesavingfrontend/common/enum/user_role_enum.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
+import 'package:tymesavingfrontend/components/heading/heading_title_based_location.dart';
 import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/screens/home/home_admin_page.dart';
@@ -9,6 +11,7 @@ import 'package:tymesavingfrontend/screens/home/home_page.dart';
 import 'package:tymesavingfrontend/screens/more_menu/more_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
+import 'package:tymesavingfrontend/components/heading/heading_actions_based_location.dart';
 
 class MainPageLayout extends StatefulWidget {
   const MainPageLayout({super.key});
@@ -142,26 +145,29 @@ class _MainPageLayoutState extends State<MainPageLayout> with RouteAware {
   }
 
   PreferredSizeWidget? _heading({required int index, User? user}) {
-    String displayTitle = '';
+    PageLocation? currentPageLocation = PageLocation.homePage;
+    final UserRole userRole = user?.role ?? UserRole.customer;
 
     switch (index) {
       case 0: // Home
-        displayTitle = user?.role == UserRole.admin
-            ? 'Users Management'
-            : 'Hi, ${user?.fullname}';
+        currentPageLocation = PageLocation.homePage;
         break;
       case 1:
-        displayTitle = 'Goals';
+        currentPageLocation = PageLocation.savingPage;
         break;
       case 2:
-        displayTitle = 'Budgets';
+        currentPageLocation = PageLocation.budgetPage;
         break;
+      default:
+        currentPageLocation = null;
     }
 
-    return displayTitle.isNotEmpty
+    return currentPageLocation != null
         ? Heading(
-            title: displayTitle,
-          )
+            title: renderHeadingTitleBasedUserRoleAndLocation(
+                context, userRole, currentPageLocation, user?.username),
+            actions: renderHeadingActionsBasedUserRoleAndLocation(
+                context, userRole, currentPageLocation))
         : null;
   }
 

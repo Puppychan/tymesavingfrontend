@@ -12,6 +12,7 @@ class UserService extends ChangeNotifier {
   // };
 
   String _roleFilter = '';
+  String _sortUser = '';
 
   List<User> _users = [];
 
@@ -43,12 +44,18 @@ class UserService extends ChangeNotifier {
 
     void updateFilterOptions(String key, String value) {
     // _filterOptions[key] = value;
-    if (key == 'role') {
+    if (key == 'role') { // in case having multiple filter options
       _roleFilter = value;
-      debugPrint('Filter: $_roleFilter');
     }
     notifyListeners();
   }
+  //   void updateSortOptions(String newSortValue) {
+  //   if (key == 'role') {
+  //     _roleFilter = value;
+      
+  //   }
+  //   notifyListeners();
+  // }
 
   Future<dynamic> deleteUser(username) async {
     final response = await NetworkService.instance
