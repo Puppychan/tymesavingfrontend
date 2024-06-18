@@ -55,7 +55,9 @@ Future<void> handleMainPageApi(
           MaterialPageRoute(builder: (context) => const SignInView()),
           (_) => false);
     } else {
-      ErrorDisplay.navigateToErrorPage(result, context);
+      Future.delayed(const Duration(seconds: 2), () {
+        ErrorDisplay.navigateToErrorPage(result, context);
+      });
     }
   } catch (e) {
     if (!context.mounted) return;

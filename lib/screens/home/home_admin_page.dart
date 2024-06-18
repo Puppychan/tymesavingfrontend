@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tymesavingfrontend/common/styles/app_padding.dart';
 import 'package:tymesavingfrontend/components/common/text_align.dart';
 import 'package:tymesavingfrontend/main.dart';
-import 'package:tymesavingfrontend/models/user.model.dart';
+import 'package:tymesavingfrontend/models/user_model.dart';
+import 'package:tymesavingfrontend/screens/user_list/user_list_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
@@ -19,17 +21,18 @@ class _HomeAdminPageState extends State<HomeAdminPage> with RouteAware {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() async {
-      final authService = Provider.of<AuthService>(context, listen: false);
-      await handleMainPageApi(context, () async {
-        return await authService.getCurrentUserData();
-        // return result;
-      }, () async {
-        setState(() {
-          user = authService.user;
-        });
-      });
-    });
+    // Future.microtask(() async {
+    //   if (!mounted) return;
+    //   final authService = Provider.of<AuthService>(context, listen: false);
+    //   await handleMainPageApi(context, () async {
+    //     return await authService.getCurrentUserData();
+    //     // return result;
+    //   }, () async {
+    //     setState(() {
+    //       user = authService.user;
+    //     });
+    //   });
+    // });
   }
 
   @override
@@ -42,34 +45,19 @@ class _HomeAdminPageState extends State<HomeAdminPage> with RouteAware {
   }
 
   @override
-  void didPopNext() {
-    // Called when the current route has been popped off, and the current route shows up.
-    Future.microtask(() async {
-      if (mounted) {
-        final authService = Provider.of<AuthService>(context, listen: false);
-        await handleMainPageApi(context, () async {
-          return await authService.getCurrentUserData();
-          // return result;
-        }, () async {
-          setState(() {
-            user = authService.user;
-          });
-        });
-      }
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-      // Image.asset("assets/img/app_logo_light.svg",
-      //     width: media.width * 0.5, fit: BoxFit.contain),
-      CustomAlignText(
-          text: 'View our user list here!',
-          style: Theme.of(context).textTheme.headlineMedium!),
-      const SizedBox(
-        height: 24,
-      ),
-    ]);
+    return Padding(
+        padding: AppPaddingStyles.pagePaddingIncludeSubText,
+        child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+          // Image.asset("assets/img/app_logo_light.svg",
+          //     width: media.width * 0.5, fit: BoxFit.contain),
+          CustomAlignText(
+              text: 'View our user list here!',
+              style: Theme.of(context).textTheme.headlineMedium!),
+          const SizedBox(
+            height: 24,
+          ),
+          const UserListPage(),
+        ]));
   }
 }

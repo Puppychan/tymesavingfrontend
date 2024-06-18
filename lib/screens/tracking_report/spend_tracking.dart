@@ -7,7 +7,7 @@ import 'package:tymesavingfrontend/components/transaction_tracking/expense_card.
 import 'package:tymesavingfrontend/components/transaction_tracking/income_card.dart';
 import 'package:tymesavingfrontend/components/transaction_tracking/tip_card.dart';
 import 'package:tymesavingfrontend/models/transaction_report_model.dart';
-import 'package:tymesavingfrontend/models/user.model.dart';
+import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/transaction_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';

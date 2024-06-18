@@ -8,7 +8,7 @@ import 'package:tymesavingfrontend/components/report_page/outflow_header.dart';
 import 'package:tymesavingfrontend/components/report_page/report_detail.dart';
 import 'package:tymesavingfrontend/components/report_page/report_flow.dart';
 import 'package:tymesavingfrontend/models/transaction_report_model.dart';
-import 'package:tymesavingfrontend/models/user.model.dart';
+import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/transaction_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';

@@ -7,7 +7,7 @@ class ThemeToggleSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeService>(context);
+    final themeProvider = Provider.of<ThemeService>(context, listen: false);
 
     return Switch.adaptive(
       value: themeProvider.isDarkMode,

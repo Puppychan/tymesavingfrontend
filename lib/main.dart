@@ -8,6 +8,7 @@ import 'package:tymesavingfrontend/screens/splash_screen.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/theme_service.dart';
 import 'package:tymesavingfrontend/services/transaction_service.dart';
+import 'package:tymesavingfrontend/services/user_service.dart';
 import 'package:tymesavingfrontend/services/utils/network_service.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
@@ -24,6 +25,7 @@ Future<void> main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthService()),
+        ChangeNotifierProvider(create: (_) => UserService()),
         ChangeNotifierProvider(create: (_) => ThemeService()),
         ChangeNotifierProvider(create: (_) => TransactionService())
       ],
@@ -41,7 +43,7 @@ class MyApp extends StatelessWidget {
       title: 'My App', 
       theme: AppThemes.lightTheme,
       darkTheme: AppThemes.darkTheme,
-      themeMode: Provider.of<ThemeService>(context).themeMode,
+      themeMode: Provider.of<ThemeService>(context, listen: false).themeMode,
       navigatorObservers: [routeObserver],
       home: LoaderOverlay(
         useDefaultLoading: true,
