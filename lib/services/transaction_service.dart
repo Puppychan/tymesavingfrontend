@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:tymesavingfrontend/models/transaction.model.dart';
 import 'package:tymesavingfrontend/models/transaction_report_model.dart';
 import 'package:tymesavingfrontend/services/utils/get_backend_endpoint.dart';
 import 'package:tymesavingfrontend/services/utils/network_service.dart';
@@ -81,5 +82,62 @@ class TransactionService extends ChangeNotifier {
       notifyListeners();
     }
     return response;
+  }
+
+  Future<Map<String, List<Transaction>>> fetchTransactions(userid) async {
+    String normalizeMonthName(String month) {
+      switch (month.toUpperCase()) {
+        case 'JAN':
+          return 'Jan';
+        case 'FEB':
+          return 'Feb';
+        case 'MAR':
+          return 'Mar';
+        case 'APR':
+          return 'Apr';
+        case 'MAY':
+          return 'May';
+        case 'JUN':
+          return 'Jun';
+        case 'JUL':
+          return 'Jul';
+        case 'AUG':
+          return 'Aug';
+        case 'SEP':
+          return 'Sep';
+        case 'OCT':
+          return 'Oct';
+        case 'NOV':
+          return 'Nov';
+        case 'DEC':
+          return 'Dec';
+        default:
+          return month;
+      }
+    }
+
+    final response = await NetworkService.instance.get(
+        "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReportByUser}/$userid");
+
+    if (response['response'] != null && response['statusCode'] == 200) {
+      final responseData = response['response'] as Map<String, dynamic>;
+
+      final transactions =
+          responseData.map<String, List<Transaction>>((month, transactions) {
+        final transactionList = (transactions['transactions'] as List<dynamic>)
+            .map((transaction) => Transaction.fromJson(transaction))
+            .toList();
+        return MapEntry(normalizeMonthName(month), transactionList);
+      });
+
+      print('Parsed transactions: $transactions');
+
+      notifyListeners();
+      return transactions;
+    } else {
+      print(
+          'Failed to load transactions. Status code: ${response['statusCode']}');
+      throw Exception('Failed to load transactions');
+    }
   }
 }

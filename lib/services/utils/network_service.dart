@@ -90,6 +90,7 @@ class NetworkService {
     );
   }
 
+
   Future<dynamic> get(
     String url, {
     Map<String, dynamic>? queryParameters,
