@@ -40,6 +40,9 @@ class _UserSortFilterState extends State<UserSortFilter> {
           widget.updateUserList();
         },
       ),
+      const SizedBox(height: 10),
+      const Divider(),
+      const SizedBox(height: 10),
       SortBox(
           label: "Sort Options",
           options: convertOptionsToText(),
