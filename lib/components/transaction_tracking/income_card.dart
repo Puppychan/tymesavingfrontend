@@ -32,7 +32,7 @@ class _IncomeCardState extends State<IncomeCard> {
                 children: [
                   Text.rich(
                     TextSpan(
-                      text: 'Current income this month is ',
+                      text: 'Current income is ',
                       style: textTheme
                           .titleSmall!, // Default style for the first part
                       children: <TextSpan>[
