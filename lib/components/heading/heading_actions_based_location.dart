@@ -37,7 +37,7 @@ List<Widget> renderHeadingActionsBasedUserRoleAndLocation(
 
 
 IconButton buildThemeButton(BuildContext context) {
-  final themeProvider = Provider.of<ThemeService>(context, listen: false);
+  final themeProvider = Provider.of<ThemeService>(context);
   return IconButton(
     icon: Icon(
       themeProvider.isDarkMode ? Icons.brightness_7 : Icons.brightness_4,
