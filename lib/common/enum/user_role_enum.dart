@@ -14,6 +14,7 @@ enum UserRole {
   String toString() => name;
 
   static UserRole fromString(String name) {
+    // get the role from the name
     for (var role in UserRole.values) {
       if (role.name == name) {
         return role;

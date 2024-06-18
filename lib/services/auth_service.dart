@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/common/constant/local_storage_key_constant.dart';
 import 'package:tymesavingfrontend/common/enum/user_role_enum.dart';
-import 'package:tymesavingfrontend/models/user.model.dart';
+import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/services/utils/get_backend_endpoint.dart';
 import 'package:tymesavingfrontend/services/utils/local_storage_service.dart';
 import 'package:tymesavingfrontend/services/utils/network_service.dart';
@@ -40,7 +40,6 @@ class AuthService extends ChangeNotifier {
     //     'Token: $token, Expiry: $expiry, User: $user');
 
     if (token!.isNotEmpty && expiry!.isNotEmpty && user!.isNotEmpty) {
-      print("True");
       final parsedUser = jsonDecode(user);
       // _token = token;
       // _username = parsedUser['username'];
@@ -139,6 +138,10 @@ class AuthService extends ChangeNotifier {
       notifyListeners();
     }
     return response;
+  }
+
+  UserRole getCurrentUserDataRole() {
+    return _user?.role ?? UserRole.customer;
   }
 
   Future<Map<String, dynamic>> changePassword(

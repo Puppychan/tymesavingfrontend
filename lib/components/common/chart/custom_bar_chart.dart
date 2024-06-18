@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
+import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 
 class CustomBarChart extends StatefulWidget {
   const CustomBarChart(
@@ -16,13 +17,19 @@ class CustomBarChart extends StatefulWidget {
 class _CustomBarChartState extends State<CustomBarChart> {
   late List<MapEntry<String, int>> expenseEntries;
   late List<MapEntry<String, int>> incomeEntries;
+  late List<MapEntry<String, int>> keyValuePairs;
 
   @override
   void initState() {
     super.initState();
     expenseEntries = widget.totalsExpense.entries.toList();
     incomeEntries = widget.totalsIncome.entries.toList();
+    keyValuePairs = [];
 
+    // Extract and insert key-value pairs into the list
+    widget.totalsExpense.forEach((key, value) {
+      keyValuePairs.add(MapEntry(key, value));
+    });
   }
 
   @override
@@ -42,17 +49,17 @@ class _CustomBarChartState extends State<CustomBarChart> {
               BarChartRodData(
                 toY: expenseEntry.value.toDouble(),
                 color: Theme.of(context).colorScheme.error,
-                width: 8,
+                width: 10,
                 borderRadius: BorderRadius.circular(0),
               ),
               BarChartRodData(
                 toY: incomeEntry.value.toDouble(),
                 color: Theme.of(context).colorScheme.success,
-                width: 8,
+                width: 10,
                 borderRadius: BorderRadius.circular(0),
               ),
             ],
-            barsSpace: 4,
+            barsSpace: 1,
           ),
         );
       }
@@ -60,17 +67,38 @@ class _CustomBarChartState extends State<CustomBarChart> {
     }
 
     return AspectRatio(
-        aspectRatio: 1.7,
+        aspectRatio: 1.9,
         child: Container(
           decoration: const BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(18)),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.symmetric(vertical: 10),
             child: BarChart(
                 swapAnimationCurve: Curves.linear,
                 swapAnimationDuration: const Duration(milliseconds: 150),
                 BarChartData(
+                    titlesData: FlTitlesData(
+                        show: true,
+                        topTitles: const AxisTitles(
+                          sideTitles: SideTitles(showTitles: false),
+                        ),
+                        leftTitles: const AxisTitles(
+                          sideTitles: SideTitles(showTitles: false),
+                        ),
+                        rightTitles: const AxisTitles(
+                          sideTitles: SideTitles(showTitles: false),
+                        ),
+                         bottomTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            showTitles: true,
+                            reservedSize: 50,
+                            interval: 1,
+                            getTitlesWidget: (value, meta) =>
+                              bottomTitleWidgets(value, meta),
+                          ),
+                      ),
+                    ),
                     gridData: const FlGridData(show: false),
                     borderData: FlBorderData(
                         border: const Border(
@@ -83,5 +111,58 @@ class _CustomBarChartState extends State<CustomBarChart> {
                     barGroups: createBarGroups())),
           ),
         ));
+  }
+
+  Widget bottomTitleWidgets(double value, TitleMeta meta) {
+    Widget text;
+    switch (value.toInt()) {
+      case 0:
+        text = Text(keyValuePairs[0].key, style: AppTextStyles.graphData);
+        break;
+      case 1:
+        text = Text(keyValuePairs[1].key, style: AppTextStyles.graphData);
+        break;
+      case 2:
+        text = Text(keyValuePairs[2].key, style: AppTextStyles.graphData);
+        break;
+      case 3:
+        text = Text(keyValuePairs[3].key, style: AppTextStyles.graphData);
+        break;
+      case 4:
+        text = Text(keyValuePairs[4].key, style: AppTextStyles.graphData);
+        break;
+      case 5:
+        text = Text(keyValuePairs[5].key, style: AppTextStyles.graphData);
+        break;
+      case 6:
+        text = Text(keyValuePairs[6].key, style: AppTextStyles.graphData);
+        break;
+      case 7:
+        text = Text(keyValuePairs[7].key, style: AppTextStyles.graphData);
+        break;
+      case 8:
+        text = Text(keyValuePairs[8].key, style: AppTextStyles.graphData);
+        break;
+      case 9:
+        text = Text(keyValuePairs[9].key, style: AppTextStyles.graphData);
+        break;
+      case 10:
+        text = Text(keyValuePairs[10].key, style: AppTextStyles.graphData);
+        break;
+      case 11:
+        text = Text(keyValuePairs[11].key, style: AppTextStyles.graphData);
+        break;
+      case 12:
+        text = Text(keyValuePairs[12].key, style: AppTextStyles.graphData);
+        break;
+      default:
+        text = const Text('', style: AppTextStyles.graphData);
+        break;
+    }
+
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      child: Container(padding: const EdgeInsets.only(top: 5), child: text),
+    );
   }
 }

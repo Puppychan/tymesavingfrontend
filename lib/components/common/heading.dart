@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/components/common/text_align.dart';
-import 'package:tymesavingfrontend/services/theme_service.dart';
 
 class Heading extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final bool showBackButton;
+  final List<Widget>? actions;
 
-  const Heading({super.key, required this.title, this.showBackButton = false});
+  const Heading(
+      {super.key,
+      required this.title,
+      this.showBackButton = false,
+      this.actions});
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeService>(context);
-
     return AppBar(
       title: CustomAlignText(text: title),
       leading: showBackButton
@@ -27,16 +28,7 @@ class Heading extends StatelessWidget implements PreferredSizeWidget {
               ),
             )
           : null,
-      actions: <Widget>[
-        IconButton(
-          icon: Icon(
-            themeProvider.isDarkMode ? Icons.brightness_7 : Icons.brightness_4,
-          ),
-          onPressed: () {
-            themeProvider.toggleTheme();
-          },
-        ),
-      ],
+      actions: actions,
     );
   }
 

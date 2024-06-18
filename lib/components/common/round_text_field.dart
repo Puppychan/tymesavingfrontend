@@ -9,6 +9,7 @@ class RoundTextField extends StatefulWidget {
   final bool obscureText;
   final bool isPasswordField;
   final double componentHeight = 58;
+  final bool enabled;
   final String? Function(String?)? validator; // Add a validator parameter
 
   const RoundTextField(
@@ -19,6 +20,7 @@ class RoundTextField extends StatefulWidget {
       this.controller,
       this.isPasswordField = false,
       this.keyboardType,
+      this.enabled = true,
       this.obscureText =
           false, // Whether the text should be obscured - hidden from view - for passwords
       this.validator});
@@ -65,7 +67,10 @@ class _RoundTextFieldState extends State<RoundTextField> {
           alignment: Alignment.centerLeft,
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           decoration: BoxDecoration(
-            color: colorScheme.tertiary,
+            // color: colorScheme.tertiary,
+            color: colorScheme.tertiary.withOpacity(widget.enabled
+                ? 1
+                : 0.7), // Adjust opacity based on the field's enabled state
             borderRadius: BorderRadius.circular(widget.componentHeight / 2),
             boxShadow: const [
               BoxShadow(
@@ -108,6 +113,7 @@ class _RoundTextFieldState extends State<RoundTextField> {
             ),
             keyboardType: widget.keyboardType,
             obscureText: _isObscure,
+            enabled: widget.enabled,
             // validator: validator, // Use the validator
           ),
         ),

@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/common/styles/app_padding.dart';
-import 'package:tymesavingfrontend/components/common/heading.dart';
+import 'package:provider/provider.dart';
+import 'package:tymesavingfrontend/components/common/bottom_sheet.dart';
 import 'package:tymesavingfrontend/components/common/text_align.dart';
-import 'package:tymesavingfrontend/models/user_model.txt';
+import 'package:tymesavingfrontend/components/user/user_sort_filter.dart';
+import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/components/user/user_card.dart';
+import 'package:tymesavingfrontend/screens/user_profile/update_user_page.dart';
+import 'package:tymesavingfrontend/services/user_service.dart';
+import 'package:tymesavingfrontend/utils/handling_error.dart';
 
 class UserListPage extends StatefulWidget {
   const UserListPage({super.key});
@@ -11,52 +15,60 @@ class UserListPage extends StatefulWidget {
   State<UserListPage> createState() => _UserListPageState();
 }
 
+Widget buildFood(String foodName) => ListTile(
+      title: Text(foodName),
+      onTap: () {},
+    );
+
 class _UserListPageState extends State<UserListPage> {
-  late final List<UserModel> users;
-  @override
-  void initState() {
-    super.initState();
-    users = UserModel.getUsers(); // This fetches the user data once during initialization
+  late List<User> users = [];
+  void _fetchUsers() async {
+    Future.microtask(() async {
+      if (!mounted) return;
+      final userService = Provider.of<UserService>(context, listen: false);
+      await handleMainPageApi(context, () async {
+        return await userService.fetchUserList();
+      }, () async {
+        setState(() {
+          users = userService.users;
+        });
+      });
+    });
   }
 
   @override
+  void initState() {
+    super.initState();
+    _fetchUsers();
+  }
+
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const Heading(title: 'Users'),
-      body: Padding(
-        padding: AppPaddingStyles.pagePaddingIncludeSubText,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // subtext here
-            CustomAlignText(
-              text: 'Manage Users Here',
-              style: Theme.of(context).textTheme.headlineMedium!,
-            ),
-            const SizedBox(height: 30),
-            Expanded(
+    return Consumer<UserService>(builder: (context, userService, child) {
+      final users = userService.users;
+      return users.isNotEmpty
+          ? Expanded(
               child: ListView.separated(
-                itemCount: users.length,
-                separatorBuilder: (context, index) => const SizedBox(height: 15),
-                // padding: const EdgeInsets.symmetric(horizontal: 15),
-                itemBuilder: (context, index) {
-                  return UserCard(
-                    user: users[index],
-                    onEdit: () {
-                      // Implement your edit functionality
-                      print('Edit ${users[index].name}');
-                    },
-                    onDelete: () {
-                      // Implement your delete functionality
-                      print('Delete ${users[index].name}');
-                    },
-                  );
-                },
+              itemCount: users.length,
+              separatorBuilder: (context, index) => const SizedBox(height: 15),
+              itemBuilder: (context, index) {
+                return UserCard(user: users[index]);
+              },
+            ))
+          : const Expanded(
+              child: Center(
+                child: CircularProgressIndicator(),
               ),
-            ),
-          ],
-        ),
-      ),
-    );
+            );
+      // return ElevatedButton(
+      //   onPressed: () => showStyledBottomSheet(
+      //     context: context,
+      //     title: "Filter",
+      //     contentWidget: UserSortFilter(updateUserList: _fetchUsers),
+      //   ),
+      //   child: const Text('Show Filter'),
+      // );
+    });
   }
 }

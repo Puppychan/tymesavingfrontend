@@ -1,9 +1,6 @@
 
 # TymeX Project Front-end
 
-
-
-
 ## Introduction
 Welcome to the TymeX Front-End repository! This repository contains the source code for the mobile finance application "TymeX," developed as part of a capstone project. TymeX aims to provide users with a seamless and intuitive financial management experience on their mobile devices.
 ## Overview
@@ -13,18 +10,31 @@ TymeX is built using Flutter and Dart, allowing for a cross-platform application
 - Vo Thanh Thong - Front-end Developer
 - Giang Trong Duong - Front-end Developer
 
-## Getting Started
-This project is a starting point for a Flutter application.
+## Installation
+### Prerequisites
+- Ensure to setup .env based on .example.env
+- Ensure to have Flutter installed on your machine
+- Ensure to have an emulator or a physical device connected to your machine
+### Steps
+1. Clone the repository to your local machine
+   ```bash
+   git clone https://bitbucket.org/tyme-ni-rmit/tymesavingfrontend/src/main/
+   ```
+2. Navigate to the project directory
+   ```bash
+    cd tymesavingfrontend
+    ```
+3. Install the required dependencies
+    ```bash
+    flutter pub get
+    ```
+**Option Steps**
+- If you want to run the backend server locally, please follow the instruction in the backend repository and running backend server locally. Then paste the local server URL to the .env file.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
+4. Run the application
+   ```bash
+   flutter run
+   ```
 
 # For Dev
 ## Add Native Splash Screen
