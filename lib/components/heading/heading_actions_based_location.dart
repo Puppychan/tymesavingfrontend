@@ -15,17 +15,17 @@ List<Widget> renderHeadingActionsBasedUserRoleAndLocation(
     BuildContext context, UserRole userRole, PageLocation pageLocation) {
   // Define icons for each role and PageLocation
   Map<UserRole, Map<PageLocation, List<IconButton>>> rolePageLocationIcons = {
-    UserRole.admin: {
-      PageLocation.homePage: [
-        buildThemeButton(context),
-        buildUserFilterButton(context)
-      ],
-      // PageLocation.settingsPage: [Icons.home, Icons.logout],
-    },
-    UserRole.customer: {
-      PageLocation.homePage: [buildThemeButton(context)],
-      // PageLocation.settingsPage: [Icons.home],
-    },
+      UserRole.admin: {
+        PageLocation.homePage: [
+          buildThemeButton(context),
+          buildUserFilterButton(context)
+        ],
+        // PageLocation.settingsPage: [Icons.home, Icons.logout],
+      },
+      UserRole.customer: {
+        PageLocation.homePage: [buildThemeButton(context)],
+        // PageLocation.settingsPage: [Icons.home],
+      },
   };
 
   // Get the icons for the current role and PageLocation

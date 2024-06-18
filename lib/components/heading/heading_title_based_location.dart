@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/common/enum/page_location_enum.dart';
 import 'package:tymesavingfrontend/common/enum/user_role_enum.dart';
-import 'package:tymesavingfrontend/components/common/heading.dart';
-import 'package:tymesavingfrontend/models/user_model.dart';
 
 String renderHeadingTitleBasedUserRoleAndLocation(BuildContext context,
     UserRole userRole, PageLocation pageLocation, String? username) {
