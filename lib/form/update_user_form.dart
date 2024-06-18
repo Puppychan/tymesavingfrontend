@@ -5,6 +5,7 @@ import 'package:tymesavingfrontend/components/common/round_text_field.dart';
 import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
+import 'package:tymesavingfrontend/services/user_service.dart';
 import 'package:tymesavingfrontend/utils/display_error.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 import 'package:tymesavingfrontend/utils/validator.dart';
@@ -130,7 +131,16 @@ class UpdateUserState extends State<UpdateUserForm> {
 
     await handleMainPageApi(context, () async {
       final authService = Provider.of<AuthService>(context, listen: false);
-      return await authService.updateCurrentUser(
+      final userService = Provider.of<UserService>(context, listen: false);
+      if (authService.user?.username == widget.user?.username) {
+        return await authService.updateCurrentUser(
+          context,
+          gmail,
+          phone,
+          fullName,
+        );
+      }
+      return await userService.updateUser(
           username, gmail, phone, fullName);
     }, () async {
       // setState(() {

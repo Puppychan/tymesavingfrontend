@@ -8,7 +8,11 @@ class User {
   final String email;
   final String fullname;
   final String phone;
+  final String creationDate;
   final String? pin;
+
+  final double? contribution;
+
   // final List<Invitation>? invitations;
   // final List<String>? sharedBudgetHosts;
   // final List<String>? joinedSharedBudgetGroups;
@@ -28,7 +32,10 @@ class User {
         email = user['email'],
         fullname = user['fullname'],
         phone = user['phone'],
-        pin = user['pin'] ?? '';
+        creationDate = user['creationDate'],
+        pin = user['pin'] ?? '',
+        // TODO: Implement the contribution value
+        contribution = user['contribution'];
 
   Map<String, dynamic> toMap() {
     // we are using the map to send the data to the API
