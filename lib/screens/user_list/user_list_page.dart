@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tymesavingfrontend/components/common/bottom_sheet.dart';
-import 'package:tymesavingfrontend/components/common/text_align.dart';
-import 'package:tymesavingfrontend/components/user/user_sort_filter.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/components/user/user_card.dart';
-import 'package:tymesavingfrontend/screens/user_profile/update_user_page.dart';
 import 'package:tymesavingfrontend/services/user_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 

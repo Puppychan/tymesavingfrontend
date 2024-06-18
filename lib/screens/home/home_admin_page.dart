@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/styles/app_padding.dart';
 import 'package:tymesavingfrontend/components/common/text_align.dart';
 import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/screens/user_list/user_list_page.dart';
-import 'package:tymesavingfrontend/services/auth_service.dart';
-import 'package:tymesavingfrontend/utils/handling_error.dart';
 
 class HomeAdminPage extends StatefulWidget {
   const HomeAdminPage({super.key});

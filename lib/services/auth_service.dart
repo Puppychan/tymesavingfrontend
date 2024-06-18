@@ -2,9 +2,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/constant/local_storage_key_constant.dart';
 import 'package:tymesavingfrontend/common/enum/user_role_enum.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
+import 'package:tymesavingfrontend/services/user_service.dart';
 import 'package:tymesavingfrontend/services/utils/get_backend_endpoint.dart';
 import 'package:tymesavingfrontend/services/utils/local_storage_service.dart';
 import 'package:tymesavingfrontend/services/utils/network_service.dart';
@@ -40,15 +42,21 @@ class AuthService extends ChangeNotifier {
     //     'Token: $token, Expiry: $expiry, User: $user');
 
     if (token!.isNotEmpty && expiry!.isNotEmpty && user!.isNotEmpty) {
-      final parsedUser = jsonDecode(user);
-      // _token = token;
-      // _username = parsedUser['username'];
-      _user = User.fromMap(parsedUser);
-      _token = token;
-      // _user = User.fromMap(user); // Assuming User has a fromJson constructor
-      // _username = parsedUser['username'];
-      final isExpiredToken = isExpired(expiry);
-      return !isExpiredToken;
+      try {
+        final parsedUser = jsonDecode(user);
+        // _token = token;
+        // _username = parsedUser['username'];
+        _user = User.fromMap(parsedUser);
+        _token = token;
+        // _user = User.fromMap(user); // Assuming User has a fromJson constructor
+        // _username = parsedUser['username'];
+        final isExpiredToken = isExpired(expiry);
+        return !isExpiredToken;
+      } catch (e) {
+        // debugPrint("Error in isLoggedIn: $e");
+        // in case there is change in User Model type and cannot login
+        signOut();
+      }
     }
     return false;
   }
@@ -63,8 +71,7 @@ class AuthService extends ChangeNotifier {
     );
 
     // Ensure response['response'] is a Map and contains the 'token'
-    if (response['response'] != null &&
-        response['statusCode'] == 200) {
+    if (response['response'] != null && response['statusCode'] == 200) {
       final responseBody = response['response'];
       String? token = responseBody['token'] as String?;
 
@@ -113,20 +120,19 @@ class AuthService extends ChangeNotifier {
   }
 
   Future<Map<String, dynamic>> updateCurrentUser(
-    String username,
+    // String username,
+    BuildContext context, 
     String email,
     String phone,
     String fullname,
   ) async {
-    final response = await NetworkService.instance.put(
-      "${BackendEndpoints.user}/${_user!.username}/${BackendEndpoints.userUpdate}",
-      body: {
-        'username': username,
-        'email': email,
-        'phone': phone,
-        'fullname': fullname,
-      },
-    );
+    final userProvider = Provider.of<UserService>(context, listen: false);
+    final response = await userProvider.updateUser(
+      _user!.username,
+      email,
+      phone,
+      fullname);
+
     if (response['response'] != null &&
         response['response'] is Map<String, dynamic> &&
         response['statusCode'] == 200) {
@@ -162,7 +168,6 @@ class AuthService extends ChangeNotifier {
   Future<dynamic> getCurrentUserData() async {
     final response = await NetworkService.instance
         .get("${BackendEndpoints.user}/${_user!.username}");
-    debugPrint("Response in getCurrentUserData: $response");
     if (response['response'] != null && response['statusCode'] == 200) {
       _user = User.fromMap(response['response']);
       await LocalStorageService.setString(
@@ -199,7 +204,7 @@ class AuthService extends ChangeNotifier {
   // }
 
   bool isExpired(String? expiry) {
-    print("Expiry: $expiry -");
+    debugPrint("Expiry: $expiry -");
     DateTime datetime;
     try {
       if (expiry != null && expiry.isNotEmpty) {

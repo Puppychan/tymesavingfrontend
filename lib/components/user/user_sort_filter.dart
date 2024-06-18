@@ -13,10 +13,22 @@ class UserSortFilter extends StatefulWidget {
 }
 
 class _UserSortFilterState extends State<UserSortFilter> {
+  final List<String> filterRoleData = ["All", "Admin", "Customer"];
+  final List<String> options = ["Username", "Created Date", "Role"];
+  List<String> convertOptionsToText() {
+    return options.expand((option) {
+      return [
+        '$option in ascending order',
+        '$option in descending order',
+      ];
+    }).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     final userService = Provider.of<UserService>(context, listen: false);
-    const List<String> filterRoleData = ["All", "Admin", "Customer"];
+    debugPrint("User Service Sort Options: ${userService.sortOption}"); // "Username in ascending order
+
     return Column(children: [
       FilterBox(
         filterData: filterRoleData,
@@ -28,7 +40,17 @@ class _UserSortFilterState extends State<UserSortFilter> {
           widget.updateUserList();
         },
       ),
-      // SortBox(label: "Sort Options", options: options, onSelected: onSelected)
+      const SizedBox(height: 10),
+      const Divider(),
+      const SizedBox(height: 10),
+      SortBox(
+          label: "Sort Options",
+          options: convertOptionsToText(),
+          selectedOption: userService.sortOption,
+          onSelected: (value) {
+            userService.updateSortOptions(value);
+            widget.updateUserList();
+          })
     ]);
   }
 }
