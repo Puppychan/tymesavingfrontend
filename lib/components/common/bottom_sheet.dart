@@ -7,8 +7,12 @@ void showStyledBottomSheet({
   String? title,
   String? subTitle,
   required Widget contentWidget, // Adjust the type accordingly
+
   bool isTransparentBackground = false,
-  double initialChildSize = 0.4, // -1 if want to fit the content
+  double initialChildSize = 0.5, // -1 if want to fit the content
+  // Widget? headingButtons,
+  VoidCallback?
+      onNavigateToPreviousSheet, // Callback for navigating to previous sheet
 }) {
   final colorScheme = Theme.of(context).colorScheme;
   final textTheme = Theme.of(context).textTheme;
@@ -28,12 +32,24 @@ void showStyledBottomSheet({
               decoration: BoxDecoration(
                 color: isTransparentBackground
                     ? Colors.transparent
-                    : colorScheme.background,
+                    : colorScheme.tertiary,
                 borderRadius:
                     const BorderRadius.vertical(top: Radius.circular(25)),
               ),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  if (onNavigateToPreviousSheet != null)
+                    IconButton(
+                      onPressed: () {
+                        onNavigateToPreviousSheet();
+                      },
+                      icon: const Icon(
+                        Icons.arrow_back_ios,
+                        size: 24.0,
+                        semanticLabel: 'Back to previous page',
+                      ),
+                    ),
                   if (title != null)
                     CustomAlignText(
                         text: title, style: textTheme.headlineLarge),

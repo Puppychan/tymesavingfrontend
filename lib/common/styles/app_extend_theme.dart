@@ -9,4 +9,5 @@ extension ExtendColorScheme on ColorScheme {
   Color get quaternary => brightness == Brightness.dark ? AppColors.quaternaryDark : AppColors.quaternary;
   Color get onQuaternary => brightness == Brightness.dark ? AppColors.secondaryDark : AppColors.secondary;
   Color get success => AppColors.positive;
+  Color get onSuccess => AppColors.black;
 }
