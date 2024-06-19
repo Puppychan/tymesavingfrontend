@@ -99,4 +99,30 @@ class Validator {
     }
     return null;
   }
+
+  static String? validateTitle(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter a title';
+    }
+    if (value.length < 4) {
+      return 'Title must be at least 4 characters long';
+    }
+    return null;
+  }
+
+  static String? validateAmount(String? value) {
+    print("Validate amount: $value");
+    const minAmount = 100;
+    if (value == null || value.isEmpty) {
+      return 'Amount cannot be empty';
+    }
+    final number = double.tryParse(value);
+    if (number == null) {
+      return 'Please enter a valid number';
+    }
+    if (number < minAmount) {
+      return 'Amount must be greater than $minAmount dong';
+    }
+    return null; // null means the input is valid
+  }
 }

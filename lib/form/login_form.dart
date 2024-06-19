@@ -30,7 +30,7 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    Future<void> _trySubmit() async {
+    Future<void> trySubmit() async {
       final authService = Provider.of<AuthService>(context, listen: false);
       final isValid = _formKey.currentState?.validate();
       // If the form is not valid, show an error
@@ -58,6 +58,7 @@ class _LoginFormState extends State<LoginForm> {
           _usernameController.text,
           _passwordController.text,
         );
+
         return result;
       }, () async {
         // nếu success
@@ -99,7 +100,7 @@ class _LoginFormState extends State<LoginForm> {
           const SizedBox(height: 20),
           PrimaryButton(
             title: "Sign In",
-            onPressed: _trySubmit,
+            onPressed: trySubmit,
           ),
         ],
       ),

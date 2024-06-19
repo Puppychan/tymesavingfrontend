@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
 import 'package:tymesavingfrontend/components/common/bottom_sheet.dart';
-import 'package:tymesavingfrontend/components/multiple_page_sheet/common/add_amount_calculator.dart';
+// import 'package:tymesavingfrontend/components/multiple_page_sheet/common/add_amount_calculator.dart';
+import 'package:tymesavingfrontend/components/multiple_page_sheet/common/add_transaction_form_main.dart';
 import 'package:tymesavingfrontend/components/multiple_page_sheet/common/transaction_selection_sheet.dart';
 import 'package:tymesavingfrontend/utils/navigate_between_sheet.dart';
 
@@ -26,7 +27,7 @@ void showTransactionFormB(BuildContext context, bool isIncome) {
       context: context,
       title: 'Add new income',
       // contentWidget: Text("PageB "),
-      contentWidget: AddAmountCalculator(
+      contentWidget: AddTransactionFormMain(
         type: isIncome ? FormStateType.income : FormStateType.expense,
       ),
       onNavigateToPreviousSheet: () => navigateSheetToSheet(context,

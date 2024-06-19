@@ -58,7 +58,7 @@ class _TransactionCategorySelectionPageState
                   onTap: () async =>
                       {await onTransactionCategorySelected(context, category)},
                   child: ListTile(
-                    leading: getCategoryIcon(categoryInfo),
+                    leading: getCategoryIcon(currentCategoryInfo: categoryInfo),
                     title: Text(category.name, style: textTheme.bodyLarge),
                     trailing: isSelected
                         ? RoundedIcon(

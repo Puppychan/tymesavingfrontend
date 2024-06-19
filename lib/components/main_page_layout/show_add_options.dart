@@ -65,6 +65,7 @@ void showAddOptions(BuildContext context) {
           title: 'Add new expense',
           onTap: () {
             // Handle add new budget plan
+            Navigator.of(context).pop();
             showTransactionFormA(context, false);
           },
           textTheme: textTheme,

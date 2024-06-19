@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
 
@@ -8,9 +9,8 @@ class FormStateProvider with ChangeNotifier {
   Map<String, dynamic> _budgetFormFields = {};
   Map<String, dynamic> _savingFormFields = {};
 
-
   dynamic _validateFieldNull(
-      String key, Map<String, dynamic> typeFormFields, dynamic? defaultValue) {
+      String key, Map<String, dynamic> typeFormFields, dynamic defaultValue) {
     if (typeFormFields[key] == null) {
       return defaultValue;
     }
@@ -28,6 +28,25 @@ class FormStateProvider with ChangeNotifier {
           TransactionCategory.defaultCategory());
     }
   }
+
+  String getFormattedAmount(FormStateType type) {
+    final NumberFormat formatter =
+        NumberFormat.currency(locale: 'vi_VN', symbol: '₫');
+    double amount = 0.0;
+    if (type == FormStateType.income) {
+      amount = _validateFieldNull('amount', _incomeFormFields, 0.0) as double;
+    } else {
+      amount = _validateFieldNull('amount', _expenseFormFields, 0.0) as double;
+    }
+    return formatter.format(amount);
+  }
+
+  double convertFormattedToNumber(String formattedAmount) {
+    String numericString = formattedAmount.replaceAll(RegExp(r'[^\d]'), '');
+    double amount = double.parse(numericString);
+    return double.parse(amount.toStringAsFixed(2));
+  }
+
   Map<String, dynamic> getFormField(FormStateType type) {
     if (type == FormStateType.income) {
       return _incomeFormFields;
@@ -49,8 +68,18 @@ class FormStateProvider with ChangeNotifier {
   void updateFormCategory(TransactionCategory category, FormStateType type) {
     if (type == FormStateType.income) {
       _incomeFormFields['category'] = category;
+      debugPrint("Income form fields: $_incomeFormFields");
     } else {
       _expenseFormFields['category'] = category;
+    }
+    notifyListeners();
+  }
+
+  void updateFormTitle(String title, FormStateType type) {
+    if (type == FormStateType.income) {
+      _incomeFormFields['title'] = title;
+    } else {
+      _expenseFormFields['title'] = title;
     }
     notifyListeners();
   }
