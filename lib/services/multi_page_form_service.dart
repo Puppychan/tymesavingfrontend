@@ -39,6 +39,7 @@ class FormStateProvider with ChangeNotifier {
   void updateFormField(String key, dynamic value, FormStateType type) {
     if (type == FormStateType.income) {
       _incomeFormFields[key] = value;
+      debugPrint('Income form fields: $_incomeFormFields');
     } else {
       _expenseFormFields[key] = value;
     }

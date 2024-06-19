@@ -28,24 +28,72 @@ class _AddAmountCalculatorState extends State<AddAmountCalculator> {
 
   @override
   Widget build(BuildContext context) {
+    String _subtitleText = 'Type your income name...';
+
     final formStateService =
         Provider.of<FormStateProvider>(context, listen: false);
-        final formField = formStateService.getFormField(widget.type);
-        final currentTransactionCategoryInfo = transactionCategoryData[formStateService.getCategory(widget.type)]!;
+    final formField = formStateService.getFormField(widget.type);
+    final currentTransactionCategoryInfo =
+        transactionCategoryData[formStateService.getCategory(widget.type)]!;
     // final TransactionCategory selectedCategory =
     //     formStateService.categoryIncome;
+
+    void _showInputDialog(BuildContext context) {
+      final TextEditingController _controller = TextEditingController();
+
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Enter Income Name'),
+            content: TextField(
+              controller: _controller,
+              decoration: InputDecoration(
+                hintText: 'Income name',
+                errorText: _controller.text.isEmpty
+                    ? 'This field cannot be empty'
+                    : null,
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  if (_controller.text.isNotEmpty) {
+                    setState(() {
+                      _subtitleText = _controller.text;
+                    });
+                    Navigator.of(context).pop();
+                  }
+                },
+                child: Text('OK'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Cancel'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     return Column(
       children: [
         ListTile(
           leading: getCategoryIcon(currentTransactionCategoryInfo),
-          title: Text(formField['category'].name, style: Theme.of(context).textTheme.bodyLarge),
-          subtitle: const Text('Type your income name...'),
+          title: Text(formField['category'].name,
+              style: Theme.of(context).textTheme.bodyLarge),
+          // subtitle: const Text('Type your income name...'),
+          subtitle: Text(_subtitleText),
           trailing: TextButton(
-            onPressed: () {},
+            onPressed: () {
+              _showInputDialog(context);
+            },
             child: const Text('Change', style: TextStyle(color: Colors.blue)),
           ),
         ),
-
         const SizedBox(height: 20),
         Text('TOTAL AMOUNT', style: Theme.of(context).textTheme.bodyLarge),
         const SizedBox(height: 10),
