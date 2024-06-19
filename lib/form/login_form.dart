@@ -28,51 +28,51 @@ class _LoginFormState extends State<LoginForm> {
     super.dispose();
   }
 
-  Future<void> _trySubmit() async {
-    final authService = Provider.of<AuthService>(context, listen: false);
-    final isValid = _formKey.currentState?.validate();
-    // If the form is not valid, show an error
-    if (isValid == null || !isValid) {
-      final String? validateMessageUsername =
-          Validator.validateUsername(_usernameController.text);
-      if (validateMessageUsername != null) {
-        ErrorDisplay.showErrorToast(validateMessageUsername, context);
-        return;
-      }
-
-      final String? validateMessagePassword =
-          Validator.validatePassword(_passwordController.text);
-      if (validateMessagePassword != null) {
-        ErrorDisplay.showErrorToast(validateMessagePassword, context);
-        return;
-      }
-    }
-    // If the form is valid, proceed with the login process
-    // Show loader overlay while waiting for the response
-    context.loaderOverlay.show();
-
-    await handleAuthApi(context, () async {
-      final result = await authService.signIn(
-        _usernameController.text,
-        _passwordController.text,
-      );
-      return result;
-    }, () async {
-      // nếu success
-      // hiện loading
-      context.loaderOverlay.hide();
-      // If successful, navigate to HomePage
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const MainPageLayout(),
-          ),
-          (_) => false);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    Future<void> _trySubmit() async {
+      final authService = Provider.of<AuthService>(context, listen: false);
+      final isValid = _formKey.currentState?.validate();
+      // If the form is not valid, show an error
+      if (isValid == null || !isValid) {
+        final String? validateMessageUsername =
+            Validator.validateUsername(_usernameController.text);
+        if (validateMessageUsername != null) {
+          ErrorDisplay.showErrorToast(validateMessageUsername, context);
+          return;
+        }
+
+        final String? validateMessagePassword =
+            Validator.validatePassword(_passwordController.text);
+        if (validateMessagePassword != null) {
+          ErrorDisplay.showErrorToast(validateMessagePassword, context);
+          return;
+        }
+      }
+      // If the form is valid, proceed with the login process
+      // Show loader overlay while waiting for the response
+      context.loaderOverlay.show();
+
+      await handleAuthApi(context, () async {
+        final result = await authService.signIn(
+          _usernameController.text,
+          _passwordController.text,
+        );
+        return result;
+      }, () async {
+        // nếu success
+        // hiện loading
+        context.loaderOverlay.hide();
+        // If successful, navigate to HomePage
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const MainPageLayout(),
+            ),
+            (_) => false);
+      });
+    }
+
     return Form(
       key: _formKey,
       child: Column(

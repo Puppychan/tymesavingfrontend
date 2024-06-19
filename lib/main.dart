@@ -21,6 +21,7 @@ Future<void> main() async {
 
   // Initialize the NetworkService
   await NetworkService.instance.initClient();
+  ThemeService();
   // runApp(const MyApp());
   runApp(
     MultiProvider(
@@ -31,7 +32,11 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => ThemeService()),
         ChangeNotifierProvider(create: (_) => TransactionService())
       ],
-      child: const MyApp(),
+      child: GlobalLoaderOverlay(
+        useDefaultLoading: true,
+        overlayColor: AppColors.primaryBlue.withOpacity(0.5),
+        child: const MyApp(),
+      ),
     ),
   );
 }
@@ -42,16 +47,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'My App', 
+      title: 'My App',
       theme: AppThemes.lightTheme,
       darkTheme: AppThemes.darkTheme,
       themeMode: Provider.of<ThemeService>(context).themeMode,
       navigatorObservers: [routeObserver],
-      home: LoaderOverlay(
-        useDefaultLoading: true,
-        overlayColor: AppColors.cream.withOpacity(0.7),
-        child: const SplashScreen(),
-      ),
+      // home: LoaderOverlay(
+      //   useDefaultLoading: true,
+      //   overlayColor: AppColors.cream.withOpacity(0.7),
+      //   child: const SplashScreen(),
+      // ),
+      home: const SplashScreen(),
     );
   }
 }
