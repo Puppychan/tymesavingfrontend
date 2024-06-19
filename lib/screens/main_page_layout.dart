@@ -4,6 +4,7 @@ import 'package:tymesavingfrontend/common/enum/page_location_enum.dart';
 import 'package:tymesavingfrontend/common/enum/user_role_enum.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/heading/heading_title_based_location.dart';
+import 'package:tymesavingfrontend/components/main_page_layout/show_add_options.dart';
 import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/screens/home/home_admin_page.dart';
@@ -99,7 +100,9 @@ class _MainPageLayoutState extends State<MainPageLayout> with RouteAware {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          showAddOptions(context);
+        },
         shape: const CircleBorder(),
         child: const Icon(Icons.add),
       ),

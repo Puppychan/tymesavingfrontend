@@ -51,12 +51,12 @@ class AppTextStyles {
   //   fontWeight: FontWeight.w700,
   // );
 
-  static const TextStyle subHeadingSmall = TextStyle(
-    color: AppColors.primaryText,
-    fontSize: 14,
-    fontFamily: 'Merriweather',
-    fontWeight: FontWeight.w400,
-  );
+  // static const TextStyle subHeadingSmall = TextStyle(
+  //   color: AppColors.primaryText,
+  //   fontSize: 14,
+  //   fontFamily: 'Merriweather',
+  //   fontWeight: FontWeight.w400,
+  // );
 
   // static const TextStyle boldHeadingBlue = TextStyle(
   //   // color: AppColors.primaryBlue,

@@ -14,6 +14,7 @@ class TransactionService extends ChangeNotifier {
   CurrentMonthReport? _currentMonthReport;
   TopCategoriesList? _topCategoriesList;
   NetSpend? _netSpend;
+  Map<String, List<Transaction>>? _transactions;
 
   // Getter to access outside of this class
   CompareToLastMonth? get compareToLastMonth => _compareToLastMonth;
@@ -22,6 +23,7 @@ class TransactionService extends ChangeNotifier {
   CurrentMonthReport? get currrentMonthReport => _currentMonthReport;
   TopCategoriesList? get topCategoriesList => _topCategoriesList;
   NetSpend? get netSpend => _netSpend;
+  Map<String, List<Transaction>>? get transactions => _transactions;
 
   Future<Map<String, dynamic>> getChartReport(userid) async {
     final response = await NetworkService.instance.get(
@@ -84,7 +86,7 @@ class TransactionService extends ChangeNotifier {
     return response;
   }
 
-  Future<Map<String, List<Transaction>>> fetchTransactions(userid) async {
+  Future<Map<String, dynamic>> fetchTransactions(userid) async {
     String normalizeMonthName(String month) {
       switch (month.toUpperCase()) {
         case 'JAN':
@@ -129,15 +131,17 @@ class TransactionService extends ChangeNotifier {
             .toList();
         return MapEntry(normalizeMonthName(month), transactionList);
       });
-
+      _transactions = transactions;
       print('Parsed transactions: $transactions');
 
       notifyListeners();
-      return transactions;
+      // return transactions;
+      
     } else {
       print(
           'Failed to load transactions. Status code: ${response['statusCode']}');
-      throw Exception('Failed to load transactions');
+      // throw Exception('Failed to load transactions');
     }
+    return response;
   }
 }

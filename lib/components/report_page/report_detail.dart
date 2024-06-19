@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
 import 'package:tymesavingfrontend/models/transaction_report_model.dart';
 
 class ReportDetail extends StatefulWidget {
@@ -41,31 +42,13 @@ class CategoryCardItem extends StatefulWidget {
 }
 
 class _CategoryCardItemState extends State<CategoryCardItem> {
-  //Append icon to category
-  final Map<String, Map<String, dynamic>> categoryData = {
-    'Dine out': {'icon': Icons.restaurant, 'color': Colors.red},
-    'Shopping': {'icon': Icons.shopping_cart, 'color': Colors.blue},
-    'Travel': {'icon': Icons.airplanemode_active, 'color': Colors.orange},
-    'Entertainment': {'icon': Icons.movie, 'color': Colors.purple},
-    'Personal': {'icon': Icons.person, 'color': Colors.teal},
-    'Transportation': {'icon': Icons.directions_car, 'color': Colors.green},
-    'Rent/Mortgage': {'icon': Icons.home, 'color': Colors.brown},
-    'Utilities': {'icon': Icons.lightbulb, 'color': Colors.yellow},
-    'Bills & Fees': {'icon': Icons.receipt, 'color': Colors.grey},
-    'Health': {'icon': Icons.local_hospital, 'color': Colors.pink},
-    'Education': {'icon': Icons.school, 'color': Colors.indigo},
-    'Groceries': {'icon': Icons.local_grocery_store, 'color': Colors.lime},
-    'Gifts': {'icon': Icons.card_giftcard, 'color': Colors.redAccent},
-    'Work': {'icon': Icons.work, 'color': Colors.blueAccent},
-    'Other expenses': {'icon': Icons.money_off, 'color': Colors.black},
-  };
-
-
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-    final category = categoryData[widget.categoryName] ?? {'icon': Icons.money_off, 'color': colorScheme.error};
+    final category = transactionCategoryData[
+            TransactionCategory.fromString(widget.categoryName)] ??
+        {'icon': Icons.money_off, 'color': colorScheme.error};
     final IconData iconData = category['icon'];
     final Color color = category['color'];
     return Card(

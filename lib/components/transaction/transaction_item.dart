@@ -8,7 +8,7 @@ class TransactionItem extends StatelessWidget {
   final IconData randomIcon;
   final Color randomColor;
 
-  TransactionItem({
+  const TransactionItem({super.key, 
     required this.transaction,
     required this.formattedDate,
     required this.randomIcon,
