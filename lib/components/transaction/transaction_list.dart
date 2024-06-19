@@ -7,7 +7,7 @@ import 'package:tymesavingfrontend/models/transaction.model.dart';
 class TransactionList extends StatelessWidget {
   final List<Transaction> transactions;
 
-  TransactionList({required this.transactions});
+  TransactionList({super.key, required this.transactions});
 
   final List<IconData> icons = [
     Icons.shopping_cart,

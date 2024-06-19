@@ -6,6 +6,7 @@ import 'package:tymesavingfrontend/common/styles/app_color.dart';
 import 'package:tymesavingfrontend/common/styles/app_theme.dart';
 import 'package:tymesavingfrontend/screens/splash_screen.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
+import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
 import 'package:tymesavingfrontend/services/theme_service.dart';
 import 'package:tymesavingfrontend/services/transaction_service.dart';
 import 'package:tymesavingfrontend/services/user_service.dart';
@@ -24,6 +25,7 @@ Future<void> main() async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => FormStateProvider()),
         ChangeNotifierProvider(create: (_) => AuthService()),
         ChangeNotifierProvider(create: (_) => UserService()),
         ChangeNotifierProvider(create: (_) => ThemeService()),
