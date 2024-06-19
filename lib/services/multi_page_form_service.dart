@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
+import 'package:tymesavingfrontend/utils/format_amount.dart';
 
 class FormStateProvider with ChangeNotifier {
   Map<String, dynamic> _incomeFormFields = {};
@@ -40,12 +41,19 @@ class FormStateProvider with ChangeNotifier {
     }
     return formatter.format(amount);
   }
+  // String getFormattedDate(FormStateType type) {
+  //   // final DateFormat formatter = DateFormat('dd/MM/yyyy');
+  //   DateTime date = DateTime.now();
+  //   if (type == FormStateType.income) {
+  //     date = _validateFieldNull('createdDate', _incomeFormFields, DateTime.now()) as DateTime;
+  //   } else {
+  //     date = _validateFieldNull('createdDate', _expenseFormFields, DateTime.now()) as DateTime;
+  //   }
+  //   return formatter.format(date);
+  // }
 
-  double convertFormattedToNumber(String formattedAmount) {
-    String numericString = formattedAmount.replaceAll(RegExp(r'[^\d]'), '');
-    double amount = double.parse(numericString);
-    return double.parse(amount.toStringAsFixed(2));
-  }
+
+
 
   Map<String, dynamic> getFormField(FormStateType type) {
     if (type == FormStateType.income) {
@@ -56,6 +64,10 @@ class FormStateProvider with ChangeNotifier {
   }
 
   void updateFormField(String key, dynamic value, FormStateType type) {
+    if (key == "amount") {
+      value = convertFormattedToNumber(value);
+    }
+
     if (type == FormStateType.income) {
       _incomeFormFields[key] = value;
       debugPrint('Income form fields: $_incomeFormFields');

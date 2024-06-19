@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
+import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
+import 'package:tymesavingfrontend/components/common/dialog/date_picker_dialog.dart';
 import 'package:tymesavingfrontend/components/common/dialog/input_dialog.dart';
-import 'package:tymesavingfrontend/components/common/rounded_icon.dart';
+import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
+import 'package:tymesavingfrontend/components/common/dialog/time_picker_dialog.dart';
+import 'package:tymesavingfrontend/components/common/input/underline_text_field.dart';
 import 'package:tymesavingfrontend/components/multiple_page_sheet/common/category_icon.dart';
 import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
+import 'package:tymesavingfrontend/utils/display_error.dart';
+import 'package:tymesavingfrontend/utils/format_amount.dart';
+import 'package:tymesavingfrontend/utils/format_date.dart';
 import 'package:tymesavingfrontend/utils/validator.dart';
 
 class AddTransactionFormMain extends StatefulWidget {
@@ -16,23 +25,54 @@ class AddTransactionFormMain extends StatefulWidget {
 }
 
 class _AddTransactionFormMainState extends State<AddTransactionFormMain> {
-  int _selectedAmount = 50;
-  DateTime _selectedDate = DateTime.now();
-  String _title = 'Starbuck Cappuccino';
-  String _description = 'Description here....';
-  String _paidBy = 'Paid by Momo 01234566';
-  String _savingOrBudget = 'For None';
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _amountController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _paidByController = TextEditingController();
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   final formStateService =
-  //       Provider.of<FormStateProvider>(context, listen: false);
-  //   setState(() {
-  //     _formFields = formStateService.getFormField(widget.type);
-  //     _selectedCategory = formStateService.getCategory(widget.type);
-  //   });
-  // }
+  DateTime _selectedDate = DateTime.now();
+  TimeOfDay _selectedTime = TimeOfDay.now();
+  String _savingOrBudget = 'For None';
+  // init state
+  @override
+  void initState() {
+    super.initState();
+    final formFields =
+        Provider.of<FormStateProvider>(context, listen: false).getFormField(widget.type);
+    String? formCreatedDate = formFields['createdDate'];
+    if (formCreatedDate != null) {
+      setState(() {
+        final Map<String, dynamic> dateTimeMap =
+            setDateTimeFromTimestamp(formCreatedDate);
+        _selectedDate = dateTimeMap['date'];
+        _selectedTime = dateTimeMap['time'];
+      });
+    }
+  }
+
+  Future<void> _trySubmit() async {
+    final isValid = _formKey.currentState?.validate();
+    print("Result: ${_amountController.text}");
+    print(
+        "Result: ${_amountController.text} - ${_descriptionController.text} - ${_paidByController.text}");
+    // If the form is not valid, show an error
+    if (isValid == null || !isValid) {
+      final String? validateTotalAmount =
+          Validator.validateAmount(_amountController.text);
+      if (validateTotalAmount != null) {
+        ErrorDisplay.showErrorToast(validateTotalAmount, context);
+        return;
+      }
+    }
+
+    //
+    final formattedDateTime = combineDateAndTime(_selectedDate, _selectedTime);
+    onUpdateInputValue("amount", _amountController.text);
+    onUpdateInputValue("createdDate", formattedDateTime ?? "");
+    onUpdateInputValue("description", _descriptionController.text);
+    onUpdateInputValue("paidBy", _paidByController.text);
+  }
+
   void onTransactionCategorySelected(TransactionCategory category) {
     Future.microtask(() async {
       if (!mounted) return;
@@ -51,16 +91,6 @@ class _AddTransactionFormMainState extends State<AddTransactionFormMain> {
     });
   }
 
-  void onChangeAmount() {
-    showInputDialog(
-        context: context,
-        label: "Total Amount",
-        placeholder: "Your income amount",
-        type: TextInputType.number,
-        validator: Validator.validateAmount,
-        successCall: (value) => {onUpdateInputValue("amount", value)});
-  }
-
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -74,6 +104,9 @@ class _AddTransactionFormMainState extends State<AddTransactionFormMain> {
       TransactionCategory selectedCategory =
           formStateService.getCategory(widget.type);
       String formattedAmount = formStateService.getFormattedAmount(widget.type);
+      String formDescription =
+          formFields['description'] ?? "Please add description";
+      String formPaidBy = formFields['paidBy'] ?? "Pay by cash?";
 
       List<Widget> renderCategories(BuildContext context) {
         return TransactionCategory.values.expand((category) {
@@ -97,168 +130,146 @@ class _AddTransactionFormMainState extends State<AddTransactionFormMain> {
         }).toList();
       }
 
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ..._buildComponentGroup(
-              label: "CHOOSE CATEGORY",
-              contentWidget: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: renderCategories(context),
-                  ))),
-          ..._buildComponentGroup(label: "TOTAL AMOUNT", contentWidget: [
-            Row(
-              children: [
-                Text(formattedAmount, style: textTheme.displayMedium),
-                GestureDetector(
-                  onTap: onChangeAmount,
-                  child: Text('Change', style: TextStyle(color: Colors.blue)),
-                ),
-              ],
-            ),
-            SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [10, 50, 100, 500].map((amount) {
-                return ChoiceChip(
-                  label: Text('\$$amount'),
-                  selected: _selectedAmount == amount,
-                  onSelected: (selected) {
-                    setState(() {
-                      _selectedAmount = amount;
-                    });
-                  },
-                );
-              }).toList(),
-            )
-          ]),
-          ..._buildComponentGroup(
-              label: "DATE",
-              contentWidget: _buildEditableRow(
-                context: context,
+      return Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ..._buildComponentGroup(
+                  label: "CHOOSE CATEGORY",
+                  contentWidget: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: renderCategories(context),
+                      ))),
+              UnderlineTextField(
+                  label: "TOTAL AMOUNT",
+                  controller: _amountController,
+                  icon: Icons.attach_money,
+                  placeholder: formattedAmount,
+                  keyboardType: TextInputType.number,
+                  validator: Validator.validateAmount),
+              ..._buildComponentGroup(contentWidget: [
+                // SizedBox(height: 10),
+                SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [50000.0, 100000.0, 500000.0, 1000000.0]
+                          .expand((amount) {
+                        final selectedAmount =
+                            convertFormattedToNumber(formattedAmount);
+                        return [
+                          ChoiceChip(
+                            color: MaterialStateProperty.all<Color>(
+                                colorScheme.tertiary),
+                            label: Text(formatAmount(amount)),
+                            selected: selectedAmount == amount,
+                            onSelected: (selected) {
+                              setState(() {
+                                onUpdateInputValue(
+                                    "amount", _amountController.text);
+                              });
+                            },
+                          ),
+                          const SizedBox(width: 10)
+                        ];
+                      }).toList(),
+                    ))
+              ]),
+              UnderlineTextField(
                 icon: Icons.calendar_today,
-                title: 'DATE',
-                value: 'Today',
+                label: 'DATE',
+                placeholder: convertDateTimeToReadableString(_selectedDate),
+                readOnly: true,
+                suffixIcon: Icons.edit,
                 onTap: () async {
-                  DateTime? pickedDate = await showDatePicker(
-                    context: context,
-                    initialDate: _selectedDate,
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2100),
-                  );
+                  DateTime? pickedDate = await showCustomDatePickerDialog(
+                      context: context,
+                      initialDate: _selectedDate,
+                      helpText: 'Select Date of Income');
                   if (pickedDate != null) {
                     setState(() {
                       _selectedDate = pickedDate;
+                      
                     });
                   }
                 },
-              )),
-          ..._buildComponentGroup(
-              label: "DESCRIPTION",
-              contentWidget: _buildEditableRow(
-                context: context,
+              ),
+              UnderlineTextField(
+                icon: Icons.hourglass_bottom_rounded,
+                label: 'TIME',
+                placeholder: convertTimeDayToReadableString(context, _selectedTime),
+                readOnly: true,
+                suffixIcon: Icons.edit,
+                onTap: () async {
+                  // Show the time picker dialog
+                  final TimeOfDay? pickedTime =
+                      await showCustomTimePickerDialog(
+                    context:
+                        context, // Make sure you have a BuildContext available
+                    initialTime: _selectedTime,
+                  );
+
+                  // Check if a time was picked
+                  if (pickedTime != null) {
+                    setState(() {
+                      _selectedTime = pickedTime;
+                    });
+                  }
+                },
+              ),
+              UnderlineTextField(
+                label: 'DESCRIPTION',
+                controller: _descriptionController,
                 icon: Icons.description,
-                title: 'DESCRIPTION',
-                value: _description,
-                onTap: () => _showInputDialog(
-                  context,
-                  initialValue: _description,
-                  onSubmitted: (value) {
-                    setState(() {
-                      _description = value;
-                    });
-                  },
-                ),
-              )),
-          ..._buildComponentGroup(
-              label: "PAID BY",
-              contentWidget: _buildEditableRow(
-                context: context,
+                placeholder: formDescription,
+                keyboardType: TextInputType.text,
+              ),
+              UnderlineTextField(
+                controller: _paidByController,
                 icon: Icons.payment,
-                title: 'PAID BY',
-                value: _paidBy,
-                onTap: () => _showInputDialog(
-                  context,
-                  initialValue: _paidBy,
-                  onSubmitted: (value) {
-                    setState(() {
-                      _paidBy = value;
-                    });
-                  },
-                ),
-              )),
-          ..._buildComponentGroup(label: "DESCRIPTION", contentWidget: [
-            Text('SAVING OR BUDGET', style: textTheme.subtitle1),
-            SizedBox(height: 10),
-            Column(
-              children: ['For Saving', 'For Budget', 'For None'].map((option) {
-                return RadioListTile(
-                  title: Text(option),
-                  value: option,
-                  groupValue: _savingOrBudget,
-                  onChanged: (value) {
-                    setState(() {
-                      _savingOrBudget = value!;
-                    });
-                  },
-                );
-              }).toList(),
-            )
-          ]),
-        ],
-      );
+                label: 'PAID BY',
+                placeholder: formPaidBy,
+                keyboardType: TextInputType.text,
+              ),
+              // ..._buildComponentGroup(
+              //     label: "SAVING OR BUDGET",
+              //     contentWidget: [
+              //       Column(
+              //         children: ['For Saving', 'For Budget', 'For None']
+              //             .map((option) {
+              //           return RadioListTile(
+              //             title: Text(option),
+              //             value: option,
+              //             groupValue: _savingOrBudget,
+              //             onChanged: (value) {
+              //               setState(() {
+              //                 _savingOrBudget = value!;
+              //               });
+              //             },
+              //           );
+              //         }).toList(),
+              //       )
+              //     ]),
+              PrimaryButton(title: "Add", onPressed: _trySubmit)
+            ],
+          ));
     });
   }
 
   List<Widget> _buildComponentGroup(
-      {required dynamic contentWidget, required String label}) {
+      {required dynamic contentWidget, String? label}) {
     final textTheme = Theme.of(context).textTheme;
     return [
-      Text(label, style: textTheme.titleSmall),
-      const SizedBox(height: 10),
+      if (label != null) Text(label, style: textTheme.titleSmall),
+      label != null ? const SizedBox(height: 10) : const SizedBox.shrink(),
       if (contentWidget is List) ...contentWidget else contentWidget,
       const SizedBox(height: 5),
       const Divider(),
-      const SizedBox(height: 20),
+      const SizedBox(height: 30),
     ];
-  }
-
-  Widget _buildEditableRow({
-    required BuildContext context,
-    required IconData icon,
-    required String title,
-    required String value,
-    required VoidCallback onTap,
-  }) {
-    final textTheme = Theme.of(context).textTheme;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Icon(icon),
-              SizedBox(width: 10),
-              Text(title, style: textTheme.subtitle1),
-            ],
-          ),
-          Row(
-            children: [
-              Text(value, style: textTheme.bodyText2),
-              SizedBox(width: 10),
-              GestureDetector(
-                onTap: onTap,
-                child: Text('Change', style: TextStyle(color: Colors.blue)),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
   }
 
   Future<void> _showInputDialog(

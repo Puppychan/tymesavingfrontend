@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/components/common/round_text_field.dart';
+import 'package:tymesavingfrontend/components/common/input/round_text_field.dart';
 import 'package:tymesavingfrontend/utils/display_error.dart';
 
 void showInputDialog(
