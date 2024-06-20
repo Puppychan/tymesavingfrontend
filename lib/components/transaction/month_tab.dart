@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/models/transaction.model.dart';
+import 'package:tymesavingfrontend/models/transaction_model.dart';
 
 class MonthTab extends StatelessWidget {
   final String month;

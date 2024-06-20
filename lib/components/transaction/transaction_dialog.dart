@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/models/transaction.model.dart';
+import 'package:tymesavingfrontend/models/transaction_model.dart';
 import 'package:tymesavingfrontend/components/transaction/infor_row.dart';
+import 'package:tymesavingfrontend/screens/transaction/transaction_update_page.dart';
+import 'package:tymesavingfrontend/utils/format_amount.dart';
 
 class TransactionDialog extends StatelessWidget {
   final Transaction transaction;
@@ -29,30 +31,30 @@ class TransactionDialog extends StatelessWidget {
               children: [
                 InfoRow(
                   icon: Icons.label,
-                  iconColor: Colors.blue,
+                  iconColor: Colors.indigo[600],
                   label: 'Type:',
                   value: transaction.type,
                 ),
                 const SizedBox(height: 8),
                 InfoRow(
                   icon: Icons.category,
-                  iconColor: Colors.green,
+                  iconColor: Colors.green[800],
                   label: 'Category:',
                   value: transaction.category,
                 ),
                 const SizedBox(height: 8),
                 InfoRow(
                   icon: Icons.date_range,
-                  iconColor: Colors.orange,
+                  iconColor: Colors.orange[800],
                   label: 'Date:',
                   value: formattedDate,
                 ),
                 const SizedBox(height: 8),
                 InfoRow(
                   icon: Icons.attach_money,
-                  iconColor: Colors.red,
+                  iconColor: Colors.red[800],
                   label: 'Amount:',
-                  value: '\$${transaction.amount.toStringAsFixed(2)}',
+                  value: formatAmount(transaction.amount),
                 ),
               ],
             ),
@@ -61,6 +63,12 @@ class TransactionDialog extends StatelessWidget {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => TransactionUpdatePage(
+                              transactionId: transaction.id,
+                            )));
                 // Add your edit functionality here
               },
               child: const Text('Edit'),

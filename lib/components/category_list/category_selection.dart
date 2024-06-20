@@ -3,22 +3,22 @@ import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
 import 'package:tymesavingfrontend/components/common/rounded_icon.dart';
-import 'package:tymesavingfrontend/components/multiple_page_sheet/common/category_icon.dart';
+import 'package:tymesavingfrontend/components/category_list/category_icon.dart';
 import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
 import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
 
-class TransactionCategorySelectionPage extends StatefulWidget {
+class CategorySelectionPage extends StatefulWidget {
   final VoidCallback? onNavigateToNext;
   final FormStateType type;
-  const TransactionCategorySelectionPage({super.key, this.onNavigateToNext, required this.type});
+  const CategorySelectionPage({super.key, this.onNavigateToNext, required this.type});
 
   @override
-  State<TransactionCategorySelectionPage> createState() =>
-      _TransactionCategorySelectionPageState();
+  State<CategorySelectionPage> createState() =>
+      _CategorySelectionPageState();
 }
 
-class _TransactionCategorySelectionPageState
-    extends State<TransactionCategorySelectionPage> {
+class _CategorySelectionPageState
+    extends State<CategorySelectionPage> {
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +58,7 @@ class _TransactionCategorySelectionPageState
                   onTap: () async =>
                       {await onTransactionCategorySelected(context, category)},
                   child: ListTile(
-                    leading: getCategoryIcon(categoryInfo),
+                    leading: getCategoryIcon(currentCategoryInfo: categoryInfo),
                     title: Text(category.name, style: textTheme.bodyLarge),
                     trailing: isSelected
                         ? RoundedIcon(

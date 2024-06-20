@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/models/transaction.model.dart';
+import 'package:tymesavingfrontend/models/transaction_model.dart';
 import 'package:tymesavingfrontend/common/styles/app_color.dart';
 import 'package:tymesavingfrontend/components/transaction/transaction_list.dart';
 
@@ -65,7 +65,19 @@ class TransactionScreen extends StatelessWidget {
           Expanded(
             child: TabBarView(
               children: months.map((month) {
-                return TransactionList(transactions: transactions[month] ?? []);
+                if (transactions[month] == null) {
+                  // if not found
+                  return Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: Text('No transactions found',
+                            style: Theme.of(context).textTheme.bodyLarge),
+                      ));
+                } else {
+                  return TransactionList(
+                      transactions: transactions[month] ?? []);
+                }
               }).toList(),
             ),
           ),

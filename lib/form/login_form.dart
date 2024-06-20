@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:provider/provider.dart';
-import 'package:tymesavingfrontend/components/common/round_text_field.dart';
+import 'package:tymesavingfrontend/components/common/input/round_text_field.dart';
 import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
 import 'package:tymesavingfrontend/screens/main_page_layout.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
@@ -28,51 +28,52 @@ class _LoginFormState extends State<LoginForm> {
     super.dispose();
   }
 
-  Future<void> _trySubmit() async {
-    final authService = Provider.of<AuthService>(context, listen: false);
-    final isValid = _formKey.currentState?.validate();
-    // If the form is not valid, show an error
-    if (isValid == null || !isValid) {
-      final String? validateMessageUsername =
-          Validator.validateUsername(_usernameController.text);
-      if (validateMessageUsername != null) {
-        ErrorDisplay.showErrorToast(validateMessageUsername, context);
-        return;
-      }
-
-      final String? validateMessagePassword =
-          Validator.validatePassword(_passwordController.text);
-      if (validateMessagePassword != null) {
-        ErrorDisplay.showErrorToast(validateMessagePassword, context);
-        return;
-      }
-    }
-    // If the form is valid, proceed with the login process
-    // Show loader overlay while waiting for the response
-    context.loaderOverlay.show();
-
-    await handleAuthApi(context, () async {
-      final result = await authService.signIn(
-        _usernameController.text,
-        _passwordController.text,
-      );
-      return result;
-    }, () async {
-      // nếu success
-      // hiện loading
-      context.loaderOverlay.hide();
-      // If successful, navigate to HomePage
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const MainPageLayout(),
-          ),
-          (_) => false);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    Future<void> trySubmit() async {
+      final authService = Provider.of<AuthService>(context, listen: false);
+      final isValid = _formKey.currentState?.validate();
+      // If the form is not valid, show an error
+      if (isValid == null || !isValid) {
+        final String? validateMessageUsername =
+            Validator.validateUsername(_usernameController.text);
+        if (validateMessageUsername != null) {
+          ErrorDisplay.showErrorToast(validateMessageUsername, context);
+          return;
+        }
+
+        final String? validateMessagePassword =
+            Validator.validatePassword(_passwordController.text);
+        if (validateMessagePassword != null) {
+          ErrorDisplay.showErrorToast(validateMessagePassword, context);
+          return;
+        }
+      }
+      // If the form is valid, proceed with the login process
+      // Show loader overlay while waiting for the response
+      context.loaderOverlay.show();
+
+      await handleAuthApi(context, () async {
+        final result = await authService.signIn(
+          _usernameController.text,
+          _passwordController.text,
+        );
+
+        return result;
+      }, () async {
+        // nếu success
+        // hiện loading
+        context.loaderOverlay.hide();
+        // If successful, navigate to HomePage
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const MainPageLayout(),
+            ),
+            (_) => false);
+      });
+    }
+
     return Form(
       key: _formKey,
       child: Column(
@@ -99,7 +100,7 @@ class _LoginFormState extends State<LoginForm> {
           const SizedBox(height: 20),
           PrimaryButton(
             title: "Sign In",
-            onPressed: _trySubmit,
+            onPressed: trySubmit,
           ),
         ],
       ),

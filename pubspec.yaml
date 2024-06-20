@@ -80,6 +80,7 @@ flutter:
     - assets/img/app_logo_light.png
     - assets/img/app_logo_dark.png
     - assets/img/error.svg
+    - assets/img/splash_dark.png
     - assets/img/splash_light.png
 
   # An image asset can refer to one or more resolution-specific "variants", see

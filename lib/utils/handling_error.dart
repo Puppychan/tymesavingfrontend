@@ -1,5 +1,6 @@
 // Function to handle errors during authentication
 import 'package:flutter/material.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:tymesavingfrontend/screens/authentication/sign_in_page.dart';
 import 'package:tymesavingfrontend/utils/display_error.dart';
 
@@ -22,6 +23,7 @@ Future<void> handleAuthApi(
       await successAction();
     } else if (result['statusCode'] == 401 || result['statusCode'] == 400) {
       // Display error message
+      context.loaderOverlay.hide();
       ErrorDisplay.showErrorToast(result['response'], context);
     } else {
       ErrorDisplay.navigateToErrorPage(result, context);
