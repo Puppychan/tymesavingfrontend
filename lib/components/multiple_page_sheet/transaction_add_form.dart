@@ -10,7 +10,7 @@ void showTransactionFormA(BuildContext context, bool isIncome) {
   // because this sheet open from another sheet -> we need to pop the current sheet
   showStyledBottomSheet(
       context: context,
-      title: 'Add new income',
+      title: 'Add new ${isIncome ? 'income' : 'expense'}',
       subTitle: 'Choose category',
       contentWidget: TransactionCategorySelectionPage(
         type: isIncome ? FormStateType.income : FormStateType.expense,
@@ -25,7 +25,7 @@ void showTransactionFormA(BuildContext context, bool isIncome) {
 void showTransactionFormB(BuildContext context, bool isIncome) {
   showStyledBottomSheet(
       context: context,
-      title: 'Add new income',
+      title: 'Add new ${isIncome ? 'income' : 'expense'}',
       // contentWidget: Text("PageB "),
       contentWidget: AddTransactionFormMain(
         type: isIncome ? FormStateType.income : FormStateType.expense,

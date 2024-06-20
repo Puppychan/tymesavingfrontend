@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:intl/intl.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
 import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
 import 'package:tymesavingfrontend/components/common/dialog/date_picker_dialog.dart';
-import 'package:tymesavingfrontend/components/common/dialog/input_dialog.dart';
-import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
 import 'package:tymesavingfrontend/components/common/dialog/time_picker_dialog.dart';
 import 'package:tymesavingfrontend/components/common/input/underline_text_field.dart';
 import 'package:tymesavingfrontend/components/multiple_page_sheet/common/category_icon.dart';
+import 'package:tymesavingfrontend/models/user_model.dart';
+import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
+import 'package:tymesavingfrontend/services/transaction_service.dart';
 import 'package:tymesavingfrontend/utils/display_error.dart';
+import 'package:tymesavingfrontend/utils/display_success.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
 import 'package:tymesavingfrontend/utils/format_date.dart';
+import 'package:tymesavingfrontend/utils/handling_error.dart';
 import 'package:tymesavingfrontend/utils/validator.dart';
 
 class AddTransactionFormMain extends StatefulWidget {
@@ -37,8 +39,8 @@ class _AddTransactionFormMainState extends State<AddTransactionFormMain> {
   @override
   void initState() {
     super.initState();
-    final formFields =
-        Provider.of<FormStateProvider>(context, listen: false).getFormField(widget.type);
+    final formFields = Provider.of<FormStateProvider>(context, listen: false)
+        .getFormField(widget.type);
     String? formCreatedDate = formFields['createdDate'];
     if (formCreatedDate != null) {
       setState(() {
@@ -71,6 +73,29 @@ class _AddTransactionFormMainState extends State<AddTransactionFormMain> {
     onUpdateInputValue("createdDate", formattedDateTime ?? "");
     onUpdateInputValue("description", _descriptionController.text);
     onUpdateInputValue("paidBy", _paidByController.text);
+    Future.microtask(() async {
+      await handleMainPageApi(context, () async {
+        final authService = Provider.of<AuthService>(context, listen: false);
+        final formField = Provider.of<FormStateProvider>(context, listen: false)
+            .getFormField(widget.type);
+        // return null;
+        User? user = authService.user;
+        context.loaderOverlay.show();
+        return await Provider.of<TransactionService>(context, listen: false)
+            .createTransaction(
+                user?.id ?? "",
+                formField['createdDate'],
+                formField['description'],
+                widget.type,
+                formField['amount'],
+                formField['paidBy'],
+                formField['category']);
+      }, () async {
+        context.loaderOverlay.hide();
+        Navigator.of(context).pop();
+        SuccessDisplay.showSuccessToast("Create new ${widget.type} successfully", context);
+      });
+    });
   }
 
   void onTransactionCategorySelected(TransactionCategory category) {
@@ -188,11 +213,10 @@ class _AddTransactionFormMainState extends State<AddTransactionFormMain> {
                   DateTime? pickedDate = await showCustomDatePickerDialog(
                       context: context,
                       initialDate: _selectedDate,
-                      helpText: 'Select Date of Income');
+                      helpText: 'Select Date of Transaction');
                   if (pickedDate != null) {
                     setState(() {
                       _selectedDate = pickedDate;
-                      
                     });
                   }
                 },
@@ -200,7 +224,8 @@ class _AddTransactionFormMainState extends State<AddTransactionFormMain> {
               UnderlineTextField(
                 icon: Icons.hourglass_bottom_rounded,
                 label: 'TIME',
-                placeholder: convertTimeDayToReadableString(context, _selectedTime),
+                placeholder:
+                    convertTimeDayToReadableString(context, _selectedTime),
                 readOnly: true,
                 suffixIcon: Icons.edit,
                 onTap: () async {

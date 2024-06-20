@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
+import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
 import 'package:tymesavingfrontend/models/transaction.model.dart';
 import 'package:tymesavingfrontend/models/transaction_report_model.dart';
 import 'package:tymesavingfrontend/services/utils/get_backend_endpoint.dart';
@@ -37,6 +39,29 @@ class TransactionService extends ChangeNotifier {
     _currentMonthReport =
         CurrentMonthReport.fromJson(responseData['currentMonthTotal']);
     _netSpend = NetSpend.fromJson(responseData['netSpend']);
+    return response;
+  }
+
+  Future<Map<String, dynamic>> createTransaction(
+      String userId,
+      String createdDate,
+      String description,
+      FormStateType type,
+      double amount,
+      String payBy,
+      TransactionCategory category) async {
+    // print type of all
+    final response = await NetworkService.instance.post(
+        BackendEndpoints.transaction,
+        body: {
+          'userId': userId,
+          'createdDate': createdDate,
+          'description': description,
+          'type': type.value, //
+          'amount': amount,
+          'payBy': payBy,
+          'category': category.name,
+        });
     return response;
   }
 
@@ -136,7 +161,6 @@ class TransactionService extends ChangeNotifier {
 
       notifyListeners();
       // return transactions;
-      
     } else {
       print(
           'Failed to load transactions. Status code: ${response['statusCode']}');
