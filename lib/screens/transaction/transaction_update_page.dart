@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
 import 'package:tymesavingfrontend/common/styles/app_padding.dart';
 import 'package:tymesavingfrontend/components/common/bottom_sheet.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
-import 'package:tymesavingfrontend/components/multiple_page_sheet/common/add_transaction_form_main.dart';
-import 'package:tymesavingfrontend/components/multiple_page_sheet/common/transaction_selection_sheet.dart';
+import 'package:tymesavingfrontend/components/multiple_page_sheet/common/transaction_form.dart';
+import 'package:tymesavingfrontend/components/category_list/category_selection.dart';
 import 'package:tymesavingfrontend/models/transaction_model.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
@@ -102,7 +101,7 @@ class _TransactionUpdatePageState extends State<TransactionUpdatePage> {
                       showStyledBottomSheet(
                           context: context,
                           title: "Category Selection",
-                          contentWidget: TransactionCategorySelectionPage(
+                          contentWidget: CategorySelectionPage(
                               type: FormStateType.updateTransaction,
                               onNavigateToNext: () => Navigator.pop(context)));
                     },
@@ -111,7 +110,7 @@ class _TransactionUpdatePageState extends State<TransactionUpdatePage> {
                       style: textTheme.titleSmall,
                     )),
                 const Divider(),
-                const AddTransactionFormMain(
+                const TransactionFormMain(
                     type: FormStateType.updateTransaction),
               ],
             )));

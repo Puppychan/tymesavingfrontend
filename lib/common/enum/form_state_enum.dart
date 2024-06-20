@@ -3,7 +3,8 @@ enum FormStateType {
   expense('Expense'),
   updateTransaction('UpdateTransaction'),
   saving('Saving'),
-  budget('Budget');
+  budget('Budget'),
+  updateBudget('UpdateBudget');
 
   final String value;
   const FormStateType(this.value);

@@ -29,9 +29,12 @@ class FormStateProvider with ChangeNotifier {
       // return categoryExpense;
       return _validateFieldNull('category', _expenseFormFields,
           TransactionCategory.defaultCategory());
-    } else {
+    } else if (type == FormStateType.updateTransaction) {
       return _validateFieldNull('category', _updateTransactionFormFields,
           TransactionCategory.defaultCategory());
+    } else {
+      // TODO: temp
+      return TransactionCategory.defaultCategory();
     }
   }
 
@@ -43,9 +46,12 @@ class FormStateProvider with ChangeNotifier {
       amount = _validateFieldNull('amount', _incomeFormFields, 0.0) as double;
     } else if (type == FormStateType.expense) {
       amount = _validateFieldNull('amount', _expenseFormFields, 0.0) as double;
-    } else {
+    } else if (type == FormStateType.updateTransaction) {
       amount = _validateFieldNull(
           'amount', _updateTransactionFormFields, 0.0) as double;
+    } else {
+      amount = _validateFieldNull(
+          'amount', _budgetFormFields, 0.0) as double;
     }
     return formatter.format(amount);
   }
@@ -57,8 +63,10 @@ class FormStateProvider with ChangeNotifier {
       return _incomeFormFields;
     } else if (type == FormStateType.expense) {
       return _expenseFormFields;
-    } else {
+    } else if (type == FormStateType.updateTransaction) {
       return _updateTransactionFormFields;
+    } else {
+      return _budgetFormFields;
     }
   }
 
@@ -89,8 +97,10 @@ class FormStateProvider with ChangeNotifier {
       debugPrint('Income form fields: $_incomeFormFields');
     } else if (type == FormStateType.expense) {
       _expenseFormFields[key] = value;
-    } else {
+    } else if (type == FormStateType.updateTransaction) {
       _updateTransactionFormFields[key] = value;
+    } else {
+      _budgetFormFields[key] = value;
     }
     notifyListeners();
   }
@@ -101,8 +111,10 @@ class FormStateProvider with ChangeNotifier {
       debugPrint("Income form fields: $_incomeFormFields");
     } else if (type == FormStateType.expense) {
       _expenseFormFields['category'] = category;
-    } else {
+    } else if (type == FormStateType.updateTransaction) {
       _updateTransactionFormFields['category'] = category;
+    } else {
+      _budgetFormFields['category'] = category;
     }
     notifyListeners();
   }

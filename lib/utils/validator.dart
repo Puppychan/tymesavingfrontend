@@ -1,3 +1,5 @@
+import 'package:tymesavingfrontend/utils/format_amount.dart';
+
 class Validator {
   // Validate email addresses
   static String? validateEmail(String? value) {
@@ -116,11 +118,12 @@ class Validator {
     if (value == null || value.isEmpty) {
       return 'Amount cannot be empty';
     }
-    final number = double.tryParse(value);
-    if (number == null) {
-      return 'Please enter a valid number';
-    }
-    if (number < minAmount) {
+    final convertedValue = convertFormattedToNumber(value);
+    // final number = double.tryParse(convertedValue);
+    // if (number == null) {
+    //   return 'Please enter a valid number';
+    // }
+    if (convertedValue < minAmount) {
       return 'Amount must be greater than $minAmount dong';
     }
     return null; // null means the input is valid
