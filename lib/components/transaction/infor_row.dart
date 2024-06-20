@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class InfoRow extends StatelessWidget {
   final IconData icon;
-  final Color iconColor;
+  final Color? iconColor;
   final String label;
   final String value;
 

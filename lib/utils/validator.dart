@@ -1,3 +1,5 @@
+import 'package:tymesavingfrontend/utils/format_amount.dart';
+
 class Validator {
   // Validate email addresses
   static String? validateEmail(String? value) {
@@ -98,5 +100,32 @@ class Validator {
       return 'Please enter a valid phone number';
     }
     return null;
+  }
+
+  static String? validateTitle(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter a title';
+    }
+    if (value.length < 4) {
+      return 'Title must be at least 4 characters long';
+    }
+    return null;
+  }
+
+  static String? validateAmount(String? value) {
+    print("Validate amount: $value");
+    const minAmount = 100;
+    if (value == null || value.isEmpty) {
+      return 'Amount cannot be empty';
+    }
+    final convertedValue = convertFormattedToNumber(value);
+    // final number = double.tryParse(convertedValue);
+    // if (number == null) {
+    //   return 'Please enter a valid number';
+    // }
+    if (convertedValue < minAmount) {
+      return 'Amount must be greater than $minAmount dong';
+    }
+    return null; // null means the input is valid
   }
 }

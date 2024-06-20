@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tymesavingfrontend/components/transaction/transaction_item.dart';
 import 'dart:math';
-import 'package:tymesavingfrontend/models/transaction.model.dart';
+import 'package:tymesavingfrontend/models/transaction_model.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> transactions;

@@ -53,7 +53,7 @@ Future<String?> getToken() async {
 }
 
 class NetworkService {
-  final TIMEOUT_DURATION = const Duration(seconds: 10);
+  final TIMEOUT_DURATION = const Duration(seconds: 30);
   late final Dio _dio;
   final JsonEncoder _encoder = const JsonEncoder();
   static final NetworkService _instance = NetworkService.internal();
@@ -66,8 +66,8 @@ class NetworkService {
     _dio = Dio(
       BaseOptions(
         baseUrl: BackendEndpoints.baseUrl,
-        connectTimeout: const Duration(milliseconds: 10000),
-        receiveTimeout: const Duration(milliseconds: 10000),
+        connectTimeout: TIMEOUT_DURATION,
+        receiveTimeout: TIMEOUT_DURATION,
         headers: {
           CONTENT_TYPE: APPLICATION_JSON,
           ACCEPT: APPLICATION_JSON,
