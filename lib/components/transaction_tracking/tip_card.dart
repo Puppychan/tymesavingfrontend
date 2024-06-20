@@ -44,6 +44,8 @@ class _TipCardState extends State<TipCard> {
                             ? 'Your net spend is positive! Great job managing your finances. Keep up the good work and continue saving for your future.'
                             : 'Your net spend is negative. Consider reviewing your expenses and identify areas where you can reduce unnecessary spending.',
                         style: textTheme.bodyMedium,
+                        softWrap: true,
+                        overflow: TextOverflow.visible,
                       )
                     ]),
               )
