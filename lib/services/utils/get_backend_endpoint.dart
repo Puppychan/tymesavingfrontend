@@ -26,6 +26,7 @@ class BackendEndpoints {
   // if there is no $baseUrl, the URL will be concatenated with other endpoints
   static String get userUpdate => "update";
   static String get userPasswordUpdate => "update/password";
+  static String get userById => "byId";
   static String get transactionReport => "report";
   static String get transactionReportByUser => "byUser";
 }

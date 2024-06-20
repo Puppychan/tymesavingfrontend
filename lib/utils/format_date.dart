@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-Map<String, dynamic> setDateTimeFromTimestamp(String dateTimeString) {
+Map<String, dynamic> setDateTimeFromTimestamp(String? dateTimeString) {
+  if (dateTimeString == null) {
+    return {'date': DateTime.now(), 'time': TimeOfDay.now()};
+  }
   DateTime parsedDateTime;
   try {
     parsedDateTime =

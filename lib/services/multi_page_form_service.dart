@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
+import 'package:tymesavingfrontend/models/transaction_model.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
 
 class FormStateProvider with ChangeNotifier {
-  Map<String, dynamic> _incomeFormFields = {};
-  Map<String, dynamic> _expenseFormFields = {};
+  final Map<String, dynamic> _incomeFormFields = {};
+  final Map<String, dynamic> _expenseFormFields = {};
+  final Map<String, dynamic> _updateTransactionFormFields = {};
   Map<String, dynamic> _budgetFormFields = {};
   Map<String, dynamic> _savingFormFields = {};
 
@@ -23,9 +25,12 @@ class FormStateProvider with ChangeNotifier {
     if (type == FormStateType.income) {
       return _validateFieldNull(
           'category', _incomeFormFields, TransactionCategory.defaultCategory());
-    } else {
+    } else if (type == FormStateType.expense) {
       // return categoryExpense;
       return _validateFieldNull('category', _expenseFormFields,
+          TransactionCategory.defaultCategory());
+    } else {
+      return _validateFieldNull('category', _updateTransactionFormFields,
           TransactionCategory.defaultCategory());
     }
   }
@@ -36,33 +41,44 @@ class FormStateProvider with ChangeNotifier {
     double amount = 0.0;
     if (type == FormStateType.income) {
       amount = _validateFieldNull('amount', _incomeFormFields, 0.0) as double;
-    } else {
+    } else if (type == FormStateType.expense) {
       amount = _validateFieldNull('amount', _expenseFormFields, 0.0) as double;
+    } else {
+      amount = _validateFieldNull(
+          'amount', _updateTransactionFormFields, 0.0) as double;
     }
     return formatter.format(amount);
   }
-  // String getFormattedDate(FormStateType type) {
-  //   // final DateFormat formatter = DateFormat('dd/MM/yyyy');
-  //   DateTime date = DateTime.now();
-  //   if (type == FormStateType.income) {
-  //     date = _validateFieldNull('createdDate', _incomeFormFields, DateTime.now()) as DateTime;
-  //   } else {
-  //     date = _validateFieldNull('createdDate', _expenseFormFields, DateTime.now()) as DateTime;
-  //   }
-  //   return formatter.format(date);
-  // }
-
 
 
 
   Map<String, dynamic> getFormField(FormStateType type) {
     if (type == FormStateType.income) {
       return _incomeFormFields;
-    } else {
+    } else if (type == FormStateType.expense) {
       return _expenseFormFields;
+    } else {
+      return _updateTransactionFormFields;
     }
   }
 
+  void setUpdateTransactionFormFields(Transaction? transaction) {
+    if (transaction == null) {
+      return;
+    }
+    print("Before update: ${transaction.id}");
+    _updateTransactionFormFields['id'] = transaction.id;
+    _updateTransactionFormFields['userId'] = transaction.userId;
+    _updateTransactionFormFields['description'] = transaction.description;
+    _updateTransactionFormFields['payBy'] = transaction.payBy;
+    _updateTransactionFormFields['amount'] = transaction.amount;
+    // _updateTransactionFormFields['category'] = transaction.category;
+    _updateTransactionFormFields['category'] = TransactionCategory.fromString(transaction.category);
+    _updateTransactionFormFields['createdDate'] = transaction.date;
+    _updateTransactionFormFields['type'] = transaction.type;
+    print("after update");
+    notifyListeners();
+  }
   void updateFormField(String key, dynamic value, FormStateType type) {
     if (key == "amount") {
       value = convertFormattedToNumber(value);
@@ -71,8 +87,10 @@ class FormStateProvider with ChangeNotifier {
     if (type == FormStateType.income) {
       _incomeFormFields[key] = value;
       debugPrint('Income form fields: $_incomeFormFields');
-    } else {
+    } else if (type == FormStateType.expense) {
       _expenseFormFields[key] = value;
+    } else {
+      _updateTransactionFormFields[key] = value;
     }
     notifyListeners();
   }
@@ -81,17 +99,10 @@ class FormStateProvider with ChangeNotifier {
     if (type == FormStateType.income) {
       _incomeFormFields['category'] = category;
       debugPrint("Income form fields: $_incomeFormFields");
-    } else {
+    } else if (type == FormStateType.expense) {
       _expenseFormFields['category'] = category;
-    }
-    notifyListeners();
-  }
-
-  void updateFormTitle(String title, FormStateType type) {
-    if (type == FormStateType.income) {
-      _incomeFormFields['title'] = title;
     } else {
-      _expenseFormFields['title'] = title;
+      _updateTransactionFormFields['category'] = category;
     }
     notifyListeners();
   }

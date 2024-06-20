@@ -30,7 +30,7 @@ class _AddTransactionFormMainState extends State<AddTransactionFormMain> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _paidByController = TextEditingController();
+  final TextEditingController _payByController = TextEditingController();
 
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _selectedTime = TimeOfDay.now();
@@ -41,7 +41,8 @@ class _AddTransactionFormMainState extends State<AddTransactionFormMain> {
     super.initState();
     final formFields = Provider.of<FormStateProvider>(context, listen: false)
         .getFormField(widget.type);
-    String? formCreatedDate = formFields['createdDate'];
+    String? formCreatedDate;
+    formCreatedDate = formFields['createdDate'];
     if (formCreatedDate != null) {
       setState(() {
         final Map<String, dynamic> dateTimeMap =
@@ -56,7 +57,7 @@ class _AddTransactionFormMainState extends State<AddTransactionFormMain> {
     final isValid = _formKey.currentState?.validate();
     print("Result: ${_amountController.text}");
     print(
-        "Result: ${_amountController.text} - ${_descriptionController.text} - ${_paidByController.text}");
+        "Result: ${_amountController.text} - ${_descriptionController.text} - ${_payByController.text}");
     // If the form is not valid, show an error
     if (isValid == null || !isValid) {
       final String? validateTotalAmount =
@@ -67,12 +68,14 @@ class _AddTransactionFormMainState extends State<AddTransactionFormMain> {
       }
     }
 
-    //
     final formattedDateTime = combineDateAndTime(_selectedDate, _selectedTime);
     onUpdateInputValue("amount", _amountController.text);
-    onUpdateInputValue("createdDate", formattedDateTime ?? "");
+    onUpdateInputValue(
+        "createdDate",
+        formattedDateTime ??
+            ""); // if you accidentally input wrong date, it will be null
     onUpdateInputValue("description", _descriptionController.text);
-    onUpdateInputValue("paidBy", _paidByController.text);
+    onUpdateInputValue("payBy", _payByController.text);
     Future.microtask(() async {
       await handleMainPageApi(context, () async {
         final authService = Provider.of<AuthService>(context, listen: false);
@@ -80,37 +83,57 @@ class _AddTransactionFormMainState extends State<AddTransactionFormMain> {
             .getFormField(widget.type);
         // return null;
         User? user = authService.user;
+
+        final transactionType = widget.type == FormStateType.updateTransaction
+            ? formField['type']
+            : widget.type;
+
         context.loaderOverlay.show();
-        return await Provider.of<TransactionService>(context, listen: false)
-            .createTransaction(
-                user?.id ?? "",
-                formField['createdDate'],
-                formField['description'],
-                widget.type,
-                formField['amount'],
-                formField['paidBy'],
-                formField['category']);
+        if (widget.type == FormStateType.updateTransaction) {
+          return await Provider.of<TransactionService>(context, listen: false)
+              .updateTransaction(
+                  // user?.id ?? "",
+                  formField['id'],
+                  formField['createdDate'],
+                  formField['description'],
+                  // transactionType,
+                  formField['amount'],
+                  formField['payBy'],
+                  formField['category']);
+        } else {
+          return await Provider.of<TransactionService>(context, listen: false)
+              .createTransaction(
+                  user?.id ?? "",
+                  formField['createdDate'],
+                  formField['description'],
+                  transactionType,
+                  formField['amount'],
+                  formField['payBy'],
+                  formField['category']);
+        }
       }, () async {
         context.loaderOverlay.hide();
         Navigator.of(context).pop();
-        SuccessDisplay.showSuccessToast("Create new ${widget.type} successfully", context);
+        SuccessDisplay.showSuccessToast(
+            "Create new ${widget.type} successfully", context);
       });
     });
   }
 
   void updateOnChange(String type) {
-    switch(type) {
+    switch (type) {
       case "amount":
         onUpdateInputValue("amount", _amountController.text);
         break;
       case "description":
         onUpdateInputValue("description", _descriptionController.text);
         break;
-      case "paidBy":
-        onUpdateInputValue("paidBy", _paidByController.text);
+      case "payBy":
+        onUpdateInputValue("payBy", _payByController.text);
         break;
       case "date":
-        final formattedDateTime = combineDateAndTime(_selectedDate, _selectedTime);
+        final formattedDateTime =
+            combineDateAndTime(_selectedDate, _selectedTime);
         onUpdateInputValue("createdDate", formattedDateTime ?? "");
         break;
     }
@@ -147,12 +170,12 @@ class _AddTransactionFormMainState extends State<AddTransactionFormMain> {
       String formattedAmount = formStateService.getFormattedAmount(widget.type);
       String formDescription =
           formFields['description'] ?? "Please add description";
-      String formPaidBy = formFields['paidBy'] ?? "Pay by cash?";
+      String formpayBy = formFields['payBy'] ?? "Pay by cash?";
 
       // update text to controller
       _amountController.text = formStateService.getFormattedAmount(widget.type);
       _descriptionController.text = formFields['description'] ?? "";
-      _paidByController.text = formFields['paidBy'] ?? "";
+      _payByController.text = formFields['payBy'] ?? "";
 
       List<Widget> renderCategories(BuildContext context) {
         return TransactionCategory.values.expand((category) {
@@ -195,8 +218,7 @@ class _AddTransactionFormMainState extends State<AddTransactionFormMain> {
                   icon: Icons.attach_money,
                   placeholder: formattedAmount,
                   keyboardType: TextInputType.number,
-                  onChange: (value) =>
-                      updateOnChange("amount"),
+                  onChange: (value) => updateOnChange("amount"),
                   validator: Validator.validateAmount),
               ..._buildComponentGroup(contentWidget: [
                 // SizedBox(height: 10),
@@ -210,9 +232,18 @@ class _AddTransactionFormMainState extends State<AddTransactionFormMain> {
                             convertFormattedToNumber(formattedAmount);
                         return [
                           ChoiceChip(
-                            color: MaterialStateProperty.all<Color>(
-                                colorScheme.tertiary),
-                            label: Text(formatAmount(amount)),
+                            // color: MaterialStateProperty.all<Color>(
+                            //     colorScheme.tertiary),
+                            color: MaterialStateColor.resolveWith((states) =>
+                                states.contains(MaterialState.selected)
+                                    ? colorScheme.primary
+                                    : colorScheme.tertiary),
+                            label: Text(formatAmount(amount),
+                                style: TextStyle(
+                                  color: selectedAmount == amount
+                                      ? colorScheme.onPrimary
+                                      : colorScheme.onTertiary, // Change colors as needed
+                                )),
                             selected: selectedAmount == amount,
                             onSelected: (selected) {
                               setState(() {
@@ -276,17 +307,15 @@ class _AddTransactionFormMainState extends State<AddTransactionFormMain> {
                 icon: Icons.description,
                 placeholder: formDescription,
                 keyboardType: TextInputType.text,
-                onChange: (value) =>
-                    updateOnChange("description"),
+                onChange: (value) => updateOnChange("description"),
               ),
               UnderlineTextField(
-                controller: _paidByController,
+                controller: _payByController,
                 icon: Icons.payment,
                 label: 'PAID BY',
-                placeholder: formPaidBy,
+                placeholder: formpayBy,
                 keyboardType: TextInputType.text,
-                onChange: (value) =>
-                    updateOnChange("paidBy"),
+                onChange: (value) => updateOnChange("payBy"),
               ),
               // ..._buildComponentGroup(
               //     label: "SAVING OR BUDGET",

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
-import 'package:tymesavingfrontend/models/transaction.model.dart';
+import 'package:tymesavingfrontend/models/transaction_model.dart';
 import 'package:tymesavingfrontend/models/transaction_report_model.dart';
 import 'package:tymesavingfrontend/services/utils/get_backend_endpoint.dart';
 import 'package:tymesavingfrontend/services/utils/network_service.dart';
@@ -17,6 +17,7 @@ class TransactionService extends ChangeNotifier {
   TopCategoriesList? _topCategoriesList;
   NetSpend? _netSpend;
   Map<String, List<Transaction>>? _transactions;
+  Transaction? _detailedTransaction;
 
   // Getter to access outside of this class
   CompareToLastMonth? get compareToLastMonth => _compareToLastMonth;
@@ -26,6 +27,7 @@ class TransactionService extends ChangeNotifier {
   TopCategoriesList? get topCategoriesList => _topCategoriesList;
   NetSpend? get netSpend => _netSpend;
   Map<String, List<Transaction>>? get transactions => _transactions;
+  Transaction? get getDetailedTransaction => _detailedTransaction;
 
   Future<Map<String, dynamic>> getChartReport(userid) async {
     final response = await NetworkService.instance.get(
@@ -57,6 +59,26 @@ class TransactionService extends ChangeNotifier {
       'createdDate': createdDate,
       'description': description,
       'type': type.value, //
+      'amount': amount,
+      'payBy': payBy,
+      'category': category.name,
+    });
+    return response;
+  }
+  Future<Map<String, dynamic>> updateTransaction(
+      String transactionId,
+      String createdDate,
+      String description,
+      // FormStateType type,
+      double amount,
+      String payBy,
+      TransactionCategory category) async {
+    // print type of all
+    final response =
+        await NetworkService.instance.put("${BackendEndpoints.transaction}/$transactionId", body: {
+      'createdDate': createdDate,
+      'description': description,
+      // 'type': type.value, //
       'amount': amount,
       'payBy': payBy,
       'category': category.name,
@@ -110,7 +132,19 @@ class TransactionService extends ChangeNotifier {
     return response;
   }
 
-  Future<Map<String, dynamic>> fetchTransactions(username) async {
+  Future<Map<String, dynamic>> getTransaction(transactionId) async {
+    final response = await NetworkService.instance.get(
+        "${BackendEndpoints.transaction}/$transactionId");
+    // final responseData = response['response'];
+    if (response['response'] != null && response['statusCode'] == 200) {
+      final responseData = response['response'];
+      _detailedTransaction = Transaction.fromMap(responseData);
+      notifyListeners();
+    }
+    return response;
+  }
+
+  Future<Map<String, dynamic>> fetchTransactions(id) async {
     String normalizeMonthName(String month) {
       switch (month.toUpperCase()) {
         case 'JAN':
@@ -143,7 +177,7 @@ class TransactionService extends ChangeNotifier {
     }
 
     final response = await NetworkService.instance.get(
-        "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReportByUser}/$username");
+        "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReportByUser}/$id");
 
     if (response['response'] != null && response['statusCode'] == 200) {
       final responseData = response['response'] as Map<String, dynamic>;

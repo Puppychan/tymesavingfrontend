@@ -9,9 +9,8 @@ import 'package:tymesavingfrontend/models/transaction_report_model.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/transaction_service.dart';
-import 'package:tymesavingfrontend/utils/display_success.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
-import 'package:tymesavingfrontend/models/transaction.model.dart';
+import 'package:tymesavingfrontend/models/transaction_model.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -56,7 +55,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
       // Fetch transactions
       if (!mounted) return;
       await handleMainPageApi(context, () async {
-        return await transactionService.fetchTransactions(user?.username);
+        return await transactionService.fetchTransactions(user?.id);
       }, () async {
         setState(() {
           transactions = transactionService.transactions;

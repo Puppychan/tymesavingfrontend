@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/components/transaction/transaction_dialog.dart';
-import 'package:tymesavingfrontend/models/transaction.model.dart';
+import 'package:tymesavingfrontend/models/transaction_model.dart';
+import 'package:tymesavingfrontend/utils/format_amount.dart';
 
 class TransactionItem extends StatelessWidget {
   final Transaction transaction;
@@ -74,7 +75,7 @@ class TransactionItem extends StatelessWidget {
           ],
         ),
         trailing: Text(
-          '\$${transaction.amount.toStringAsFixed(2)}',
+          formatAmount(transaction.amount),
           style: const TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
