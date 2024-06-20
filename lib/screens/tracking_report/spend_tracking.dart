@@ -65,11 +65,24 @@ class _SpendTrackingState extends State<SpendTracking> {
       ),
       body: Column(children: [
         const SizedBox(
-          height: 50,
+          height: 10,
         ),
         Text(
           'Spending trend (past 12 month)',
           style: textTheme.titleMedium,
+          textAlign: TextAlign.start,
+        ),
+        const SizedBox(
+          height: 1.5,
+        ),
+        Text(
+          'Transform your spending habits by uncovering ',
+          style: textTheme.bodySmall,
+          textAlign: TextAlign.start,
+        ),
+        Text(
+          'the patterns of your expense!',
+          style: textTheme.bodySmall,
           textAlign: TextAlign.start,
         ),
         const SizedBox(
@@ -88,20 +101,20 @@ class _SpendTrackingState extends State<SpendTracking> {
         if (currentMonthReport == null)
           // Display a loading indicator or placeholder widget
           const CircularProgressIndicator(),
-          Skeletonizer(
+        Skeletonizer(
+          enabled: chartReport == null,
+          child: ExpenseCard(
+              month: currentMonthReport?.currentMonth ?? '',
+              expense: currentMonthReport?.totalAmount ?? 0),
+        ),
+        Skeletonizer(
             enabled: chartReport == null,
-            child: ExpenseCard(
-                month: currentMonthReport?.currentMonth ?? '',
-                expense: currentMonthReport?.totalAmount ?? 0),
-          ),
-          Skeletonizer(
+            child: IncomeCard(
+                currentMonthIncome: netSpend?.currentMonthIncome ?? 0,
+                currentNetSpend: netSpend?.currentNetSpend ?? 0)),
+        Skeletonizer(
             enabled: chartReport == null,
-            child: IncomeCard(currentMonthIncome: netSpend?.currentMonthIncome ?? 0, currentNetSpend: netSpend?.currentNetSpend ?? 0)
-          ),
-          Skeletonizer(
-            enabled: chartReport == null,
-            child: TipCard(netSpend: netSpend?.currentNetSpend ?? 0)
-          ),
+            child: TipCard(netSpend: netSpend?.currentNetSpend ?? 0)),
       ]),
     );
   }
