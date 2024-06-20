@@ -49,6 +49,7 @@ dependencies:
   flutter_native_splash: ^2.4.0
   skeletonizer: ^1.1.2+1
   fl_chart: ^0.68.0
+  retry: ^3.1.2
 
 dev_dependencies:
   flutter_test:
@@ -79,6 +80,7 @@ flutter:
     - assets/img/app_logo_light.png
     - assets/img/app_logo_dark.png
     - assets/img/error.svg
+    - assets/img/splash_dark.png
     - assets/img/splash_light.png
 
   # An image asset can refer to one or more resolution-specific "variants", see

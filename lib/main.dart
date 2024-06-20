@@ -6,6 +6,8 @@ import 'package:tymesavingfrontend/common/styles/app_color.dart';
 import 'package:tymesavingfrontend/common/styles/app_theme.dart';
 import 'package:tymesavingfrontend/screens/splash_screen.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
+import 'package:tymesavingfrontend/services/budget_service.dart';
+import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
 import 'package:tymesavingfrontend/services/theme_service.dart';
 import 'package:tymesavingfrontend/services/transaction_service.dart';
 import 'package:tymesavingfrontend/services/user_service.dart';
@@ -20,16 +22,23 @@ Future<void> main() async {
 
   // Initialize the NetworkService
   await NetworkService.instance.initClient();
+  ThemeService();
   // runApp(const MyApp());
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => FormStateProvider()),
         ChangeNotifierProvider(create: (_) => AuthService()),
+        ChangeNotifierProvider(create: (_) => BudgetService()),
         ChangeNotifierProvider(create: (_) => UserService()),
         ChangeNotifierProvider(create: (_) => ThemeService()),
         ChangeNotifierProvider(create: (_) => TransactionService())
       ],
-      child: const MyApp(),
+      child: GlobalLoaderOverlay(
+        useDefaultLoading: true,
+        overlayColor: AppColors.primaryBlue.withOpacity(0.5),
+        child: const MyApp(),
+      ),
     ),
   );
 }
@@ -40,16 +49,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'My App', 
+      title: 'My App',
       theme: AppThemes.lightTheme,
       darkTheme: AppThemes.darkTheme,
       themeMode: Provider.of<ThemeService>(context).themeMode,
       navigatorObservers: [routeObserver],
-      home: LoaderOverlay(
-        useDefaultLoading: true,
-        overlayColor: AppColors.cream.withOpacity(0.7),
-        child: const SplashScreen(),
-      ),
+      // home: LoaderOverlay(
+      //   useDefaultLoading: true,
+      //   overlayColor: AppColors.cream.withOpacity(0.7),
+      //   child: const SplashScreen(),
+      // ),
+      home: const SplashScreen(),
     );
   }
 }

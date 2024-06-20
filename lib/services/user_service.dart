@@ -125,6 +125,17 @@ class UserService extends ChangeNotifier {
     return response;
   }
 
+    Future<dynamic> getUserDataById(id) async {
+    final response = await NetworkService.instance
+        .get("${BackendEndpoints.user}/${BackendEndpoints.userById}/$id");
+    if (response['response'] != null && response['statusCode'] == 200) {
+      _currentFetchUser = User.fromMap(response['response']);
+      notifyListeners();
+    }
+    // return response['response']?.containsKey("id") ?? false;
+    return response;
+  }
+
     Future<Map<String, dynamic>> updateUser(
     String username,
     String email,

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:retry/retry.dart';
 import 'package:tymesavingfrontend/common/constant/local_storage_key_constant.dart';
 import 'package:tymesavingfrontend/services/utils/get_backend_endpoint.dart';
 import 'package:tymesavingfrontend/services/utils/local_storage_service.dart';
@@ -52,6 +53,7 @@ Future<String?> getToken() async {
 }
 
 class NetworkService {
+  final TIMEOUT_DURATION = const Duration(seconds: 30);
   late final Dio _dio;
   final JsonEncoder _encoder = const JsonEncoder();
   static final NetworkService _instance = NetworkService.internal();
@@ -64,8 +66,8 @@ class NetworkService {
     _dio = Dio(
       BaseOptions(
         baseUrl: BackendEndpoints.baseUrl,
-        connectTimeout: const Duration(milliseconds: 6000),
-        receiveTimeout: const Duration(milliseconds: 6000),
+        connectTimeout: TIMEOUT_DURATION,
+        receiveTimeout: TIMEOUT_DURATION,
         headers: {
           CONTENT_TYPE: APPLICATION_JSON,
           ACCEPT: APPLICATION_JSON,
@@ -89,15 +91,26 @@ class NetworkService {
       ),
     );
   }
-
+    final retryCall = const RetryOptions(
+    maxAttempts: 3,
+    delayFactor: Duration(seconds: 2),
+  );
 
   Future<dynamic> get(
     String url, {
     Map<String, dynamic>? queryParameters,
   }) async {
     try {
-      final response = await _dio.get(url, queryParameters: queryParameters);
-      return {'response': response.data?['response'], 'statusCode': response.statusCode};
+      final response = await retryCall.retry(
+        () => _dio.get(url, queryParameters: queryParameters).timeout(TIMEOUT_DURATION),
+        retryIf: (e) => e is DioException && e.type != DioExceptionType.cancel,
+      );
+
+      // final response = await _dio.get(url, queryParameters: queryParameters);
+      return {
+        'response': response.data?['response'],
+        'statusCode': response.statusCode
+      };
     } catch (error) {
       return handleError(error);
     }
@@ -105,8 +118,15 @@ class NetworkService {
 
   Future<dynamic> download(String url, String path) async {
     try {
-      final response = await _dio.download(url, path);
-      return {'response': response.data?['response'], 'statusCode': response.statusCode};
+      final response = await retryCall.retry(
+        () => _dio.download(url, path).timeout(TIMEOUT_DURATION),
+        retryIf: (e) => e is DioException && e.type != DioExceptionType.cancel,
+      );
+      // final response = await _dio.download(url, path);
+      return {
+        'response': response.data?['response'],
+        'statusCode': response.statusCode
+      };
     } catch (error) {
       return handleError(error);
     }
@@ -114,8 +134,15 @@ class NetworkService {
 
   Future<dynamic> delete(String url) async {
     try {
-      final response = await _dio.delete(url);
-      return {'response': response.data?['response'], 'statusCode': response.statusCode};
+      final response = await retryCall.retry(
+        () => _dio.delete(url).timeout(TIMEOUT_DURATION),
+        retryIf: (e) => e is DioException && e.type != DioExceptionType.cancel,
+      );
+      // final response = await _dio.delete(url);
+      return {
+        'response': response.data?['response'],
+        'statusCode': response.statusCode
+      };
     } catch (error) {
       return handleError(error);
     }
@@ -123,8 +150,15 @@ class NetworkService {
 
   Future<dynamic> post(String url, {body, encoding}) async {
     try {
-      final response = await _dio.post(url, data: _encoder.convert(body));
-      return {'response': response.data?['response'], 'statusCode': response.statusCode};
+      final response = await retryCall.retry(
+        () => _dio.post(url, data: _encoder.convert(body)).timeout(TIMEOUT_DURATION),
+        retryIf: (e) => e is DioException && e.type != DioExceptionType.cancel,
+      );
+      // final response = await _dio.post(url, data: _encoder.convert(body));
+      return {
+        'response': response.data?['response'],
+        'statusCode': response.statusCode
+      };
     } catch (error) {
       return handleError(error);
     }
@@ -132,8 +166,15 @@ class NetworkService {
 
   Future<dynamic> postFormData(String url, {required FormData data}) async {
     try {
-      final response = await _dio.post(url, data: data);
-      return {'response': response.data?['response'], 'statusCode': response.statusCode};
+      final response = await retryCall.retry(
+        () => _dio.post(url, data: data).timeout(TIMEOUT_DURATION),
+        retryIf: (e) => e is DioException && e.type != DioExceptionType.cancel,
+      );
+      // final response = await _dio.post(url, data: data);
+      return {
+        'response': response.data?['response'],
+        'statusCode': response.statusCode
+      };
     } catch (error) {
       return handleError(error);
     }
@@ -141,8 +182,15 @@ class NetworkService {
 
   Future<dynamic> patch(String url, {body, encoding}) async {
     try {
-      final response = await _dio.patch(url, data: _encoder.convert(body));
-      return {'response': response.data?['response'], 'statusCode': response.statusCode};
+      final response = await retryCall.retry(
+        () => _dio.patch(url, data: _encoder.convert(body)).timeout(TIMEOUT_DURATION),
+        retryIf: (e) => e is DioException && e.type != DioExceptionType.cancel,
+      );
+      // final response = await _dio.patch(url, data: _encoder.convert(body));
+      return {
+        'response': response.data?['response'],
+        'statusCode': response.statusCode
+      };
     } catch (error) {
       return handleError(error);
     }
@@ -150,8 +198,15 @@ class NetworkService {
 
   Future<dynamic> put(String url, {body, encoding}) async {
     try {
-      final response = await _dio.put(url, data: _encoder.convert(body));
-      return {'response': response.data?['response'], 'statusCode': response.statusCode};
+      final response = await retryCall.retry(
+        () => _dio.put(url, data: _encoder.convert(body)).timeout(TIMEOUT_DURATION),
+        retryIf: (e) => e is DioException && e.type != DioExceptionType.cancel,
+      );
+      // final response = await _dio.put(url, data: _encoder.convert(body));
+      return {
+        'response': response.data?['response'],
+        'statusCode': response.statusCode
+      };
     } catch (error) {
       return handleError(error);
     }

@@ -35,6 +35,17 @@ List<Widget> renderHeadingActionsBasedUserRoleAndLocation(
   return icons?.toList() ?? [];
 }
 
+IconButton buildEditButton(BuildContext context, String type) {
+  return IconButton(
+    icon: const Icon(Icons.edit),
+    onPressed: () {
+      // Navigate to the edit page
+      if (type == "transaction") {
+        
+      }
+    },
+  );
+}
 
 IconButton buildThemeButton(BuildContext context) {
   final themeProvider = Provider.of<ThemeService>(context);

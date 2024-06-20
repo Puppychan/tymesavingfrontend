@@ -22,7 +22,7 @@ class UserCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: Implement user's contribution inside shared budget  and saving group
-    final bool isHaveContribution = user.contribution != null;
+    final bool isHaveContribution = user.contribution != -1.0;
     final currentUser = Provider.of<AuthService>(context).user;
 
     void onEdit() {
