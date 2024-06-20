@@ -51,8 +51,8 @@ class _CategoryCardItemState extends State<CategoryCardItem> {
         {'icon': Icons.money_off, 'color': colorScheme.error};
     final IconData iconData = category['icon'];
     final Color color = category['color'];
-    return Card(
-      color: colorScheme.surface,
+    return Card.filled(
+      color: colorScheme.onPrimaryFixed,
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -69,14 +69,14 @@ class _CategoryCardItemState extends State<CategoryCardItem> {
                     TextSpan(
                       text: widget.categoryName,
                       style: textTheme
-                          .titleSmall!, // Default style for the first part
+                          .bodyLarge!, // Default style for the first part
                     ),
                   ),
                   Text.rich(
                     TextSpan(
-                      text: '${widget.amountSpend} vnd',
+                      text: '${widget.amountSpend} ₫',
                       style: textTheme
-                          .titleSmall!, // Default style for the first part
+                          .bodyLarge!, // Default style for the first part
                     ),
                   ),
                 ],

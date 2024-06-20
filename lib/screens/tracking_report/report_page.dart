@@ -83,7 +83,9 @@ class _ReportPageState extends State<ReportPage> {
               const EmptyCaseOutFlow()
             else
               CustomPieChart(topCategories: topCategoriesList!.topCategory),
-
+            const SizedBox(
+              height: 20,
+            ),
             if (topCategoriesList == null)
               const SizedBox()
             else
