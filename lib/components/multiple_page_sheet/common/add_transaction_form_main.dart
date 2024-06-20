@@ -137,7 +137,6 @@ class _AddTransactionFormMainState extends State<AddTransactionFormMain> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
 
     return Consumer<FormStateProvider>(
         builder: (context, formStateService, child) {

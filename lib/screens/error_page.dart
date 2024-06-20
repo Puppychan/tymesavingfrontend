@@ -31,6 +31,7 @@ class ErrorPage extends StatelessWidget {
 
                 Text(
                   'An error occurred ${statusCode.toString()}!',
+                  overflow: TextOverflow.visible,
                   // style: Theme.of(context).textTheme.headline4,
                   style: Theme.of(context).textTheme.headlineLarge!,
                   textAlign: TextAlign.center,
@@ -39,6 +40,7 @@ class ErrorPage extends StatelessWidget {
                 Text(
                   errorMessage,
                   // style: Theme.of(context).textTheme.bodyText1,
+                  overflow: TextOverflow.visible,
                   style: Theme.of(context).textTheme.headlineMedium!,
                   textAlign: TextAlign.center,
                 ),

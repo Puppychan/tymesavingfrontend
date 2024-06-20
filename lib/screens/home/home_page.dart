@@ -56,10 +56,11 @@ class _HomePageState extends State<HomePage> with RouteAware {
       // Fetch transactions
       if (!mounted) return;
       await handleMainPageApi(context, () async {
-        return await transactionService.getBothChartReport(user?.id);
+        return await transactionService.fetchTransactions(user?.username);
       }, () async {
         setState(() {
           transactions = transactionService.transactions;
+          print(transactions);
         });
       });
     });

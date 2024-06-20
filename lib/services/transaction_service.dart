@@ -51,17 +51,16 @@ class TransactionService extends ChangeNotifier {
       String payBy,
       TransactionCategory category) async {
     // print type of all
-    final response = await NetworkService.instance.post(
-        BackendEndpoints.transaction,
-        body: {
-          'userId': userId,
-          'createdDate': createdDate,
-          'description': description,
-          'type': type.value, //
-          'amount': amount,
-          'payBy': payBy,
-          'category': category.name,
-        });
+    final response =
+        await NetworkService.instance.post(BackendEndpoints.transaction, body: {
+      'userId': userId,
+      'createdDate': createdDate,
+      'description': description,
+      'type': type.value, //
+      'amount': amount,
+      'payBy': payBy,
+      'category': category.name,
+    });
     return response;
   }
 
@@ -111,7 +110,7 @@ class TransactionService extends ChangeNotifier {
     return response;
   }
 
-  Future<Map<String, dynamic>> fetchTransactions(userid) async {
+  Future<Map<String, dynamic>> fetchTransactions(username) async {
     String normalizeMonthName(String month) {
       switch (month.toUpperCase()) {
         case 'JAN':
@@ -144,7 +143,7 @@ class TransactionService extends ChangeNotifier {
     }
 
     final response = await NetworkService.instance.get(
-        "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReportByUser}/$userid");
+        "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReportByUser}/$username");
 
     if (response['response'] != null && response['statusCode'] == 200) {
       final responseData = response['response'] as Map<String, dynamic>;
@@ -154,6 +153,7 @@ class TransactionService extends ChangeNotifier {
         final transactionList = (transactions['transactions'] as List<dynamic>)
             .map((transaction) => Transaction.fromJson(transaction))
             .toList();
+
         return MapEntry(normalizeMonthName(month), transactionList);
       });
       _transactions = transactions;
