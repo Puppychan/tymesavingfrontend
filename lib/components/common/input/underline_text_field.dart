@@ -15,6 +15,7 @@ class UnderlineTextField extends StatefulWidget {
   final IconData? icon;
   final Function()? onTap;
   final bool? readOnly;
+  final void Function(String)? onChange;
 
   const UnderlineTextField({
     super.key,
@@ -31,6 +32,7 @@ class UnderlineTextField extends StatefulWidget {
     this.icon,
     this.onTap,
     this.readOnly,
+    this.onChange,
   });
 
   @override
@@ -48,6 +50,7 @@ class _UnderlineTextFieldState extends State<UnderlineTextField> {
       const SizedBox(height: 10),
       TextFormField(
         controller: widget.controller,
+        onChanged: widget.onChange,
         validator: widget.validator,
         keyboardType: widget.keyboardType,
         readOnly: widget.readOnly ?? false,
