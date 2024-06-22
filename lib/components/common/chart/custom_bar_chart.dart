@@ -1,6 +1,5 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
 import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 
 class CustomBarChart extends StatefulWidget {
@@ -48,13 +47,13 @@ class _CustomBarChartState extends State<CustomBarChart> {
             barRods: [
               BarChartRodData(
                 toY: expenseEntry.value.toDouble(),
-                color: Theme.of(context).colorScheme.error,
+                color: Theme.of(context).colorScheme.inversePrimary,
                 width: 10,
                 borderRadius: BorderRadius.circular(0),
               ),
               BarChartRodData(
                 toY: incomeEntry.value.toDouble(),
-                color: Theme.of(context).colorScheme.success,
+                color: Theme.of(context).colorScheme.primary,
                 width: 10,
                 borderRadius: BorderRadius.circular(0),
               ),
