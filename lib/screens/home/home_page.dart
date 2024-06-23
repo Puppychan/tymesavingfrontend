@@ -103,8 +103,9 @@ class _HomePageState extends State<HomePage> with RouteAware {
               text: 'Have a nice day!',
               style: Theme.of(context).textTheme.headlineMedium!),
           const SizedBox(
-            height: 24,
+            height: 10,
           ),
+          
           if (chartReport == null || chartReportSecondary == null)
             // Display a loading indicator or placeholder widget
             const CircularProgressIndicator()
@@ -113,7 +114,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
               totalsExpense: chartReport!.totals,
               totalsIncome: chartReportSecondary!.totals,
             ),
-          const SizedBox(height: 24), // Add some spacing between sections
+          const SizedBox(height: 10), // Add some spacing between sections
           SizedBox(
             height: 500,
             child: transactions == null

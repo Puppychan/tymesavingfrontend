@@ -67,16 +67,18 @@ class _CustomBarChartState extends State<CustomBarChart> {
 
     return AspectRatio(
         aspectRatio: 1.9,
-        child: Container(
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(18)),
-          ),
+        child: Card.filled(
+          color: Colors.transparent.withOpacity(0),
+          shadowColor: Theme.of(context).colorScheme.onTertiary,
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),
             child: BarChart(
                 swapAnimationCurve: Curves.linear,
                 swapAnimationDuration: const Duration(milliseconds: 150),
                 BarChartData(
+                  barTouchData: BarTouchData(
+                    enabled: false,
+                  ),
                     titlesData: FlTitlesData(
                         show: true,
                         topTitles: const AxisTitles(
@@ -104,7 +106,7 @@ class _CustomBarChartState extends State<CustomBarChart> {
                       top: BorderSide.none,
                       right: BorderSide.none,
                       left: BorderSide.none,
-                      bottom: BorderSide(width: 1),
+                      bottom: BorderSide.none,
                     )),
                     groupsSpace: 10,
                     barGroups: createBarGroups())),
