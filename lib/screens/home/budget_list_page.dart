@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/components/user/user_card.dart';
-import 'package:tymesavingfrontend/services/user_service.dart';
+import 'package:tymesavingfrontend/services/budget_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
 class BudgetListPage extends StatefulWidget {
@@ -11,22 +11,15 @@ class BudgetListPage extends StatefulWidget {
   State<BudgetListPage> createState() => _BudgetListPageState();
 }
 
-Widget buildFood(String foodName) => ListTile(
-      title: Text(foodName),
-      onTap: () {},
-    );
-
 class _BudgetListPageState extends State<BudgetListPage> {
-  late List<User> users = [];
-  void _fetchUsers() async {
+  void _fetchBudgets() async {
     Future.microtask(() async {
       if (!mounted) return;
-      final userService = Provider.of<UserService>(context, listen: false);
+      final budgetService = Provider.of<BudgetService>(context, listen: false);
       await handleMainPageApi(context, () async {
-        return await userService.fetchUserList();
+        // return await budgetService.fetchBudgetGroup();
       }, () async {
         setState(() {
-          users = userService.users;
         });
       });
     });
@@ -35,21 +28,21 @@ class _BudgetListPageState extends State<BudgetListPage> {
   @override
   void initState() {
     super.initState();
-    _fetchUsers();
+    _fetchBudgets();
   }
 
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<UserService>(builder: (context, userService, child) {
-      final users = userService.users;
-      return users.isNotEmpty
+    return Consumer<BudgetService>(builder: (context, budgetService, child) {
+      final budgets = budgetService.budgets;
+      return budgets.isNotEmpty
           ? Expanded(
               child: ListView.separated(
-              itemCount: users.length,
+              itemCount: budgets.length,
               separatorBuilder: (context, index) => const SizedBox(height: 15),
               itemBuilder: (context, index) {
-                return UserCard(user: users[index]);
+                return UserCard(user: budgets[index]);
               },
             ))
           : const Expanded(
@@ -61,7 +54,7 @@ class _BudgetListPageState extends State<BudgetListPage> {
       //   onPressed: () => showStyledBottomSheet(
       //     context: context,
       //     title: "Filter",
-      //     contentWidget: UserSortFilter(updateUserList: _fetchUsers),
+      //     contentWidget: UserSortFilter(updateUserList: _fetchBudgets),
       //   ),
       //   child: const Text('Show Filter'),
       // );

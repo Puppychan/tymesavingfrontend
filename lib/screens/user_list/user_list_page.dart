@@ -17,7 +17,7 @@ Widget buildFood(String foodName) => ListTile(
     );
 
 class _UserListPageState extends State<UserListPage> {
-  late List<User> users = [];
+  // late List<User> users = [];
   void _fetchUsers() async {
     Future.microtask(() async {
       if (!mounted) return;
@@ -25,9 +25,9 @@ class _UserListPageState extends State<UserListPage> {
       await handleMainPageApi(context, () async {
         return await userService.fetchUserList();
       }, () async {
-        setState(() {
-          users = userService.users;
-        });
+        // setState(() {
+        //   users = userService.users;
+        // });
       });
     });
   }
