@@ -1,11 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
 import 'package:tymesavingfrontend/models/budget_model.dart';
 import 'package:tymesavingfrontend/screens/budget/budget_update_page.dart';
-import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/budget_service.dart';
 import 'package:tymesavingfrontend/utils/display_success.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
@@ -19,8 +20,8 @@ final tempBudget = Budget(
   description: 'Description',
   amount: 50000000,
   concurrentAmount: 10000000,
-  createdDate: DateTime.now(),
-  endDate: DateTime.now().add(const Duration(days: 30)),
+  createdDate: DateTime.now().toString(),
+  endDate: DateTime.now().add(const Duration(days: 30)).toString(),
   participants: [],
 );
 
@@ -32,8 +33,6 @@ class BudgetCard extends StatefulWidget {
 }
 
 class _BudgetCardState extends State<BudgetCard> {
-
-
   @override
   Widget build(BuildContext context) {
     // final budget = Provider.of<AuthService>(context).budget;
@@ -91,6 +90,7 @@ class _BudgetCardState extends State<BudgetCard> {
     String formattedDate =
         timeago.format(DateTime.parse(budget.createdDate.toString()));
     final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Card(
       color: colorScheme.tertiary,
       shadowColor: colorScheme.secondary.withOpacity(0.5),
@@ -100,7 +100,8 @@ class _BudgetCardState extends State<BudgetCard> {
         onTap: () {
           // debugPrint('Challenge tapped.');
           Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return Budget(budget: budget);
+            // TODO: Implement the budget details page
+            return BudgetUpdatePage(budgetId: budget.id);
           }));
         },
         borderRadius: BorderRadius.circular(16),
@@ -121,15 +122,9 @@ class _BudgetCardState extends State<BudgetCard> {
                       ),
                     ),
                   ),
-                  IconButton(
-                    icon: Icon(Icons.edit, color: colorScheme.secondary),
-                    onPressed: onEdit,
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.delete, color: colorScheme.secondary),
-                    onPressed: () async {
-                      await showDeleteConfirmationDialog();
-                    },
+                  Text(
+                    "Created $formattedDate",
+                    style: Theme.of(context).textTheme.bodySmall!,
                   ),
                 ],
               ),
@@ -151,19 +146,27 @@ class _BudgetCardState extends State<BudgetCard> {
                               text: 'Progress ',
                               style: Theme.of(context).textTheme.bodyMedium!,
                             ),
-                            TextSpan(
-                              text: '${formatAmount(budget.concurrentAmount)}',
-                              // text: "Budget Contribution",
-                              style: AppTextStyles.paragraphBold(context),
-                            ),
                           ],
                         ),
                       )),
                   const SizedBox(width: 3),
-                  Text(
-                    "Joined $formattedDate",
-                    style: Theme.of(context).textTheme.bodySmall!,
-                  ),
+                  Text.rich(TextSpan(children: <TextSpan>[
+                    TextSpan(
+                      text: formatAmount(budget.concurrentAmount),
+                      // text: "Budget Contribution",
+                      style: textTheme.bodyLarge,
+                    ),
+                     TextSpan(
+                      text: ' / ',
+                      style: textTheme.labelLarge!.copyWith(
+                        color: colorScheme.inversePrimary,
+                      ),
+                    ),
+                    TextSpan(
+                      text: formatAmount(budget.amount),
+                      style: Theme.of(context).textTheme.bodyMedium!,
+                    ),
+                  ]))
                 ],
               ),
             ),
@@ -172,13 +175,14 @@ class _BudgetCardState extends State<BudgetCard> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(4),
                 child: LinearProgressIndicator(
-                        value: currentProgress.clamp(0.0, 1.0), // Ensuring the value is between 0 and 1
-                        // value: 0.4, // Ensuring the value is between 0 and 1
-                        backgroundColor: colorScheme.quaternary,
-                        valueColor:
-                            AlwaysStoppedAnimation<Color>(colorScheme.primary),
-                        minHeight: 8,
-                      ),
+                  value: currentProgress.clamp(
+                      0.0, 1.0), // Ensuring the value is between 0 and 1
+                  // value: 0.4, // Ensuring the value is between 0 and 1
+                  backgroundColor: colorScheme.quaternary,
+                  valueColor:
+                      AlwaysStoppedAnimation<Color>(colorScheme.primary),
+                  minHeight: 8,
+                ),
               ),
             ),
           ],
@@ -186,4 +190,8 @@ class _BudgetCardState extends State<BudgetCard> {
       ),
     );
   }
+
+  // Widget displayParticipants() {
+  //   return 
+  // }
 }

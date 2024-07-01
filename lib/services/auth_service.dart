@@ -99,6 +99,26 @@ class AuthService extends ChangeNotifier {
     return response;
   }
 
+  Future<void> storeLoginCredentials(String username, String password) async {
+    await LocalStorageService.setStringList({
+      LOCAL_USERNAME: username,
+      LOCAL_PASSWORD: password,
+    });
+  }
+
+  Future<List<String>> loadLoginCredentials() async {
+    final Map<String, String> keyValues =
+        await LocalStorageService.getStringList([
+      LOCAL_USERNAME,
+      LOCAL_PASSWORD,
+    ]);
+
+    final String? username = keyValues[LOCAL_USERNAME];
+    final String? password = keyValues[LOCAL_PASSWORD];
+
+    return [username!, password!];
+  }
+
   Future<Map<String, dynamic>> signUp(
     String username,
     String email,

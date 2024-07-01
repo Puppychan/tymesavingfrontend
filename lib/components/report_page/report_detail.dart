@@ -52,7 +52,7 @@ class _CategoryCardItemState extends State<CategoryCardItem> {
     final IconData iconData = category['icon'];
     final Color color = category['color'];
     return Card.filled(
-      color: colorScheme.onPrimaryFixed,
+      color: colorScheme.onPrimary,
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),

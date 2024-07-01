@@ -34,9 +34,8 @@ class BudgetService extends ChangeNotifier {
 
   Future<Map<String, dynamic>> fetchBudgetDetails(id) async {
     final response = await NetworkService.instance.get("${BackendEndpoints.budget}/$id");
-    final responseData = response['response'];
-    if (responseData != null && response['statusCode'] == 200) {
-      _currentBudget = Budget.fromMap(responseData);
+    if (response['response'] != null && response['statusCode'] == 200) {
+      _currentBudget = Budget.fromMap(response['response']);
       notifyListeners();
     }
     return response;
