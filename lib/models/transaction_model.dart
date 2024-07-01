@@ -1,3 +1,5 @@
+import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
+
 class Transaction {
   final String id;
   final String type;
@@ -41,6 +43,19 @@ class Transaction {
         category = transaction['category'],
         amount = transaction['amount'].toDouble(),
         date = transaction['createdDate'];
+
+  Map<String, dynamic> toMapForForm() {
+    return {
+      'id': id,
+      'userId': userId,
+      'description': description,
+      'payBy': payBy,
+      'amount': amount,
+      'category': TransactionCategory.fromString(category).toString(),
+      'createdDate': date,
+      'type': type,
+    };
+  }
 
   @override
   String toString() {

@@ -5,8 +5,10 @@ import 'package:tymesavingfrontend/services/utils/network_service.dart';
 
 class BudgetService extends ChangeNotifier {
   Budget? _currentBudget;
+  List<Budget> _budgets = [];
 
   Budget? get currentBudget => _currentBudget;
+  List<Budget> get budgets => _budgets;
 
   Future<Map<String, dynamic>> addBudgetGroup(
     String hostedBy,
@@ -27,6 +29,15 @@ class BudgetService extends ChangeNotifier {
         'endDate': endDate,
       },
     );
+    return response;
+  }
+
+  Future<Map<String, dynamic>> fetchBudgetDetails(id) async {
+    final response = await NetworkService.instance.get("${BackendEndpoints.budget}/$id");
+    if (response['response'] != null && response['statusCode'] == 200) {
+      _currentBudget = Budget.fromMap(response['response']);
+      notifyListeners();
+    }
     return response;
   }
 
@@ -56,6 +67,12 @@ class BudgetService extends ChangeNotifier {
       'amount': amount,
       'endDate': endDate,
     });
+    return response;
+  }
+
+  Future<Map<String, dynamic>> deleteBudget(String budgetId) async {
+    final response = await NetworkService.instance
+        .delete("${BackendEndpoints.budget}/$budgetId");
     return response;
   }
 }

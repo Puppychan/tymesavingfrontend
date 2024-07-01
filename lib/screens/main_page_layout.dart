@@ -7,6 +7,7 @@ import 'package:tymesavingfrontend/components/heading/heading_title_based_locati
 import 'package:tymesavingfrontend/components/main_page_layout/show_add_options.dart';
 import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
+import 'package:tymesavingfrontend/screens/budget/budget_list_page.dart';
 import 'package:tymesavingfrontend/screens/home/home_admin_page.dart';
 import 'package:tymesavingfrontend/screens/home/home_page.dart';
 import 'package:tymesavingfrontend/screens/more_menu/more_page.dart';
@@ -94,7 +95,7 @@ class _MainPageLayoutState extends State<MainPageLayout> with RouteAware {
               ? const HomeAdminPage()
               : const HomePage(),
           const Center(child: Text('Goals')),
-          const Center(child: Text('Budgets')),
+          const BudgetListPage(),
           const MoreMenuPage(),
         ],
       ),

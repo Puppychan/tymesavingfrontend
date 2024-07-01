@@ -20,12 +20,31 @@ class _LoginFormState extends State<LoginForm> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _rememberMe = false;
 
   @override
   void dispose() {
     _usernameController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Load the stored login credentials
+    Future.microtask(() async {
+      List<String> credentials =
+          await Provider.of<AuthService>(context, listen: false)
+              .loadLoginCredentials();
+      if (credentials.isNotEmpty) {
+        setState(() {
+          _rememberMe = true;
+        });
+        _usernameController.text = credentials[0];
+        _passwordController.text = credentials[1];
+      }
+    });
   }
 
   @override
@@ -64,7 +83,15 @@ class _LoginFormState extends State<LoginForm> {
         // nếu success
         // hiện loading
         context.loaderOverlay.hide();
+        // store login credentials to auto login
+        if (_rememberMe) {
+          await authService.storeLoginCredentials(
+            _usernameController.text,
+            _passwordController.text,
+          );
+        }
         // If successful, navigate to HomePage
+        if (!mounted) return;
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
@@ -96,6 +123,17 @@ class _LoginFormState extends State<LoginForm> {
             isPasswordField: true,
             keyboardType: TextInputType.visiblePassword,
             validator: Validator.validatePassword,
+          ),
+          CheckboxListTile(
+            title: const Text("Remember me"),
+            value: _rememberMe,
+            onChanged: (bool? value) {
+              setState(() {
+                _rememberMe = value!;
+              });
+            },
+            controlAffinity: ListTileControlAffinity
+                .leading, // positions the checkbox at the start of the tile
           ),
           const SizedBox(height: 20),
           PrimaryButton(
