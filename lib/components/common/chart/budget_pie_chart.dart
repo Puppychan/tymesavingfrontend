@@ -29,13 +29,13 @@ class _BudgetPieChartState extends State<BudgetPieChart> {
               PieChartData(
                 sections: [
                   PieChartSectionData(
-                    value: 50,
+                    value: widget.amount,
                     color: colorScheme.inversePrimary, // Example color
                     title: '',
                     showTitle: false,
                   ),
                   PieChartSectionData(
-                    value: 50,
+                    value: widget.concurrent,
                     color: colorScheme.primary, // Example color
                     title: '',
                     showTitle: false,
@@ -44,10 +44,21 @@ class _BudgetPieChartState extends State<BudgetPieChart> {
               ),
             ),
             Center(
-              child: Text(
-                '50%', // Replace with your actual calculated percentage
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
+              child: Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: widget.amount.toString(),
+                            style: Theme.of(context).textTheme.headlineMedium,
+                          ),
+                          TextSpan(
+                            text: '%',
+                            style: Theme.of(context).textTheme.headlineMedium, // Customize this style as needed
+                          ),
+                        ],
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
             ),
           ],
         ),

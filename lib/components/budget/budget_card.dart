@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
+import 'package:tymesavingfrontend/components/budget/budget_details.dart';
 import 'package:tymesavingfrontend/models/budget_model.dart';
 import 'package:tymesavingfrontend/screens/budget/budget_update_page.dart';
 import 'package:tymesavingfrontend/services/budget_service.dart';
@@ -98,7 +99,7 @@ class _BudgetCardState extends State<BudgetCard> {
           // debugPrint('Challenge tapped.');
           Navigator.push(context, MaterialPageRoute(builder: (context) {
             // TODO: Implement the budget details page
-            return BudgetUpdatePage(budgetId: widget.budget.id);
+            return BudgetDetails(budgetId: widget.budget.id);
           }));
         },
         borderRadius: BorderRadius.circular(16),

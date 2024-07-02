@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
 import 'package:tymesavingfrontend/components/common/chart/budget_pie_chart.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/models/budget_model.dart';
@@ -18,17 +21,18 @@ class BudgetDetails extends StatefulWidget {
 }
 
 class _BudgetDetailsState extends State<BudgetDetails> {
-  late Budget _budget;
+  late final Budget? _budget;
+  late final double? percentageTaken;
+  late final double? percentageLeft;
+  bool isLoading = true;
 
   @override
   void initState() {
-    // TODO: implement initState
     Future.microtask(() async {
       if (!mounted) return;
       final budgetService =
           Provider.of<BudgetService>(context, listen: false);
       await handleMainPageApi(context, () async {
-        // TODO: add the fetchBudgetDetails method to the budgetService
         return await budgetService.fetchBudgetDetails(widget.budgetId);
       }, () async {
         if (!mounted) return;
@@ -39,17 +43,16 @@ class _BudgetDetailsState extends State<BudgetDetails> {
         formStateService.setUpdateBudgetFormFields(tempBudget);
         setState(() {
           _budget = tempBudget!;
+          percentageTaken = _budget!.amount / _budget.concurrentAmount * 100;
+          percentageLeft = percentageTaken!.isInfinite ? 100.0 : 100.0 - percentageTaken!;
+          isLoading = false;
         });
-
-        // // update state
-        // setState(() {
-        //   _budget = tempBudget;
-        // });
-        // await _renderUser(tempBudget!.userId);
       });
     });
+
     super.initState();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +62,8 @@ class _BudgetDetailsState extends State<BudgetDetails> {
         title: 'Budget details',
         showBackButton: true, 
       ),
-      body: Column(
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator()) : Column(
         children: [
           Center(
             child: Card.filled(
@@ -71,26 +75,84 @@ class _BudgetDetailsState extends State<BudgetDetails> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(_budget.name, style: Theme.of(context).textTheme.headlineLarge, textAlign: TextAlign.center,),
-                    Text('By Duong', style: Theme.of(context).textTheme.headlineMedium, textAlign: TextAlign.center,),
+                    Text(_budget!.name, style: Theme.of(context).textTheme.headlineLarge, textAlign: TextAlign.center,),
+                    Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: 'By ',
+                            style: Theme.of(context).textTheme.headlineMedium,
+                          ),
+                          TextSpan(
+                            text: _budget.hostedBy,
+                            style: Theme.of(context).textTheme.headlineMedium, // Customize this style as needed
+                          ),
+                        ],
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
                     const SizedBox(height: 10,),
                     Text('You have 10 days left', style: Theme.of(context).textTheme.bodyMedium),
-                    Text('Used 50%', style: Theme.of(context).textTheme.bodyMedium, textAlign: TextAlign.center,),
+                    Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: 'Used ',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          TextSpan(
+                            text: percentageTaken!.isInfinite ? '0%' : '${percentageTaken?.toStringAsFixed(2)}%',
+                            style: Theme.of(context).textTheme.bodyMedium, // Customize this style as needed
+                          ),
+                        ],
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
                     const SizedBox(height: 10,),
-                    Text('5.983,321 vnd', style: Theme.of(context).textTheme.headlineMedium),
+                    Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: _budget.concurrentAmount.toString(),
+                            style: Theme.of(context).textTheme.headlineMedium,
+                          ),
+                          TextSpan(
+                            text: 'đ',
+                            style: Theme.of(context).textTheme.headlineMedium, // Customize this style as needed
+                          ),
+                        ],
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
                   ],
                 ),
               ),
             ),
           ),
-          BudgetPieChart(amount: 10, concurrent: 10),
+          BudgetPieChart(amount: percentageTaken!.isInfinite ? 0 : percentageTaken! , concurrent: percentageLeft!),
           const SizedBox(height: 20,),
-          Card(
+          Card.filled(
             margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-            child: Text('',
-            style: Theme.of(context).textTheme.bodyMedium, textAlign: TextAlign.center,
-            overflow: TextOverflow.clip,),
-          )
+            child: 
+            Column(
+              children: [
+                Text('Description', style: Theme.of(context).textTheme.headlineMedium,),
+                const SizedBox(height: 10,),
+                Text(_budget.description,
+                style: Theme.of(context).textTheme.bodyMedium, textAlign: TextAlign.center,
+                overflow: TextOverflow.clip,),
+              ],
+            )
+          ),
+          const Expanded(child: SizedBox()),
+          SizedBox(
+            width: 300,
+            child: PrimaryButton(
+                title: 'UPDATE',
+                // TODO: Add method to open update pages!
+                onPressed: (){}),
+          ),
+          const SizedBox(height: 50),
         ],
       )
     );

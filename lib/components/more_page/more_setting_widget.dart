@@ -42,7 +42,7 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
     //Debug here
     debugPrint('Report page tapped!');
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const BudgetDetails(budgetId: '6673d1a62419b25b7a6d7553',)));
+        context, MaterialPageRoute(builder: (context) => const BudgetDetails(budgetId: '66837377f8053558ab30e0f4',)));
   }
 
   Future<void> logoutFunction() async {
