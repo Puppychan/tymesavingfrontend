@@ -1,6 +1,6 @@
 enum InvitationType {
-  budget("Budget"),
-  saving("Saving");
+  budget("SharedBudget"),
+  savings("GroupSaving");
 
   const InvitationType(this.value);
 
