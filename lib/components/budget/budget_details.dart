@@ -24,6 +24,8 @@ class _BudgetDetailsState extends State<BudgetDetails> {
   late final Budget? _budget;
   late final double? percentageTaken;
   late final double? percentageLeft;
+  late DateTime? endDate;
+  late int? daysLeft;
   bool isLoading = true;
 
   @override
@@ -45,6 +47,8 @@ class _BudgetDetailsState extends State<BudgetDetails> {
           _budget = tempBudget!;
           percentageTaken = _budget!.amount / _budget.concurrentAmount * 100;
           percentageLeft = percentageTaken!.isInfinite ? 100.0 : 100.0 - percentageTaken!;
+          endDate = DateTime.parse(_budget.endDate);
+          daysLeft = calculateDaysLeft(endDate!);
           isLoading = false;
         });
       });
@@ -53,6 +57,11 @@ class _BudgetDetailsState extends State<BudgetDetails> {
     super.initState();
   }
 
+ int calculateDaysLeft(DateTime endDate) {
+    final now = DateTime.now();
+    final difference = endDate.difference(now);
+    return difference.inDays;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +101,21 @@ class _BudgetDetailsState extends State<BudgetDetails> {
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 10,),
-                    Text('You have 10 days left', style: Theme.of(context).textTheme.bodyMedium),
+                    Text.rich(
+                      TextSpan(
+                        text: 'You have ',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        children: [
+                          TextSpan(
+                            text: '$daysLeft', // Display the daysLeft variable here
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          TextSpan(
+                            text: ' day${daysLeft != 1 ? 's' : ''} left', // Pluralize based on the value of daysLeft
+                          ),
+                        ],
+                      ),
+                    ),
                     Text.rich(
                       TextSpan(
                         children: [
