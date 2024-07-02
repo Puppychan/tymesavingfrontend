@@ -1,6 +1,4 @@
-import 'package:tymesavingfrontend/utils/format_date.dart';
-
-class Budget {
+class Goal {
   String id;
   String hostedBy;
   String name;
@@ -11,7 +9,7 @@ class Budget {
   String endDate;
   List<String> participants;
 
-  Budget({
+  Goal({
     required this.id,
     required this.hostedBy,
     required this.name,
@@ -23,8 +21,8 @@ class Budget {
     this.participants = const [],
   });
 
-  factory Budget.fromMap(Map<String, dynamic> map) {
-    return Budget(
+  factory Goal.fromMap(Map<String, dynamic> map) {
+    return Goal(
       id: map['_id'],
       hostedBy: map['hostedBy'],
       name: map['name'],

@@ -23,6 +23,7 @@ class BackendEndpoints {
   static String get signup => "$baseUrl/user/signup";
   static String get transaction => "$baseUrl/transaction";
   static String get budget => "$baseUrl/sharedBudget";
+  static String get goal => "$baseUrl/goal";
 
   // if there is no $baseUrl, the URL will be concatenated with other endpoints
   static String get userUpdate => "update";
@@ -30,4 +31,10 @@ class BackendEndpoints {
   static String get userById => "byId";
   static String get transactionReport => "report";
   static String get transactionReportByUser => "byUser";
+
+  // budget specific endpoints
+  static String get budgetByUserId => "byUser";
+
+  // goal specific endpoints
+  static String get goalByUserId => "byUser";
 }

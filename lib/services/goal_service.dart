@@ -1,36 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/models/budget_model.dart';
+import 'package:tymesavingfrontend/models/goal_model.dart';
 import 'package:tymesavingfrontend/services/utils/get_backend_endpoint.dart';
 import 'package:tymesavingfrontend/services/utils/network_service.dart';
 
-class BudgetService extends ChangeNotifier {
-  Budget? _currentBudget;
-  List<Budget> _budgets = [];
+class GoalService extends ChangeNotifier {
+  Goal? _currentGoal;
+  List<Goal> _goals = [];
 
-  Budget? get currentBudget => _currentBudget;
-  List<Budget> get budgets => _budgets;
+  Goal? get currentGoal => _currentGoal;
+  List<Goal> get goals => _goals;
 
-  Future<dynamic> fetchBudgetList(String? userId) async {
+  Future<dynamic> fetchGoalList(String? userId) async {
     // if (userId == null) return {'response': 'User ID is required.', 'statusCode': 400};
     final response = await NetworkService.instance.get(
-        "${BackendEndpoints.budget}/${BackendEndpoints.budgetByUserId}/$userId");
+        "${BackendEndpoints.goal}/${BackendEndpoints.goalByUserId}/$userId");
     if (response['response'] != null && response['statusCode'] == 200) {
       final responseData = response['response'];
-      List<Budget> budgetList = [];
-      for (var budget in responseData) {
-        print("Budget: $budget");
-        final tempBudget = Budget.fromMap(budget);
-        print("Temp Budget: $tempBudget");
-        budgetList.add(tempBudget);
-        print("After");
+      List<Goal> goalList = [];
+      for (var goal in responseData) {
+        final tempGoal = Goal.fromMap(goal);
+        goalList.add(tempGoal);
       }
-      _budgets = budgetList;
+      _goals = goalList;
       notifyListeners();
     }
     return response;
   }
 
-  Future<Map<String, dynamic>> addBudgetGroup(
+  Future<Map<String, dynamic>> addGoalGroup(
     String hostedBy,
     String name,
     String description,
@@ -39,7 +36,7 @@ class BudgetService extends ChangeNotifier {
     String endDate,
   ) async {
     final response = await NetworkService.instance.post(
-      BackendEndpoints.budget,
+      BackendEndpoints.goal,
       body: {
         'hostedBy': hostedBy,
         'name': name,
@@ -52,18 +49,18 @@ class BudgetService extends ChangeNotifier {
     return response;
   }
 
-  Future<Map<String, dynamic>> fetchBudgetDetails(id) async {
+  Future<Map<String, dynamic>> fetchGoalDetails(id) async {
     final response =
-        await NetworkService.instance.get("${BackendEndpoints.budget}/$id");
+        await NetworkService.instance.get("${BackendEndpoints.goal}/$id");
     if (response['response'] != null && response['statusCode'] == 200) {
-      _currentBudget = Budget.fromMap(response['response']);
+      _currentGoal = Goal.fromMap(response['response']);
       notifyListeners();
     }
     return response;
   }
 
-  Future<Map<String, dynamic>> updateBudgetGroup(
-    String budgetGroupId,
+  Future<Map<String, dynamic>> updateGoalGroup(
+    String goalGroupId,
     String hostedBy,
     String name,
     String description,
@@ -71,7 +68,7 @@ class BudgetService extends ChangeNotifier {
     String endDate,
   ) async {
     final response = await NetworkService.instance
-        .put("${BackendEndpoints.budget}/$budgetGroupId/$hostedBy", body: {
+        .put("${BackendEndpoints.goal}/$goalGroupId/$hostedBy", body: {
       'name': name,
       'description': description,
       'amount': amount,
@@ -80,9 +77,9 @@ class BudgetService extends ChangeNotifier {
     return response;
   }
 
-  Future<Map<String, dynamic>> deleteBudget(String budgetId) async {
+  Future<Map<String, dynamic>> deleteGoal(String goalId) async {
     final response = await NetworkService.instance
-        .delete("${BackendEndpoints.budget}/$budgetId");
+        .delete("${BackendEndpoints.goal}/$goalId");
     return response;
   }
 }

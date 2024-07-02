@@ -4,6 +4,8 @@ enum FormStateType {
   updateTransaction('UpdateTransaction'),
   saving('Saving'),
   budget('Budget'),
+  goal('Goal'),
+  updateGoal("UpdateGoal"),
   updateBudget('UpdateBudget');
 
   final String value;

@@ -89,6 +89,9 @@ class _LoginFormState extends State<LoginForm> {
             _usernameController.text,
             _passwordController.text,
           );
+        } else {
+          // if not remember me, clear the stored login credentials
+          await authService.storeLoginCredentials("", "");
         }
         // If successful, navigate to HomePage
         if (!mounted) return;

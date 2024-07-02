@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/styles/app_padding.dart';
-import 'package:tymesavingfrontend/components/budget/budget_card.dart';
+import 'package:tymesavingfrontend/components/goal/goal_card.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
-import 'package:tymesavingfrontend/services/budget_service.dart';
+import 'package:tymesavingfrontend/services/goal_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
-class BudgetListPage extends StatefulWidget {
+class GoalListPage extends StatefulWidget {
   final User? user;
-  const BudgetListPage({super.key, this.user});
+  const GoalListPage({super.key, this.user});
   @override
-  State<BudgetListPage> createState() => _BudgetListPageState();
+  State<GoalListPage> createState() => _GoalListPageState();
 }
 
-class _BudgetListPageState extends State<BudgetListPage> {
-  void _fetchBudgets() async {
+class _GoalListPageState extends State<GoalListPage> {
+  void _fetchGoals() async {
     Future.microtask(() async {
       if (!mounted) return;
-      final budgetService = Provider.of<BudgetService>(context, listen: false);
+      final goalService = Provider.of<GoalService>(context, listen: false);
       await handleMainPageApi(context, () async {
-        return await budgetService.fetchBudgetList(widget.user?.id);
+        return await goalService.fetchGoalList(widget.user?.id);
       }, () async {
       });
     });
@@ -28,22 +28,22 @@ class _BudgetListPageState extends State<BudgetListPage> {
   @override
   void initState() {
     super.initState();
-    _fetchBudgets();
+    _fetchGoals();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<BudgetService>(builder: (context, budgetService, child) {
-      final budgets = budgetService.budgets;
+    return Consumer<GoalService>(builder: (context, goalService, child) {
+      final goals = goalService.goals;
       return Padding(
           padding: AppPaddingStyles.pagePadding,
-          child: budgets.isNotEmpty
+          child: goals.isNotEmpty
               ? ListView.separated(
-                  itemCount: budgets.length,
+                  itemCount: goals.length,
                   separatorBuilder: (context, index) =>
                       const SizedBox(height: 15),
                   itemBuilder: (context, index) {
-                    return BudgetCard(budget: budgets[index]);
+                    return GoalCard(goal: goals[index]);
                   },
                 )
               : const Center(
