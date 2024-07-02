@@ -12,8 +12,8 @@ class _EmptyCaseOutFlowState extends State<EmptyCaseOutFlow> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-    return Card(
-      color: colorScheme.surface,
+    return Card.filled(
+      color: Colors.transparent,
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
       child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
@@ -30,6 +30,7 @@ class _EmptyCaseOutFlowState extends State<EmptyCaseOutFlow> {
                       Text(
                         'Your transaction data is currently insufficient for analysis. Please make transaction and use the app further more!',
                         style: textTheme.bodyMedium,
+                        overflow: TextOverflow.visible
                       )
                     ]),
               )
