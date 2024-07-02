@@ -52,6 +52,13 @@ Future<String?> getToken() async {
   return await LocalStorageService.getString(LOCAL_AUTH_TOKEN);
 }
 
+Future<void> addBearerTokenToHeader(Dio dio) async {
+  String? token = await getToken();
+  if (token != null) {
+    dio.options.headers['Authorization'] = 'Bearer ${token.toString()}';
+  }
+}
+
 class NetworkService {
   final TIMEOUT_DURATION = const Duration(seconds: 30);
   late final Dio _dio;
@@ -79,19 +86,15 @@ class NetworkService {
       InterceptorsWrapper(
         onRequest: (options, handler) async {
           // Get the token from somewhere (e.g., shared preferences)
-          String? token = await getToken();
-
-          if (token != null) {
-            // Add the token to the request headers
-            options.headers['Authorization'] = 'Bearer $token';
-          }
+          await addBearerTokenToHeader(_dio);
 
           return handler.next(options);
         },
       ),
     );
   }
-    final retryCall = const RetryOptions(
+
+  final retryCall = const RetryOptions(
     maxAttempts: 3,
     delayFactor: Duration(seconds: 2),
   );
@@ -102,7 +105,9 @@ class NetworkService {
   }) async {
     try {
       final response = await retryCall.retry(
-        () => _dio.get(url, queryParameters: queryParameters).timeout(TIMEOUT_DURATION),
+        () => _dio
+            .get(url, queryParameters: queryParameters)
+            .timeout(TIMEOUT_DURATION),
         retryIf: (e) => e is DioException && e.type != DioExceptionType.cancel,
       );
 
@@ -151,7 +156,9 @@ class NetworkService {
   Future<dynamic> post(String url, {body, encoding}) async {
     try {
       final response = await retryCall.retry(
-        () => _dio.post(url, data: _encoder.convert(body)).timeout(TIMEOUT_DURATION),
+        () => _dio
+            .post(url, data: _encoder.convert(body))
+            .timeout(TIMEOUT_DURATION),
         retryIf: (e) => e is DioException && e.type != DioExceptionType.cancel,
       );
       // final response = await _dio.post(url, data: _encoder.convert(body));
@@ -183,7 +190,9 @@ class NetworkService {
   Future<dynamic> patch(String url, {body, encoding}) async {
     try {
       final response = await retryCall.retry(
-        () => _dio.patch(url, data: _encoder.convert(body)).timeout(TIMEOUT_DURATION),
+        () => _dio
+            .patch(url, data: _encoder.convert(body))
+            .timeout(TIMEOUT_DURATION),
         retryIf: (e) => e is DioException && e.type != DioExceptionType.cancel,
       );
       // final response = await _dio.patch(url, data: _encoder.convert(body));
@@ -199,7 +208,9 @@ class NetworkService {
   Future<dynamic> put(String url, {body, encoding}) async {
     try {
       final response = await retryCall.retry(
-        () => _dio.put(url, data: _encoder.convert(body)).timeout(TIMEOUT_DURATION),
+        () => _dio
+            .put(url, data: _encoder.convert(body))
+            .timeout(TIMEOUT_DURATION),
         retryIf: (e) => e is DioException && e.type != DioExceptionType.cancel,
       );
       // final response = await _dio.put(url, data: _encoder.convert(body));

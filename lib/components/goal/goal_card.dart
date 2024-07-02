@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
-import 'package:tymesavingfrontend/models/budget_model.dart';
-import 'package:tymesavingfrontend/screens/budget/budget_update_page.dart';
-import 'package:tymesavingfrontend/services/budget_service.dart';
+import 'package:tymesavingfrontend/models/goal_model.dart';
+import 'package:tymesavingfrontend/screens/goal/goal_update_page.dart';
+import 'package:tymesavingfrontend/services/goal_service.dart';
 import 'package:tymesavingfrontend/utils/display_success.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-// final tempBudget = Budget(
+// final tempGoal = Goal(
 //   id: "1",
 //   hostedBy: "72e4b93000be75dd6e367723",
-//   name: 'Budget Name',
+//   name: 'Goal Name',
 //   description: 'Description',
 //   amount: 50000000,
 //   concurrentAmount: 10000000,
@@ -21,27 +21,27 @@ import 'package:timeago/timeago.dart' as timeago;
 //   participants: [],
 // );
 
-class BudgetCard extends StatefulWidget {
-  // final String budgetId;
-  final Budget budget;
-  const BudgetCard({super.key, required this.budget});
+class GoalCard extends StatefulWidget {
+  // final String goalId;
+  final Goal goal;
+  const GoalCard({super.key, required this.goal});
   @override
-  State<BudgetCard> createState() => _BudgetCardState();
+  State<GoalCard> createState() => _GoalCardState();
 }
 
-class _BudgetCardState extends State<BudgetCard> {
+class _GoalCardState extends State<GoalCard> {
   @override
   Widget build(BuildContext context) {
-    // final budget = Provider.of<AuthService>(context).budget;
-    // final budget = tempBudget;
-    final currentProgress = widget.budget.concurrentAmount / widget.budget.amount;
+    // final goal = Provider.of<AuthService>(context).goal;
+    // final goal = tempGoal;
+    final currentProgress = widget.goal.concurrentAmount / widget.goal.amount;
 
     void onEdit() {
       // Implement the edit functionality
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => BudgetUpdatePage(budgetId: widget.budget.id)),
+            builder: (context) => GoalUpdatePage(goalId: widget.goal.id)),
       );
     }
 
@@ -51,7 +51,7 @@ class _BudgetCardState extends State<BudgetCard> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Delete Confirmation'),
-            content: const Text('Are you sure you want to delete this budget?'),
+            content: const Text('Are you sure you want to delete this goal?'),
             actions: [
               TextButton(
                 onPressed: () {
@@ -62,15 +62,15 @@ class _BudgetCardState extends State<BudgetCard> {
               TextButton(
                 onPressed: () {
                   Future.microtask(() async {
-                    final budgetService =
-                        Provider.of<BudgetService>(context, listen: false);
+                    final goalService =
+                        Provider.of<GoalService>(context, listen: false);
                     await handleMainPageApi(context, () async {
-                      return await budgetService.deleteBudget(widget.budget.id);
+                      return await goalService.deleteGoal(widget.goal.id);
                       // return result;
                     }, () async {
                       Navigator.of(context).pop();
                       SuccessDisplay.showSuccessToast(
-                          "Successfully delete the budget", context);
+                          "Successfully delete the goal", context);
                     });
                   });
                   // onDelete();
@@ -83,9 +83,9 @@ class _BudgetCardState extends State<BudgetCard> {
       );
     }
 
-    // double progress = budget.contribution / maxContribution; // Calculate the progress as a fraction
+    // double progress = goal.contribution / maxContribution; // Calculate the progress as a fraction
     String formattedDate =
-        timeago.format(DateTime.parse(widget.budget.createdDate.toString()));
+        timeago.format(DateTime.parse(widget.goal.createdDate.toString()));
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     return Card(
@@ -97,8 +97,8 @@ class _BudgetCardState extends State<BudgetCard> {
         onTap: () {
           // debugPrint('Challenge tapped.');
           Navigator.push(context, MaterialPageRoute(builder: (context) {
-            // TODO: Implement the budget details page
-            return BudgetUpdatePage(budgetId: widget.budget.id);
+            // TODO: Implement the goal details page
+            return GoalUpdatePage(goalId: widget.goal.id);
           }));
         },
         borderRadius: BorderRadius.circular(16),
@@ -108,11 +108,11 @@ class _BudgetCardState extends State<BudgetCard> {
               padding: const EdgeInsets.all(8),
               child: Row(
                 children: [
-                  // CustomCircleAvatar(imagePath: budget.avatarPath),
+                  // CustomCircleAvatar(imagePath: goal.avatarPath),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      widget.budget.name,
+                      widget.goal.name,
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -149,8 +149,8 @@ class _BudgetCardState extends State<BudgetCard> {
                   const SizedBox(width: 3),
                   Text.rich(TextSpan(children: <TextSpan>[
                     TextSpan(
-                      text: formatAmount(widget.budget.concurrentAmount),
-                      // text: "Budget Contribution",
+                      text: formatAmount(widget.goal.concurrentAmount),
+                      // text: "Goal Contribution",
                       style: textTheme.bodyLarge,
                     ),
                      TextSpan(
@@ -160,7 +160,7 @@ class _BudgetCardState extends State<BudgetCard> {
                       ),
                     ),
                     TextSpan(
-                      text: formatAmount(widget.budget.amount),
+                      text: formatAmount(widget.goal.amount),
                       style: Theme.of(context).textTheme.bodyMedium!,
                     ),
                   ]))

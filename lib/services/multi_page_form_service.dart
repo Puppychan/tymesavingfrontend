@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
 import 'package:tymesavingfrontend/models/budget_model.dart';
+import 'package:tymesavingfrontend/models/goal_model.dart';
 import 'package:tymesavingfrontend/models/transaction_model.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
 
@@ -12,6 +13,7 @@ class FormStateProvider with ChangeNotifier {
   final Map<String, dynamic> _updateTransactionFormFields = {};
   final Map<String, dynamic> _budgetFormFields = {};
   final Map<String, dynamic> _updateBudgetFormFields = {};
+  final Map<String, dynamic> _updateGoalFormFields = {};
   Map<String, dynamic> _savingFormFields = {};
 
   dynamic _validateFieldNull(
@@ -51,6 +53,12 @@ class FormStateProvider with ChangeNotifier {
     } else if (type == FormStateType.updateTransaction) {
       amount = _validateFieldNull(
           'amount', _updateTransactionFormFields, 0.0) as double;
+    } else if (type == FormStateType.updateBudget) {
+      amount = _validateFieldNull(
+          'amount', _updateBudgetFormFields, 0.0) as double;
+    } else if (type == FormStateType.updateGoal) {
+      amount = _validateFieldNull(
+          'amount', _updateGoalFormFields, 0.0) as double;
     } else {
       amount = _validateFieldNull(
           'amount', _budgetFormFields, 0.0) as double;
@@ -67,6 +75,10 @@ class FormStateProvider with ChangeNotifier {
       return _expenseFormFields;
     } else if (type == FormStateType.updateTransaction) {
       return _updateTransactionFormFields;
+    } else if (type == FormStateType.updateBudget) {
+      return _updateBudgetFormFields;
+    } else if (type == FormStateType.updateGoal) {
+      return _updateGoalFormFields;
     } else {
       return _budgetFormFields;
     }
@@ -96,6 +108,10 @@ class FormStateProvider with ChangeNotifier {
       _expenseFormFields[key] = value;
     } else if (type == FormStateType.updateTransaction) {
       _updateTransactionFormFields[key] = value;
+    } else if (type == FormStateType.updateBudget) {
+      _updateBudgetFormFields[key] = value;
+    } else if (type == FormStateType.updateGoal) {
+      _updateGoalFormFields[key] = value;
     } else {
       _budgetFormFields[key] = value;
     }
@@ -109,6 +125,16 @@ class FormStateProvider with ChangeNotifier {
     Map<String, dynamic> tempBudget = budget.toMapForForm();
     for (var key in tempBudget.keys) {
       _updateBudgetFormFields[key] = tempBudget[key];
+    }
+    notifyListeners();
+  }
+  void setUpdateGoalFormFields(Goal? goal) {
+    if (goal == null) {
+      return;
+    }
+    Map<String, dynamic> tempGoal = goal.toMapForForm();
+    for (var key in tempGoal.keys) {
+      _updateGoalFormFields[key] = tempGoal[key];
     }
     notifyListeners();
   }

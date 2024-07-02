@@ -7,20 +7,19 @@ import 'package:tymesavingfrontend/components/transaction/transaction_screen.dar
 import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/transaction_report_model.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
-import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/transaction_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 import 'package:tymesavingfrontend/models/transaction_model.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final User? user;
+  const HomePage({super.key, this.user});
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> with RouteAware {
-  late User? user; // Assuming User is a defined model
   ChartReport? chartReport;
   ChartReport? chartReportSecondary;
   Map<String, List<Transaction>>? transactions;
@@ -30,21 +29,15 @@ class _HomePageState extends State<HomePage> with RouteAware {
     super.initState();
     Future.microtask(() async {
       if (!mounted) return;
-      final authService = Provider.of<AuthService>(context, listen: false);
-      await handleMainPageApi(context, () async {
-        return await authService.getCurrentUserData();
-      }, () async {
-        setState(() {
-          user = authService.user;
-        });
-      });
+      // final authService = Provider.of<AuthService>(context, listen: false);
+      
 
       // Start the second task only after the first one completes
       if (!mounted) return;
       final transactionService =
           Provider.of<TransactionService>(context, listen: false);
       await handleMainPageApi(context, () async {
-        return await transactionService.getBothChartReport(user?.id);
+        return await transactionService.getBothChartReport(widget.user?.id);
       }, () async {
         setState(() {
           chartReport = transactionService.chartReport!;
@@ -55,7 +48,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
       // Fetch transactions
       if (!mounted) return;
       await handleMainPageApi(context, () async {
-        return await transactionService.fetchTransactions(user?.id);
+        return await transactionService.fetchTransactions(widget.user?.id);
       }, () async {
         setState(() {
           transactions = transactionService.transactions;
@@ -74,23 +67,23 @@ class _HomePageState extends State<HomePage> with RouteAware {
     }
   }
 
-  @override
-  void didPopNext() {
-    // Called when the current route has been popped off, and the current route shows up.
-    Future.microtask(() async {
-      if (mounted) {
-        final authService = Provider.of<AuthService>(context, listen: false);
-        await handleMainPageApi(context, () async {
-          return await authService.getCurrentUserData();
-          // return result;
-        }, () async {
-          setState(() {
-            user = authService.user;
-          });
-        });
-      }
-    });
-  }
+  // @override
+  // void didPopNext() {
+  //   // Called when the current route has been popped off, and the current route shows up.
+  //   Future.microtask(() async {
+  //     if (mounted) {
+  //       final authService = Provider.of<AuthService>(context, listen: false);
+  //       await handleMainPageApi(context, () async {
+  //         return await authService.getCurrentUserData();
+  //         // return result;
+  //       }, () async {
+  //         setState(() {
+  //           widget.user = authService.user;
+  //         });
+  //       });
+  //     }
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
