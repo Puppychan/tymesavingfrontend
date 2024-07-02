@@ -7,8 +7,10 @@ import 'package:tymesavingfrontend/components/common/button/primary_button.dart'
 import 'package:tymesavingfrontend/components/common/chart/budget_pie_chart.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/models/budget_model.dart';
+import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/services/budget_service.dart';
 import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
+import 'package:tymesavingfrontend/services/user_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
 class BudgetDetails extends StatefulWidget {
@@ -26,7 +28,23 @@ class _BudgetDetailsState extends State<BudgetDetails> {
   late final double? percentageLeft;
   late DateTime? endDate;
   late int? daysLeft;
+  User? _user;
   bool isLoading = true;
+
+  Future<void> _renderUser(userId) async {
+    Future.microtask(() async {
+      if (!mounted) return;
+      final userService = Provider.of<UserService>(context, listen: false);
+      await handleMainPageApi(context, () async {
+        return await userService.getUserDataById(userId);
+      }, () async {
+        if (!mounted) return;
+        setState(() {
+          _user = userService.currentFetchUser;
+        });
+      });
+    });
+  }
 
   @override
   void initState() {
@@ -51,6 +69,7 @@ class _BudgetDetailsState extends State<BudgetDetails> {
           daysLeft = calculateDaysLeft(endDate!);
           isLoading = false;
         });
+        await _renderUser(tempBudget!.hostedBy);
       });
     });
 
@@ -89,11 +108,11 @@ class _BudgetDetailsState extends State<BudgetDetails> {
                       TextSpan(
                         children: [
                           TextSpan(
-                            text: 'By ',
+                            text: 'Hosted by ',
                             style: Theme.of(context).textTheme.headlineMedium,
                           ),
                           TextSpan(
-                            text: _budget.hostedBy,
+                            text: _user?.fullname ?? '...',
                             style: Theme.of(context).textTheme.headlineMedium, // Customize this style as needed
                           ),
                         ],
