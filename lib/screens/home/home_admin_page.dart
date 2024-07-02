@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/common/styles/app_padding.dart';
 import 'package:tymesavingfrontend/components/common/text_align.dart';
 import 'package:tymesavingfrontend/main.dart';
-import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/screens/user_list/user_list_page.dart';
 
 class HomeAdminPage extends StatefulWidget {
+  // final User? user;
   const HomeAdminPage({super.key});
 
   @override
@@ -13,23 +13,10 @@ class HomeAdminPage extends StatefulWidget {
 }
 
 class _HomeAdminPageState extends State<HomeAdminPage> with RouteAware {
-  late User? user; // Assuming User is a defined model
 
   @override
   void initState() {
     super.initState();
-    // Future.microtask(() async {
-    //   if (!mounted) return;
-    //   final authService = Provider.of<AuthService>(context, listen: false);
-    //   await handleMainPageApi(context, () async {
-    //     return await authService.getCurrentUserData();
-    //     // return result;
-    //   }, () async {
-    //     setState(() {
-    //       user = authService.user;
-    //     });
-    //   });
-    // });
   }
 
   @override
