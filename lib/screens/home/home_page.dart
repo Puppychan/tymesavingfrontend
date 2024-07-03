@@ -1,4 +1,7 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/styles/app_padding.dart';
 import 'package:tymesavingfrontend/components/common/chart/custom_bar_chart.dart';
@@ -33,32 +36,34 @@ class _HomePageState extends State<HomePage> with RouteAware {
     _loadData();
   }
 
-  Future<void> _loadData() async {
-    final transactionService =
-        Provider.of<TransactionService>(context, listen: false);
+  void _loadData() async {
+    Future.microtask(() async {
+      final transactionService =
+          Provider.of<TransactionService>(context, listen: false);
 
-    if (widget.user != null) {
-      await handleMainPageApi(context, () async {
-        return await transactionService.getBothChartReport(widget.user!.id);
-      }, () async {
-        setState(() {
-          chartReport = transactionService.chartReport;
-          chartReportSecondary = transactionService.chartReportSecondary;
+      if (widget.user != null) {
+        await handleMainPageApi(context, () async {
+          return await transactionService.getBothChartReport(widget.user!.id);
+        }, () async {
+          setState(() {
+            chartReport = transactionService.chartReport;
+            chartReportSecondary = transactionService.chartReportSecondary;
+          });
         });
-      });
 
-      if (!mounted) return;
-      await handleMainPageApi(context, () async {
-        return await transactionService.fetchTransactions(widget.user!.id);
-      }, () async {
-        setState(() {
-          transactions = transactionService.transactions;
+        if (!mounted) return;
+        await handleMainPageApi(context, () async {
+          return await transactionService.fetchTransactions(widget.user!.id);
+        }, () async {
+          setState(() {
+            transactions = transactionService.transactions;
+          });
         });
-      });
-    }
+      }
 
-    setState(() {
-      isLoading = false;
+      setState(() {
+        isLoading = false;
+      });
     });
   }
 
@@ -71,23 +76,12 @@ class _HomePageState extends State<HomePage> with RouteAware {
     }
   }
 
-  // @override
-  // void didPopNext() {
-  //   // Called when the current route has been popped off, and the current route shows up.
-  //   Future.microtask(() async {
-  //     if (mounted) {
-  //       final authService = Provider.of<AuthService>(context, listen: false);
-  //       await handleMainPageApi(context, () async {
-  //         return await authService.getCurrentUserData();
-  //         // return result;
-  //       }, () async {
-  //         setState(() {
-  //           widget.user = authService.user;
-  //         });
-  //       });
-  //     }
-  //   });
-  // }
+  @override
+  void didPopNext() {
+    _loadData();
+    super.didPopNext();
+  }
+
 
   void _navigateToAllTransactions(BuildContext context) {
     Navigator.push(
@@ -164,7 +158,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
           ),
           const SizedBox(height: 4), // Add some spacing between sections
           SizedBox(
-            height: 500,
+            height: MediaQuery.of(context).size.height * 0.4,
             child: TransactionSection(transactions: transactions!),
           ),
         ],
