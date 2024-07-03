@@ -3,10 +3,10 @@ import 'package:tymesavingfrontend/models/transaction_model.dart';
 import 'package:tymesavingfrontend/common/styles/app_color.dart';
 import 'package:tymesavingfrontend/components/transaction/transaction_list.dart';
 
-class TransactionScreen extends StatelessWidget {
+class TransactionSection extends StatelessWidget {
   final Map<String, List<Transaction>> transactions;
 
-  TransactionScreen({super.key, required this.transactions});
+  TransactionSection({super.key, required this.transactions});
 
   final List<String> months = [
     'Jan',
