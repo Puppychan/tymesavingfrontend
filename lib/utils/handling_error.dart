@@ -19,6 +19,8 @@ Future<void> handleAuthApi(
     // detect before call navigation
     if (!context.mounted) return;
 
+    print("Result from handleAuthApi: $result");
+
     if (result['statusCode'] == 200) {
       await successAction();
     } else if (result['statusCode'] == 401 || result['statusCode'] == 400) {
@@ -26,11 +28,12 @@ Future<void> handleAuthApi(
       context.loaderOverlay.hide();
       ErrorDisplay.showErrorToast(result['response'], context);
     } else {
+      print("Error was thrown on handleAuthApi - inside $result");
       ErrorDisplay.navigateToErrorPage(result, context);
     }
   } catch (e) {
     if (!context.mounted) return;
-
+    print("Error was thrown on handleAuthApi $e");
     // Display error message
     ErrorDisplay.navigateToErrorPage({'response': e.toString()}, context);
   }
@@ -58,12 +61,13 @@ Future<void> handleMainPageApi(
           (_) => false);
     } else {
       Future.delayed(const Duration(seconds: 2), () {
+        print("Error was thrown on handleMainPageApi - inside: $result");
         ErrorDisplay.navigateToErrorPage(result, context);
       });
     }
   } catch (e) {
     if (!context.mounted) return;
-
+    print("Error was thrown on handleMainPageApi: $e");
     // Display error message
     ErrorDisplay.navigateToErrorPage({'response': e.toString()}, context);
   }

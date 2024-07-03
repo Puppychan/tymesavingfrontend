@@ -159,7 +159,9 @@ class UserService extends ChangeNotifier {
     return response;
   }
 
-  Future<dynamic> getUserDataById(id) async {
+  Future<dynamic> getUserDataById(
+    id,
+  ) async {
     final response = await NetworkService.instance
         .get("${BackendEndpoints.user}/${BackendEndpoints.userById}/$id");
     if (response['response'] != null && response['statusCode'] == 200) {
@@ -168,6 +170,24 @@ class UserService extends ChangeNotifier {
     }
     // return response['response']?.containsKey("id") ?? false;
     return response;
+  }
+
+  Future<dynamic> getOtherUserInfo(id,
+      {String? sharedBudgetId, String? groupSavingId}) async {
+    String endpoint =
+        "${BackendEndpoints.user}/${BackendEndpoints.otherUserById}/$id";
+    if (sharedBudgetId != null) {
+      endpoint += "?sharedBudgetId=$sharedBudgetId";
+    } else if (groupSavingId != null) {
+      endpoint += "?groupSavingId=$groupSavingId";
+    }
+
+    final response = await NetworkService.instance.get(endpoint);
+    if (response['response'] != null && response['statusCode'] == 200) {
+      _currentFetchUser = User.fromMap(response['response']);
+      notifyListeners();
+    }
+
   }
 
   Future<Map<String, dynamic>> updateUser(

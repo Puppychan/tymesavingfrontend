@@ -8,10 +8,15 @@ class User {
   final String email;
   final String fullname;
   final String phone;
-  final String creationDate;
-  final String pin;
 
-  final double contribution;
+  // optional
+  final String? creationDate;
+  final String? pin;
+
+  // display inside group only
+  final double? contribution;
+  final double? totalAmount;
+  final int? transactionCount;
 
   // final List<Invitation>? invitations;
   // final List<String>? sharedBudgetHosts;
@@ -31,14 +36,20 @@ class User {
         email = user['email'],
         fullname = user['fullname'],
         phone = user['phone'],
-        creationDate = user['creationDate'],
+        // Optional fields
+        creationDate =
+            (user['creationDate'] != null) ? user['creationDate'] : "",
         pin = (user['pin'] != null) ? user['pin'] : "",
-        // TODO: Implement the contribution value
         contribution = (user['contribution'] != null)
             ? user['contribution'].toDouble()
-            : -1.0 {
-    print(
-        'User created with id: $id, role: $role, username: $username, email: $email, fullname: $fullname, phone: $phone, creationDate: $creationDate, pin: $pin, contribution: $contribution');
+            : -1.0,
+        totalAmount = (user['totalAmount'] != null)
+            ? user['totalAmount'].toDouble()
+            : 0.0,
+        transactionCount =
+            (user['transactionCount'] != null) ? user['transactionCount'] : 0 {
+    // print(
+    //     'User created with id: $id, role: $role, username: $username, email: $email, fullname: $fullname, phone: $phone, creationDate: $creationDate, pin: $pin, contribution: $contribution');
   }
 
   Map<String, dynamic> toMap() {

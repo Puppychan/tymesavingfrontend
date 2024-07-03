@@ -30,11 +30,13 @@ class BackendEndpoints {
   static String get userUpdate => "update";
   static String get userPasswordUpdate => "update/password";
   static String get userById => "byId";
+  static String get otherUserById => "viewUserFromId";
   static String get transactionReport => "report";
   static String get transactionReportByUser => "byUser";
 
   // budget specific endpoints
   static String get budgetsGetByUserId => "byUser";
+  static String get budgetGetSummaryById => "viewBudgetFromId";
   static String get budgetUpdateHost => "host/edit";
   static String get budgetRemoveMember => "host/remove-member";
   static String get budgetGetMembers => "member-list";
@@ -44,4 +46,6 @@ class BackendEndpoints {
 
   // invitation specific endpoints
   static String get invitationsGetByUserId => "byUser";
+  static String get invitationsAccept => "acceptInvitation";
+  static String get invitationsReject => "cancelInvitation";
 }

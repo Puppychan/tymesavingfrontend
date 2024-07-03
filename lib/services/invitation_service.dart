@@ -25,5 +25,31 @@ class InvitationService extends ChangeNotifier {
       _invitations = invitationList;
       notifyListeners();
     }
+    return response;
+  }
+  
+
+  Future<dynamic> acceptInvitation(String userId, String invitationId) async {
+    final response = await NetworkService.instance.post(
+        "${BackendEndpoints.invitation}/${BackendEndpoints.invitationsAccept}",
+        body: {"userId": userId, "invitationId": invitationId});
+
+    if (response['response'] != null && response['statusCode'] == 200) {
+      _invitations.removeWhere((element) => element.invitationId == invitationId);
+      notifyListeners();
+    }
+    return response;
+  }
+
+  Future<dynamic> declineInvitation(String userId, String invitationId) async {
+    final response = await NetworkService.instance.post(
+        "${BackendEndpoints.invitation}/${BackendEndpoints.invitationsReject}",
+        body: {"userId": userId, "invitationId": invitationId});
+
+    if (response['response'] != null && response['statusCode'] == 200) {
+      _invitations.removeWhere((element) => element.invitationId == invitationId);
+      notifyListeners();
+    }
+    return response;
   }
 }

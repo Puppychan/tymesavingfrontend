@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/models/budget_model.dart';
+import 'package:tymesavingfrontend/models/summary_group_model.dart';
 import 'package:tymesavingfrontend/services/utils/get_backend_endpoint.dart';
 import 'package:tymesavingfrontend/services/utils/network_service.dart';
 
 class BudgetService extends ChangeNotifier {
   Budget? _currentBudget;
   List<Budget> _budgets = [];
+  SummaryGroup? _summaryGroup;
 
   Budget? get currentBudget => _currentBudget;
   List<Budget> get budgets => _budgets;
+  SummaryGroup? get summaryGroup => _summaryGroup;
 
   Future<dynamic> fetchBudgetList(String? userId) async {
     // if (userId == null) return {'response': 'User ID is required.', 'statusCode': 400};
@@ -56,6 +59,20 @@ class BudgetService extends ChangeNotifier {
         .get("${BackendEndpoints.budget}/$id/info");
     if (response['response'] != null && response['statusCode'] == 200) {
       _currentBudget = Budget.fromMap(response['response']);
+      notifyListeners();
+    }
+    return response;
+  }
+
+  Future<dynamic> fetchBudgetSummary(id) async {
+    final response = await NetworkService.instance
+        .get("${BackendEndpoints.budget}/${BackendEndpoints.budgetGetSummaryById}/$id");
+
+    print("Response from fetchBudgetSummary: $response");
+
+    if (response['response'] != null && response['statusCode'] == 200) {
+      _summaryGroup = SummaryGroup.fromMap(response['response']);
+      print("Summary Budget after response: $_summaryGroup");
       notifyListeners();
     }
     return response;

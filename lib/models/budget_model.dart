@@ -1,5 +1,3 @@
-import 'package:tymesavingfrontend/utils/format_date.dart';
-
 class Budget {
   String id;
   String hostedBy;

@@ -66,7 +66,7 @@ class MemberCard extends StatelessWidget {
     }
 
     // double progress = member.contribution / maxContribution; // Calculate the progress as a fraction
-    String formattedDate = timeago.format(DateTime.parse(user.creationDate));
+    String formattedDate = timeago.format(DateTime.parse(user.creationDate ?? ""));
     final colorScheme = Theme.of(context).colorScheme;
     return Card(
       color: colorScheme.tertiary,
