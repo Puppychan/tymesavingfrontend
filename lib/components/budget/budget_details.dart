@@ -257,17 +257,18 @@ class _BudgetDetailsState extends State<BudgetDetails> {
                           const SizedBox(
                             height: 10,
                           ),
-                          Text(
-                            _budget.description,
-                            style: Theme.of(context).textTheme.bodyMedium,
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.clip,
+                          Card.filled(
+                            margin: const EdgeInsets.symmetric(horizontal: 30),
+                            child: Text(
+                              _budget.description,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.clip,
+                            ),
                           ),
                         ],
                       )),
                   // const Expanded(child: SizedBox()),
-                 
-                  const SizedBox(height: 50),
                 ],
               ));
   }
