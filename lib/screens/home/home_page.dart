@@ -1,7 +1,4 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/styles/app_padding.dart';
 import 'package:tymesavingfrontend/components/common/chart/custom_bar_chart.dart';
@@ -34,6 +31,12 @@ class _HomePageState extends State<HomePage> with RouteAware {
   void initState() {
     super.initState();
     _loadData();
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
   }
 
   void _loadData() async {
@@ -81,7 +84,6 @@ class _HomePageState extends State<HomePage> with RouteAware {
     _loadData();
     super.didPopNext();
   }
-
 
   void _navigateToAllTransactions(BuildContext context) {
     Navigator.push(
@@ -131,8 +133,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
           const SizedBox(height: 12), // Add some spacing between sections
           const Divider(),
           Row(
-            mainAxisAlignment: MainAxisAlignment
-                .spaceBetween, // This aligns the children with space between them
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 'My Transactions',

@@ -29,13 +29,13 @@ class _BudgetPieChartState extends State<BudgetPieChart> {
               PieChartData(
                 sections: [
                   PieChartSectionData(
-                    value: widget.amount,
+                    value: double.parse(widget.amount.toStringAsFixed(2)),
                     color: colorScheme.inversePrimary, // Example color
                     title: '',
                     showTitle: false,
                   ),
                   PieChartSectionData(
-                    value: widget.concurrent,
+                    value: double.parse(widget.concurrent.toStringAsFixed(2)),
                     color: colorScheme.primary, // Example color
                     title: '',
                     showTitle: false,
@@ -48,7 +48,7 @@ class _BudgetPieChartState extends State<BudgetPieChart> {
                       TextSpan(
                         children: [
                           TextSpan(
-                            text: widget.amount.toString(),
+                            text: widget.amount.toStringAsFixed(2),
                             style: Theme.of(context).textTheme.headlineMedium,
                           ),
                           TextSpan(

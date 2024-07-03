@@ -97,6 +97,16 @@ class UserService extends ChangeNotifier {
     return response;
   }
 
+  Future<dynamic> removeGroupMember(bool isBudgetGroup, String? groupId, String memberId) async {
+    final response = await NetworkService.instance.delete(
+        "${BackendEndpoints.budget}/$groupId/${BackendEndpoints.budgetRemoveMember}/$memberId");
+    if (response['response'] != null && response['statusCode'] == 200) {
+      _members.removeWhere((element) => element.user.id == memberId);
+      notifyListeners();
+    }
+    return response;
+  }
+
   void updateFilterOptions(String key, String value) {
     // _filterOptions[key] = value;
     if (key == 'role') {
