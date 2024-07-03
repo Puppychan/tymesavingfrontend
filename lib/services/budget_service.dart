@@ -17,9 +17,11 @@ class BudgetService extends ChangeNotifier {
     if (response['response'] != null && response['statusCode'] == 200) {
       final responseData = response['response'];
       List<Budget> budgetList = [];
-      for (var budget in responseData) {
-        final tempBudget = Budget.fromMap(budget);
-        budgetList.add(tempBudget);
+      if (responseData != [] && responseData != null) {
+        for (var budget in responseData) {
+          final tempBudget = Budget.fromMap(budget);
+          budgetList.add(tempBudget);
+        }
       }
       _budgets = budgetList;
       notifyListeners();
@@ -50,8 +52,8 @@ class BudgetService extends ChangeNotifier {
   }
 
   Future<Map<String, dynamic>> fetchBudgetDetails(id) async {
-    final response =
-        await NetworkService.instance.get("${BackendEndpoints.budget}/$id/info");
+    final response = await NetworkService.instance
+        .get("${BackendEndpoints.budget}/$id/info");
     if (response['response'] != null && response['statusCode'] == 200) {
       _currentBudget = Budget.fromMap(response['response']);
       notifyListeners();
@@ -67,13 +69,14 @@ class BudgetService extends ChangeNotifier {
     double amount,
     String endDate,
   ) async {
-    final response = await NetworkService.instance
-        .put("${BackendEndpoints.budget}/$budgetGroupId/${BackendEndpoints.budgetUpdateHost}", body: {
-      'name': name,
-      'description': description,
-      'amount': amount,
-      'endDate': endDate,
-    });
+    final response = await NetworkService.instance.put(
+        "${BackendEndpoints.budget}/$budgetGroupId/${BackendEndpoints.budgetUpdateHost}",
+        body: {
+          'name': name,
+          'description': description,
+          'amount': amount,
+          'endDate': endDate,
+        });
     return response;
   }
 

@@ -4,7 +4,7 @@ import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
 import 'package:tymesavingfrontend/common/styles/app_padding.dart';
 import 'package:tymesavingfrontend/components/common/bottom_sheet.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
-import 'package:tymesavingfrontend/components/multiple_page_sheet/common/budget_form.dart';
+import 'package:tymesavingfrontend/form/common_form/budget_form.dart';
 import 'package:tymesavingfrontend/components/category_list/category_selection.dart';
 import 'package:tymesavingfrontend/models/budget_model.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';

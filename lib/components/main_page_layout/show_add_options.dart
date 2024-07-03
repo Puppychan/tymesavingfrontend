@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/components/common/bottom_sheet.dart';
-import 'package:tymesavingfrontend/components/multiple_page_sheet/budget_add_form.dart';
-import 'package:tymesavingfrontend/components/multiple_page_sheet/goal_add_form.dart';
-import 'package:tymesavingfrontend/components/multiple_page_sheet/transaction_add_form.dart';
+import 'package:tymesavingfrontend/form/budget_add_form.dart';
+import 'package:tymesavingfrontend/form/goal_add_form.dart';
+import 'package:tymesavingfrontend/form/transaction_add_form.dart';
 
 ListTile makeListTile({
   required IconData leadingIcon,

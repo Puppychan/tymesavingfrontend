@@ -17,9 +17,11 @@ class GoalService extends ChangeNotifier {
     if (response['response'] != null && response['statusCode'] == 200) {
       final responseData = response['response'];
       List<Goal> goalList = [];
-      for (var goal in responseData) {
-        final tempGoal = Goal.fromMap(goal);
-        goalList.add(tempGoal);
+      if (responseData != [] && responseData != null) {
+        for (var goal in responseData) {
+          final tempGoal = Goal.fromMap(goal);
+          goalList.add(tempGoal);
+        }
       }
       _goals = goalList;
       notifyListeners();

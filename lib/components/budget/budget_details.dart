@@ -224,7 +224,11 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                               textAlign: TextAlign.center,
                             ),
                             const SizedBox(
-                              height: 7,
+                              height: 10,
+                            ),
+                            const Divider(),
+                            const SizedBox(
+                              height: 10,
                             ),
                             InkWell(
                               onTap: () {

@@ -87,9 +87,11 @@ class UserService extends ChangeNotifier {
     if (response['response'] != null && response['statusCode'] == 200) {
       final responseData = response['response'];
       List<Member> memberList = [];
-      for (var member in responseData) {
-        final tempMember = Member.fromMap(member);
-        memberList.add(tempMember);
+      if (responseData != [] && responseData != null) {
+        for (var member in responseData) {
+          final tempMember = Member.fromMap(member);
+          memberList.add(tempMember);
+        }
       }
       _members = memberList;
       notifyListeners();
@@ -97,7 +99,8 @@ class UserService extends ChangeNotifier {
     return response;
   }
 
-  Future<dynamic> removeGroupMember(bool isBudgetGroup, String? groupId, String memberId) async {
+  Future<dynamic> removeGroupMember(
+      bool isBudgetGroup, String? groupId, String memberId) async {
     final response = await NetworkService.instance.delete(
         "${BackendEndpoints.budget}/$groupId/${BackendEndpoints.budgetRemoveMember}/$memberId");
     if (response['response'] != null && response['statusCode'] == 200) {

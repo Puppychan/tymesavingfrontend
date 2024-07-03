@@ -24,6 +24,7 @@ class BackendEndpoints {
   static String get transaction => "$baseUrl/transaction";
   static String get budget => "$baseUrl/sharedBudget";
   static String get goal => "$baseUrl/goal";
+  static String get invitation => "$baseUrl/invitation";
 
   // if there is no $baseUrl, the URL will be concatenated with other endpoints
   static String get userUpdate => "update";
@@ -40,4 +41,7 @@ class BackendEndpoints {
 
   // goal specific endpoints
   static String get goalByUserId => "byUser";
+
+  // invitation specific endpoints
+  static String get invitationsGetByUserId => "byUser";
 }
