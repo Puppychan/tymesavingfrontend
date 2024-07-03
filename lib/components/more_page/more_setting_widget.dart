@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/components/budget/budget_details.dart';
+import 'package:tymesavingfrontend/screens/about_contact/about_us.dart';
 import 'package:tymesavingfrontend/screens/authentication/sign_in_page.dart';
 import 'package:tymesavingfrontend/screens/tracking_report/spend_tracking.dart';
 import 'package:tymesavingfrontend/screens/tracking_report/report_page.dart';
@@ -38,11 +39,11 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
         context, MaterialPageRoute(builder: (context) => const ReportPage()));
   }
 
-  Future<void> sandBox() async {
+  Future<void> about() async {
     //Debug here
     debugPrint('Report page tapped!');
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const BudgetDetails(budgetId: '66837377f8053558ab30e0f4',)));
+        context, MaterialPageRoute(builder: (context) => const AboutUs()));
   }
 
   Future<void> logoutFunction() async {
@@ -80,8 +81,8 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
                 const Icon(Icons.settings), placeHolderFunction),
             RowSettingTemplate('Contact us', 'Send a email or direct hotline',
                 const Icon(Icons.phone), placeHolderFunction),
-            RowSettingTemplate('About', 'Change setting',
-                const Icon(Icons.info), sandBox),
+            RowSettingTemplate('About', 'Some information about the project',
+                const Icon(Icons.info), about),
             RowSettingTemplate('Logout', 'Logout your account here',
                 const Icon(Icons.logout), logoutFunction),
           ],
