@@ -8,6 +8,7 @@ import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/transaction_report_model.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/services/transaction_service.dart';
+import 'package:tymesavingfrontend/utils/display_warning.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 import 'package:tymesavingfrontend/models/transaction_model.dart';
 import 'package:tymesavingfrontend/screens/transaction/view_all_transaction_page.dart';
@@ -32,7 +33,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
     _loadData();
   }
 
-    Future<void> _loadData() async {
+  Future<void> _loadData() async {
     final transactionService =
         Provider.of<TransactionService>(context, listen: false);
 
@@ -118,20 +119,50 @@ class _HomePageState extends State<HomePage> with RouteAware {
           const SizedBox(
             height: 10,
           ),
-          CustomBarChart(
-            totalsExpense: chartReport!.totals,
-            totalsIncome: chartReportSecondary!.totals,
-          ),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: transactions == null
-                  ? null
-                  : () => _navigateToAllTransactions(context),
-              child: const Text('View All Transactions'),
+          if (chartReport == null && chartReportSecondary == null)
+            Column(
+              children: [
+                const SizedBox(height: 16),
+                Text("No data available for chart",
+                    style: Theme.of(context).textTheme.displayLarge),
+                const SizedBox(height: 16),
+              ],
+            )
+          else
+            CustomBarChart(
+              totalsExpense: chartReport!.totals,
+              totalsIncome: chartReportSecondary!.totals,
             ),
-          ),
+
           const SizedBox(height: 24), // Add some spacing between sections
+          const Divider(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment
+                .spaceBetween, // This aligns the children with space between them
+            children: [
+              Text(
+                'My Transactions',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              TextButton(
+                onPressed: () {
+                  if (transactions == null) {
+                    WarningDisplay.showWarningToast(
+                        "No transactions available", context);
+                  }
+                  _navigateToAllTransactions(context);
+                },
+                child: Text(
+                  'View All',
+                  style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
+                        decoration: TextDecoration.underline,
+                      ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12), // Add some spacing between sections
           SizedBox(
             height: 500,
             child: TransactionSection(transactions: transactions!),
