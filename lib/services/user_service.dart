@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tymesavingfrontend/models/member_model.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/services/utils/get_backend_endpoint.dart';
 import 'package:tymesavingfrontend/services/utils/network_service.dart';
@@ -17,12 +18,14 @@ class UserService extends ChangeNotifier {
   // user list
   List<User> _users = [];
   User? _currentFetchUser;
+  List<Member> _members = [];
 
   // List<String> get filterData => _filterData;
   String get roleFilter => _roleFilter;
   String get sortOption => _convertSortOptionToString();
   List<User> get users => _users;
   User? get currentFetchUser => _currentFetchUser;
+  List<Member> get members => _members;
 
   String _convertSortOptionToString() {
     final tempSortValue = _sortOption.keys.first;
@@ -76,6 +79,24 @@ class UserService extends ChangeNotifier {
     return response;
   }
 
+  Future<dynamic> fetchGroupMemberList(
+      bool? isBudgetGroup, String? groupId) async {
+    // TODO: implement if isBudgetGroup is false - Saving Group
+    final response = await NetworkService.instance.get(
+        "${BackendEndpoints.budget}/$groupId/${BackendEndpoints.budgetGetMembers}");
+    if (response['response'] != null && response['statusCode'] == 200) {
+      final responseData = response['response'];
+      List<Member> memberList = [];
+      for (var member in responseData) {
+        final tempMember = Member.fromMap(member);
+        memberList.add(tempMember);
+      }
+      _members = memberList;
+      notifyListeners();
+    }
+    return response;
+  }
+
   void updateFilterOptions(String key, String value) {
     // _filterOptions[key] = value;
     if (key == 'role') {
@@ -113,9 +134,9 @@ class UserService extends ChangeNotifier {
     notifyListeners();
   }
 
-    Future<dynamic> getCurrentUserData(username) async {
-    final response = await NetworkService.instance
-        .get("${BackendEndpoints.user}/$username");
+  Future<dynamic> getCurrentUserData(username) async {
+    final response =
+        await NetworkService.instance.get("${BackendEndpoints.user}/$username");
     debugPrint("Response in getCurrentUserData: $response");
     if (response['response'] != null && response['statusCode'] == 200) {
       _currentFetchUser = User.fromMap(response['response']);
@@ -125,7 +146,7 @@ class UserService extends ChangeNotifier {
     return response;
   }
 
-    Future<dynamic> getUserDataById(id) async {
+  Future<dynamic> getUserDataById(id) async {
     final response = await NetworkService.instance
         .get("${BackendEndpoints.user}/${BackendEndpoints.userById}/$id");
     if (response['response'] != null && response['statusCode'] == 200) {
@@ -136,7 +157,7 @@ class UserService extends ChangeNotifier {
     return response;
   }
 
-    Future<Map<String, dynamic>> updateUser(
+  Future<Map<String, dynamic>> updateUser(
     String username,
     String email,
     String phone,
@@ -145,7 +166,7 @@ class UserService extends ChangeNotifier {
     final response = await NetworkService.instance.put(
       "${BackendEndpoints.user}/$username/${BackendEndpoints.userUpdate}",
       body: {
-        // 'username': username, 
+        // 'username': username,
         'email': email,
         'phone': phone,
         'fullname': fullname,
@@ -157,7 +178,8 @@ class UserService extends ChangeNotifier {
       final responseBody = response['response'] as Map<String, dynamic>;
       final updatedUser = User.fromMap(responseBody);
       // update the user in the list
-      final index = _users.indexWhere((element) => element.username == username);
+      final index =
+          _users.indexWhere((element) => element.username == username);
       _users[index] = updatedUser;
 
       notifyListeners();

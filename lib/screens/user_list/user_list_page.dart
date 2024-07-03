@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/components/user/user_card.dart';
 import 'package:tymesavingfrontend/services/user_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
 class UserListPage extends StatefulWidget {
-  const UserListPage({super.key});
+  final bool? isBudgetGroup; // if null -> user list, if true -> budget group, if false -> goal group
+  final String? groupId;
+  const UserListPage({super.key, this.isBudgetGroup, this.groupId});
   @override
   State<UserListPage> createState() => _UserListPageState();
 }
@@ -25,9 +26,6 @@ class _UserListPageState extends State<UserListPage> {
       await handleMainPageApi(context, () async {
         return await userService.fetchUserList();
       }, () async {
-        // setState(() {
-        //   users = userService.users;
-        // });
       });
     });
   }
@@ -57,14 +55,6 @@ class _UserListPageState extends State<UserListPage> {
                 child: CircularProgressIndicator(),
               ),
             );
-      // return ElevatedButton(
-      //   onPressed: () => showStyledBottomSheet(
-      //     context: context,
-      //     title: "Filter",
-      //     contentWidget: UserSortFilter(updateUserList: _fetchUsers),
-      //   ),
-      //   child: const Text('Show Filter'),
-      // );
     });
   }
 }

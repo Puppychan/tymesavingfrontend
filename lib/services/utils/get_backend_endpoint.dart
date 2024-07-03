@@ -33,7 +33,9 @@ class BackendEndpoints {
   static String get transactionReportByUser => "byUser";
 
   // budget specific endpoints
-  static String get budgetByUserId => "byUser";
+  static String get budgetsGetByUserId => "byUser";
+  static String get budgetUpdateHost => "host/edit";
+  static String get budgetGetMembers => "member-list";
 
   // goal specific endpoints
   static String get goalByUserId => "byUser";
