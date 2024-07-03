@@ -134,7 +134,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
               totalsIncome: chartReportSecondary!.totals,
             ),
 
-          const SizedBox(height: 24), // Add some spacing between sections
+          const SizedBox(height: 12), // Add some spacing between sections
           const Divider(),
           Row(
             mainAxisAlignment: MainAxisAlignment
@@ -162,7 +162,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
               ),
             ],
           ),
-          const SizedBox(height: 12), // Add some spacing between sections
+          const SizedBox(height: 4), // Add some spacing between sections
           SizedBox(
             height: 500,
             child: TransactionSection(transactions: transactions!),
