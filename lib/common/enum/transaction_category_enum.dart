@@ -15,7 +15,12 @@ enum TransactionCategory {
   groceries('Groceries'),
   gifts('Gifts'),
   work('Work'),
-  otherExpenses('Other expenses');
+  otherExpenses('Other expenses'),
+  salary('Salary'), // New
+  businessProfits('Business Profits'), // New
+  investmentIncome('Investment Income'), // New
+  freelanceWork('Freelance Work'), // New
+  rentalIncome('Rental Income'); // New
 
   const TransactionCategory(this.name);
 
@@ -93,5 +98,25 @@ final Map<TransactionCategory, Map<String, dynamic>> transactionCategoryData = {
   TransactionCategory.otherExpenses: {
     'icon': Icons.money_off,
     'color': Colors.blueGrey[400]
+  },
+  TransactionCategory.salary: {
+    'icon': Icons.attach_money,
+    'color': Colors.green[700]
+  },
+  TransactionCategory.businessProfits: {
+    'icon': Icons.business,
+    'color': Colors.blue[800]
+  },
+  TransactionCategory.investmentIncome: {
+    'icon': Icons.trending_up,
+    'color': Colors.orange[700]
+  },
+  TransactionCategory.freelanceWork: {
+    'icon': Icons.work_outline,
+    'color': Colors.purple[700]
+  },
+  TransactionCategory.rentalIncome: {
+    'icon': Icons.home_work,
+    'color': Colors.brown[700]
   },
 };

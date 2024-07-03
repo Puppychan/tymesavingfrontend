@@ -70,10 +70,10 @@ class AppThemes {
         headlineLarge: TextStyle(
             // display
             overflow: TextOverflow.ellipsis,
-            fontSize: 28,
+            fontSize: 25,
             color: AppColors.black,
             fontFamily: 'Merriweather',
-            fontWeight: FontWeight.w700),
+            fontWeight: FontWeight.w600),
         headlineMedium: TextStyle(
             // sub display - subheading
             fontSize: 22,

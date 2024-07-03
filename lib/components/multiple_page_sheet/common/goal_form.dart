@@ -104,7 +104,7 @@ class _GoalFormMainState extends State<GoalFormMain> {
         context.loaderOverlay.hide();
         Navigator.of(context).pop();
         SuccessDisplay.showSuccessToast(
-            "Create new ${widget.type} successfully", context);
+            "${widget.type == FormStateType.updateBudget ? "Update" : "Create"} new ${widget.type} successfully", context);
       });
     });
   }

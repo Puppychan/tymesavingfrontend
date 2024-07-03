@@ -33,7 +33,7 @@ class _BudgetUpdatePageState extends State<BudgetUpdatePage> {
           Provider.of<BudgetService>(context, listen: false);
       await handleMainPageApi(context, () async {
         // TODO: add the fetchBudgetDetails method to the budgetService
-        // return await budgetService.fetchBudgetDetails(widget.budgetId);
+        return await budgetService.fetchBudgetDetails(widget.budgetId);
       }, () async {
         if (!mounted) return;
         final tempBudget = budgetService.currentBudget;
