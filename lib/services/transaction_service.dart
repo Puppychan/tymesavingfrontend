@@ -65,6 +65,7 @@ class TransactionService extends ChangeNotifier {
     });
     return response;
   }
+
   Future<Map<String, dynamic>> updateTransaction(
       String transactionId,
       String createdDate,
@@ -74,8 +75,8 @@ class TransactionService extends ChangeNotifier {
       String payBy,
       TransactionCategory category) async {
     // print type of all
-    final response =
-        await NetworkService.instance.put("${BackendEndpoints.transaction}/$transactionId", body: {
+    final response = await NetworkService.instance
+        .put("${BackendEndpoints.transaction}/$transactionId", body: {
       'createdDate': createdDate,
       'description': description,
       // 'type': type.value, //
@@ -133,8 +134,8 @@ class TransactionService extends ChangeNotifier {
   }
 
   Future<Map<String, dynamic>> getTransaction(transactionId) async {
-    final response = await NetworkService.instance.get(
-        "${BackendEndpoints.transaction}/$transactionId");
+    final response = await NetworkService.instance
+        .get("${BackendEndpoints.transaction}/$transactionId");
     // final responseData = response['response'];
     if (response['response'] != null && response['statusCode'] == 200) {
       final responseData = response['response'];
