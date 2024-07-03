@@ -130,7 +130,7 @@ class _BudgetDetailsState extends State<BudgetDetails> {
           showBackButton: true,
           actions: renderHeadingActions(context, isMember, widget.budgetId),
         ),
-        body: isLoading
+        body: _user == null
             ? const Center(child: CircularProgressIndicator())
             : Column(
                 children: [
