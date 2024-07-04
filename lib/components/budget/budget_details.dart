@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/components/common/chart/budget_pie_chart.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
+import 'package:tymesavingfrontend/components/common_group/group_heading_actions.dart';
 import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/budget_model.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
@@ -13,41 +15,6 @@ import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
 import 'package:tymesavingfrontend/services/user_service.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
-
-List<Widget> renderHeadingActions(
-    BuildContext context, bool isMember, String budgetId) {
-  List<Widget> actions = [
-    IconButton(
-      icon: const Icon(Icons.people_rounded),
-      onPressed: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return MemberListPage(isBudgetGroup: true, groupId: budgetId);
-        }));
-      },
-    ),
-    IconButton(
-      icon: const Icon(Icons.wallet_sharp),
-      onPressed: () {
-        // Navigate to the edit page
-      },
-    ),
-  ];
-  // if host
-  if (!isMember) {
-    actions.add(
-      IconButton(
-        icon: const Icon(Icons.edit),
-        onPressed: () {
-          // Navigate to the edit page
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return BudgetUpdatePage(budgetId: budgetId);
-          }));
-        },
-      ),
-    );
-  }
-  return actions;
-}
 
 class BudgetDetails extends StatefulWidget {
   const BudgetDetails({super.key, required this.budgetId});
@@ -168,11 +135,14 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-        appBar: Heading(
-          title: 'Budget',
-          showBackButton: true,
-          actions: renderHeadingActions(context, isMember, widget.budgetId),
-        ),
+        appBar: Heading(title: 'Budget', showBackButton: true, actions: [
+          IconButton(
+            icon: const Icon(FontAwesomeIcons.ellipsis),
+            onPressed: () {
+              showGroupActionBottonSheet(context, isMember, true, widget.budgetId);
+            },
+          )
+        ]),
         body: isLoading
             ? const Center(child: CircularProgressIndicator())
             : Column(
@@ -234,7 +204,8 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                               onTap: () {
                                 // Action to view the rest of the description. This could open a dialog, a new page, or expand the text in place.
                                 setState(() {
-                                  _isDisplayRestDescription = !_isDisplayRestDescription!;
+                                  _isDisplayRestDescription =
+                                      !_isDisplayRestDescription!;
                                 });
                               },
                               child: Text(
@@ -242,7 +213,9 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                                 style: Theme.of(context).textTheme.bodyMedium,
                                 textAlign: TextAlign.center,
                                 maxLines: _isDisplayRestDescription ? null : 1,
-                                overflow: _isDisplayRestDescription ? TextOverflow.visible : TextOverflow.fade,
+                                overflow: _isDisplayRestDescription
+                                    ? TextOverflow.visible
+                                    : TextOverflow.fade,
                               ),
                             ),
                             const SizedBox(

@@ -10,13 +10,8 @@ class User {
   final String phone;
 
   // optional
-  final String? creationDate;
+  final String creationDate;
   final String? pin;
-
-  // display inside group only
-  final double? contribution;
-  final double? totalAmount;
-  final int? transactionCount;
 
   // final List<Invitation>? invitations;
   // final List<String>? sharedBudgetHosts;
@@ -37,17 +32,9 @@ class User {
         fullname = user['fullname'],
         phone = user['phone'],
         // Optional fields
-        creationDate =
-            (user['creationDate'] != null) ? user['creationDate'] : "",
-        pin = (user['pin'] != null) ? user['pin'] : "",
-        contribution = (user['contribution'] != null)
-            ? user['contribution'].toDouble()
-            : -1.0,
-        totalAmount = (user['totalAmount'] != null)
-            ? user['totalAmount'].toDouble()
-            : 0.0,
-        transactionCount =
-            (user['transactionCount'] != null) ? user['transactionCount'] : 0 {
+        creationDate = user['creationDate'],
+        pin = (user['pin'] != null) ? user['pin'] : ""
+            {
     // print(
     //     'User created with id: $id, role: $role, username: $username, email: $email, fullname: $fullname, phone: $phone, creationDate: $creationDate, pin: $pin, contribution: $contribution');
   }

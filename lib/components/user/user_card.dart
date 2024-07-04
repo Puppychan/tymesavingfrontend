@@ -21,8 +21,6 @@ class UserCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: Implement user's contribution inside shared budget  and saving group
-    final bool isHaveContribution = user.contribution != -1.0;
     final currentUser = Provider.of<AuthService>(context).user;
 
     void onEdit() {
@@ -121,56 +119,40 @@ class UserCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Expanded(
-                      flex: 6,
-                      child: Text.rich(
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        TextSpan(
-                          children: isHaveContribution
-                              ? <TextSpan>[
-                                  TextSpan(
-                                    text: 'Contribute ',
-                                    style:
-                                        Theme.of(context).textTheme.bodyMedium!,
-                                  ),
-                                  TextSpan(
-                                    // text: '\$${user.contribution.toStringAsFixed(2)}',
-                                    text: "User Contribution",
-                                    style: AppTextStyles.paragraphBold(context),
-                                  ),
-                                ]
-                              : <TextSpan>[
-                                  TextSpan(
-                                    // text: '\$${user.contribution.toStringAsFixed(2)}',
-                                    text: user.fullname,
-                                    style: AppTextStyles.paragraphBold(context),
-                                  )
-                                ],
-                        ),
-                      )),
+                  // Expanded(
+                  //     flex: 6,
+                  //     child: Text.rich(
+                  //       maxLines: 2,
+                  //       overflow: TextOverflow.ellipsis,
+                  //       TextSpan(
+                  //         children: isHaveContribution
+                  //             ? <TextSpan>[
+                  //                 TextSpan(
+                  //                   text: 'Contribute ',
+                  //                   style:
+                  //                       Theme.of(context).textTheme.bodyMedium!,
+                  //                 ),
+                  //                 TextSpan(
+                  //                   // text: '\$${user.contribution.toStringAsFixed(2)}',
+                  //                   text: "User Contribution",
+                  //                   style: AppTextStyles.paragraphBold(context),
+                  //                 ),
+                  //               ]
+                  //             : <TextSpan>[
+                  //                 TextSpan(
+                  //                   // text: '\$${user.contribution.toStringAsFixed(2)}',
+                  //                   text: user.fullname,
+                  //                   style: AppTextStyles.paragraphBold(context),
+                  //                 )
+                  //               ],
+                  //       ),
+                  //     )),
                   const SizedBox(width: 3),
                   Text(
                     "Joined $formattedDate",
                     style: Theme.of(context).textTheme.bodySmall!,
                   ),
                 ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: isHaveContribution
-                    ? LinearProgressIndicator(
-                        // value: progress.clamp(0.0, 1.0), // Ensuring the value is between 0 and 1
-                        value: 0.4, // Ensuring the value is between 0 and 1
-                        backgroundColor: colorScheme.quaternary,
-                        valueColor:
-                            AlwaysStoppedAnimation<Color>(colorScheme.primary),
-                        minHeight: 8,
-                      )
-                    : Container(),
               ),
             ),
           ],

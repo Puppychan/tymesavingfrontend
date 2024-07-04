@@ -46,6 +46,7 @@ class BackendEndpoints {
 
   // invitation specific endpoints
   static String get invitationsGetByUserId => "byUser";
+  static String get invitationsGetAll => "admin";
   static String get invitationsAccept => "acceptInvitation";
   static String get invitationsReject => "cancelInvitation";
 }

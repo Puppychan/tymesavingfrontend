@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
 import 'package:tymesavingfrontend/models/member_model.dart';
+import 'package:tymesavingfrontend/models/summary_user_model.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/screens/user_list/user_detail_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
@@ -24,7 +25,7 @@ class MemberCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final User user = member.user;
+    final SummaryUser user = member.user;
     // TODO: Implement member's contribution inside shared budget  and saving group
     final bool isHaveContribution = user.contribution != -1.0;
     final currentUser = Provider.of<AuthService>(context).user;
@@ -50,7 +51,7 @@ class MemberCard extends StatelessWidget {
                     final userService =
                         Provider.of<UserService>(context, listen: false);
                     await handleMainPageApi(context, () async {
-                      return await userService.removeGroupMember(isBudgetGroup, groupId, user.id);
+                      return await userService.removeGroupMember(isBudgetGroup, groupId, user.id ?? "");
                       // return result;
                     }, () async {
                       Navigator.of(context).pop();
@@ -66,7 +67,7 @@ class MemberCard extends StatelessWidget {
     }
 
     // double progress = member.contribution / maxContribution; // Calculate the progress as a fraction
-    String formattedDate = timeago.format(DateTime.parse(user.creationDate ?? ""));
+    String formattedDate = timeago.format(DateTime.parse(member.joinedDate));
     final colorScheme = Theme.of(context).colorScheme;
     return Card(
       color: colorScheme.tertiary,
@@ -76,9 +77,10 @@ class MemberCard extends StatelessWidget {
         splashColor: colorScheme.quaternary,
         onTap: () {
           // debugPrint('Challenge tapped.');
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return UserDetail(user: user);
-          }));
+            // TODO: Implement user detail page
+          // Navigator.push(context, MaterialPageRoute(builder: (context) {
+          //   return UserDetail(user: user);
+          // }));
         },
         borderRadius: BorderRadius.circular(16),
         child: Column(

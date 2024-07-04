@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/enum/invitation_type_enum.dart';
 import 'package:tymesavingfrontend/components/common/bottom_sheet.dart';
@@ -7,28 +8,33 @@ import 'package:tymesavingfrontend/components/common/text_align.dart';
 import 'package:tymesavingfrontend/components/invitation/widget_detailed_summary_group.dart';
 import 'package:tymesavingfrontend/models/invitation_model.dart';
 import 'package:tymesavingfrontend/models/summary_group_model.dart';
+import 'package:tymesavingfrontend/models/summary_user_model.dart';
+import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/budget_service.dart';
 import 'package:tymesavingfrontend/services/invitation_service.dart';
+import 'package:tymesavingfrontend/services/user_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
-class AuthUserInvitationCard extends StatefulWidget {
+class GroupInvitationCard extends StatefulWidget {
   final Invitation invitation;
 
-  const AuthUserInvitationCard({super.key, required this.invitation});
+  const GroupInvitationCard({super.key, required this.invitation});
 
   @override
-  State<AuthUserInvitationCard> createState() => _AuthUserInvitationCardState();
+  State<GroupInvitationCard> createState() => _GroupInvitationCardState();
 }
 
-class _AuthUserInvitationCardState extends State<AuthUserInvitationCard> {
+class _GroupInvitationCardState extends State<GroupInvitationCard> {
   bool _isDataFetched = false;
   SummaryGroup? groupSummary;
+  SummaryUser? summaryUser;
   Timer? _debounce;
 
   void _fetchData() async {
     if (!_isDataFetched && mounted) {
+      // Fetch group details
       await handleMainPageApi(context, () async {
         if (widget.invitation.type == InvitationType.budget) {
           // Fetch budget details
@@ -64,19 +70,15 @@ class _AuthUserInvitationCardState extends State<AuthUserInvitationCard> {
     }
   }
 
-  Future<void> acceptDeclineInvitation(bool isAccept) async {
-    final userId = Provider.of<AuthService>(context, listen: false).user?.id;
+  Future<SummaryUser?> _fetchUserData(String userId) async {
+    SummaryUser? user;
     await handleMainPageApi(context, () async {
-      final invitationService =
-          Provider.of<InvitationService>(context, listen: false);
-      if (isAccept) {
-        return await invitationService.acceptInvitation(
-            userId ?? "", widget.invitation.invitationId);
-      } else {
-        return await invitationService.declineInvitation(
-            userId ?? "", widget.invitation.invitationId);
-      }
-    }, () async {});
+      return await Provider.of<UserService>(context, listen: false)
+          .getOtherUserInfo(userId);
+    }, () async {
+      user = Provider.of<UserService>(context, listen: false).summaryUser;
+    });
+    return user;
   }
 
   void _onVisibilityChanged(VisibilityInfo visibilityInfo) {
@@ -145,47 +147,57 @@ class _AuthUserInvitationCardState extends State<AuthUserInvitationCard> {
                               )),
                         ],
                       ),
-                      const SizedBox(height: 8.0),
-                      CustomAlignText(
-                        text:
-                            "Invite from ${groupSummary?.name ?? "Loading..."}",
-                        style: textTheme.bodyLarge!.copyWith(
-                          color: colorScheme.secondary,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        maxLines: 2,
+                      const SizedBox(height: 16.0),
+                      FutureBuilder<SummaryUser?>(
+                        future: _fetchUserData(widget.invitation.userId ?? ""),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return const Text('Error loading user data');
+                          } else if (!snapshot.hasData) {
+                            return const Text('User not found');
+                          } else {
+                            final user = snapshot.data!;
+                            return RichText(
+                              textAlign: TextAlign.start,
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                      text: "Sent to: ",
+                                      style: textTheme.bodyLarge!.copyWith(
+                                        fontStyle: FontStyle.italic,
+                                      )),
+                                  const WidgetSpan(
+                                    child: Icon(
+                                        FontAwesomeIcons.personDotsFromLine,
+                                        size: 18),
+                                  ),
+                                  TextSpan(
+                                      text: "  ${user.fullname}",
+                                      style: textTheme.bodyLarge),
+                                  TextSpan(
+                                      text: " - ${user.username}",
+                                      style: textTheme.bodyLarge!.copyWith(
+                                        color: colorScheme.secondary,
+                                        fontStyle: FontStyle.italic,
+                                        fontWeight: FontWeight.w400,
+                                      )),
+                                ],
+                              ),
+                            );
+                          }
+                        },
                       ),
-                      const SizedBox(height: 8.0),
+                      const SizedBox(height: 16.0),
                       CustomAlignText(
-                        text: widget.invitation.description,
+                        text: "\" ${widget.invitation.description} \"",
                         style: textTheme.bodyMedium!.copyWith(
                           color: colorScheme.secondary,
                           fontWeight: FontWeight.w400,
                         ),
                         maxLines: 2,
-                      ),
-                      Row(
-                        children: [
-                          TextButton(
-                            onPressed: () async {
-                              await acceptDeclineInvitation(true);
-                            },
-                            child: Text('Accept',
-                                style: textTheme.bodyMedium!.copyWith(
-                                    color: colorScheme.primary,
-                                    fontWeight: FontWeight.w600)),
-                          ),
-                          TextButton(
-                              onPressed: () async {
-                                await acceptDeclineInvitation(false);
-                              },
-                              child: Text(
-                                'Decline',
-                                style: textTheme.bodyMedium!.copyWith(
-                                    color: colorScheme.secondary,
-                                    fontWeight: FontWeight.w500),
-                              )),
-                        ],
                       ),
                     ],
                   )),

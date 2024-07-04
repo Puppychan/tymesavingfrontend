@@ -10,6 +10,8 @@ enum InvitationStatus {
   @override
   String toString() => value;
 
+  String toStringLower() => value.toLowerCase();
+
   static InvitationStatus fromString(String value) {
     // get the invitation type from the value
     for (var type in InvitationStatus.values) {

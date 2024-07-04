@@ -4,27 +4,27 @@ import 'package:tymesavingfrontend/models/summary_group_model.dart';
 
 class Invitation {
   final String invitationId;
-  final String userId;
   final String code; // 6 character code for the user to enter and join
   final String description;
   final InvitationType
       type; // is this invitation for SharedBudget or GroupSaving?
   final String groupId; // object ID for the group that this invitation is in
-  final InvitationStatus status; // status of the invitation
-
+  
   // optional
+  final String? userId;
+  final InvitationStatus? status; // status of the invitation
   SummaryGroup? summaryGroup; // summary of the budget group
   
 
   Invitation.fromMap(Map<String, dynamic> invitation)
       : invitationId = invitation['invitationId'],
-        userId = invitation['userId'],
         code = invitation['code'],
         description = invitation['description'],
         type = InvitationType.fromString(invitation['type']),
         groupId = invitation['groupId'],
-        status = InvitationStatus.fromString(invitation['status']),
         // optional
+        userId = invitation['userId'] ?? '',
+        status = InvitationStatus.fromString(invitation['status'] ?? ''),
         summaryGroup = invitation['summaryGroup'] != null
             ? SummaryGroup.fromMap(invitation['summaryGroup'])
             : null;

@@ -67,12 +67,8 @@ class BudgetService extends ChangeNotifier {
   Future<dynamic> fetchBudgetSummary(id) async {
     final response = await NetworkService.instance
         .get("${BackendEndpoints.budget}/${BackendEndpoints.budgetGetSummaryById}/$id");
-
-    print("Response from fetchBudgetSummary: $response");
-
     if (response['response'] != null && response['statusCode'] == 200) {
       _summaryGroup = SummaryGroup.fromMap(response['response']);
-      print("Summary Budget after response: $_summaryGroup");
       notifyListeners();
     }
     return response;

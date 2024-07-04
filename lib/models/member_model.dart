@@ -1,8 +1,8 @@
-import 'package:tymesavingfrontend/models/user_model.dart';
+import 'package:tymesavingfrontend/models/summary_user_model.dart';
 
 class Member {
-  final User user;
-  final DateTime joinedDate;
+  final SummaryUser user;
+  final String joinedDate;
   final String role; // Member role within a group or organization
 
   Member({
@@ -13,8 +13,8 @@ class Member {
 
   factory Member.fromMap(Map<String, dynamic> json) {
     return Member(
-      user: User.fromMap(json['user']),
-      joinedDate: DateTime.parse(json['joinedDate']),
+      user: SummaryUser.fromMap(json['user']),
+      joinedDate: json['joinedDate'],
       role: json['role'],
     );
   }
@@ -22,7 +22,7 @@ class Member {
   Map<String, dynamic> toMap() {
     return {
       'user': user.toMap(),
-      'joinedDate': joinedDate.toIso8601String(),
+      'joinedDate': joinedDate,
       'role': role,
     };
   }
