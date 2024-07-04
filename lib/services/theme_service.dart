@@ -34,4 +34,15 @@ class ThemeService extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  void _evaluateThemeBasedOnTime() {
+    final hour = DateTime.now().hour;
+    if (hour >= 6 && hour < 18) {
+      _themeMode = ThemeMode.light;
+    } else {
+      _themeMode = ThemeMode.dark;
+    }
+    LocalStorageService.setString(LOCAL_THEME, _themeMode.toString());
+    debugPrint("Theme Mode set based on time: $_themeMode");
+  }
 }

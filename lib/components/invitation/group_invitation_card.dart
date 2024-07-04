@@ -2,17 +2,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:tymesavingfrontend/common/enum/invitation_status_enum.dart';
 import 'package:tymesavingfrontend/common/enum/invitation_type_enum.dart';
-import 'package:tymesavingfrontend/components/common/bottom_sheet.dart';
+import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
 import 'package:tymesavingfrontend/components/common/text_align.dart';
-import 'package:tymesavingfrontend/components/invitation/widget_detailed_summary_group.dart';
 import 'package:tymesavingfrontend/models/invitation_model.dart';
 import 'package:tymesavingfrontend/models/summary_group_model.dart';
 import 'package:tymesavingfrontend/models/summary_user_model.dart';
-import 'package:tymesavingfrontend/models/user_model.dart';
-import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/budget_service.dart';
-import 'package:tymesavingfrontend/services/invitation_service.dart';
 import 'package:tymesavingfrontend/services/user_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -106,11 +103,11 @@ class _GroupInvitationCardState extends State<GroupInvitationCard> {
         child: InkWell(
             onTap: () {
               // Handle tap action
-              showStyledBottomSheet(
-                context: context,
-                title: widget.invitation.type.toStringFormatted(),
-                contentWidget: detailedSummaryGroup(context, groupSummary),
-              );
+              // showStyledBottomSheet(
+              //   context: context,
+              //   title: widget.invitation.type.toStringFormatted(),
+              //   contentWidget: detailedSummaryGroup(context, groupSummary),
+              // );
             },
             child: Card(
               color: colorScheme.tertiary,
@@ -135,7 +132,12 @@ class _GroupInvitationCardState extends State<GroupInvitationCard> {
                                   : Icons.assessment),
                               const SizedBox(width: 5.0),
                               Text(widget.invitation.type.toStringFormatted(),
-                                  style: textTheme.bodyLarge)
+                                  style: textTheme.bodyLarge),
+                              const SizedBox(width: 5.0),
+                              Icon(
+                                Icons.circle_rounded,
+                                size: 18,
+                                color: widget.invitation.status == InvitationStatus.pending ? colorScheme.inversePrimary : colorScheme.error,)
                             ],
                           ),
                           Text(widget.invitation.code,
@@ -153,7 +155,7 @@ class _GroupInvitationCardState extends State<GroupInvitationCard> {
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
-                            return const CircularProgressIndicator();
+                            return Text("Loading user data...", style: Theme.of(context).textTheme.bodyMedium);
                           } else if (snapshot.hasError) {
                             return const Text('Error loading user data');
                           } else if (!snapshot.hasData) {
@@ -196,6 +198,7 @@ class _GroupInvitationCardState extends State<GroupInvitationCard> {
                         style: textTheme.bodyMedium!.copyWith(
                           color: colorScheme.secondary,
                           fontWeight: FontWeight.w400,
+                          fontStyle: FontStyle.italic,
                         ),
                         maxLines: 2,
                       ),

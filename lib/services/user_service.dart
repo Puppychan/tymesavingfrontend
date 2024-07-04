@@ -186,7 +186,6 @@ class UserService extends ChangeNotifier {
     }
 
     final response = await NetworkService.instance.get(endpoint);
-      print("Current fetch USEEr: $response, $id");
     if (response['response'] != null && response['statusCode'] == 200) {
       _summaryUser = SummaryUser.fromMap(response['response']);
       notifyListeners();

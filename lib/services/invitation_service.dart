@@ -26,7 +26,7 @@ class InvitationService extends ChangeNotifier {
         sortOption == 'sortGroupType' ||
         sortOption == 'sortStatus') {
       if (sortValue == 'ascending' || sortValue == 'descending') {
-        _sortOptions = {sortOption: sortValue};
+        _sortOptions = {..._sortOptions, sortOption: sortValue};
         notifyListeners();
       }
     }
@@ -38,7 +38,7 @@ class InvitationService extends ChangeNotifier {
               'All',
               InvitationType.budget.toString(),
               InvitationType.savings.toString()
-            ].contains(filterValue)) &&
+            ].contains(filterValue)) ||
         (filterOption == 'getStatus' &&
             [
               'All',
@@ -46,14 +46,15 @@ class InvitationService extends ChangeNotifier {
               InvitationStatus.pending.toString(),
               InvitationStatus.cancelled.toString()
             ].contains(filterValue))) {
-      _filterOptions = {filterOption: filterValue};
+      _filterOptions = {..._filterOptions, filterOption: filterValue};
       notifyListeners();
     }
   }
 
   String _convertOptionsToString(String type) {
     String returnParams = "?sortGroupId=${_sortOptions['sortGroupId']}"
-        "&sortGroupType=${_sortOptions['sortGroupType']}";
+        "&sortGroupType=${_sortOptions['sortGroupType']}"
+        "&sortStatus=${_sortOptions['sortStatus']}";
 
     // eliminate if filter option is 'All'
     if (_filterOptions['getGroupType'] != 'All') {
@@ -63,10 +64,6 @@ class InvitationService extends ChangeNotifier {
       returnParams += "&getStatus=${_filterOptions['getStatus']}";
     }
 
-    if (type == 'byUser') {
-      return returnParams + 
-      "&sortStatus=${_sortOptions['sortStatus']}";
-    }
     return returnParams;
   }
 
@@ -78,6 +75,8 @@ class InvitationService extends ChangeNotifier {
     // Fetch invitations from the backend
     final response = await NetworkService.instance.get(
         "${BackendEndpoints.invitation}/${BackendEndpoints.invitationsGetAll}${_convertOptionsToString("byGroup")}${_assignGroupIdEndpoint(groupId)}");
+      // print("Filter options: ${_filterOptions.toString()}");
+      // print("Response of fetchInvitationsByGroupId: ${BackendEndpoints.invitation}/${BackendEndpoints.invitationsGetAll}${_convertOptionsToString("byGroup")}${_assignGroupIdEndpoint(groupId)}");
 
     if (response['response'] != null && response['statusCode'] == 200) {
       final responseData = response['response'];
