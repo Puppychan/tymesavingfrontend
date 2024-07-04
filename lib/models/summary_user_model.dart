@@ -1,7 +1,5 @@
-import 'package:tymesavingfrontend/common/enum/user_role_enum.dart';
-
 class SummaryUser {
-  final String? id;
+  final String id;
   final String username;
   final String email;
   final String fullname;
@@ -14,7 +12,7 @@ class SummaryUser {
 
   SummaryUser.fromMap(Map<String, dynamic> user)
       // we are using the map to get the data from the API
-      : id = user['id'] ?? "",
+      : id = user['_id'],
         username = user['username'],
         email = user['email'],
         fullname = user['fullname'],

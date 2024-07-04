@@ -60,7 +60,7 @@ void showGroupActionBottonSheet(
   showStyledBottomSheet(
       context: context,
       title: 'Group Actions',
-      initialChildSize: 0.3,
+      // initialChildSize: 0.3,
       contentWidget: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children:

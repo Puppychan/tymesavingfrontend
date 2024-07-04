@@ -4,7 +4,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/enum/invitation_status_enum.dart';
 import 'package:tymesavingfrontend/common/enum/invitation_type_enum.dart';
-import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
 import 'package:tymesavingfrontend/components/common/text_align.dart';
 import 'package:tymesavingfrontend/models/invitation_model.dart';
 import 'package:tymesavingfrontend/models/summary_group_model.dart';

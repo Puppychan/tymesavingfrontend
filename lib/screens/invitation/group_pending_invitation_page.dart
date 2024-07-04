@@ -5,6 +5,7 @@ import 'package:tymesavingfrontend/common/enum/invitation_status_enum.dart';
 import 'package:tymesavingfrontend/common/styles/app_padding.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/invitation/group_invitation_card.dart';
+import 'package:tymesavingfrontend/components/invitation_add_modal.dart';
 import 'package:tymesavingfrontend/services/invitation_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
@@ -78,6 +79,14 @@ class _GroupPendingInvitationPageState extends State<GroupPendingInvitationPage>
             appBar: Heading(
                 title: "Invitations",
                 showBackButton: true,
+                actions: [
+                  IconButton(
+                    icon: const Icon(FontAwesomeIcons.userPlus),
+                    onPressed: () {
+                      showUserInputModal(context);
+                    },
+                  )
+                ],
                 bottom: TabBar(
                   controller: _tabController,
                   tabs: const [

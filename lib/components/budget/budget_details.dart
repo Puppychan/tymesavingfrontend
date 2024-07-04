@@ -6,6 +6,7 @@ import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/common_group/group_heading_actions.dart';
 import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/budget_model.dart';
+import 'package:tymesavingfrontend/models/summary_user_model.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/screens/budget/budget_update_page.dart';
 import 'package:tymesavingfrontend/screens/member_list_page.dart';
@@ -31,27 +32,26 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
   double? percentageLeft;
   DateTime? endDate;
   int? daysLeft;
-  User? _user;
+  SummaryUser? _user;
   bool isMember = false;
   bool isLoading = true;
   String _displayPercentageTaken = '';
   bool _isDisplayRestDescription = false;
 
-  // TODO: uncomment when backend is fixed
-  // Future<void> _renderUser(userId) async {
-  //   Future.microtask(() async {
-  //     if (!mounted) return;
-  //     final userService = Provider.of<UserService>(context, listen: false);
-  //     await handleMainPageApi(context, () async {
-  //       return await userService.getUserDataById(userId);
-  //     }, () async {
-  //       if (!mounted) return;
-  //       setState(() {
-  //         _user = userService.currentFetchUser;
-  //       });
-  //     });
-  //   });
-  // }
+  Future<void> _renderUser(String? userId) async {
+    Future.microtask(() async {
+      if (!mounted) return;
+      final userService = Provider.of<UserService>(context, listen: false);
+      await handleMainPageApi(context, () async {
+        return await userService.getOtherUserInfo(userId);
+      }, () async {
+        if (!mounted) return;
+        setState(() {
+          _user = userService.summaryUser;
+        });
+      });
+    });
+  }
 
   Future<void> _loadData() async {
     Future.microtask(() async {
@@ -67,8 +67,6 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
             Provider.of<FormStateProvider>(context, listen: false);
         formStateService.setUpdateBudgetFormFields(tempBudget);
         // render host user
-        // TODO: uncomment when backend is fixed
-        // await _renderUser(tempBudget!.hostedBy);
 
         // set state for budget details
         setState(() {
@@ -95,6 +93,8 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
           }
         });
       });
+
+      await _renderUser(_budget?.hostedBy);
     });
   }
 

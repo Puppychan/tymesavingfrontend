@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:tymesavingfrontend/common/styles/app_padding.dart';
 import 'package:tymesavingfrontend/components/transaction/transaction_item.dart';
 import 'dart:math';
 import 'package:tymesavingfrontend/models/transaction_model.dart';
@@ -42,6 +43,7 @@ class TransactionList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      padding: AppPaddingStyles.pagePadding,
       itemCount: transactions.length,
       itemBuilder: (context, index) {
         final transaction = transactions[index];

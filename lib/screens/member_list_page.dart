@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/styles/app_padding.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/user/member_card.dart';
+import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/user_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
@@ -47,6 +48,7 @@ class _MemberListPageState extends State<MemberListPage> {
   Widget build(BuildContext context) {
     return Consumer<UserService>(builder: (context, memberService, child) {
       final members = memberService.members;
+      final isCurrentUserHost = Provider.of<AuthService>(context).user?.id == members.firstWhere((element) => element.role == 'Host').user.id;
       return Scaffold(
           appBar: const Heading(
             title: "Members",
@@ -62,6 +64,7 @@ class _MemberListPageState extends State<MemberListPage> {
                     itemBuilder: (context, index) {
                       return MemberCard(
                         member: members[index],
+                        isCurrentUserHost: isCurrentUserHost,
                         groupId: widget.groupId,
                         isBudgetGroup: widget.isBudgetGroup,
                       );

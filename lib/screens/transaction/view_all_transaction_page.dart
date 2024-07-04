@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/models/transaction_model.dart';
 import 'package:tymesavingfrontend/components/transaction/transaction_list.dart';
 
@@ -64,8 +65,8 @@ class _ViewAllTransactionsPageState extends State<ViewAllTransactionsPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('All Transactions'),
+      appBar: Heading(
+        title: 'All Transactions',
         bottom: TabBar(
           controller: _tabController,
           tabs: const [

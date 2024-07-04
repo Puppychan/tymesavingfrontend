@@ -13,6 +13,7 @@ import 'package:tymesavingfrontend/utils/handling_error.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class MemberCard extends StatelessWidget {
+  final bool isCurrentUserHost;
   final bool isBudgetGroup;
   final String groupId;
   final Member member;
@@ -20,7 +21,10 @@ class MemberCard extends StatelessWidget {
 
   const MemberCard({
     super.key,
-    required this.member, required this.groupId, required this.isBudgetGroup,
+    required this.member,
+    required this.groupId,
+    required this.isBudgetGroup,
+    required this.isCurrentUserHost,
   });
 
   @override
@@ -29,7 +33,7 @@ class MemberCard extends StatelessWidget {
     // TODO: Implement member's contribution inside shared budget  and saving group
     final bool isHaveContribution = user.contribution != -1.0;
     final currentUser = Provider.of<AuthService>(context).user;
-    final bool isHost = member.role == 'host';
+    final bool isHost = member.role == 'Host';
 
     Future showDeleteConfirmationDialog() async {
       showDialog(
@@ -51,7 +55,8 @@ class MemberCard extends StatelessWidget {
                     final userService =
                         Provider.of<UserService>(context, listen: false);
                     await handleMainPageApi(context, () async {
-                      return await userService.removeGroupMember(isBudgetGroup, groupId, user.id ?? "");
+                      return await userService.removeGroupMember(
+                          isBudgetGroup, groupId, user.id ?? "");
                       // return result;
                     }, () async {
                       Navigator.of(context).pop();
@@ -70,115 +75,114 @@ class MemberCard extends StatelessWidget {
     String formattedDate = timeago.format(DateTime.parse(member.joinedDate));
     final colorScheme = Theme.of(context).colorScheme;
     return Card(
-      color: colorScheme.tertiary,
-      shadowColor: colorScheme.secondary.withOpacity(0.5),
-      elevation: 5,
-      child: InkWell(
-        splashColor: colorScheme.quaternary,
-        onTap: () {
-          // debugPrint('Challenge tapped.');
+        color: colorScheme.tertiary,
+        shadowColor: colorScheme.secondary.withOpacity(0.5),
+        elevation: 5,
+        child: InkWell(
+          splashColor: colorScheme.quaternary,
+          onTap: () {
+            // debugPrint('Challenge tapped.');
             // TODO: Implement user detail page
-          // Navigator.push(context, MaterialPageRoute(builder: (context) {
-          //   return UserDetail(user: user);
-          // }));
-        },
-        borderRadius: BorderRadius.circular(16),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Row(
-                    children: [
-                      // CustomCircleAvatar(imagePath: member.avatarPath),
-                      Icon(FontAwesomeIcons.crown,
-                          size: 24.0,
-                          color: Theme.of(context).colorScheme.inversePrimary),
-                      const SizedBox(width: 8),
-                      Text(
-                        "${user.username} ${currentUser?.username == user.username ? '(You)' : ''}",
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+            // Navigator.push(context, MaterialPageRoute(builder: (context) {
+            //   return UserDetail(user: user);
+            // }));
+          },
+          borderRadius: BorderRadius.circular(16),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        // CustomCircleAvatar(imagePath: member.avatarPath),
+                        Icon(isHost? FontAwesomeIcons.crown : FontAwesomeIcons.person,
+                            size: 24.0,
+                            color:
+                                Theme.of(context).colorScheme.inversePrimary),
+                        const SizedBox(width: 8),
+                        Text(
+                          "${user.username} ${currentUser?.username == user.username ? '(You)' : ''}",
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  if (isHost)
-                    IconButton(
-                      icon: Icon(Icons.group_remove_rounded,
-                          color: colorScheme.secondary),
-                      onPressed: () async {
-                        await showDeleteConfirmationDialog();
-                      },
+                      ],
                     ),
-                ],
-              ),
+                    (isCurrentUserHost && !isHost)
+                        ? IconButton(
+                            icon: Icon(Icons.group_remove_rounded,
+                                color: colorScheme.secondary),
+                            onPressed: () async {
+                              await showDeleteConfirmationDialog();
+                            },
+                          )
+                        : Container(),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Expanded(
+                        flex: 6,
+                        child: Text.rich(
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          TextSpan(
+                            children: isHaveContribution
+                                ? <TextSpan>[
+                                    TextSpan(
+                                      text: 'Contribute ',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!,
+                                    ),
+                                    TextSpan(
+                                      // text: '\$${member.contribution.toStringAsFixed(2)}',
+                                      text: "Member Contribution",
+                                      style:
+                                          AppTextStyles.paragraphBold(context),
+                                    ),
+                                  ]
+                                : <TextSpan>[
+                                    TextSpan(
+                                      // text: '\$${member.contribution.toStringAsFixed(2)}',
+                                      text: user.fullname,
+                                      style:
+                                          AppTextStyles.paragraphBold(context),
+                                    )
+                                  ],
+                          ),
+                        )),
+                    const SizedBox(width: 3),
+                    Text(
+                      "Joined $formattedDate",
+                      style: Theme.of(context).textTheme.bodySmall!,
+                    ),
+                  ],
+                ),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: isHaveContribution
+                      ? LinearProgressIndicator(
+                          // value: progress.clamp(0.0, 1.0), // Ensuring the value is between 0 and 1
+                          value: 0.4, // Ensuring the value is between 0 and 1
+                          backgroundColor: colorScheme.quaternary,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                              colorScheme.primary),
+                          minHeight: 8,
+                        )
+                      : Container(),
+                )
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Expanded(
-                      flex: 6,
-                      child: Text.rich(
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        TextSpan(
-                          children: isHaveContribution
-                              ? <TextSpan>[
-                                  TextSpan(
-                                    text: 'Contribute ',
-                                    style:
-                                        Theme.of(context).textTheme.bodyMedium!,
-                                  ),
-                                  TextSpan(
-                                    // text: '\$${member.contribution.toStringAsFixed(2)}',
-                                    text: "Member Contribution",
-                                    style: AppTextStyles.paragraphBold(context),
-                                  ),
-                                ]
-                              : <TextSpan>[
-                                  TextSpan(
-                                    // text: '\$${member.contribution.toStringAsFixed(2)}',
-                                    text: user.fullname,
-                                    style: AppTextStyles.paragraphBold(context),
-                                  )
-                                ],
-                        ),
-                      )),
-                  const SizedBox(width: 3),
-                  Text(
-                    "Joined $formattedDate",
-                    style: Theme.of(context).textTheme.bodySmall!,
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: isHaveContribution
-                    ? LinearProgressIndicator(
-                        // value: progress.clamp(0.0, 1.0), // Ensuring the value is between 0 and 1
-                        value: 0.4, // Ensuring the value is between 0 and 1
-                        backgroundColor: colorScheme.quaternary,
-                        valueColor:
-                            AlwaysStoppedAnimation<Color>(colorScheme.primary),
-                        minHeight: 8,
-                      )
-                    : Container(),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+          ),
+        ));
   }
 }

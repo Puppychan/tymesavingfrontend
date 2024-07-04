@@ -87,6 +87,7 @@ class UserService extends ChangeNotifier {
     // TODO: implement if isBudgetGroup is false - Saving Group
     final response = await NetworkService.instance.get(
         "${BackendEndpoints.budget}/$groupId/${BackendEndpoints.budgetGetMembers}");
+    print("Response data in fetchGroupMemberList: $response");
     if (response['response'] != null && response['statusCode'] == 200) {
       final responseData = response['response'];
       List<Member> memberList = [];
@@ -175,8 +176,9 @@ class UserService extends ChangeNotifier {
     return response;
   }
 
-  Future<dynamic> getOtherUserInfo(id,
+  Future<dynamic> getOtherUserInfo(String? id,
       {String? sharedBudgetId, String? groupSavingId}) async {
+    if (id == null) return;
     String endpoint =
         "${BackendEndpoints.user}/${BackendEndpoints.otherUserById}/$id";
     if (sharedBudgetId != null) {
@@ -191,6 +193,11 @@ class UserService extends ChangeNotifier {
       notifyListeners();
     }
     return response;
+  }
+
+  Future<dynamic> searchUserByUsername(String username) {
+    return NetworkService.instance.get(
+        "${BackendEndpoints.user}/${BackendEndpoints.userSearchByUsername}/$username");
   }
 
   Future<Map<String, dynamic>> updateUser(
