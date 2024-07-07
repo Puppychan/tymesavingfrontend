@@ -215,9 +215,7 @@ class UserService extends ChangeNotifier {
         'fullname': fullname,
       },
     );
-    if (response['response'] != null &&
-        response['response'] is Map<String, dynamic> &&
-        response['statusCode'] == 200) {
+    if (response['response'] != null && response['statusCode'] == 200) {
       final responseBody = response['response'] as Map<String, dynamic>;
       final updatedUser = User.fromMap(responseBody);
       // update the user in the list

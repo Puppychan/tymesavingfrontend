@@ -6,7 +6,7 @@ class Validator {
     if (value == null || value.isEmpty) {
       return 'Please enter your email address';
     }
-    String pattern = r'^\w+@\w+\.\w+$'; // Improved pattern for simplicity
+    String pattern = r'^[\w\.]+@\w+(\.\w+)+$'; // Improved pattern for simplicity
     if (!RegExp(pattern).hasMatch(value)) {
       return 'Please enter a valid email address';
     }

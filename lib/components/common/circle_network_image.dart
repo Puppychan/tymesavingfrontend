@@ -12,10 +12,21 @@ class CustomCircleAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CircleAvatar(
-      radius: radius,
-      // shadowColor: AppColors.secondary.withOpacity(0.2),
-      backgroundImage: NetworkImage(imagePath),
-    );
+    return Container(
+        decoration: BoxDecoration(
+          // color: Theme.of(context).shadowColor,
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+                blurRadius: 5,
+                color: Theme.of(context).shadowColor,
+                // spreadRadius: 2,
+                offset: const Offset(0, 3)),
+          ],
+        ),
+        child: CircleAvatar(
+          radius: radius,
+          backgroundImage: NetworkImage(imagePath),
+        ));
   }
 }

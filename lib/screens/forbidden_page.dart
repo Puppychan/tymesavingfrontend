@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
 import 'package:tymesavingfrontend/common/enum/button_theme_enum.dart';
-import 'package:tymesavingfrontend/screens/authentication/sign_in_page.dart';
 
-class ErrorPage extends StatelessWidget {
-  final String errorMessage;
-  final int statusCode;
+class ForbiddenPage extends StatelessWidget {
   // final VoidCallback onRetry;
 
-  const ErrorPage(
-      {super.key, required this.errorMessage, required this.statusCode});
+  const ForbiddenPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,14 +19,14 @@ class ErrorPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SvgPicture.asset(
-              'assets/img/error.svg',
+              'assets/img/forbidden.svg',
               height: MediaQuery.of(context).size.width * 0.7,
               width: MediaQuery.of(context).size.width * 0.7,
               fit: BoxFit.cover,
             ), // Add this line
-
+            const SizedBox(height: 16.0),
             Text(
-              'An error occurred ${statusCode.toString()}!',
+              'An error occurred 403!',
               overflow: TextOverflow.visible,
               // style: Theme.of(context).textTheme.headline4,
               style: Theme.of(context).textTheme.headlineLarge!,
@@ -39,9 +34,9 @@ class ErrorPage extends StatelessWidget {
             ),
             const SizedBox(height: 16.0),
             Text(
-              errorMessage,
-              // style: Theme.of(context).textTheme.bodyText1,
+              'You are not allowed to access this page!',
               overflow: TextOverflow.visible,
+              // style: Theme.of(context).textTheme.headline4,
               style: Theme.of(context).textTheme.headlineMedium!,
               textAlign: TextAlign.center,
             ),
@@ -53,25 +48,13 @@ class ErrorPage extends StatelessWidget {
             // const SizedBox(height: 8.0),
             PrimaryButton(
               onPressed: () {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const SignInView(),
-                  ),
-                  (_) => false,
-                );
+                // Pop 2 times to go back to the previous page
+                Navigator.pop(context);
+                Navigator.pop(context);
               },
               theme: AppButtonTheme.yellowBlack,
-              title: 'Go Back To Sign In Page',
+              title: 'Back to Previous Page',
             ),
-            const SizedBox(height: 16.0),
-            TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text('Or Back to Previous Page',
-                    style: AppTextStyles.paragraphLinkBlue(context)
-                        .copyWith(fontSize: 17.0))),
           ],
         ),
       ),

@@ -1,3 +1,4 @@
+import 'package:tymesavingfrontend/common/constant/temp_constant.dart';
 import 'package:tymesavingfrontend/common/enum/user_role_enum.dart';
 
 class User {
@@ -11,6 +12,7 @@ class User {
 
   // optional
   final String creationDate;
+  final String? avatar;
   final String? pin;
 
   // final List<Invitation>? invitations;
@@ -33,6 +35,7 @@ class User {
         phone = user['phone'],
         // Optional fields
         creationDate = user['creationDate'],
+        avatar = (user['avatar'] != null) ? user['avatar'] : TEMP_AVATAR_IMAGE,
         pin = (user['pin'] != null) ? user['pin'] : ""
             {
     // print(
@@ -48,6 +51,7 @@ class User {
       "email": email,
       "fullname": fullname,
       "phone": phone,
+      "avatar": avatar,
       "creationDate": creationDate,
       "pin": pin,
       // "contribution": contribution,
