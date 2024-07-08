@@ -205,7 +205,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                                 // Action to view the rest of the description. This could open a dialog, a new page, or expand the text in place.
                                 setState(() {
                                   _isDisplayRestDescription =
-                                      !_isDisplayRestDescription!;
+                                      !_isDisplayRestDescription;
                                 });
                               },
                               child: Text(
