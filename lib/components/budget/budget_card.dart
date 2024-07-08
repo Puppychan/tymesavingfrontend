@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
 import 'package:tymesavingfrontend/components/budget/budget_details.dart';
 import 'package:tymesavingfrontend/models/budget_model.dart';
-import 'package:tymesavingfrontend/screens/budget/budget_update_page.dart';
-import 'package:tymesavingfrontend/services/budget_service.dart';
-import 'package:tymesavingfrontend/utils/display_success.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
-import 'package:tymesavingfrontend/utils/handling_error.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 // final tempBudget = Budget(
@@ -37,53 +32,6 @@ class _BudgetCardState extends State<BudgetCard> {
     // final budget = tempBudget;
     final currentProgress = widget.budget.concurrentAmount / widget.budget.amount;
 
-    void onEdit() {
-      // Implement the edit functionality
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => BudgetUpdatePage(budgetId: widget.budget.id)),
-      );
-    }
-
-    Future showDeleteConfirmationDialog() async {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Delete Confirmation'),
-            content: const Text('Are you sure you want to delete this budget?'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Future.microtask(() async {
-                    final budgetService =
-                        Provider.of<BudgetService>(context, listen: false);
-                    await handleMainPageApi(context, () async {
-                      return await budgetService.deleteBudget(widget.budget.id);
-                      // return result;
-                    }, () async {
-                      Navigator.of(context).pop();
-                      SuccessDisplay.showSuccessToast(
-                          "Successfully delete the budget", context);
-                    });
-                  });
-                  // onDelete();
-                },
-                child: const Text('Delete'),
-              ),
-            ],
-          );
-        },
-      );
-    }
-
     // double progress = budget.contribution / maxContribution; // Calculate the progress as a fraction
     String formattedDate =
         timeago.format(DateTime.parse(widget.budget.createdDate.toString()));
@@ -91,14 +39,13 @@ class _BudgetCardState extends State<BudgetCard> {
     final textTheme = Theme.of(context).textTheme;
     return Card(
       color: colorScheme.tertiary,
-      shadowColor: colorScheme.secondary.withOpacity(0.5),
+      shadowColor: colorScheme.shadow,
       elevation: 5,
       child: InkWell(
         splashColor: colorScheme.quaternary,
         onTap: () {
           // debugPrint('Challenge tapped.');
           Navigator.push(context, MaterialPageRoute(builder: (context) {
-            // TODO: Implement the budget details page
             return BudgetDetails(budgetId: widget.budget.id);
           }));
         },

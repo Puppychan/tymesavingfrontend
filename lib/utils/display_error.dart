@@ -18,6 +18,17 @@ class ErrorDisplay {
 
   static void navigateToErrorPage(
       Map<String, dynamic> errorResponse, BuildContext context) {
+    // check if already in error page
+    bool alreadyInErrorPage = false;
+    var currentRoute = ModalRoute.of(context);
+    if (currentRoute != null &&
+        currentRoute.settings.name == ErrorPage.routeName) {
+      alreadyInErrorPage = true;
+    }
+    if (alreadyInErrorPage) {
+      return;
+    }
+
     // Display error message
     Navigator.push(
       context,

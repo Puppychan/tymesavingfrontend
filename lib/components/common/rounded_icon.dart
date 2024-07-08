@@ -26,11 +26,10 @@ class RoundedIcon extends StatelessWidget {
           BoxShadow(
             color: Theme.of(context)
                 .colorScheme
-                .shadow
-                .withOpacity(0.2), // Shadow color with opacity
+                .shadow,
             spreadRadius: 2, // Spread radius
             blurRadius: 4, // Blur radius
-            offset: const Offset(0, 2), // changes position of shadow
+            offset: const Offset(0, 2),
           ),
         ],
       ),

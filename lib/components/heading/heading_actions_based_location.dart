@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/enum/page_location_enum.dart';
 
 import 'package:tymesavingfrontend/common/enum/user_role_enum.dart';
-import 'package:tymesavingfrontend/components/common/bottom_sheet.dart';
+import 'package:tymesavingfrontend/components/common/sheet/bottom_sheet.dart';
 import 'package:tymesavingfrontend/components/user/user_sort_filter.dart';
 import 'package:tymesavingfrontend/screens/notifications_page.dart';
 import 'package:tymesavingfrontend/services/theme_service.dart';

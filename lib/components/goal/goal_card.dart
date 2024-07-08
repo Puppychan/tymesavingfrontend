@@ -90,7 +90,7 @@ class _GoalCardState extends State<GoalCard> {
     final textTheme = Theme.of(context).textTheme;
     return Card(
       color: colorScheme.tertiary,
-      shadowColor: colorScheme.secondary.withOpacity(0.5),
+      shadowColor: colorScheme.shadow,
       elevation: 5,
       child: InkWell(
         splashColor: colorScheme.quaternary,

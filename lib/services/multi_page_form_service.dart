@@ -37,7 +37,6 @@ class FormStateProvider with ChangeNotifier {
       return _validateFieldNull('category', _updateTransactionFormFields,
           TransactionCategory.defaultCategory());
     } else {
-      // TODO: temp
       return TransactionCategory.defaultCategory();
     }
   }

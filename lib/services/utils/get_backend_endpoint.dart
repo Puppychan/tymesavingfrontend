@@ -41,6 +41,13 @@ class BackendEndpoints {
   static String get budgetUpdateHost => "host/edit";
   static String get budgetRemoveMember => "host/remove-member";
   static String get budgetGetMembers => "member-list";
+  
+  // goal specific endpoints
+  static String get goalsGetByUserId => "byUser";
+  static String get goalGetSummaryById => "viewGoalFromId";
+  static String get goalUpdateHost => "host/edit";
+  static String get goalRemoveMember => "host/remove-member";
+  static String get goalGetMembers => "member-list";
 
   // goal specific endpoints
   static String get goalByUserId => "byUser";

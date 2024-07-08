@@ -2,13 +2,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/enum/invitation_type_enum.dart';
-import 'package:tymesavingfrontend/components/common/bottom_sheet.dart';
+import 'package:tymesavingfrontend/components/common/sheet/bottom_sheet.dart';
 import 'package:tymesavingfrontend/components/common/text_align.dart';
 import 'package:tymesavingfrontend/components/invitation/widget_detailed_summary_group.dart';
 import 'package:tymesavingfrontend/models/invitation_model.dart';
 import 'package:tymesavingfrontend/models/summary_group_model.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/budget_service.dart';
+import 'package:tymesavingfrontend/services/goal_service.dart';
 import 'package:tymesavingfrontend/services/invitation_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -36,18 +37,8 @@ class _AuthUserInvitationCardState extends State<AuthUserInvitationCard> {
               .fetchBudgetSummary(widget.invitation.groupId);
         } else if (widget.invitation.type == InvitationType.savings) {
           // Fetch goal details
-
-          // TODO: Implement fetching goal details
-          return {
-            "response": {
-              "name": "Goal Travel 2",
-              "description": "Goal Group For Travelling 2",
-              "hostUsername": "hakhanh",
-              "memberCount": 17,
-              "createdDate": "2024-07-03T06:08:06.039Z"
-            },
-            "statusCode": 200
-          };
+          return await Provider.of<GoalService>(context, listen: false)
+              .fetchGoalSummary(widget.invitation.groupId);
         }
       }, () async {
         setState(() {

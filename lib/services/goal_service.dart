@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/models/goal_model.dart';
+import 'package:tymesavingfrontend/models/summary_group_model.dart';
 import 'package:tymesavingfrontend/services/utils/get_backend_endpoint.dart';
 import 'package:tymesavingfrontend/services/utils/network_service.dart';
 
 class GoalService extends ChangeNotifier {
   Goal? _currentGoal;
   List<Goal> _goals = [];
+  SummaryGroup? _summaryGroup;
 
   Goal? get currentGoal => _currentGoal;
   List<Goal> get goals => _goals;
+  SummaryGroup? get summaryGroup => _summaryGroup;
 
   Future<dynamic> fetchGoalList(String? userId) async {
     // if (userId == null) return {'response': 'User ID is required.', 'statusCode': 400};
     final response = await NetworkService.instance.get(
-        "${BackendEndpoints.goal}/${BackendEndpoints.goalByUserId}/$userId");
+        "${BackendEndpoints.goal}/${BackendEndpoints.goalsGetByUserId}/$userId");
     if (response['response'] != null && response['statusCode'] == 200) {
       final responseData = response['response'];
       List<Goal> goalList = [];
@@ -52,10 +55,20 @@ class GoalService extends ChangeNotifier {
   }
 
   Future<Map<String, dynamic>> fetchGoalDetails(id) async {
-    final response =
-        await NetworkService.instance.get("${BackendEndpoints.goal}/$id");
+    final response = await NetworkService.instance
+        .get("${BackendEndpoints.goal}/$id/info");
     if (response['response'] != null && response['statusCode'] == 200) {
       _currentGoal = Goal.fromMap(response['response']);
+      notifyListeners();
+    }
+    return response;
+  }
+
+  Future<dynamic> fetchGoalSummary(id) async {
+    final response = await NetworkService.instance
+        .get("${BackendEndpoints.goal}/${BackendEndpoints.goalGetSummaryById}/$id");
+    if (response['response'] != null && response['statusCode'] == 200) {
+      _summaryGroup = SummaryGroup.fromMap(response['response']);
       notifyListeners();
     }
     return response;
@@ -69,13 +82,14 @@ class GoalService extends ChangeNotifier {
     double amount,
     String endDate,
   ) async {
-    final response = await NetworkService.instance
-        .put("${BackendEndpoints.goal}/$goalGroupId/$hostedBy", body: {
-      'name': name,
-      'description': description,
-      'amount': amount,
-      'endDate': endDate,
-    });
+    final response = await NetworkService.instance.put(
+        "${BackendEndpoints.goal}/$goalGroupId/${BackendEndpoints.goalUpdateHost}",
+        body: {
+          'name': name,
+          'description': description,
+          'amount': amount,
+          'endDate': endDate,
+        });
     return response;
   }
 

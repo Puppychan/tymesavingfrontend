@@ -30,8 +30,7 @@ class _GoalUpdatePageState extends State<GoalUpdatePage> {
       final goalService =
           Provider.of<GoalService>(context, listen: false);
       await handleMainPageApi(context, () async {
-        // TODO: add the fetchGoalDetails method to the goalService
-        // return await goalService.fetchGoalDetails(widget.goalId);
+        return await goalService.fetchGoalDetails(widget.goalId);
       }, () async {
         if (!mounted) return;
         final tempGoal = goalService.currentGoal;

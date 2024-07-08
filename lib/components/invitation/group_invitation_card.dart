@@ -9,6 +9,7 @@ import 'package:tymesavingfrontend/models/invitation_model.dart';
 import 'package:tymesavingfrontend/models/summary_group_model.dart';
 import 'package:tymesavingfrontend/models/summary_user_model.dart';
 import 'package:tymesavingfrontend/services/budget_service.dart';
+import 'package:tymesavingfrontend/services/goal_service.dart';
 import 'package:tymesavingfrontend/services/user_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -38,18 +39,8 @@ class _GroupInvitationCardState extends State<GroupInvitationCard> {
               .fetchBudgetSummary(widget.invitation.groupId);
         } else if (widget.invitation.type == InvitationType.savings) {
           // Fetch goal details
-
-          // TODO: Implement fetching goal details
-          return {
-            "response": {
-              "name": "Goal Travel 2",
-              "description": "Goal Group For Travelling 2",
-              "hostUsername": "hakhanh",
-              "memberCount": 17,
-              "createdDate": "2024-07-03T06:08:06.039Z"
-            },
-            "statusCode": 200
-          };
+          return await Provider.of<GoalService>(context, listen: false)
+              .fetchGoalSummary(widget.invitation.groupId);
         }
       }, () async {
         setState(() {
@@ -136,7 +127,11 @@ class _GroupInvitationCardState extends State<GroupInvitationCard> {
                               Icon(
                                 Icons.circle_rounded,
                                 size: 18,
-                                color: widget.invitation.status == InvitationStatus.pending ? colorScheme.inversePrimary : colorScheme.error,)
+                                color: widget.invitation.status ==
+                                        InvitationStatus.pending
+                                    ? colorScheme.inversePrimary
+                                    : colorScheme.error,
+                              )
                             ],
                           ),
                           Text(widget.invitation.code,
@@ -154,7 +149,8 @@ class _GroupInvitationCardState extends State<GroupInvitationCard> {
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
-                            return Text("Loading user data...", style: Theme.of(context).textTheme.bodyMedium);
+                            return Text("Loading user data...",
+                                style: Theme.of(context).textTheme.bodyMedium);
                           } else if (snapshot.hasError) {
                             return const Text('Error loading user data');
                           } else if (!snapshot.hasData) {

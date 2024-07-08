@@ -50,8 +50,8 @@ class AppThemes {
         onTertiary: AppColors.black,
         onBackground: AppColors.black,
         onError: AppColors.errorText,
-
-        // shadow: AppColors.secondary,
+    
+        shadow: AppColors.shadow,
       ),
       appBarTheme: const AppBarTheme(
         color: AppColors.cream, // background color of the app bar
@@ -247,7 +247,8 @@ class AppThemes {
         onBackground: AppColors.cream,
         onError: AppColors.errorTextDark,
 
-        // shadow: AppColors.secondaryDark,
+        shadow: AppColors.shadowDark,
+
       ),
       appBarTheme: const AppBarTheme(
         color: AppColors.black, // background color of the app bar

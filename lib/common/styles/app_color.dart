@@ -15,6 +15,7 @@ class AppColors {
   static const Color border = Color(0xffCFCFFC);
   static const Color error = Color(0xffFFC2B1);
   static const Color errorText = Color(0xffC0564B);
+  static const Color shadow = Color(0xffb8af84);
 
   // static const Color primaryText =.white;
   // static const Color primaryText = gray;
@@ -30,6 +31,7 @@ class AppColors {
   static const Color primaryTextDark = cream;
   static const Color errorDark = Color(0xffC0564B);
   static const Color errorTextDark = Color(0xffFFC2B1);
+  static const Color shadowDark = Color(0xffb8af84);
 
   static const Color positive = Color.fromARGB(255, 131, 250, 135);
   static const Color negative = Color.fromARGB(255, 214, 92, 84);

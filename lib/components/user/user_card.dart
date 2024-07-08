@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/constant/temp_constant.dart';
 import 'package:tymesavingfrontend/common/enum/user_role_enum.dart';
 import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
-import 'package:tymesavingfrontend/components/common/circle_network_image.dart';
+import 'package:tymesavingfrontend/components/common/images/circle_network_image.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/screens/user_list/user_detail_page.dart';
 import 'package:tymesavingfrontend/screens/user_profile/update_user_page.dart';
@@ -76,14 +76,14 @@ class UserCard extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     return Card(
       color: colorScheme.tertiary,
-      shadowColor: colorScheme.secondary.withOpacity(0.5),
+      shadowColor: colorScheme.shadow,
       elevation: 5,
       child: InkWell(
         splashColor: colorScheme.quaternary,
         onTap: () {
           // debugPrint('Challenge tapped.');
           Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return UserDetail(user: user);
+            return UserDetailPage(user: user);
           }));
         },
         borderRadius: BorderRadius.circular(16),

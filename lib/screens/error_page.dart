@@ -6,6 +6,7 @@ import 'package:tymesavingfrontend/common/enum/button_theme_enum.dart';
 import 'package:tymesavingfrontend/screens/authentication/sign_in_page.dart';
 
 class ErrorPage extends StatelessWidget {
+  static const String routeName = '/errorPage'; // Add this line
   final String errorMessage;
   final int statusCode;
   // final VoidCallback onRetry;

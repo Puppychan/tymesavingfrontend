@@ -76,7 +76,7 @@ class MemberCard extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     return Card(
         color: colorScheme.tertiary,
-        shadowColor: colorScheme.secondary.withOpacity(0.5),
+        shadowColor: colorScheme.shadow,
         elevation: 5,
         child: InkWell(
           splashColor: colorScheme.quaternary,
@@ -84,7 +84,7 @@ class MemberCard extends StatelessWidget {
             // debugPrint('Challenge tapped.');
             // TODO: Implement user detail page
             // Navigator.push(context, MaterialPageRoute(builder: (context) {
-            //   return UserDetail(user: user);
+            //   return UserDetailPage(user: user);
             // }));
           },
           borderRadius: BorderRadius.circular(16),

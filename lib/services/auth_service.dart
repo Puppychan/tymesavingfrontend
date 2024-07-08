@@ -17,8 +17,6 @@ class AuthService extends ChangeNotifier {
   // Create a private user variable to store user data in this provider
   User? _user;
 
-  // Create a private token variable to store user authentication token
-  String? _token;
   // store the current user ID variable
   // String? _username;
 
@@ -44,10 +42,8 @@ class AuthService extends ChangeNotifier {
     if (token!.isNotEmpty && expiry!.isNotEmpty && user!.isNotEmpty) {
       try {
         final parsedUser = jsonDecode(user);
-        // _token = token;
         // _username = parsedUser['username'];
         _user = User.fromMap(parsedUser);
-        _token = token;
         // _user = User.fromMap(user); // Assuming User has a fromJson constructor
         // _username = parsedUser['username'];
         final isExpiredToken = isExpired(expiry);
@@ -79,7 +75,6 @@ class AuthService extends ChangeNotifier {
       if (token != null) {
         DateTime calculatedExpireDate =
             DateTime.now().add(const Duration(days: EXPIRE_TOKEN_DAYS));
-        _token = token;
         // _username = username;
         _user = User.fromMap(responseBody['user']);
 
@@ -199,7 +194,6 @@ class AuthService extends ChangeNotifier {
 
   Future<void> signOut() async {
     _user = null;
-    _token = null;
     // _username = null;
     _user = null;
     await LocalStorageService.removeStringList([
