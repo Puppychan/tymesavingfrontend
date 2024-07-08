@@ -23,11 +23,12 @@ Widget buildFood(String foodName) => ListTile(
 
 class _MemberListPageState extends State<MemberListPage> {
   // late List<Member> members = [];
-  void _fetchMembers() async {
+  void _fetchMembers() {
     Future.microtask(() async {
       if (!mounted) return;
       final userService = Provider.of<UserService>(context, listen: false);
       await handleMainPageApi(context, () async {
+        print("Calling fetchGroupMemberList");
         return await userService.fetchGroupMemberList(
             widget.isBudgetGroup, widget.groupId);
       }, () async {
@@ -46,15 +47,18 @@ class _MemberListPageState extends State<MemberListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<UserService>(builder: (context, memberService, child) {
-      final members = memberService.members;
-      final isCurrentUserHost = Provider.of<AuthService>(context).user?.id == members.firstWhere((element) => element.role == 'Host').user.id;
-      return Scaffold(
-          appBar: const Heading(
-            title: "Members",
-            showBackButton: true,
-          ),
-          body: Padding(
+    return Scaffold(
+        appBar: const Heading(
+          title: "Members",
+          showBackButton: true,
+        ),
+        body: Consumer<UserService>(builder: (context, memberService, child) {
+          final members = memberService.members;
+          final isCurrentUserHost = Provider.of<AuthService>(context)
+                  .user
+                  ?.id ==
+              members.firstWhere((element) => element.role == 'Host').user.id;
+          return Padding(
             padding: AppPaddingStyles.pagePadding,
             child: members.isNotEmpty
                 ? ListView.separated(
@@ -73,7 +77,7 @@ class _MemberListPageState extends State<MemberListPage> {
                 : const Center(
                     child: CircularProgressIndicator(),
                   ),
-          ));
-    });
+          );
+        }));
   }
 }

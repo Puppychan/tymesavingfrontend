@@ -9,7 +9,7 @@ import 'package:tymesavingfrontend/models/budget_model.dart';
 import 'package:tymesavingfrontend/models/summary_user_model.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/screens/budget/budget_update_page.dart';
-import 'package:tymesavingfrontend/screens/member_list_page.dart';
+import 'package:tymesavingfrontend/screens/user_list/member_list_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/budget_service.dart';
 import 'package:tymesavingfrontend/services/multi_page_form_service.dart';

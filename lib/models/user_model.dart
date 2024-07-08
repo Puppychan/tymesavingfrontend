@@ -41,9 +41,9 @@ class User extends UserBase {
     // we are using the map to send the data to the API
     return {
       ...super.toMap(),
-      "_id": id,
       "role": role.toString(),
       "pin": pin,
+      "creationDate": creationDate,
     };
   }
 }

@@ -83,8 +83,9 @@ class UserService extends ChangeNotifier {
   }
 
   Future<dynamic> fetchGroupMemberList(
-      bool? isBudgetGroup, String? groupId) async {
+      bool isBudgetGroup, String? groupId) async {
     // TODO: implement if isBudgetGroup is false - Saving Group
+    print("Calling fetchGroupMemberList");
     final response = await NetworkService.instance.get(
         "${BackendEndpoints.budget}/$groupId/${BackendEndpoints.budgetGetMembers}");
     print("Response data in fetchGroupMemberList: $response");
