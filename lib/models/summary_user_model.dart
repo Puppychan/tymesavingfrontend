@@ -8,17 +8,17 @@ class SummaryUser extends UserBase {
   // final String phone;
 
   // display inside group only
-  final double? contribution;
-  final double? totalAmount;
+  final double? totalIncome;
+  final double? totalExpense;
   final int? transactionCount;
 
   SummaryUser.fromMap(super.user)
       // Optional fields
-      : contribution = (user['contribution'] != null)
-            ? user['contribution'].toDouble()
-            : -1.0,
-        totalAmount = (user['totalAmount'] != null)
-            ? user['totalAmount'].toDouble()
+      : totalIncome = (user['totalIncome'] != null)
+            ? user['totalIncome'].toDouble()
+            : 0.0,
+        totalExpense = (user['totalExpense'] != null)
+            ? user['totalExpense'].toDouble()
             : 0.0,
         transactionCount =
             (user['transactionCount'] != null) ? user['transactionCount'] : 0,
@@ -39,8 +39,8 @@ class SummaryUser extends UserBase {
   @override
   Map<String, dynamic> getOtherFields() {
     return {
-      "contribution": contribution,
-      "totalAmount": totalAmount,
+      "totalIncome": totalIncome,
+      "totalExpense": totalExpense,
       "transactionCount": transactionCount,
     };
   }

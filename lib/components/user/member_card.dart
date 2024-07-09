@@ -5,8 +5,7 @@ import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
 import 'package:tymesavingfrontend/models/member_model.dart';
 import 'package:tymesavingfrontend/models/summary_user_model.dart';
-import 'package:tymesavingfrontend/models/user_model.dart';
-import 'package:tymesavingfrontend/screens/user_list/user_detail_page.dart';
+import 'package:tymesavingfrontend/screens/user_list/member_detail_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/user_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
@@ -17,7 +16,7 @@ class MemberCard extends StatelessWidget {
   final bool isBudgetGroup;
   final String groupId;
   final Member member;
-  final double maxContribution = 100.0; // Example maximum contribution value
+  final double maxContribution = 100.0;
 
   const MemberCard({
     super.key,
@@ -30,8 +29,6 @@ class MemberCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final SummaryUser user = member.user;
-    // TODO: Implement member's contribution inside shared budget  and saving group
-    final bool isHaveContribution = user.contribution != -1.0;
     final currentUser = Provider.of<AuthService>(context).user;
     final bool isHost = member.role == 'Host';
 
@@ -81,11 +78,12 @@ class MemberCard extends StatelessWidget {
         child: InkWell(
           splashColor: colorScheme.quaternary,
           onTap: () {
-            // debugPrint('Challenge tapped.');
-            // TODO: Implement user detail page
-            // Navigator.push(context, MaterialPageRoute(builder: (context) {
-            //   return UserDetailPage(user: user);
-            // }));
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return MemberDetailPage(
+                user: user,
+                groupId: groupId,
+              );
+            }));
           },
           borderRadius: BorderRadius.circular(16),
           child: Padding(
@@ -94,13 +92,17 @@ class MemberCard extends StatelessWidget {
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         // CustomCircleAvatar(imagePath: member.avatarPath),
-                        Icon(isHost? FontAwesomeIcons.crown : FontAwesomeIcons.person,
-                            size: 24.0,
+                        Icon(
+                            isHost
+                                ? FontAwesomeIcons.crown
+                                : FontAwesomeIcons.person,
+                            size: 20.0,
                             color:
                                 Theme.of(context).colorScheme.inversePrimary),
                         const SizedBox(width: 8),
@@ -135,29 +137,13 @@ class MemberCard extends StatelessWidget {
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           TextSpan(
-                            children: isHaveContribution
-                                ? <TextSpan>[
-                                    TextSpan(
-                                      text: 'Contribute ',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!,
-                                    ),
-                                    TextSpan(
-                                      // text: '\$${member.contribution.toStringAsFixed(2)}',
-                                      text: "Member Contribution",
-                                      style:
-                                          AppTextStyles.paragraphBold(context),
-                                    ),
-                                  ]
-                                : <TextSpan>[
-                                    TextSpan(
-                                      // text: '\$${member.contribution.toStringAsFixed(2)}',
-                                      text: user.fullname,
-                                      style:
-                                          AppTextStyles.paragraphBold(context),
-                                    )
-                                  ],
+                            children: <TextSpan>[
+                              TextSpan(
+                                // text: '\$${member.contribution.toStringAsFixed(2)}',
+                                text: user.fullname,
+                                style: AppTextStyles.paragraphBold(context),
+                              )
+                            ],
                           ),
                         )),
                     const SizedBox(width: 3),
@@ -167,19 +153,6 @@ class MemberCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(4),
-                  child: isHaveContribution
-                      ? LinearProgressIndicator(
-                          // value: progress.clamp(0.0, 1.0), // Ensuring the value is between 0 and 1
-                          value: 0.4, // Ensuring the value is between 0 and 1
-                          backgroundColor: colorScheme.quaternary,
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                              colorScheme.primary),
-                          minHeight: 8,
-                        )
-                      : Container(),
-                )
               ],
             ),
           ),

@@ -12,7 +12,7 @@ List<Widget> renderGroupHeadingActions(
   List<Widget> actions = [
     ...actionRow(context, Icons.people_rounded, 'Members', () {
       Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return MemberListPage(isBudgetGroup: isBudget, groupId: groupId);
+        return MemberListPage(isBudgetGroup: isBudget, groupId: groupId, isMember: isMember);
       }));
     }),
     ...actionRow(context, Icons.wallet_sharp, "View group transaction history",

@@ -8,7 +8,6 @@ import 'package:tymesavingfrontend/components/main_page_layout/show_add_options.
 import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/screens/budget/budget_list_page.dart';
-import 'package:tymesavingfrontend/screens/goal/goal_list_page.dart';
 import 'package:tymesavingfrontend/screens/home/home_admin_page.dart';
 import 'package:tymesavingfrontend/screens/home/home_page.dart';
 import 'package:tymesavingfrontend/screens/more_menu/more_page.dart';
