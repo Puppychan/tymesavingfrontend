@@ -1,5 +1,3 @@
-
-
 import 'package:tymesavingfrontend/common/constant/temp_constant.dart';
 
 class UserBase {
