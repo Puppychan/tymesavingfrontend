@@ -149,7 +149,7 @@ class _GoalCardState extends State<GoalCard> {
                   const SizedBox(width: 3),
                   Text.rich(TextSpan(children: <TextSpan>[
                     TextSpan(
-                      text: formatAmount(widget.goal.concurrentAmount),
+                      text: formatAmountToVnd(widget.goal.concurrentAmount),
                       // text: "Goal Contribution",
                       style: textTheme.bodyLarge,
                     ),
@@ -160,7 +160,7 @@ class _GoalCardState extends State<GoalCard> {
                       ),
                     ),
                     TextSpan(
-                      text: formatAmount(widget.goal.amount),
+                      text: formatAmountToVnd(widget.goal.amount),
                       style: Theme.of(context).textTheme.bodyMedium!,
                     ),
                   ]))

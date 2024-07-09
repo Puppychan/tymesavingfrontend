@@ -97,7 +97,7 @@ class _BudgetCardState extends State<BudgetCard> {
                   const SizedBox(width: 3),
                   Text.rich(TextSpan(children: <TextSpan>[
                     TextSpan(
-                      text: formatAmount(widget.budget.concurrentAmount),
+                      text: formatAmountToVnd(widget.budget.concurrentAmount),
                       // text: "Budget Contribution",
                       style: textTheme.bodyLarge,
                     ),
@@ -108,7 +108,7 @@ class _BudgetCardState extends State<BudgetCard> {
                       ),
                     ),
                     TextSpan(
-                      text: formatAmount(widget.budget.amount),
+                      text: formatAmountToVnd(widget.budget.amount),
                       style: Theme.of(context).textTheme.bodyMedium!,
                     ),
                   ]))

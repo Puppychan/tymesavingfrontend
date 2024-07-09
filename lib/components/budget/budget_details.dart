@@ -261,7 +261,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                             const SizedBox(
                               height: 10,
                             ),
-                            Text(formatAmount(_budget!.concurrentAmount),
+                            Text(formatAmountToVnd(_budget!.concurrentAmount),
                                 style:
                                     Theme.of(context).textTheme.headlineMedium),
                           ],

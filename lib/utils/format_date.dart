@@ -67,3 +67,13 @@ String? combineDateAndTime(DateTime? date, TimeOfDay? time) {
     return null;
   }
 }
+
+
+String convertTimestamptzToReadableDate(String? date) {
+  if (date == null) {
+    return 'Loading...';
+  }
+  final DateTime parsedDate = DateTime.parse(date);
+  final String formattedDate = DateFormat('yyyy-MM-dd kk:mm').format(parsedDate);
+  return formattedDate;
+}

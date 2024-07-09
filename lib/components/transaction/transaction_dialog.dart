@@ -54,7 +54,7 @@ class TransactionDialog extends StatelessWidget {
                   icon: Icons.attach_money,
                   iconColor: Colors.red[800],
                   label: 'Amount:',
-                  value: formatAmount(transaction.amount),
+                  value: formatAmountToVnd(transaction.amount),
                 ),
               ],
             ),

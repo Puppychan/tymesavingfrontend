@@ -92,8 +92,8 @@ class TransactionItem extends StatelessWidget {
         ),
         trailing: Text(
           transaction.type == 'Income'
-              ? '+ ${formatAmount(transaction.amount)}'
-              : '- ${formatAmount(transaction.amount)}',
+              ? '+ ${formatAmountToVnd(transaction.amount)}'
+              : '- ${formatAmountToVnd(transaction.amount)}',
           style: const TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,

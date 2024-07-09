@@ -226,7 +226,7 @@ class _GoalFormMainState extends State<GoalFormMain> {
                       children: [50000.0, 100000.0, 500000.0, 1000000.0]
                           .expand((amount) {
                         final selectedAmount =
-                            convertFormattedToNumber(formattedAmount);
+                            convertFormattedAmountToNumber(formattedAmount);
                         return [
                           ChoiceChip(
                             // color: MaterialStateProperty.all<Color>(
@@ -235,7 +235,7 @@ class _GoalFormMainState extends State<GoalFormMain> {
                                 states.contains(MaterialState.selected)
                                     ? colorScheme.primary
                                     : colorScheme.tertiary),
-                            label: Text(formatAmount(amount),
+                            label: Text(formatAmountToVnd(amount),
                                 style: TextStyle(
                                   color: selectedAmount == amount
                                       ? colorScheme.onPrimary
@@ -245,7 +245,7 @@ class _GoalFormMainState extends State<GoalFormMain> {
                             selected: selectedAmount == amount,
                             onSelected: (selected) {
                               setState(() {
-                                _amountController.text = formatAmount(amount);
+                                _amountController.text = formatAmountToVnd(amount);
                                 updateOnChange("amount");
                               });
                             },

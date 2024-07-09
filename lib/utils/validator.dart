@@ -118,7 +118,7 @@ class Validator {
     if (value == null || value.isEmpty) {
       return 'Amount cannot be empty';
     }
-    final convertedValue = convertFormattedToNumber(value);
+    final convertedValue = convertFormattedAmountToNumber(value);
     // final number = double.tryParse(convertedValue);
     // if (number == null) {
     //   return 'Please enter a valid number';

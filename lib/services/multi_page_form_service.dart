@@ -97,7 +97,7 @@ class FormStateProvider with ChangeNotifier {
   }
   void updateFormField(String key, dynamic value, FormStateType type) {
     if (key == "amount") {
-      value = convertFormattedToNumber(value);
+      value = convertFormattedAmountToNumber(value);
     }
 
     if (type == FormStateType.income) {
