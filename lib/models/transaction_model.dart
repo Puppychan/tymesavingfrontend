@@ -33,7 +33,7 @@ class Transaction {
       userId: json['userId'] ?? '',
     );
   }
-  
+
   Transaction.fromMap(Map<String, dynamic> transaction)
       : id = transaction['_id'],
         userId = transaction['userId'],

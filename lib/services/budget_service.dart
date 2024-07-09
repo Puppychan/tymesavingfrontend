@@ -3,6 +3,7 @@ import 'package:tymesavingfrontend/models/budget_model.dart';
 import 'package:tymesavingfrontend/models/summary_group_model.dart';
 import 'package:tymesavingfrontend/services/utils/get_backend_endpoint.dart';
 import 'package:tymesavingfrontend/services/utils/network_service.dart';
+import 'package:tymesavingfrontend/models/transaction_model.dart';
 
 class BudgetService extends ChangeNotifier {
   Budget? _currentBudget;
@@ -12,6 +13,10 @@ class BudgetService extends ChangeNotifier {
   Budget? get currentBudget => _currentBudget;
   List<Budget> get budgets => _budgets;
   SummaryGroup? get summaryGroup => _summaryGroup;
+
+  List<Transaction> _transactions = [];
+
+  List<Transaction> get transactions => _transactions;
 
   Future<dynamic> fetchBudgetList(String? userId) async {
     // if (userId == null) return {'response': 'User ID is required.', 'statusCode': 400};
@@ -65,8 +70,8 @@ class BudgetService extends ChangeNotifier {
   }
 
   Future<dynamic> fetchBudgetSummary(id) async {
-    final response = await NetworkService.instance
-        .get("${BackendEndpoints.budget}/${BackendEndpoints.budgetGetSummaryById}/$id");
+    final response = await NetworkService.instance.get(
+        "${BackendEndpoints.budget}/${BackendEndpoints.budgetGetSummaryById}/$id");
     if (response['response'] != null && response['statusCode'] == 200) {
       _summaryGroup = SummaryGroup.fromMap(response['response']);
       notifyListeners();
@@ -96,6 +101,34 @@ class BudgetService extends ChangeNotifier {
   Future<Map<String, dynamic>> deleteBudget(String budgetId) async {
     final response = await NetworkService.instance
         .delete("${BackendEndpoints.budget}/$budgetId");
+    return response;
+  }
+
+  Future<dynamic> fetchTransactionsForBudget(String budgetId) async {
+    final response = await NetworkService.instance
+        .get("${BackendEndpoints.budget}/$budgetId/transactions");
+    if (response['response'] != null && response['statusCode'] == 200) {
+      final responseData = response['response'];
+      List<Transaction> transactionList = [];
+      if (responseData != [] && responseData != null) {
+        for (var item in responseData) {
+          var transactions = item['transactions'];
+          if (transactions != null && transactions.isNotEmpty) {
+            for (var transaction in transactions) {
+              final tempTransaction = Transaction.fromJson(transaction);
+              transactionList.add(tempTransaction);
+            }
+          } else {
+            final tempTransaction = Transaction.fromJson(item);
+            transactionList.add(tempTransaction);
+          }
+        }
+      }
+      _transactions = transactionList;
+
+      debugPrint(transactionList.toString());
+      notifyListeners();
+    }
     return response;
   }
 }
