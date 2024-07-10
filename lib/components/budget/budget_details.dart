@@ -15,6 +15,8 @@ import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
 import 'package:tymesavingfrontend/services/user_service.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
+import 'package:tymesavingfrontend/components/transaction/transaction_list.dart';
+import 'package:tymesavingfrontend/models/transaction_model.dart';
 
 class BudgetDetails extends StatefulWidget {
   const BudgetDetails({super.key, required this.budgetId});
@@ -38,18 +40,6 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
   bool _isDisplayRestDescription = false;
   List<Transaction> _transactions = [];
 
-  Future<void> _loadTransactions() async {
-    if (!mounted) return;
-    final budgetService = Provider.of<BudgetService>(context, listen: false);
-    await handleMainPageApi(context, () async {
-      return await budgetService.fetchTransactionsForBudget(widget.budgetId);
-    }, () async {
-      if (!mounted) return;
-      setState(() {
-        _transactions = budgetService.transactions;
-      });
-    });
-  }
 
   Future<void> _renderUser(String? userId) async {
     Future.microtask(() async {
@@ -62,6 +52,19 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
         setState(() {
           _user = userService.summaryUser;
         });
+      });
+    });
+  }
+
+  Future<void> _loadTransactions() async {
+    if (!mounted) return;
+    final budgetService = Provider.of<BudgetService>(context, listen: false);
+    await handleMainPageApi(context, () async {
+      return await budgetService.fetchBudgetTransactions(widget.budgetId);
+    }, () async {
+      if (!mounted) return;
+      setState(() {
+        _transactions = budgetService.transactions;
       });
     });
   }

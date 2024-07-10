@@ -104,29 +104,24 @@ class BudgetService extends ChangeNotifier {
     return response;
   }
 
-  Future<dynamic> fetchTransactionsForBudget(String budgetId) async {
+  Future<Map<String, dynamic>> fetchBudgetTransactions(
+      String budgetGroupId) async {
     final response = await NetworkService.instance
-        .get("${BackendEndpoints.budget}/$budgetId/transactions");
+        .get("${BackendEndpoints.budget}/$budgetGroupId/transactions");
+
     if (response['response'] != null && response['statusCode'] == 200) {
+      debugPrint("#====== Transactions of Budget ======#");
+      debugPrint(response.toString());
+      debugPrint("#====== Transactions of Budget ======#");
       final responseData = response['response'];
       List<Transaction> transactionList = [];
-      if (responseData != [] && responseData != null) {
-        for (var item in responseData) {
-          var transactions = item['transactions'];
-          if (transactions != null && transactions.isNotEmpty) {
-            for (var transaction in transactions) {
-              final tempTransaction = Transaction.fromJson(transaction);
-              transactionList.add(tempTransaction);
-            }
-          } else {
-            final tempTransaction = Transaction.fromJson(item);
-            transactionList.add(tempTransaction);
-          }
+      if (responseData.isNotEmpty) {
+        for (var transaction in responseData) {
+          final tempTransaction = Transaction.fromMap(transaction);
+          transactionList.add(tempTransaction);
         }
       }
       _transactions = transactionList;
-
-      debugPrint(transactionList.toString());
       notifyListeners();
     }
     return response;

@@ -34,6 +34,13 @@ class TransactionItem extends StatelessWidget {
     final icon = categoryData?['icon'] ?? randomIcon;
     final color = categoryData?['color'] ?? randomColor;
 
+    // Determine title and category display
+    final title = transaction.user != null
+        ? transaction.user!.username.toUpperCase()
+        : transaction.category;
+    final categoryDisplay =
+        transaction.user != null ? transaction.category : '';
+
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
       padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -59,7 +66,7 @@ class TransactionItem extends StatelessWidget {
           ),
         ),
         title: Text(
-          transaction.category,
+          title,
           style: Theme.of(context)
               .textTheme
               .headlineMedium
@@ -68,6 +75,18 @@ class TransactionItem extends StatelessWidget {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if (transaction.user != null) ...[
+              const SizedBox(height: 3),
+              Text(
+                categoryDisplay,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.secondary,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                  fontFamily: 'Montserrat',
+                ),
+              ),
+            ],
             const SizedBox(height: 3),
             Text(
               transaction.type,
