@@ -108,10 +108,11 @@ class BudgetService extends ChangeNotifier {
       String budgetGroupId) async {
     final response = await NetworkService.instance
         .get("${BackendEndpoints.budget}/$budgetGroupId/transactions");
-    if (response['response'] != null && response['statusCode'] == 200) {
-      debugPrint("Helo Helo");
-      debugPrint(response);
 
+    if (response['response'] != null && response['statusCode'] == 200) {
+      debugPrint("#====== Transactions of Budget ======#");
+      debugPrint(response.toString());
+      debugPrint("#====== Transactions of Budget ======#");
       final responseData = response['response'];
       List<Transaction> transactionList = [];
       if (responseData.isNotEmpty) {

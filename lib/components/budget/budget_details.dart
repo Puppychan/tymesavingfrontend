@@ -54,7 +54,16 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
   }
 
   Future<void> _loadTransactions() async {
-    
+    if (!mounted) return;
+    final budgetService = Provider.of<BudgetService>(context, listen: false);
+    await handleMainPageApi(context, () async {
+      return await budgetService.fetchBudgetTransactions(widget.budgetId);
+    }, () async {
+      if (!mounted) return;
+      setState(() {
+        _transactions = budgetService.transactions;
+      });
+    });
   }
 
   Future<void> _loadData() async {
@@ -139,9 +148,6 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-
-    debugPrint(_transactions.toString());
-
     return Scaffold(
       appBar: Heading(title: 'Budget', showBackButton: true, actions: [
         IconButton(
@@ -310,9 +316,9 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                 //       ],
                 //     )),
                 // const Expanded(child: SizedBox()),
-                // Expanded(
-                //   child: TransactionList(transactions: _transactions),
-                // ),
+                Expanded(
+                  child: TransactionList(transactions: _transactions),
+                ),
               ],
             ),
     );
