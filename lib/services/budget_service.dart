@@ -104,6 +104,12 @@ class BudgetService extends ChangeNotifier {
     return response;
   }
 
+  void disposeDetailGroup() {
+    _currentBudget = null;
+    _transactions = [];
+    notifyListeners();
+  }
+
   Future<Map<String, dynamic>> fetchBudgetTransactions(
       String budgetGroupId) async {
     final response = await NetworkService.instance

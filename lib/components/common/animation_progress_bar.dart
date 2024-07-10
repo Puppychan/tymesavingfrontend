@@ -47,6 +47,16 @@ class _AnimatedProgressBarState extends State<AnimatedProgressBar>
     normalizedProgressList = normalizeProgressList(widget.progressList);
   }
 
+    @override
+  void didUpdateWidget(covariant AnimatedProgressBar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.progressList != widget.progressList) {
+      normalizedProgressList = normalizeProgressList(widget.progressList);
+      _controller.reset();
+      _controller.forward();
+    }
+  }
+
   @override
   void dispose() {
     _controller.dispose();
@@ -56,7 +66,11 @@ class _AnimatedProgressBarState extends State<AnimatedProgressBar>
   List<Map<String, dynamic>> normalizeProgressList(
       List<Map<String, dynamic>> progressList) {
     double totalProgress =
-        progressList.fold(0, (sum, item) => sum + item['progress']);
+        progressList.fold(0, (sum, item) {
+          print("Item progress is: ${item['progress']}");
+          return sum + item['progress'];
+          });
+    print("Total progress is: $totalProgress");
 
     if (totalProgress <= 1.0) {
       return progressList.map((item) {
