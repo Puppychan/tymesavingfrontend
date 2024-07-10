@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/models/member_model.dart';
 import 'package:tymesavingfrontend/models/summary_user_model.dart';
@@ -228,6 +229,36 @@ class UserService extends ChangeNotifier {
       _users[index] = updatedUser;
 
       notifyListeners();
+    }
+    return response;
+  }
+
+  Future<dynamic> uploadUserAvatar(String? username, String imagePath) async {
+    if (username == null) return;
+    FormData formData = FormData.fromMap({
+      "file": await MultipartFile.fromFile(imagePath, filename: 'file'),
+    });
+
+    final response = await NetworkService.instance.putFormData(
+      "${BackendEndpoints.user}/$username/${BackendEndpoints.userUploadAvatar}",
+      data: formData,
+    );
+    if (response['response'] != null && response['statusCode'] == 200) {
+      final responseBody = response['response'];
+      final updatedUser = User.fromMap(responseBody);
+      // update the user in the list
+      if (users.isNotEmpty) {
+        final index =
+            _users.indexWhere((element) => element.username == username);
+            if (index != -1) {
+              _users[index] = updatedUser;
+            }
+        notifyListeners();
+      }
+      if (currentFetchUser != null && currentFetchUser?.username == username) {
+        _currentFetchUser = updatedUser;
+        notifyListeners();
+      }
     }
     return response;
   }

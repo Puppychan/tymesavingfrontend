@@ -6,9 +6,9 @@ import 'package:tymesavingfrontend/utils/format_amount.dart';
 class AnimatedProgressBar extends StatefulWidget {
   final String title;
   final Color backgroundColor;
-  final List<Map<String, dynamic>> progressList;
+  final List<Map<String, dynamic>> progressList; // {progress: 0.5, progressColor: Colors.blue, progressText: 'Progress', originalValue: 500000}
   final double height;
-  final Map<String, dynamic> base;
+  final Map<String, dynamic> base; // {text: 'Base', value: 1000000}
 
   const AnimatedProgressBar({
     super.key,

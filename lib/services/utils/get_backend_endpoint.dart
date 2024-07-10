@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -30,6 +31,7 @@ class BackendEndpoints {
   static String get userUpdate => "update";
   static String get userPasswordUpdate => "update/password";
   static String get userById => "byId";
+  static String get userUploadAvatar => "update/avatar";
   static String get otherUserById => "viewUserFromId";
   static String get userSearchByUsername => "viewUserFromUsername";
   static String get transactionReport => "report";

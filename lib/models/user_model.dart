@@ -15,6 +15,7 @@ class User extends UserBase {
   // optional
   final String? pin;
 
+  @override
   User.fromMap(super.user)
       // we are using the map to get the data from the API
       : role = UserRole.fromString(user['role']),

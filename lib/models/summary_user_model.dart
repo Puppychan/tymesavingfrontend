@@ -12,6 +12,7 @@ class SummaryUser extends UserBase {
   final double? totalExpense;
   final int? transactionCount;
 
+  @override
   SummaryUser.fromMap(super.user)
       // Optional fields
       : totalIncome = (user['totalIncome'] != null)

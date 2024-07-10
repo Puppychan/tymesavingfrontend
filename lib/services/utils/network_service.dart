@@ -189,10 +189,10 @@ class NetworkService {
     }
   }
 
-  Future<dynamic> postFormData(String url, {required FormData data}) async {
+  Future<dynamic> putFormData(String url, {required FormData data}) async {
     try {
       final response = await retryCall.retry(
-        () => _dio.post(url, data: data).timeout(TIMEOUT_DURATION),
+        () => _dio.put(url, data: data).timeout(TIMEOUT_DURATION),
         retryIf: (e) => e is DioException && e.type != DioExceptionType.cancel,
       );
       // final response = await _dio.post(url, data: data);

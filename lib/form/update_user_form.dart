@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:tymesavingfrontend/common/constant/temp_constant.dart';
+import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
 import 'package:tymesavingfrontend/common/styles/app_padding.dart';
+import 'package:tymesavingfrontend/components/common/images/circle_network_image.dart';
+import 'package:tymesavingfrontend/components/common/images/rounded_network_image.dart';
 import 'package:tymesavingfrontend/components/common/input/round_text_field.dart';
 import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
+import 'package:tymesavingfrontend/screens/image_upload_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/user_service.dart';
 import 'package:tymesavingfrontend/utils/display_error.dart';
@@ -46,14 +52,55 @@ class UpdateUserState extends State<UpdateUserForm> {
       child: Form(
         key: _formKey,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
+            InkWell(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return ImageUploadPage(title: "Upload Avatar", uploadDetails: {
+                      'confirmFunction': (String imagePath) async {
+                        return await Provider.of<UserService>(context, listen: false).uploadUserAvatar(widget.user?.username, imagePath);
+                      },
+                      'successMessage': 'Avatar uploaded successfully',
+                    });
+                  }));
+                },
+                child: Stack(
+                  alignment: Alignment.center,
+                  clipBehavior: Clip.none,
+                  children: <Widget>[
+                    CustomRoundedAvatar(
+                        imagePath: widget.user?.avatar ?? TEMP_AVATAR_IMAGE,
+                        size: MediaQuery.of(context).size.width * 0.3),
+                    Positioned(
+                      right: -25,
+                      bottom: -25,
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: ClipOval(
+                          child: Container(
+                            color: Theme.of(context).colorScheme.inversePrimary,
+                            child: Padding(
+                              padding: const EdgeInsets.all(
+                                  12.0), // Adjust padding to ensure the icon fits well
+                              child: Icon(FontAwesomeIcons.cameraRetro,
+                                  size: 30,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onInverseSurface),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                )),
+            const SizedBox(height: 30),
             RoundTextField(
               validator: Validator.validateFullName,
               placeholder: widget.user?.fullname ?? 'Loading...',
               label: 'Full Name',
               controller: _fullNameController,
-              
             ),
             const SizedBox(
               height: 20,
@@ -141,12 +188,10 @@ class UpdateUserState extends State<UpdateUserForm> {
           fullName,
         );
       }
-      return await userService.updateUser(
-          username, gmail, phone, fullName);
+      return await userService.updateUser(username, gmail, phone, fullName);
     }, () async {
       SuccessDisplay.showSuccessToast('User information updated', context);
       Navigator.pop(context);
-
     });
 
     /*
