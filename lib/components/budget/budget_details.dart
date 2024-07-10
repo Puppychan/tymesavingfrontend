@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -8,9 +7,6 @@ import 'package:tymesavingfrontend/components/common_group/group_heading_actions
 import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/budget_model.dart';
 import 'package:tymesavingfrontend/models/summary_user_model.dart';
-import 'package:tymesavingfrontend/models/user_model.dart';
-import 'package:tymesavingfrontend/screens/budget/budget_update_page.dart';
-import 'package:tymesavingfrontend/screens/member_list_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/budget_service.dart';
 import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
@@ -19,7 +15,6 @@ import 'package:tymesavingfrontend/utils/format_amount.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 import 'package:tymesavingfrontend/components/transaction/transaction_list.dart';
 import 'package:tymesavingfrontend/models/transaction_model.dart';
-import 'package:tymesavingfrontend/services/transaction_service.dart';
 
 class BudgetDetails extends StatefulWidget {
   const BudgetDetails({super.key, required this.budgetId});
@@ -59,16 +54,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
   }
 
   Future<void> _loadTransactions() async {
-    if (!mounted) return;
-    final budgetService = Provider.of<BudgetService>(context, listen: false);
-    await handleMainPageApi(context, () async {
-      return await budgetService.fetchTransactionsForBudget(widget.budgetId);
-    }, () async {
-      if (!mounted) return;
-      setState(() {
-        _transactions = budgetService.transactions;
-      });
-    });
+    
   }
 
   Future<void> _loadData() async {
@@ -153,6 +139,9 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+
+    debugPrint(_transactions.toString());
+
     return Scaffold(
       appBar: Heading(title: 'Budget', showBackButton: true, actions: [
         IconButton(
@@ -321,9 +310,9 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                 //       ],
                 //     )),
                 // const Expanded(child: SizedBox()),
-                Expanded(
-                  child: TransactionList(transactions: _transactions),
-                ),
+                // Expanded(
+                //   child: TransactionList(transactions: _transactions),
+                // ),
               ],
             ),
     );

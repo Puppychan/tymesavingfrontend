@@ -88,7 +88,7 @@ class TransactionService extends ChangeNotifier {
   }
 
   Future<Map<String, dynamic>> getBothChartReport(userid) async {
-    print("getBothChartReport ${userid}");
+    print("getBothChartReport $userid");
     final expenseResponse = await NetworkService.instance.get(
         "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReport}?transactionType=Expense&userId=$userid");
     print("getBothChartReport after expenseResponse");

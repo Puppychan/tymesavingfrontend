@@ -14,7 +14,7 @@ class FormStateProvider with ChangeNotifier {
   final Map<String, dynamic> _budgetFormFields = {};
   final Map<String, dynamic> _updateBudgetFormFields = {};
   final Map<String, dynamic> _updateGoalFormFields = {};
-  Map<String, dynamic> _savingFormFields = {};
+  final Map<String, dynamic> _savingFormFields = {};
 
   dynamic _validateFieldNull(
       String key, Map<String, dynamic> typeFormFields, dynamic defaultValue) {

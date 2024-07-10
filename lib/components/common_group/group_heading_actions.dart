@@ -5,14 +5,14 @@ import 'package:tymesavingfrontend/components/common/sheet/icon_text_row.dart';
 import 'package:tymesavingfrontend/screens/budget/budget_update_page.dart';
 import 'package:tymesavingfrontend/screens/goal/goal_update_page.dart';
 import 'package:tymesavingfrontend/screens/invitation/group_pending_invitation_page.dart';
-import 'package:tymesavingfrontend/screens/member_list_page.dart';
+import 'package:tymesavingfrontend/screens/user_list/member_list_page.dart';
 
 List<Widget> renderGroupHeadingActions(
     BuildContext context, bool isMember, bool isBudget, String groupId) {
   List<Widget> actions = [
     ...actionRow(context, Icons.people_rounded, 'Members', () {
       Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return MemberListPage(isBudgetGroup: isBudget, groupId: groupId);
+        return MemberListPage(isBudgetGroup: isBudget, groupId: groupId, isMember: isMember);
       }));
     }),
     ...actionRow(context, Icons.wallet_sharp, "View group transaction history",

@@ -5,10 +5,8 @@ import 'package:tymesavingfrontend/common/styles/app_padding.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/form/common_form/goal_form.dart';
 import 'package:tymesavingfrontend/models/goal_model.dart';
-import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
 import 'package:tymesavingfrontend/services/goal_service.dart';
-import 'package:tymesavingfrontend/services/user_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
 class GoalUpdatePage extends StatefulWidget {

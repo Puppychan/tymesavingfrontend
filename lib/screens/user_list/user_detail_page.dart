@@ -11,13 +11,10 @@ import 'package:tymesavingfrontend/utils/handling_error.dart';
 
 class UserDetailPage extends StatefulWidget {
   final User user;
-  final bool isViewByOther;
-  final bool isViewYourself;
-  const UserDetailPage(
-      {super.key,
-      required this.user,
-      this.isViewByOther = false,
-      this.isViewYourself = false});
+  const UserDetailPage({
+    super.key,
+    required this.user,
+  });
 
   @override
   State<UserDetailPage> createState() => _UserDetailState();
@@ -31,8 +28,7 @@ class _UserDetailState extends State<UserDetailPage> {
       await handleMainPageApi(context, () async {
         return await userService.getCurrentUserData(widget.user.username);
         // return result;
-      }, () async {
-      });
+      }, () async {});
     });
   }
 
@@ -86,5 +82,4 @@ class _UserDetailState extends State<UserDetailPage> {
       ),
     );
   }
-
-  }
+}

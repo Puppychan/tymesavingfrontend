@@ -6,7 +6,7 @@ import 'package:tymesavingfrontend/components/transaction/transaction_list.dart'
 class ViewAllTransactionsPage extends StatefulWidget {
   final Map<String, List<Transaction>> transactions;
 
-  ViewAllTransactionsPage({required this.transactions});
+  const ViewAllTransactionsPage({super.key, required this.transactions});
 
   @override
   _ViewAllTransactionsPageState createState() =>
@@ -86,7 +86,7 @@ class _ViewAllTransactionsPageState extends State<ViewAllTransactionsPage>
                 child: Text(value.capitalize()),
               );
             }).toList(),
-            underline: SizedBox(), // Remove underline
+            underline: const SizedBox(), // Remove underline
           ),
         ],
       ),
@@ -103,6 +103,6 @@ class _ViewAllTransactionsPageState extends State<ViewAllTransactionsPage>
 
 extension StringExtension on String {
   String capitalize() {
-    return "${this[0].toUpperCase()}${this.substring(1)}";
+    return "${this[0].toUpperCase()}${substring(1)}";
   }
 }

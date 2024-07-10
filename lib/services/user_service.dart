@@ -83,11 +83,15 @@ class UserService extends ChangeNotifier {
   }
 
   Future<dynamic> fetchGroupMemberList(
-      bool? isBudgetGroup, String? groupId) async {
-    // TODO: implement if isBudgetGroup is false - Saving Group
-    final response = await NetworkService.instance.get(
-        "${BackendEndpoints.budget}/$groupId/${BackendEndpoints.budgetGetMembers}");
-    print("Response data in fetchGroupMemberList: $response");
+      bool isBudgetGroup, String? groupId) async {
+    String endpoint = "";
+    if (isBudgetGroup) {
+      endpoint =
+          "${BackendEndpoints.budget}/$groupId/${BackendEndpoints.budgetGetMembers}";
+    } else {
+      endpoint = "${BackendEndpoints.goal}/$groupId/${BackendEndpoints.goal}";
+    }
+    final response = await NetworkService.instance.get(endpoint);
     if (response['response'] != null && response['statusCode'] == 200) {
       final responseData = response['response'];
       List<Member> memberList = [];

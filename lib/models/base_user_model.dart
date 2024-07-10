@@ -20,9 +20,12 @@ class UserBase {
   Map<String, dynamic> toMap() {
     // we are using the map to send the data to the API
     return {
+      "_id": id,
+      "username": username,
       "email": email,
       "fullname": fullname,
       "phone": phone,
+      "avatar": avatar,
       // "contribution": contribution,
     };
   }

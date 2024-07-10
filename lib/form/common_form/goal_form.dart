@@ -337,7 +337,7 @@ class _GoalFormMainState extends State<GoalFormMain> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           content: SingleChildScrollView(
             child: IntrinsicHeight(
               child: Column(
@@ -345,7 +345,7 @@ class _GoalFormMainState extends State<GoalFormMain> {
                 children: [
                   TextField(
                     controller: controller,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Edit',
                       hintText: 'Enter new value',
                     ),
@@ -360,13 +360,13 @@ class _GoalFormMainState extends State<GoalFormMain> {
                 onSubmitted(controller.text);
                 Navigator.of(context).pop();
               },
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
           ],
         );
