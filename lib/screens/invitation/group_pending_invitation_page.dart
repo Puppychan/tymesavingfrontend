@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/enum/invitation_status_enum.dart';
 import 'package:tymesavingfrontend/common/styles/app_padding.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
+import 'package:tymesavingfrontend/components/common/not_found_message.dart';
 import 'package:tymesavingfrontend/components/invitation/group_invitation_card.dart';
 import 'package:tymesavingfrontend/components/invitation_add_modal.dart';
 import 'package:tymesavingfrontend/services/invitation_service.dart';
@@ -135,29 +136,6 @@ class _GroupPendingInvitationPageState extends State<GroupPendingInvitationPage>
   }
 
   Widget buildNoInvitation(TextTheme textTheme, ColorScheme colorScheme) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(FontAwesomeIcons.faceSadTear),
-            SizedBox(width: 8.0),
-            Icon(FontAwesomeIcons.heartCrack),
-            SizedBox(width: 8.0),
-            Icon(FontAwesomeIcons.faceSadCry),
-          ],
-        ),
-        const SizedBox(height: 16.0),
-        Text(
-          "Oops... No invitations found.",
-          style: textTheme.titleMedium!.copyWith(
-            color: colorScheme.secondary,
-          ),
-          textAlign: TextAlign.center,
-        )
-      ],
-    );
+    return const NotFoundMessage(message: "Oops... No invitations found.",);
   }
 }

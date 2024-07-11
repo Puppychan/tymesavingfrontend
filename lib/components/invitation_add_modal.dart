@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/components/common/sheet/bottom_sheet.dart';
 import 'package:tymesavingfrontend/components/common/input/underline_text_field.dart';
-import 'package:tymesavingfrontend/components/search_user_delegate.dart';
+import 'package:tymesavingfrontend/components/user/user_tile.dart';
+import 'package:tymesavingfrontend/screens/search_page.dart';
+import 'package:tymesavingfrontend/services/user_service.dart';
+import 'package:tymesavingfrontend/utils/handling_error.dart';
 
 void showUserInputModal(BuildContext context) {
-  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController userController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   showStyledBottomSheet(
     context: context,
@@ -20,20 +24,41 @@ void showUserInputModal(BuildContext context) {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TextField(
-            controller: usernameController,
+            controller: userController,
             decoration: InputDecoration(
               labelText: 'Username',
               suffixIcon: IconButton(
                 icon: const Icon(Icons.search),
                 onPressed: () async {
-                  final selectedUser = await showSearch(
-                    context: context,
-                    delegate: UserSearchDelegate(),
-                  );
-                  if (selectedUser != null) {
-                    usernameController.text = selectedUser;
-                    // Fetch additional details for the selected user and populate other fields
+                  void searchUsers(String value,
+                      Function(List<dynamic>) updateResults) async {
+                    final userService =
+                        Provider.of<UserService>(context, listen: false);
+                    await handleMainPageApi(context, () async {
+                      return await userService.searchUsers(value);
+                    }, () async {
+                      updateResults(userService.searchUserList);
+                    }, notFoundAction: () async {
+                      updateResults([]);
+                    });
                   }
+
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SearchPage(
+                            title: "Search User",
+                            searchLabel: "Search using username - email - name",
+                            searchPlaceholder:
+                                "Search potential members here...",
+                            searchCallback: (value, updateResults) async => searchUsers(value, updateResults),
+                            resultWidgetFunction: (result) => UserTile(
+                                user: result,
+                                onTap: () {
+                                  userController.text = result.id;
+                                  Navigator.pop(context);
+                                })),
+                      ));
                 },
               ),
             ),
@@ -43,9 +68,7 @@ void showUserInputModal(BuildContext context) {
             controller: descriptionController,
             label: 'Description',
             placeholder: "Any message for this invitation?",
-
           ),
-        
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () {

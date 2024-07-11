@@ -6,7 +6,8 @@ import 'package:tymesavingfrontend/utils/format_amount.dart';
 class AnimatedProgressBar extends StatefulWidget {
   final String title;
   final Color backgroundColor;
-  final List<Map<String, dynamic>> progressList; // {progress: 0.5, progressColor: Colors.blue, progressText: 'Progress', originalValue: 500000}
+  final List<Map<String, dynamic>>
+      progressList; // {progress: 0.5, progressColor: Colors.blue, progressText: 'Progress', originalValue: 500000}
   final double height;
   final Map<String, dynamic> base; // {text: 'Base', value: 1000000}
 
@@ -15,7 +16,8 @@ class AnimatedProgressBar extends StatefulWidget {
     this.backgroundColor = Colors.grey,
     this.height = 17.0,
     required this.progressList,
-    required this.base, required this.title,
+    required this.base,
+    required this.title,
   });
 
   @override
@@ -47,7 +49,7 @@ class _AnimatedProgressBarState extends State<AnimatedProgressBar>
     normalizedProgressList = normalizeProgressList(widget.progressList);
   }
 
-    @override
+  @override
   void didUpdateWidget(covariant AnimatedProgressBar oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.progressList != widget.progressList) {
@@ -65,11 +67,10 @@ class _AnimatedProgressBarState extends State<AnimatedProgressBar>
 
   List<Map<String, dynamic>> normalizeProgressList(
       List<Map<String, dynamic>> progressList) {
-    double totalProgress =
-        progressList.fold(0, (sum, item) {
-          print("Item progress is: ${item['progress']}");
-          return sum + item['progress'];
-          });
+    double totalProgress = progressList.fold(0, (sum, item) {
+      print("Item progress is: ${item['progress']}");
+      return sum + item['progress'];
+    });
     print("Total progress is: $totalProgress");
 
     if (totalProgress <= 1.0) {
@@ -96,7 +97,13 @@ class _AnimatedProgressBarState extends State<AnimatedProgressBar>
     final textTheme = Theme.of(context).textTheme;
 
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      CustomAlignText(text: widget.title, style: textTheme.titleSmall, alignment: Alignment.center, textAlign: TextAlign.center, maxLines: 2,),
+      CustomAlignText(
+        text: widget.title,
+        style: textTheme.titleSmall,
+        alignment: Alignment.center,
+        textAlign: TextAlign.center,
+        maxLines: 2,
+      ),
       const SizedBox(height: 7),
       ClipRRect(
           borderRadius: borderRadius,
@@ -144,10 +151,8 @@ class _AnimatedProgressBarState extends State<AnimatedProgressBar>
       const Divider(),
       Text(
         widget.base['text'] + ": " + formatAmountToVnd(widget.base['value']),
-        style: textTheme.bodyMedium!.copyWith(
-          fontFamily: 'Merriweather',
-          fontWeight: FontWeight.w600
-        ),
+        style: textTheme.bodyMedium!
+            .copyWith(fontFamily: 'Merriweather', fontWeight: FontWeight.w600),
       ),
       const SizedBox(height: 7),
       ...widget.progressList.map((progressValue) =>

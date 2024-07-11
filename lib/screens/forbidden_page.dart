@@ -5,8 +5,9 @@ import 'package:tymesavingfrontend/common/enum/button_theme_enum.dart';
 
 class ForbiddenPage extends StatelessWidget {
   // final VoidCallback onRetry;
+  final String errorMessage;
 
-  const ForbiddenPage({super.key});
+  const ForbiddenPage({super.key, required this.errorMessage});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +35,7 @@ class ForbiddenPage extends StatelessWidget {
             ),
             const SizedBox(height: 16.0),
             Text(
-              'You are not allowed to access this page!',
+              errorMessage,
               overflow: TextOverflow.visible,
               // style: Theme.of(context).textTheme.headline4,
               style: Theme.of(context).textTheme.headlineMedium!,

@@ -25,20 +25,18 @@ class ErrorDisplay {
         currentRoute.settings.name == ErrorPage.routeName) {
       alreadyInErrorPage = true;
     }
-    if (alreadyInErrorPage) {
-      return;
-    }
-
-    // Display error message
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ErrorPage(
-          errorMessage:
-              errorResponse['response'] ?? "Oops something went wrong",
-          statusCode: errorResponse['statusCode'] ?? 500,
+    if (!alreadyInErrorPage) {
+      // Display error message
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ErrorPage(
+            errorMessage:
+                errorResponse['response'] ?? "Oops something went wrong",
+            statusCode: errorResponse['statusCode'] ?? 500,
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
 }

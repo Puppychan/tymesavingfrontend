@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:tymesavingfrontend/models/base_user_model.dart';
 import 'package:tymesavingfrontend/models/member_model.dart';
 import 'package:tymesavingfrontend/models/summary_user_model.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
@@ -21,6 +22,7 @@ class UserService extends ChangeNotifier {
   List<User> _users = [];
   User? _currentFetchUser;
   SummaryUser? _summaryUser;
+  List<UserBase> _searchUserList = [];
   List<Member> _members = [];
 
   // List<String> get filterData => _filterData;
@@ -29,6 +31,7 @@ class UserService extends ChangeNotifier {
   List<User> get users => _users;
   User? get currentFetchUser => _currentFetchUser;
   SummaryUser? get summaryUser => _summaryUser;
+  List<UserBase> get searchUserList => _searchUserList;
   List<Member> get members => _members;
 
   String _convertSortOptionToString() {
@@ -200,9 +203,27 @@ class UserService extends ChangeNotifier {
     return response;
   }
 
-  Future<dynamic> searchUserByUsername(String username) {
-    return NetworkService.instance.get(
-        "${BackendEndpoints.user}/${BackendEndpoints.userSearchByUsername}/$username");
+  Future<dynamic> searchUsers(String username) async {
+    final response = await NetworkService.instance.get(
+        "${BackendEndpoints.user}/${BackendEndpoints.userSearch}/$username");
+    if (response['response'] != null) {
+      if (response['statusCode'] == 200) {
+        final responseBody = response['response'];
+        // convert the response to a list of User objects
+        _searchUserList = responseBody
+            .map<UserBase>(
+                (item) => UserBase.fromMap(item as Map<String, dynamic>))
+            .toList();
+        // display the search results
+        for (var user in _searchUserList) {
+          debugPrint("User: ${user.username}");
+        }
+      } else if (response['statusCode'] == 404) {
+        _searchUserList = [];
+      }
+      notifyListeners();
+    }
+    return response;
   }
 
   Future<Map<String, dynamic>> updateUser(
@@ -250,9 +271,9 @@ class UserService extends ChangeNotifier {
       if (users.isNotEmpty) {
         final index =
             _users.indexWhere((element) => element.username == username);
-            if (index != -1) {
-              _users[index] = updatedUser;
-            }
+        if (index != -1) {
+          _users[index] = updatedUser;
+        }
         notifyListeners();
       }
       if (currentFetchUser != null && currentFetchUser?.username == username) {

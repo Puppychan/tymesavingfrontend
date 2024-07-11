@@ -33,7 +33,7 @@ class BackendEndpoints {
   static String get userById => "byId";
   static String get userUploadAvatar => "update/avatar";
   static String get otherUserById => "viewUserFromId";
-  static String get userSearchByUsername => "viewUserFromUsername";
+  static String get userSearch => "search";
   static String get transactionReport => "report";
   static String get transactionReportByUser => "byUser";
 

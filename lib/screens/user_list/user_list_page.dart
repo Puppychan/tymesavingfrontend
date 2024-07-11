@@ -12,11 +12,6 @@ class UserListPage extends StatefulWidget {
   State<UserListPage> createState() => _UserListPageState();
 }
 
-Widget buildFood(String foodName) => ListTile(
-      title: Text(foodName),
-      onTap: () {},
-    );
-
 class _UserListPageState extends State<UserListPage> {
   // late List<User> users = [];
   void _fetchUsers() async {
