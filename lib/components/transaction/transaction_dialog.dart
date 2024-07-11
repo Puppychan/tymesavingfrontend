@@ -23,7 +23,7 @@ class TransactionDialog extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(10.0)),
           ),
           title: Text(transaction.category),
-          content: Container(
+          content: SizedBox(
             width: constraints.maxWidth * 0.8, // 80% of screen width
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -54,7 +54,7 @@ class TransactionDialog extends StatelessWidget {
                   icon: Icons.attach_money,
                   iconColor: Colors.red[800],
                   label: 'Amount:',
-                  value: formatAmount(transaction.amount),
+                  value: formatAmountToVnd(transaction.amount),
                 ),
               ],
             ),

@@ -1,6 +1,6 @@
   import 'package:intl/intl.dart';
 
-double convertFormattedToNumber(String formattedAmount) {
+double convertFormattedAmountToNumber(String formattedAmount) {
     String numericString = formattedAmount.replaceAll(RegExp(r'[^\d]'), '');
     double? amount = double.tryParse(numericString);
     if (amount == null) {
@@ -9,7 +9,7 @@ double convertFormattedToNumber(String formattedAmount) {
     return double.parse(amount.toStringAsFixed(2));
   }
   
-  String formatAmount(double amount) {
+  String formatAmountToVnd(double amount) {
     final NumberFormat formatter = NumberFormat.currency(locale: 'vi_VN', symbol: '₫');
     return formatter.format(amount);
   }

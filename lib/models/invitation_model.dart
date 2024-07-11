@@ -1,38 +1,43 @@
+import 'package:tymesavingfrontend/common/enum/invitation_status_enum.dart';
 import 'package:tymesavingfrontend/common/enum/invitation_type_enum.dart';
+import 'package:tymesavingfrontend/models/summary_group_model.dart';
 
 class Invitation {
-  // please note that we get all these data from the API we are using
-  final String id;
-  final String code;
+  final String invitationId;
+  final String code; // 6 character code for the user to enter and join
   final String description;
-  final InvitationType type;
-  final String groupId;
-  // final List<User>? user;
-
-  // final String email;
-  // final String fullname;
-  // final String phone;
-  // final String pin;
-
+  final InvitationType
+      type; // is this invitation for SharedBudget or GroupSaving?
+  final String groupId; // object ID for the group that this invitation is in
+  
+  // optional
+  final String? userId;
+  final InvitationStatus? status; // status of the invitation
+  SummaryGroup? summaryGroup; // summary of the budget group
+  
 
   Invitation.fromMap(Map<String, dynamic> invitation)
-  // we are using the map to get the data from the API
-      : id = invitation['_id'],
+      : invitationId = invitation['invitationId'],
         code = invitation['code'],
         description = invitation['description'],
         type = InvitationType.fromString(invitation['type']),
-        groupId = invitation['groupId'];
+        groupId = invitation['groupId'],
+        // optional
+        userId = invitation['userId'] ?? '',
+        status = InvitationStatus.fromString(invitation['status'] ?? ''),
+        summaryGroup = invitation['summaryGroup'] != null
+            ? SummaryGroup.fromMap(invitation['summaryGroup'])
+            : null;
 
   Map<String, dynamic> toMap() {
-    // we are using the map to send the data to the API
     return {
-      "_id": id,
-      "code": code,
-      "description": description,
-      "type": type.toString(),
-      "groupId": groupId,
+      'invitationId': invitationId,
+      'userId': userId,
+      'code': code,
+      'description': description,
+      'type': type.toString(),
+      'groupId': groupId,
+      'status': status.toString(),
     };
   }
-
-
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/common/styles/app_color.dart';
 
 class AppTextStyles {
   //   static const TextStyle heading = TextStyle(

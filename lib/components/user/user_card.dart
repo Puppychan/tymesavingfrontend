@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
+import 'package:tymesavingfrontend/common/constant/temp_constant.dart';
+import 'package:tymesavingfrontend/common/enum/user_role_enum.dart';
 import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
+import 'package:tymesavingfrontend/components/common/images/circle_network_image.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/screens/user_list/user_detail_page.dart';
 import 'package:tymesavingfrontend/screens/user_profile/update_user_page.dart';
@@ -21,8 +23,6 @@ class UserCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: Implement user's contribution inside shared budget  and saving group
-    final bool isHaveContribution = user.contribution != -1.0;
     final currentUser = Provider.of<AuthService>(context).user;
 
     void onEdit() {
@@ -70,110 +70,106 @@ class UserCard extends StatelessWidget {
     }
 
     // double progress = user.contribution / maxContribution; // Calculate the progress as a fraction
-    String formattedDate = timeago.format(DateTime.parse(user.creationDate));
+    String formattedDate =
+        timeago.format(DateTime.parse(user.creationDate ?? ""));
     final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Card(
       color: colorScheme.tertiary,
-      shadowColor: colorScheme.secondary.withOpacity(0.5),
+      shadowColor: colorScheme.shadow,
       elevation: 5,
       child: InkWell(
         splashColor: colorScheme.quaternary,
         onTap: () {
           // debugPrint('Challenge tapped.');
           Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return UserDetail(user: user);
+            return UserDetailPage(user: user);
           }));
         },
         borderRadius: BorderRadius.circular(16),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: Row(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  // CustomCircleAvatar(imagePath: user.avatarPath),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      "${user.username} ${currentUser?.username == user.username ? '(You)' : ''}",
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  Icon(
+                      user.role == UserRole.admin
+                          ? Icons.admin_panel_settings
+                          : Icons.person,
+                      color: user.role == UserRole.admin
+                          ? colorScheme.secondary
+                          : colorScheme.primary),
+                  const SizedBox(width: 4),
+                  const Expanded(child: Divider()),
+                  const SizedBox(width: 4),
+                  Text(
+                    user.role.toString(),
+                    style: textTheme.bodyMedium!.copyWith(
+                      color: colorScheme.secondary,
                     ),
                   ),
-                  IconButton(
-                    icon: Icon(Icons.edit, color: colorScheme.secondary),
-                    onPressed: onEdit,
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.delete, color: colorScheme.secondary),
-                    onPressed: () async {
-                      await showDeleteConfirmationDialog();
-                    },
-                  ),
                 ],
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.end,
+              const SizedBox(height: 10),
+              Row(
                 children: [
-                  Expanded(
-                      flex: 6,
-                      child: Text.rich(
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        TextSpan(
-                          children: isHaveContribution
-                              ? <TextSpan>[
-                                  TextSpan(
-                                    text: 'Contribute ',
-                                    style:
-                                        Theme.of(context).textTheme.bodyMedium!,
-                                  ),
-                                  TextSpan(
-                                    // text: '\$${user.contribution.toStringAsFixed(2)}',
-                                    text: "User Contribution",
-                                    style: AppTextStyles.paragraphBold(context),
-                                  ),
-                                ]
-                              : <TextSpan>[
-                                  TextSpan(
-                                    // text: '\$${user.contribution.toStringAsFixed(2)}',
-                                    text: user.fullname,
-                                    style: AppTextStyles.paragraphBold(context),
-                                  )
-                                ],
+                  CustomCircleAvatar(
+                      radius: 25.0,
+                      imagePath: user.avatar ?? TEMP_AVATAR_IMAGE),
+                  const SizedBox(width: 10),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment:
+                        MainAxisAlignment.start, // vertically centered
+                    children: [
+                      Text(user.username, style: textTheme.bodySmall),
+                      Text(
+                        "${user.fullname} ${currentUser?.fullname == user.fullname ? '(You)' : ''}",
+                        style: textTheme.bodyLarge!.copyWith(
+                          color: colorScheme.onBackground,
+                          fontWeight: FontWeight.w600,
                         ),
-                      )),
-                  const SizedBox(width: 3),
+                      ),
+                      Text(
+                        user.email,
+                        style: textTheme.bodyMedium!.copyWith(
+                          fontStyle: FontStyle.italic,
+                          color: colorScheme.onBackground,
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+              const SizedBox(height: 10),
+              const Divider(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
                   Text(
                     "Joined $formattedDate",
-                    style: Theme.of(context).textTheme.bodySmall!,
+                    style: textTheme.bodyMedium!,
+                    maxLines: 2,
                   ),
+                  Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    IconButton(
+                      icon: Icon(Icons.edit, color: colorScheme.secondary),
+                      onPressed: onEdit,
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.delete, color: colorScheme.secondary),
+                      onPressed: () async {
+                        await showDeleteConfirmationDialog();
+                      },
+                    ),
+                  ])
                 ],
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: isHaveContribution
-                    ? LinearProgressIndicator(
-                        // value: progress.clamp(0.0, 1.0), // Ensuring the value is between 0 and 1
-                        value: 0.4, // Ensuring the value is between 0 and 1
-                        backgroundColor: colorScheme.quaternary,
-                        valueColor:
-                            AlwaysStoppedAnimation<Color>(colorScheme.primary),
-                        minHeight: 8,
-                      )
-                    : Container(),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

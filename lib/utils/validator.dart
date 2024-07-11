@@ -6,7 +6,7 @@ class Validator {
     if (value == null || value.isEmpty) {
       return 'Please enter your email address';
     }
-    String pattern = r'^\w+@\w+\.\w+$'; // Improved pattern for simplicity
+    String pattern = r'^[\w\.]+@\w+(\.\w+)+$'; // Improved pattern for simplicity
     if (!RegExp(pattern).hasMatch(value)) {
       return 'Please enter a valid email address';
     }
@@ -118,7 +118,7 @@ class Validator {
     if (value == null || value.isEmpty) {
       return 'Amount cannot be empty';
     }
-    final convertedValue = convertFormattedToNumber(value);
+    final convertedValue = convertFormattedAmountToNumber(value);
     // final number = double.tryParse(convertedValue);
     // if (number == null) {
     //   return 'Please enter a valid number';

@@ -1,6 +1,5 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
 import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 
 class CustomBarChart extends StatefulWidget {
@@ -48,13 +47,13 @@ class _CustomBarChartState extends State<CustomBarChart> {
             barRods: [
               BarChartRodData(
                 toY: expenseEntry.value.toDouble(),
-                color: Theme.of(context).colorScheme.error,
+                color: Theme.of(context).colorScheme.inversePrimary,
                 width: 10,
                 borderRadius: BorderRadius.circular(0),
               ),
               BarChartRodData(
                 toY: incomeEntry.value.toDouble(),
-                color: Theme.of(context).colorScheme.success,
+                color: Theme.of(context).colorScheme.primary,
                 width: 10,
                 borderRadius: BorderRadius.circular(0),
               ),
@@ -68,16 +67,18 @@ class _CustomBarChartState extends State<CustomBarChart> {
 
     return AspectRatio(
         aspectRatio: 1.9,
-        child: Container(
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(18)),
-          ),
+        child: Card.filled(
+          color: Colors.transparent.withOpacity(0),
+          shadowColor: Theme.of(context).colorScheme.onTertiary,
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),
             child: BarChart(
                 swapAnimationCurve: Curves.linear,
                 swapAnimationDuration: const Duration(milliseconds: 150),
                 BarChartData(
+                  barTouchData: BarTouchData(
+                    enabled: false,
+                  ),
                     titlesData: FlTitlesData(
                         show: true,
                         topTitles: const AxisTitles(
@@ -105,7 +106,7 @@ class _CustomBarChartState extends State<CustomBarChart> {
                       top: BorderSide.none,
                       right: BorderSide.none,
                       left: BorderSide.none,
-                      bottom: BorderSide(width: 1),
+                      bottom: BorderSide.none,
                     )),
                     groupsSpace: 10,
                     barGroups: createBarGroups())),

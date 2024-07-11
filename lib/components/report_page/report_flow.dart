@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
 
-
 class ReportFlow extends StatefulWidget {
   const ReportFlow(
       {super.key,
@@ -20,7 +19,6 @@ class ReportFlow extends StatefulWidget {
 }
 
 class _ReportFlowState extends State<ReportFlow> {
-
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -29,9 +27,9 @@ class _ReportFlowState extends State<ReportFlow> {
       children: [
         Card.filled(
           margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          color: colorScheme.surface,
+          color: Colors.transparent.withOpacity(0),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
             child: Row(
               children: [
                 Icon(Icons.arrow_upward, color: colorScheme.success),
@@ -61,9 +59,9 @@ class _ReportFlowState extends State<ReportFlow> {
         ),
         Card.filled(
           margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          color: colorScheme.surface,
+          color: Colors.transparent.withOpacity(0),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
             child: Row(
               children: [
                 Icon(Icons.arrow_downward_rounded, color: colorScheme.error),

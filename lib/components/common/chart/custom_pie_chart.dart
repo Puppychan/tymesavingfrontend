@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
 import 'package:tymesavingfrontend/models/transaction_report_model.dart';
 
 class CustomPieChart extends StatefulWidget {
@@ -35,9 +36,14 @@ class _CustomPieChartState extends State<CustomPieChart> {
   void initState() {
     pieChartData = [];
     for (int i = 0; i < widget.topCategories.length; i++) {
+      final category = transactionCategoryData[
+          TransactionCategory.fromString(widget.topCategories[i].category)];
+      final Color color = category?['color'];
       pieChartData.add(PieChartSectionData(
         value: double.parse(widget.topCategories[i].percentages),
-        color: categoryColors[widget.topCategories[i].category],
+        color: color,
+        title: '',
+        showTitle: false,
       ));
     }
 

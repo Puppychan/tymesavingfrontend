@@ -15,8 +15,8 @@ class _ExpenseCardState extends State<ExpenseCard> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-    return Card(
-      color: colorScheme.surface,
+    return Card.filled(
+      color: Colors.transparent.withOpacity(0),
       margin: const EdgeInsets.symmetric(horizontal: 20,vertical: 5),
       child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),

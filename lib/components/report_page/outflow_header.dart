@@ -11,14 +11,18 @@ class _OutflowHeaderState extends State<OutflowHeader> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
           'Outflow detail',
           style: Theme.of(context).textTheme.titleLarge!,
         ),
         Text(
-          'Check where your money has gone to here!',
+          'Here is a breakdown of your expense',
+          style: Theme.of(context).textTheme.bodyMedium!,
+        ),
+        Text(
+          'account activity so far this month.',
           style: Theme.of(context).textTheme.bodyMedium!,
         ),
         const SizedBox(

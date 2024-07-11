@@ -50,11 +50,12 @@ class AppThemes {
         onTertiary: AppColors.black,
         onBackground: AppColors.black,
         onError: AppColors.errorText,
-
-        // shadow: AppColors.secondary,
+    
+        shadow: AppColors.shadow,
       ),
       appBarTheme: const AppBarTheme(
-        color: AppColors.cream, // background color of the app bar
+        // color: AppColors.cream, // background color of the app bar
+        color: Colors.transparent, // background color of the app bar
         surfaceTintColor:
             AppColors.cream, // color of the app bar when scrolling
         iconTheme: IconThemeData(color: AppColors.black),
@@ -70,10 +71,10 @@ class AppThemes {
         headlineLarge: TextStyle(
             // display
             overflow: TextOverflow.ellipsis,
-            fontSize: 28,
+            fontSize: 25,
             color: AppColors.black,
             fontFamily: 'Merriweather',
-            fontWeight: FontWeight.w700),
+            fontWeight: FontWeight.w600),
         headlineMedium: TextStyle(
             // sub display - subheading
             fontSize: 22,
@@ -247,10 +248,12 @@ class AppThemes {
         onBackground: AppColors.cream,
         onError: AppColors.errorTextDark,
 
-        // shadow: AppColors.secondaryDark,
+        shadow: AppColors.shadowDark,
+
       ),
       appBarTheme: const AppBarTheme(
-        color: AppColors.black, // background color of the app bar
+        // color: AppColors.black, // background color of the app bar
+        color: Colors.transparent, // background color of the app bar
         surfaceTintColor:
             AppColors.black, // color of the app bar when scrolling
         iconTheme: IconThemeData(color: AppColors.cream),
@@ -266,7 +269,7 @@ class AppThemes {
         headlineLarge: TextStyle(
             // display
             overflow: TextOverflow.ellipsis,
-            fontSize: 28,
+            fontSize: 25,
             color: AppColors.cream,
             fontFamily: 'Merriweather',
             fontWeight: FontWeight.w700),

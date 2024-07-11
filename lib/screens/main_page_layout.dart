@@ -7,6 +7,7 @@ import 'package:tymesavingfrontend/components/heading/heading_title_based_locati
 import 'package:tymesavingfrontend/components/main_page_layout/show_add_options.dart';
 import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
+import 'package:tymesavingfrontend/screens/budget/budget_list_page.dart';
 import 'package:tymesavingfrontend/screens/home/home_admin_page.dart';
 import 'package:tymesavingfrontend/screens/home/home_page.dart';
 import 'package:tymesavingfrontend/screens/more_menu/more_page.dart';
@@ -26,10 +27,27 @@ class _MainPageLayoutState extends State<MainPageLayout> with RouteAware {
   User? user;
   late PageController _pageController;
 
+  void _fetchCurrentUser() async {
+    Future.microtask(() async {
+      final authService = Provider.of<AuthService>(context, listen: false);
+      await handleMainPageApi(context, () async {
+        return await authService.getCurrentUserData();
+      }, () async {
+        if (!mounted) return;
+        setState(() {
+          user = authService.user;
+        });
+      });
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: _selectedIndex);
+    print("MainPageLayout initState");
+    _fetchCurrentUser();
+    print("After fetchCurrentUser");
   }
 
   @override
@@ -46,22 +64,9 @@ class _MainPageLayoutState extends State<MainPageLayout> with RouteAware {
   @override
   void didPopNext() {
     // Called when the current route has been popped off, and the current route shows up.
+    _fetchCurrentUser();
     // Future.delayed(Duration(seconds: 1));
     // if (!mounted) return;m
-    Future.microtask(() async {
-      if (mounted) {
-        final authService = Provider.of<AuthService>(context, listen: false);
-        await handleMainPageApi(context, () async {
-          return await authService.getCurrentUserData();
-          // return result;
-        }, () async {
-          if (!mounted) return;
-          setState(() {
-            user = authService.user;
-          });
-        });
-      }
-    });
   }
 
   void _onItemTapped(int index) {
@@ -92,9 +97,11 @@ class _MainPageLayoutState extends State<MainPageLayout> with RouteAware {
         children: <Widget>[
           user?.role == UserRole.admin
               ? const HomeAdminPage()
-              : const HomePage(),
-          const Center(child: Text('Goals')),
-          const Center(child: Text('Budgets')),
+              : HomePage(user: user),
+          // TODO: Uncomment when complete goal page
+          // GoalListPage(user: user),
+          const Center(child: Text("Goals Page")),
+          BudgetListPage(user: user),
           const MoreMenuPage(),
         ],
       ),
@@ -156,7 +163,7 @@ class _MainPageLayoutState extends State<MainPageLayout> with RouteAware {
         currentPageLocation = PageLocation.homePage;
         break;
       case 1:
-        currentPageLocation = PageLocation.savingPage;
+        currentPageLocation = PageLocation.goals;
         break;
       case 2:
         currentPageLocation = PageLocation.budgetPage;

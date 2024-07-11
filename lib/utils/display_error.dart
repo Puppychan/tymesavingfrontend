@@ -18,16 +18,25 @@ class ErrorDisplay {
 
   static void navigateToErrorPage(
       Map<String, dynamic> errorResponse, BuildContext context) {
-    // Display error message
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ErrorPage(
-          errorMessage:
-              errorResponse['response'] ?? "Oops something went wrong",
-          statusCode: errorResponse['statusCode'] ?? 500,
+    // check if already in error page
+    bool alreadyInErrorPage = false;
+    var currentRoute = ModalRoute.of(context);
+    if (currentRoute != null &&
+        currentRoute.settings.name == ErrorPage.routeName) {
+      alreadyInErrorPage = true;
+    }
+    if (!alreadyInErrorPage) {
+      // Display error message
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ErrorPage(
+            errorMessage:
+                errorResponse['response'] ?? "Oops something went wrong",
+            statusCode: errorResponse['statusCode'] ?? 500,
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
 }

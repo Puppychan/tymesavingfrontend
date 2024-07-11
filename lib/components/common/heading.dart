@@ -5,17 +5,20 @@ class Heading extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final bool showBackButton;
   final List<Widget>? actions;
+  final PreferredSizeWidget? bottom;
 
   const Heading(
       {super.key,
       required this.title,
       this.showBackButton = false,
-      this.actions});
+      this.actions,
+      this.bottom});
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: CustomAlignText(text: title),
+      title: CustomAlignText(
+          text: title, style: Theme.of(context).textTheme.headlineLarge),
       leading: showBackButton
           ? IconButton(
               onPressed: () {
@@ -29,9 +32,11 @@ class Heading extends StatelessWidget implements PreferredSizeWidget {
             )
           : null,
       actions: actions,
+      bottom: bottom,
     );
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  Size get preferredSize =>
+      Size.fromHeight(kToolbarHeight + (bottom?.preferredSize.height ?? 0.0));
 }

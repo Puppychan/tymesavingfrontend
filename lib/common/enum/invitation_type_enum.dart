@@ -1,6 +1,6 @@
 enum InvitationType {
-  budget("Budget"),
-  saving("Saving");
+  budget("SharedBudget"),
+  savings("GroupSaving");
 
   const InvitationType(this.value);
 
@@ -8,6 +8,14 @@ enum InvitationType {
 
   @override
   String toString() => value;
+
+  String toStringFormatted() {
+    return value.splitMapJoin(
+      RegExp(r"([A-Z][a-z]+)"),
+      onMatch: (m) => " ${m.group(0)}",
+      onNonMatch: (m) => m,
+    );
+  }
 
   static InvitationType fromString(String value) {
     // get the invitation type from the value

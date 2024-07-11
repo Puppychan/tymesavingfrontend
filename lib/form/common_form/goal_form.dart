@@ -10,7 +10,7 @@ import 'package:tymesavingfrontend/components/common/input/underline_text_field.
 import 'package:tymesavingfrontend/components/category_list/category_icon.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
-import 'package:tymesavingfrontend/services/budget_service.dart';
+import 'package:tymesavingfrontend/services/goal_service.dart';
 import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
 import 'package:tymesavingfrontend/utils/display_error.dart';
 import 'package:tymesavingfrontend/utils/display_success.dart';
@@ -19,14 +19,14 @@ import 'package:tymesavingfrontend/utils/format_date.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 import 'package:tymesavingfrontend/utils/validator.dart';
 
-class BudgetFormMain extends StatefulWidget {
+class GoalFormMain extends StatefulWidget {
   final FormStateType type;
-  const BudgetFormMain({super.key, required this.type});
+  const GoalFormMain({super.key, required this.type});
   @override
-  State<BudgetFormMain> createState() => _BudgetFormMainState();
+  State<GoalFormMain> createState() => _GoalFormMainState();
 }
 
-class _BudgetFormMainState extends State<BudgetFormMain> {
+class _GoalFormMainState extends State<GoalFormMain> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
@@ -34,7 +34,7 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
 
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _selectedTime = TimeOfDay.now();
-  // String _savingOrBudget = 'For None';
+  // String _savingOrGoal = 'For None';
   // init state
   @override
   void initState() {
@@ -79,9 +79,9 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
         User? user = authService.user;
 
         context.loaderOverlay.show();
-        if (widget.type == FormStateType.updateBudget) {
-          return await Provider.of<BudgetService>(context, listen: false)
-              .updateBudgetGroup(
+        if (widget.type == FormStateType.updateGoal) {
+          return await Provider.of<GoalService>(context, listen: false)
+              .updateGoalGroup(
             formField['id'],
             user?.id ?? "",
             formField['name'],
@@ -90,8 +90,8 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
             formField['endDate'],
           );
         } else {
-          return await Provider.of<BudgetService>(context, listen: false)
-              .addBudgetGroup(
+          return await Provider.of<GoalService>(context, listen: false)
+              .addGoalGroup(
             user?.id ?? "",
             formField['name'],
             formField['description'],
@@ -104,7 +104,7 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
         context.loaderOverlay.hide();
         Navigator.of(context).pop();
         SuccessDisplay.showSuccessToast(
-            "Create new ${widget.type} successfully", context);
+            "${widget.type == FormStateType.updateBudget ? "Update" : "Create"} new ${widget.type} successfully", context);
       });
     });
   }
@@ -226,7 +226,7 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
                       children: [50000.0, 100000.0, 500000.0, 1000000.0]
                           .expand((amount) {
                         final selectedAmount =
-                            convertFormattedToNumber(formattedAmount);
+                            convertFormattedAmountToNumber(formattedAmount);
                         return [
                           ChoiceChip(
                             // color: MaterialStateProperty.all<Color>(
@@ -235,7 +235,7 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
                                 states.contains(MaterialState.selected)
                                     ? colorScheme.primary
                                     : colorScheme.tertiary),
-                            label: Text(formatAmount(amount),
+                            label: Text(formatAmountToVnd(amount),
                                 style: TextStyle(
                                   color: selectedAmount == amount
                                       ? colorScheme.onPrimary
@@ -245,7 +245,7 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
                             selected: selectedAmount == amount,
                             onSelected: (selected) {
                               setState(() {
-                                _amountController.text = formatAmount(amount);
+                                _amountController.text = formatAmountToVnd(amount);
                                 updateOnChange("amount");
                               });
                             },
@@ -337,7 +337,7 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           content: SingleChildScrollView(
             child: IntrinsicHeight(
               child: Column(
@@ -345,7 +345,7 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
                 children: [
                   TextField(
                     controller: controller,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Edit',
                       hintText: 'Enter new value',
                     ),
@@ -360,13 +360,13 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
                 onSubmitted(controller.text);
                 Navigator.of(context).pop();
               },
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
           ],
         );

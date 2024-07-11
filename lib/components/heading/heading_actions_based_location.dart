@@ -4,8 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/enum/page_location_enum.dart';
 
 import 'package:tymesavingfrontend/common/enum/user_role_enum.dart';
-import 'package:tymesavingfrontend/components/common/bottom_sheet.dart';
+import 'package:tymesavingfrontend/components/common/sheet/bottom_sheet.dart';
 import 'package:tymesavingfrontend/components/user/user_sort_filter.dart';
+import 'package:tymesavingfrontend/screens/notifications_page.dart';
 import 'package:tymesavingfrontend/services/theme_service.dart';
 import 'package:tymesavingfrontend/services/user_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
@@ -23,7 +24,7 @@ List<Widget> renderHeadingActionsBasedUserRoleAndLocation(
         // PageLocation.settingsPage: [Icons.home, Icons.logout],
       },
       UserRole.customer: {
-        PageLocation.homePage: [buildThemeButton(context)],
+        PageLocation.homePage: [buildThemeButton(context), buildNotificationButton(context)],
         // PageLocation.settingsPage: [Icons.home],
       },
   };
@@ -35,6 +36,7 @@ List<Widget> renderHeadingActionsBasedUserRoleAndLocation(
   return icons?.toList() ?? [];
 }
 
+// 
 IconButton buildEditButton(BuildContext context, String type) {
   return IconButton(
     icon: const Icon(Icons.edit),
@@ -55,6 +57,16 @@ IconButton buildThemeButton(BuildContext context) {
     ),
     onPressed: () {
       themeProvider.toggleTheme();
+    },
+  );
+}
+
+IconButton buildNotificationButton(BuildContext context) {
+  return IconButton(
+    icon: const Icon(Icons.notifications),
+    onPressed: () {
+      // Navigate to the notification page
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const NotificationsPage()));
     },
   );
 }

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/styles/app_padding.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
-import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
-import 'package:tymesavingfrontend/components/common/button/secondary_button.dart';
+import 'package:tymesavingfrontend/components/common/sheet/bottom_sheet.dart';
+import 'package:tymesavingfrontend/components/common/sheet/icon_text_row.dart';
+import 'package:tymesavingfrontend/components/user/user_detail_widget.dart';
 import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
-import 'package:tymesavingfrontend/components/update_user_profile/build_info_template.dart';
 import 'package:tymesavingfrontend/screens/user_profile/update_user_page.dart';
 import 'package:tymesavingfrontend/screens/user_profile/update_user_password_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
@@ -80,47 +81,35 @@ class _UserProfileState extends State<UserProfile> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: const Heading(
-        title: "My Profile",
-        showBackButton: true,
-      ),
+      appBar: Heading(title: "My Profile", showBackButton: true, actions: [
+        IconButton(
+            onPressed: () {
+              showStyledBottomSheet(
+                  context: context,
+                  title: 'Group Actions',
+                  // initialChildSize: 0.3,
+                  contentWidget: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ...actionRow(context, FontAwesomeIcons.userPen, "Edit User", () => openUpdateForm()),
+                        ...actionRow(context, FontAwesomeIcons.lock, "Change Password", () => openPasswordForm()),
+                        // TODO: add change pin
+                        // ...actionRow(context, FontAwesomeIcons.userSecret, "Change PIN", () => null)
+                      ]));
+            },
+            icon: const Icon(FontAwesomeIcons.cashRegister, size: 20))
+      ]),
       body: SingleChildScrollView(
         padding: AppPaddingStyles.pagePadding,
-        child: Column(
-          children: [
-            BuildInfo('Full name', user?.fullname ?? "Loading...",
-                const Icon(Icons.badge_outlined)),
-            BuildInfo('User name', user?.username ?? "Loading...",
-                const Icon(Icons.alternate_email_outlined)),
-            BuildInfo('Phone', user?.phone ?? "Loading...",
-                const Icon(Icons.contact_phone_outlined)),
-            BuildInfo('Email', user?.email ?? "Loading...",
-                const Icon(Icons.email_outlined)),
-            // const Expanded( // cannot use along with SingleChildScrollView
-            //   child: SizedBox(),
-            // ),
-            const SizedBox(
-              height: 30,
-            ),
-            Card.filled(
-              color: colorScheme.background,
-              margin: const EdgeInsetsDirectional.symmetric(
-                  horizontal: 50, vertical: 20),
-              child: Column(
-                children: [
-                  PrimaryButton(
-                      title: 'EDIT PROFILE', onPressed: openUpdateForm),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  SecondaryButton(
-                      title: 'CHANGE PASSWORD', onPressed: openPasswordForm)
-                ],
-              ),
-            )
-          ],
+        child: Consumer<AuthService>(
+          builder: (context, userService, child) {
+            final user = userService.user;
+            return UserDetailWidget(
+              fetchedUser: user,
+              otherDetails: user?.getOtherFields(),
+            );
+          },
         ),
       ),
     );
