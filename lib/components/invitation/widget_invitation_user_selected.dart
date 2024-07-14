@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/constant/temp_constant.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
@@ -15,10 +16,12 @@ class InvitationUserSelectedWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 120,
-      child: (formUsers ?? []).isNotEmpty
-          ? ListView.builder(
+    return (formUsers ?? []).isNotEmpty
+        ? Padding(
+          padding: const EdgeInsets.only(top: 10),
+        child: SizedBox(
+            height: 120,
+            child: ListView.builder(
               clipBehavior: Clip.none,
               scrollDirection: Axis.horizontal,
               itemCount: formUsers?.length ?? 0,
@@ -31,8 +34,8 @@ class InvitationUserSelectedWidget extends StatelessWidget {
                       final formStateService = Provider.of<FormStateProvider>(
                           context,
                           listen: false);
-                      formStateService.removeElementFromListField(
-                          "users", formUsers?[index], FormStateType.memberInvitation);
+                      formStateService.removeElementFromListField("users",
+                          formUsers?[index], FormStateType.memberInvitation);
                       // special case not using Future
                       Navigator.pop(context);
                       return Future<void>.value();
@@ -41,15 +44,16 @@ class InvitationUserSelectedWidget extends StatelessWidget {
                   child: _buildUserTile(context, formUsers?[index]),
                 );
               },
-            )
-          : Center(
-              child: Text(
+            )))
+        : Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: Center(
+                child: Text(
               "No user selected",
               style: Theme.of(context).textTheme.titleSmall,
               maxLines: 2,
               textAlign: TextAlign.center,
-            )),
-    );
+            )));
   }
 
   Widget _buildUserTile(BuildContext context, UserBase? user) {

@@ -3,21 +3,20 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/components/common/input/underline_text_field.dart';
 import 'package:tymesavingfrontend/components/common/not_found_message.dart';
-import 'package:tymesavingfrontend/components/user/user_tile.dart';
-import 'package:tymesavingfrontend/services/user_service.dart';
-import 'package:tymesavingfrontend/utils/handling_error.dart';
 
 class SearchPage extends StatefulWidget {
   // use for return value when user select a result and close the search page
   final String title;
   final String searchLabel;
   final String searchPlaceholder;
+  final Widget? sideDisplay;
   final Widget Function(dynamic result) resultWidgetFunction;
   final Future<void> Function(
-      String value, Function(List<dynamic>) updateResults, CancelToken? cancelToken) searchCallback;
+      String value,
+      Function(List<dynamic>) updateResults,
+      CancelToken? cancelToken) searchCallback;
 
   const SearchPage(
       {super.key,
@@ -25,7 +24,8 @@ class SearchPage extends StatefulWidget {
       required this.searchLabel,
       required this.searchPlaceholder,
       required this.resultWidgetFunction,
-      required this.searchCallback});
+      required this.searchCallback,
+      this.sideDisplay});
 
   @override
   State<SearchPage> createState() => _SearchPageState();
@@ -53,6 +53,10 @@ class _SearchPageState extends State<SearchPage> {
                   icon: FontAwesomeIcons.magnifyingGlass,
                   placeholder: widget.searchPlaceholder,
                   onChange: _onSearchFieldChanged),
+              if (widget.sideDisplay != null) ...[
+                widget.sideDisplay!,
+                const Divider()
+              ],
               Expanded(
                 child: ((_results ?? []).isNotEmpty && _results != null)
                     ? GridView.count(

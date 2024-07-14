@@ -61,6 +61,7 @@ class InvitationAddForm extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) => SearchPage(
                         title: "Search User",
+                        sideDisplay: InvitationUserSelectedWidget(formUsers: formUsers,),
                         searchLabel: "Search using username - email - name",
                         searchPlaceholder: "Search potential members here...",
                         searchCallback:
@@ -95,7 +96,6 @@ class InvitationAddForm extends StatelessWidget {
             ),
           ),
           const Divider(),
-          const SizedBox(height: 16),
           InvitationUserSelectedWidget(formUsers: formUsers,),
           const Divider(),
           const SizedBox(height: 16),
