@@ -13,6 +13,7 @@ class UnderlineTextField extends StatefulWidget {
   final String? Function(String?)? validator;
   final IconData? suffixIcon;
   final IconData? icon;
+  final String? defaultValue;
   final Function()? onTap;
   final bool? readOnly;
   final void Function(String)? onChange;
@@ -32,7 +33,7 @@ class UnderlineTextField extends StatefulWidget {
     this.icon,
     this.onTap,
     this.readOnly,
-    this.onChange,
+    this.onChange, this.defaultValue,
   });
 
   @override
@@ -40,6 +41,13 @@ class UnderlineTextField extends StatefulWidget {
 }
 
 class _UnderlineTextFieldState extends State<UnderlineTextField> {
+  @override
+  void initState() {
+    super.initState();
+    if (widget.defaultValue != null) {
+      widget.controller!.text = widget.defaultValue!;
+    }
+  }
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;

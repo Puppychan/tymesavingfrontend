@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
 import 'package:tymesavingfrontend/components/common/chart/budget_pie_chart.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/common_group/group_heading_actions.dart';
@@ -15,8 +16,6 @@ import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
 import 'package:tymesavingfrontend/services/user_service.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
-import 'package:tymesavingfrontend/components/transaction/transaction_list.dart';
-import 'package:tymesavingfrontend/models/transaction_model.dart';
 
 class BudgetDetails extends StatefulWidget {
   const BudgetDetails({super.key, required this.budgetId});
@@ -39,7 +38,6 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
   String _displayPercentageTaken = '';
   bool _isDisplayRestDescription = false;
   List<Transaction> _transactions = [];
-
 
   Future<void> _renderUser(String? userId) async {
     Future.microtask(() async {
@@ -123,6 +121,8 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
 
   @override
   void dispose() {
+    Provider.of<FormStateProvider>(context, listen: false)
+        .resetForm(FormStateType.memberInvitation);
     routeObserver.unsubscribe(this);
     super.dispose();
   }

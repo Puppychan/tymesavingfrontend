@@ -135,6 +135,16 @@ class FormStateProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void removeElementFromListField(String field, dynamic value, FormStateType type) {
+    if (FormStateType.memberInvitation == FormStateType.memberInvitation) {
+      if (_memberInvitationFormFields[field] == null) {
+        return;
+      }
+      _memberInvitationFormFields[field].remove(value);
+    }
+    notifyListeners();
+  }
+
   void setUpdateBudgetFormFields(Budget? budget) {
     if (budget == null) {
       return;
@@ -166,6 +176,25 @@ class FormStateProvider with ChangeNotifier {
       _updateTransactionFormFields['category'] = category;
     } else {
       _budgetFormFields['category'] = category;
+    }
+    notifyListeners();
+  }
+
+  void resetForm(FormStateType type) {
+    if (type == FormStateType.income) {
+      _incomeFormFields.clear();
+    } else if (type == FormStateType.expense) {
+      _expenseFormFields.clear();
+    } else if (type == FormStateType.updateTransaction) {
+      _updateTransactionFormFields.clear();
+    } else if (type == FormStateType.updateBudget) {
+      _updateBudgetFormFields.clear();
+    } else if (type == FormStateType.updateGoal) {
+      _updateGoalFormFields.clear();
+    } else if (type == FormStateType.memberInvitation) {
+      _memberInvitationFormFields.clear();
+    } else {
+      _budgetFormFields.clear();
     }
     notifyListeners();
   }

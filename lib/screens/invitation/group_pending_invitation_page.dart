@@ -8,14 +8,15 @@ import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/common/not_found_message.dart';
 import 'package:tymesavingfrontend/components/common/sheet/bottom_sheet.dart';
 import 'package:tymesavingfrontend/components/invitation/group_invitation_card.dart';
-import 'package:tymesavingfrontend/components/invitation/invitation_add_widget.dart';
+import 'package:tymesavingfrontend/form/invitation_add_form.dart';
 import 'package:tymesavingfrontend/services/invitation_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
 class GroupPendingInvitationPage extends StatefulWidget {
   final String groupId;
   final InvitationType type;
-  const GroupPendingInvitationPage({super.key, required this.groupId, required this.type});
+  const GroupPendingInvitationPage(
+      {super.key, required this.groupId, required this.type});
 
   @override
   State<GroupPendingInvitationPage> createState() =>
@@ -67,6 +68,13 @@ class _GroupPendingInvitationPageState extends State<GroupPendingInvitationPage>
   }
 
   @override
+  void didChangeDependencies() {
+    // Fetch invitations when the page is loaded
+    super.didChangeDependencies();
+    _fetchInvitations();
+  }
+
+  @override
   void dispose() {
     _tabController.removeListener(_handleTabSelection);
     _tabController.dispose();
@@ -89,7 +97,8 @@ class _GroupPendingInvitationPageState extends State<GroupPendingInvitationPage>
                     onPressed: () {
                       showStyledBottomSheet(
                         context: context,
-                        contentWidget: InvitationAddWidget(type: widget.type, groupId: widget.groupId),
+                        contentWidget: InvitationAddForm(
+                            type: widget.type, groupId: widget.groupId),
                       );
                     },
                   )

@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/common/enum/invitation_status_enum.dart';
 import 'package:tymesavingfrontend/common/enum/invitation_type_enum.dart';
-import 'package:tymesavingfrontend/models/invitation/invitation_model.dart';
+import 'package:tymesavingfrontend/models/invitation_model.dart';
 import 'package:tymesavingfrontend/services/utils/get_backend_endpoint.dart';
 import 'package:tymesavingfrontend/services/utils/network_service.dart';
 
@@ -75,8 +75,8 @@ class InvitationService extends ChangeNotifier {
     // Fetch invitations from the backend
     final response = await NetworkService.instance.get(
         "${BackendEndpoints.invitation}/${BackendEndpoints.invitationsGetAll}${_convertOptionsToString("byGroup")}${_assignGroupIdEndpoint(groupId)}");
-      // print("Filter options: ${_filterOptions.toString()}");
-      // print("Response of fetchInvitationsByGroupId: ${BackendEndpoints.invitation}/${BackendEndpoints.invitationsGetAll}${_convertOptionsToString("byGroup")}${_assignGroupIdEndpoint(groupId)}");
+    // print("Filter options: ${_filterOptions.toString()}");
+    // print("Response of fetchInvitationsByGroupId: ${BackendEndpoints.invitation}/${BackendEndpoints.invitationsGetAll}${_convertOptionsToString("byGroup")}${_assignGroupIdEndpoint(groupId)}");
 
     if (response['response'] != null && response['statusCode'] == 200) {
       final responseData = response['response'];
@@ -110,6 +110,25 @@ class InvitationService extends ChangeNotifier {
       _invitations = invitationList;
       notifyListeners();
     }
+    return response;
+  }
+
+  Future<dynamic> sendInvitation(
+    String description,
+    InvitationType type,
+    String groupId,
+    List<dynamic> users,
+  ) async {
+    List<String> userIds = users.map((user) => user.id as String).toList();
+    final String convertedUserIds = '["' + userIds.join('", "') + '"]';
+
+    final response =
+        await NetworkService.instance.post(BackendEndpoints.invitation, body: {
+      "description": description,
+      "type": type.toString(),
+      "groupId": groupId,
+      "userIds": convertedUserIds
+    });
     return response;
   }
 

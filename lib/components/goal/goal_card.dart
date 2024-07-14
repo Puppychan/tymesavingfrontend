@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
+import 'package:tymesavingfrontend/components/common/dialog/delete_confirm_dialog.dart';
 import 'package:tymesavingfrontend/models/goal_model.dart';
 import 'package:tymesavingfrontend/screens/goal/goal_update_page.dart';
 import 'package:tymesavingfrontend/services/goal_service.dart';
@@ -46,41 +47,18 @@ class _GoalCardState extends State<GoalCard> {
     }
 
     Future showDeleteConfirmationDialog() async {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Delete Confirmation'),
-            content: const Text('Are you sure you want to delete this goal?'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Future.microtask(() async {
-                    final goalService =
-                        Provider.of<GoalService>(context, listen: false);
-                    await handleMainPageApi(context, () async {
-                      return await goalService.deleteGoal(widget.goal.id);
-                      // return result;
-                    }, () async {
-                      Navigator.of(context).pop();
-                      SuccessDisplay.showSuccessToast(
-                          "Successfully delete the goal", context);
-                    });
-                  });
-                  // onDelete();
-                },
-                child: const Text('Delete'),
-              ),
-            ],
-          );
-        },
-      );
+      showCustomDeleteConfirmationDialog(
+          context, 'Are you sure you want to delete this goal?', () async {
+        final goalService = Provider.of<GoalService>(context, listen: false);
+        await handleMainPageApi(context, () async {
+          return await goalService.deleteGoal(widget.goal.id);
+          // return result;
+        }, () async {
+          Navigator.of(context).pop();
+          SuccessDisplay.showSuccessToast(
+              "Successfully delete the goal", context);
+        });
+      });
     }
 
     // double progress = goal.contribution / maxContribution; // Calculate the progress as a fraction
@@ -153,7 +131,7 @@ class _GoalCardState extends State<GoalCard> {
                       // text: "Goal Contribution",
                       style: textTheme.bodyLarge,
                     ),
-                     TextSpan(
+                    TextSpan(
                       text: ' / ',
                       style: textTheme.labelLarge!.copyWith(
                         color: colorScheme.inversePrimary,
@@ -189,6 +167,6 @@ class _GoalCardState extends State<GoalCard> {
   }
 
   // Widget displayParticipants() {
-  //   return 
+  //   return
   // }
 }
