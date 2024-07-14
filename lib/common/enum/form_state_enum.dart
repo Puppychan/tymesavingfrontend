@@ -6,7 +6,9 @@ enum FormStateType {
   budget('Budget'),
   goal('Goal'),
   updateGoal("UpdateGoal"),
-  updateBudget('UpdateBudget');
+  updateBudget('UpdateBudget'),
+  // other type of form
+  memberInvitation("MemberInvitation");
 
   final String value;
   const FormStateType(this.value);

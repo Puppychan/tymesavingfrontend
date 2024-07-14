@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:tymesavingfrontend/common/enum/invitation_type_enum.dart';
 import 'package:tymesavingfrontend/models/base_user_model.dart';
 import 'package:tymesavingfrontend/models/member_model.dart';
 import 'package:tymesavingfrontend/models/summary_user_model.dart';
@@ -203,26 +204,51 @@ class UserService extends ChangeNotifier {
     return response;
   }
 
-  Future<dynamic> searchUsers(String username) async {
-    final response = await NetworkService.instance.get(
-        "${BackendEndpoints.user}/${BackendEndpoints.userSearch}/$username");
+  Future<dynamic> searchUsers(String username,
+      {String? exceptGroupId,
+      InvitationType? type,
+      List<dynamic>? exceptUsers,
+      CancelToken? cancelToken}) async {
+    // define the endpoint
+    String endpoint =
+        "${BackendEndpoints.user}/${BackendEndpoints.userSearch}/$username";
+    // add the query parameters to the endpoint
+    if (exceptGroupId != null && type != null) {
+      if (type == InvitationType.budget) {
+        endpoint += "?exceptBudgetId=$exceptGroupId";
+      } else if (type == InvitationType.savings) {
+        endpoint += "?exceptSavingId=$exceptGroupId";
+      }
+    }
+
+    final response =
+        await NetworkService.instance.get(endpoint, cancelToken: cancelToken);
     if (response['response'] != null) {
       if (response['statusCode'] == 200) {
         final responseBody = response['response'];
+        // get the list of usernames to exclude from the search results
+        // specific case: if add user to the form, and want to exclude the users that already in the form (not call to Backend yet)
+        final exceptUsernames =
+            exceptUsers?.map((user) => user.username).toSet() ?? {};
+
         // convert the response to a list of User objects
         _searchUserList = responseBody
-            .map<UserBase>(
-                (item) => UserBase.fromMap(item as Map<String, dynamic>))
+            .where((item) =>
+                item.containsKey('username') &&
+                !exceptUsernames.contains(item['username']))
+            .map<UserBase>((item) => UserBase.fromMap(item))
             .toList();
-        // display the search results
-        for (var user in _searchUserList) {
-          debugPrint("User: ${user.username}");
+        // if empty list
+        if (_searchUserList.isEmpty) {
+          _searchUserList = [];
+          response['statusCode'] = 404;
         }
       } else if (response['statusCode'] == 404) {
         _searchUserList = [];
       }
       notifyListeners();
     }
+    print("Response in search users $response");
     return response;
   }
 

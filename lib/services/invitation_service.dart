@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/common/enum/invitation_status_enum.dart';
 import 'package:tymesavingfrontend/common/enum/invitation_type_enum.dart';
-import 'package:tymesavingfrontend/models/invitation_model.dart';
+import 'package:tymesavingfrontend/models/invitation/invitation_model.dart';
 import 'package:tymesavingfrontend/services/utils/get_backend_endpoint.dart';
 import 'package:tymesavingfrontend/services/utils/network_service.dart';
 

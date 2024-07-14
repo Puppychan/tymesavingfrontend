@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/common/constant/temp_constant.dart';
 import 'package:tymesavingfrontend/components/common/images/circle_network_image.dart';
-import 'package:tymesavingfrontend/components/common/images/rounded_network_image.dart';
 import 'dart:math';
 
 import 'package:tymesavingfrontend/models/base_user_model.dart';
@@ -16,8 +15,9 @@ class UserTile extends StatelessWidget {
     final borderRadius = BorderRadius.circular(20);
     final colorScheme = Theme.of(context).colorScheme;
     return InkWell(
+        splashColor: colorScheme.inversePrimary.withOpacity(0.5),
         onTap: () {
-          onTap();
+          Future.delayed(const Duration(milliseconds: 500), onTap);
         },
         borderRadius: borderRadius,
         child: Stack(children: [

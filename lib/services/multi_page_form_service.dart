@@ -15,6 +15,10 @@ class FormStateProvider with ChangeNotifier {
   final Map<String, dynamic> _updateBudgetFormFields = {};
   final Map<String, dynamic> _updateGoalFormFields = {};
   final Map<String, dynamic> _savingFormFields = {};
+  final Map<String, dynamic> _updateSavingFormFields = {};
+  // invitation form
+  final Map<String, dynamic> _memberInvitationFormFields = {};
+
 
   dynamic _validateFieldNull(
       String key, Map<String, dynamic> typeFormFields, dynamic defaultValue) {
@@ -78,6 +82,8 @@ class FormStateProvider with ChangeNotifier {
       return _updateBudgetFormFields;
     } else if (type == FormStateType.updateGoal) {
       return _updateGoalFormFields;
+    } else if (type == FormStateType.memberInvitation) {
+      return _memberInvitationFormFields;
     } else {
       return _budgetFormFields;
     }
@@ -111,8 +117,20 @@ class FormStateProvider with ChangeNotifier {
       _updateBudgetFormFields[key] = value;
     } else if (type == FormStateType.updateGoal) {
       _updateGoalFormFields[key] = value;
+    } else if (type == FormStateType.memberInvitation) {
+      _memberInvitationFormFields[key] = value;
     } else {
       _budgetFormFields[key] = value;
+    }
+    notifyListeners();
+  }
+
+  void addElementToListField(String field, dynamic value, FormStateType type) {
+    if (FormStateType.memberInvitation == FormStateType.memberInvitation) {
+      if (_memberInvitationFormFields[field] == null) {
+        _memberInvitationFormFields[field] = [];
+      }
+      _memberInvitationFormFields[field].add(value);
     }
     notifyListeners();
   }

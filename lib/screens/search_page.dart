@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -16,14 +17,15 @@ class SearchPage extends StatefulWidget {
   final String searchPlaceholder;
   final Widget Function(dynamic result) resultWidgetFunction;
   final Future<void> Function(
-      String value, Function(List<dynamic>) updateResults) searchCallback;
+      String value, Function(List<dynamic>) updateResults, CancelToken? cancelToken) searchCallback;
 
   const SearchPage(
       {super.key,
       required this.title,
       required this.searchLabel,
       required this.searchPlaceholder,
-      required this.resultWidgetFunction, required this.searchCallback});
+      required this.resultWidgetFunction,
+      required this.searchCallback});
 
   @override
   State<SearchPage> createState() => _SearchPageState();
@@ -34,6 +36,8 @@ class _SearchPageState extends State<SearchPage> {
   String _input = '';
   // Declare a Timer variable for debounce
   Timer? _debounce;
+  // Declare a CancelToken variable for canceling the search request
+  CancelToken? _cancelToken;
 
   @override
   Widget build(BuildContext context) {
@@ -85,6 +89,8 @@ class _SearchPageState extends State<SearchPage> {
   _onSearchFieldChanged(String value) async {
     // Cancel the existing timer if it is set
     _debounce?.cancel();
+    // Cancel the previous request if a new search starts
+    _cancelToken?.cancel();
 
     // Set a new timer with a 500ms (or your desired) delay
     _debounce = Timer(const Duration(milliseconds: 500), () async {
@@ -102,26 +108,20 @@ class _SearchPageState extends State<SearchPage> {
         return;
       }
 
-      // Future.microtask(() async {
-      //   final userService = Provider.of<UserService>(context, listen: false);
-      //   await handleMainPageApi(context, () async {
-      //     return await userService.searchUsers(value);
-      //   }, () async {
-      //     setState(() {
-      //       _results = userService.searchUserList;
-      //     });
-      //   }, notFoundAction: () async {
-      //     // if no results are found, we set the results to an empty list
-      //     setState(() {
-      //       _results = [];
-      //     });
-      //   });
-      // });
+      _cancelToken = CancelToken();
+
       await widget.searchCallback(value, (results) {
         setState(() {
           _results = results;
         });
-      });
+      }, _cancelToken);
     });
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    _cancelToken?.cancel();
+    super.dispose();
   }
 }

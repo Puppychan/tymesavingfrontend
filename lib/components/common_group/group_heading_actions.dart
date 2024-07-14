@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:tymesavingfrontend/common/enum/invitation_type_enum.dart';
 import 'package:tymesavingfrontend/components/common/sheet/bottom_sheet.dart';
 import 'package:tymesavingfrontend/components/common/sheet/icon_text_row.dart';
 import 'package:tymesavingfrontend/screens/budget/budget_update_page.dart';
@@ -21,7 +22,7 @@ List<Widget> renderGroupHeadingActions(
     }),
     ...actionRow(context, FontAwesomeIcons.paperPlane, "Group Invitations", () {
       Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return GroupPendingInvitationPage(groupId: groupId);
+        return GroupPendingInvitationPage(groupId: groupId, type: isBudget ? InvitationType.budget : InvitationType.savings);
       }));
     })
   ];

@@ -2,17 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/enum/invitation_status_enum.dart';
+import 'package:tymesavingfrontend/common/enum/invitation_type_enum.dart';
 import 'package:tymesavingfrontend/common/styles/app_padding.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/common/not_found_message.dart';
+import 'package:tymesavingfrontend/components/common/sheet/bottom_sheet.dart';
 import 'package:tymesavingfrontend/components/invitation/group_invitation_card.dart';
-import 'package:tymesavingfrontend/components/invitation_add_modal.dart';
+import 'package:tymesavingfrontend/components/invitation/invitation_add_widget.dart';
 import 'package:tymesavingfrontend/services/invitation_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
 class GroupPendingInvitationPage extends StatefulWidget {
   final String groupId;
-  const GroupPendingInvitationPage({super.key, required this.groupId});
+  final InvitationType type;
+  const GroupPendingInvitationPage({super.key, required this.groupId, required this.type});
 
   @override
   State<GroupPendingInvitationPage> createState() =>
@@ -55,7 +58,7 @@ class _GroupPendingInvitationPageState extends State<GroupPendingInvitationPage>
   @override
   void initState() {
     super.initState();
-      _tabController = TabController(length: 2, vsync: this);  
+    _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(_handleTabSelection);
     _fetchInvitations();
     setState(() {
@@ -84,7 +87,10 @@ class _GroupPendingInvitationPageState extends State<GroupPendingInvitationPage>
                   IconButton(
                     icon: const Icon(FontAwesomeIcons.userPlus),
                     onPressed: () {
-                      showUserInputModal(context);
+                      showStyledBottomSheet(
+                        context: context,
+                        contentWidget: InvitationAddWidget(type: widget.type, groupId: widget.groupId),
+                      );
                     },
                   )
                 ],
@@ -136,6 +142,8 @@ class _GroupPendingInvitationPageState extends State<GroupPendingInvitationPage>
   }
 
   Widget buildNoInvitation(TextTheme textTheme, ColorScheme colorScheme) {
-    return const NotFoundMessage(message: "Oops... No invitations found.",);
+    return const NotFoundMessage(
+      message: "Oops... No invitations found.",
+    );
   }
 }
