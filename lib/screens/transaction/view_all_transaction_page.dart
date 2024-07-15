@@ -4,7 +4,8 @@ import 'package:tymesavingfrontend/models/transaction_model.dart';
 import 'package:tymesavingfrontend/components/transaction/transaction_list.dart';
 
 class ViewAllTransactionsPage extends StatefulWidget {
-  final Map<String, List<Transaction>> transactions;
+  final dynamic
+      transactions; // Can be List<Transaction> or Map<String, List<Transaction>>
 
   const ViewAllTransactionsPage({super.key, required this.transactions});
 
@@ -31,8 +32,20 @@ class _ViewAllTransactionsPageState extends State<ViewAllTransactionsPage>
   }
 
   List<Transaction> _filterTransactions(String type) {
-    List<Transaction> filteredTransactions = widget.transactions.values
-        .expand((list) => list)
+    List<Transaction> allTransactions;
+
+    if (widget.transactions is List<Transaction>) {
+      allTransactions = widget.transactions;
+    } else if (widget.transactions is Map<String, List<Transaction>>) {
+      allTransactions = (widget.transactions as Map<String, List<Transaction>>)
+          .values
+          .expand((list) => list)
+          .toList();
+    } else {
+      return [];
+    }
+
+    List<Transaction> filteredTransactions = allTransactions
         .where((transaction) => transaction.type == type)
         .toList();
 
@@ -62,6 +75,15 @@ class _ViewAllTransactionsPageState extends State<ViewAllTransactionsPage>
     }
   }
 
+  Widget _buildNoTransactionsMessage() {
+    return Center(
+      child: Text(
+        'No transactions available.',
+        style: TextStyle(fontSize: 18, color: Colors.grey),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,7 +99,6 @@ class _ViewAllTransactionsPageState extends State<ViewAllTransactionsPage>
         actions: [
           DropdownButton<String>(
             value: _sortOrder,
-            // icon: const Icon(Icons.more_vert),
             onChanged: _onSortOrderChanged,
             items: <String>['ascending', 'descending', 'newest', 'oldest']
                 .map<DropdownMenuItem<String>>((String value) {
@@ -86,15 +107,19 @@ class _ViewAllTransactionsPageState extends State<ViewAllTransactionsPage>
                 child: Text(value.capitalize()),
               );
             }).toList(),
-            underline: const SizedBox(), // Remove underline
+            underline: const SizedBox(),
           ),
         ],
       ),
       body: TabBarView(
         controller: _tabController,
         children: [
-          TransactionList(transactions: _filterTransactions('Income')),
-          TransactionList(transactions: _filterTransactions('Expense')),
+          _filterTransactions('Income').isEmpty
+              ? _buildNoTransactionsMessage()
+              : TransactionList(transactions: _filterTransactions('Income')),
+          _filterTransactions('Expense').isEmpty
+              ? _buildNoTransactionsMessage()
+              : TransactionList(transactions: _filterTransactions('Expense')),
         ],
       ),
     );

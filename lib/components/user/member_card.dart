@@ -18,7 +18,7 @@ class MemberCard extends StatelessWidget {
   final Member member;
   final double maxContribution = 100.0;
 
-  const MemberCard({
+  const   MemberCard({
     super.key,
     required this.member,
     required this.groupId,
