@@ -28,28 +28,29 @@ class UserService extends ChangeNotifier {
 
   // List<String> get filterData => _filterData;
   String get roleFilter => _roleFilter;
-  String get sortOption => _convertSortOptionToString();
+  Map<String, String> get sortOption => _convertSortOptionToString();
   List<User> get users => _users;
   User? get currentFetchUser => _currentFetchUser;
   SummaryUser? get summaryUser => _summaryUser;
   List<UserBase> get searchUserList => _searchUserList;
   List<Member> get members => _members;
 
-  String _convertSortOptionToString() {
-    final tempSortValue = _sortOption.keys.first;
-    String sortValue = '';
-    switch (tempSortValue) {
+  Map<String, String> _convertSortOptionToString() {
+    final sortOrder = _sortOption.values.first.toLowerCase();
+    switch (_sortOption.keys.first) {
       case 'sortUsername':
-        sortValue = 'Username';
-        break;
+        return {'Username': sortOrder};
       case 'sortCreation':
-        sortValue = 'Created Date';
-        break;
+        return {'Created Date': sortOrder};;
       case 'sortRole':
-        sortValue = 'Role';
-        break;
+        return {'Role': sortOrder};
     }
-    return '$sortValue in ${_sortOption.values.first} order';
+    return {'': sortOrder};
+    // return '$sortValue in ${_sortOption.values.first} order';
+  }
+
+  List<String> combineOptions() {
+    return ["Username", "Created Date", "Role"];
   }
 
   Future<dynamic> fetchUserList() async {
@@ -132,29 +133,25 @@ class UserService extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateSortOptions(String newSortValue) {
-    // separate the sort value and the order
-    // format: 'Username in Ascending order'
-    final tempSortValue = newSortValue.split(' ')[0];
-    final order = newSortValue.split(' ')[2];
+  void updateSortOptions(String newSortField, String newSortValue) {
 
-    String sortValue = '';
+    String sortField = '';
 
-    switch (tempSortValue) {
+    switch (newSortField) {
       case 'Username':
-        sortValue = 'sortUsername';
+        sortField = 'sortUsername';
         break;
       case 'Created Date':
-        sortValue = 'sortCreation';
+        sortField = 'sortCreation';
         break;
       case 'Role':
-        sortValue = 'sortRole';
+        sortField = 'sortRole';
         break;
     }
 
     // update the sort option
     _sortOption = {
-      sortValue: order,
+      sortField: newSortValue.toLowerCase(),
     };
 
     notifyListeners();

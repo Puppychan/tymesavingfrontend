@@ -121,10 +121,10 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
 
   @override
   void dispose() {
+    super.dispose();
     Provider.of<FormStateProvider>(context, listen: false)
         .resetForm(FormStateType.memberInvitation);
     routeObserver.unsubscribe(this);
-    super.dispose();
   }
 
   @override

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/styles/app_padding.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/common/not_found_message.dart';
+import 'package:tymesavingfrontend/components/common/sheet/bottom_sheet.dart';
 import 'package:tymesavingfrontend/components/invitation/auth_user_invitation_card.dart';
+import 'package:tymesavingfrontend/components/invitation/invitation_sort_filter.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/invitation_service.dart';
@@ -16,18 +19,22 @@ class NotificationsPage extends StatefulWidget {
   State<NotificationsPage> createState() => _NotificationsPageState();
 }
 
-class _NotificationsPageState extends State<NotificationsPage> {
+class _NotificationsPageState extends State<NotificationsPage>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
   bool _isDataFetched = false;
   User? _user;
 
   void _fetchInvitations() {
     Future.microtask(() async {
       if (!mounted) return;
-      setState(
-        () {
-          _user = Provider.of<AuthService>(context, listen: false).user;
-        },
-      );
+      if (_user == null) {
+        setState(
+          () {
+            _user = Provider.of<AuthService>(context, listen: false).user;
+          },
+        );
+      }
 
       // Fetch invitations from the backend
       await handleMainPageApi(context, () async {
@@ -38,9 +45,16 @@ class _NotificationsPageState extends State<NotificationsPage> {
     });
   }
 
+  void _handleTabSelection() {
+    if (_tabController.indexIsChanging) return;
+    _fetchInvitations(); // Fetch invitations when tab changes
+  }
+
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(_handleTabSelection);
     _fetchInvitations();
     setState(() {
       _isDataFetched = true;
@@ -49,27 +63,78 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const Heading(
-        title: "Your Invitations",
-        showBackButton: true,
-      ),
-      body: Consumer<InvitationService>(
-        builder: (context, invitationService, child) {
-          final invitations = invitationService.invitations;
-          if (!_isDataFetched) return const Center(child: CircularProgressIndicator());
-          return invitations.isNotEmpty
-              ? ListView.builder(
-                  padding: AppPaddingStyles.pagePadding,
-                  itemCount: invitations.length,
-                  itemBuilder: (context, index) {
-                    final invitation = invitations[index];
-                    return AuthUserInvitationCard(invitation: invitation);
-                  },
-                )
-              : const NotFoundMessage(message: "Oops... No invitations found.",);
-        },
-      ),
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+    return DefaultTabController(
+        length: 2,
+        child: Scaffold(
+            appBar: Heading(
+                title: "Invitations",
+                showBackButton: true,
+                actions: [
+                  IconButton(
+                    icon: const Icon(FontAwesomeIcons.ellipsisVertical),
+                    onPressed: () {
+                      showStyledBottomSheet(
+                        context: context,
+                        contentWidget: InvitationSortFilter(updateInvitationList: _fetchInvitations),
+                      );
+                    },
+                  )
+                ],
+                bottom: TabBar(
+                  controller: _tabController,
+                  tabs: const [
+                    Tab(text: 'Pending'),
+                    Tab(text: 'Cancelled'),
+                  ],
+                )),
+            body: TabBarView(children: [
+              Consumer<InvitationService>(
+                builder: (context, invitationService, child) {
+                  final invitations = invitationService.invitations;
+                  if (!_isDataFetched) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  return invitations.isNotEmpty
+                      ? ListView.builder(
+                          padding: AppPaddingStyles.pagePadding,
+                          itemCount: invitations.length,
+                          itemBuilder: (context, index) {
+                            final invitation = invitations[index];
+                            return AuthUserInvitationCard(
+                                invitation: invitation);
+                          },
+                        )
+                      : buildNoInvitation(textTheme, colorScheme);
+                },
+              ),
+              Consumer<InvitationService>(
+                builder: (context, invitationService, child) {
+                  final invitations = invitationService.invitations;
+                  if (!_isDataFetched) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  return invitations.isNotEmpty
+                      ? ListView.builder(
+                          padding: AppPaddingStyles.pagePadding,
+                          itemCount: invitations.length,
+                          itemBuilder: (context, index) {
+                            final invitation = invitations[index];
+                            return AuthUserInvitationCard(
+                                invitation: invitation);
+                          },
+                        )
+                      : buildNoInvitation(textTheme, colorScheme);
+                },
+              ),
+            ])));
+  }
+
+  Widget buildNoInvitation(TextTheme textTheme, ColorScheme colorScheme) {
+    return const NotFoundMessage(
+      message:
+          "You have no invitations yet. Plan your budget and invite your friends to join.",
     );
   }
 }

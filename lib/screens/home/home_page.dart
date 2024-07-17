@@ -160,7 +160,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
           const SizedBox(height: 4), // Add some spacing between sections
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.4,
-            child: TransactionSection(transactions: transactions!),
+            child: TransactionSection(transactions: transactions ?? {}),
           ),
         ],
       ),

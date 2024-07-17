@@ -20,8 +20,25 @@ class InvitationService extends ChangeNotifier {
   };
 
   List<Invitation> get invitations => _invitations;
+  Map<String, String> get sortOptions => _sortOptions;
+  Map<String, String> get filterOptions => _filterOptions;
 
-  void setSortOptions(String sortOption, String sortValue) {
+  void setSortOptions(String newSortOption, String sortValue) {
+    String sortOption;
+
+    switch (newSortOption) {
+      case "Group Id":
+        sortOption = 'sortGroupId';
+        break;
+      case "Group type":
+        sortOption = 'sortGroupType';
+        break;
+      case "Status":
+        sortOption = 'sortStatus';
+        break;
+      default:
+        sortOption = '';
+    }
     if (sortOption == 'sortGroupId' ||
         sortOption == 'sortGroupType' ||
         sortOption == 'sortStatus') {
@@ -29,6 +46,19 @@ class InvitationService extends ChangeNotifier {
         _sortOptions = {..._sortOptions, sortOption: sortValue};
         notifyListeners();
       }
+    }
+  }
+
+  String convertSortOptionToString(String sortOption) {
+    switch (sortOption) {
+      case 'sortGroupId':
+        return "Group Id";
+      case 'sortGroupType':
+        return "Group type";
+      case 'sortStatus':
+        return "Status";
+      default:
+        return "";
     }
   }
 

@@ -1,6 +1,7 @@
 enum InvitationType {
   budget("SharedBudget"),
-  savings("GroupSaving");
+  savings("GroupSaving"),
+  all("All");
 
   const InvitationType(this.value);
 
@@ -26,5 +27,14 @@ enum InvitationType {
     }
     // default to customer
     return InvitationType.budget;
+  }
+
+  static InvitationType fromIndex(int index) {
+    return InvitationType.values[index];
+  }
+
+  // list
+  static List<String> get formattedList {
+    return InvitationType.values.map((e) => e.toStringFormatted()).toList();
   }
 }

@@ -1,4 +1,5 @@
 enum InvitationStatus {
+  all("All"),
   accepted("Accepted"),
   pending("Pending"),
   cancelled("Cancelled");
@@ -22,4 +23,5 @@ enum InvitationStatus {
     // default to customer
     return InvitationStatus.pending;
   }
+  
 }

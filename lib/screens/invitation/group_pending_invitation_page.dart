@@ -8,6 +8,7 @@ import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/common/not_found_message.dart';
 import 'package:tymesavingfrontend/components/common/sheet/bottom_sheet.dart';
 import 'package:tymesavingfrontend/components/invitation/group_invitation_card.dart';
+import 'package:tymesavingfrontend/components/invitation/invitation_sort_filter.dart';
 import 'package:tymesavingfrontend/form/invitation_add_form.dart';
 import 'package:tymesavingfrontend/services/invitation_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
@@ -99,6 +100,15 @@ class _GroupPendingInvitationPageState extends State<GroupPendingInvitationPage>
                         context: context,
                         contentWidget: InvitationAddForm(
                             type: widget.type, groupId: widget.groupId),
+                      );
+                    },
+                  ),
+                  IconButton(
+                    icon: const Icon(FontAwesomeIcons.ellipsisVertical),
+                    onPressed: () {
+                      showStyledBottomSheet(
+                        context: context,
+                        contentWidget: InvitationSortFilter(updateInvitationList: _fetchInvitations),
                       );
                     },
                   )
