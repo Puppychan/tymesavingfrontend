@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
 import 'package:tymesavingfrontend/models/budget_model.dart';
-import 'package:tymesavingfrontend/models/goal_model.dart';
+import 'package:tymesavingfrontend/models/group_saving_model.dart';
 import 'package:tymesavingfrontend/models/transaction_model.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
 
@@ -11,9 +11,10 @@ class FormStateProvider with ChangeNotifier {
   final Map<String, dynamic> _incomeFormFields = {};
   final Map<String, dynamic> _expenseFormFields = {};
   final Map<String, dynamic> _updateTransactionFormFields = {};
+
   final Map<String, dynamic> _budgetFormFields = {};
   final Map<String, dynamic> _updateBudgetFormFields = {};
-  final Map<String, dynamic> _updateGoalFormFields = {};
+
   final Map<String, dynamic> _savingFormFields = {};
   final Map<String, dynamic> _updateSavingFormFields = {};
   // invitation form
@@ -59,9 +60,12 @@ class FormStateProvider with ChangeNotifier {
     } else if (type == FormStateType.updateBudget) {
       amount = _validateFieldNull(
           'amount', _updateBudgetFormFields, 0.0) as double;
-    } else if (type == FormStateType.updateGoal) {
+    } else if (type == FormStateType.updateGroupSaving) {
       amount = _validateFieldNull(
-          'amount', _updateGoalFormFields, 0.0) as double;
+          'amount', _updateSavingFormFields, 0.0) as double;
+    } else if (type == FormStateType.groupSaving) {
+      amount = _validateFieldNull(
+          'amount', _savingFormFields, 0.0) as double;
     } else {
       amount = _validateFieldNull(
           'amount', _budgetFormFields, 0.0) as double;
@@ -80,10 +84,12 @@ class FormStateProvider with ChangeNotifier {
       return _updateTransactionFormFields;
     } else if (type == FormStateType.updateBudget) {
       return _updateBudgetFormFields;
-    } else if (type == FormStateType.updateGoal) {
-      return _updateGoalFormFields;
+    } else if (type == FormStateType.updateGroupSaving) {
+      return _updateSavingFormFields;
     } else if (type == FormStateType.memberInvitation) {
       return _memberInvitationFormFields;
+    } else if (type == FormStateType.groupSaving) {
+      return _savingFormFields;
     } else {
       return _budgetFormFields;
     }
@@ -115,8 +121,10 @@ class FormStateProvider with ChangeNotifier {
       _updateTransactionFormFields[key] = value;
     } else if (type == FormStateType.updateBudget) {
       _updateBudgetFormFields[key] = value;
-    } else if (type == FormStateType.updateGoal) {
-      _updateGoalFormFields[key] = value;
+    } else if (type == FormStateType.updateGroupSaving) {
+      _updateSavingFormFields[key] = value;
+    } else if (type == FormStateType.groupSaving) {
+      _savingFormFields[key] = value;
     } else if (type == FormStateType.memberInvitation) {
       _memberInvitationFormFields[key] = value;
     } else {
@@ -155,13 +163,13 @@ class FormStateProvider with ChangeNotifier {
     }
     notifyListeners();
   }
-  void setUpdateGoalFormFields(Goal? goal) {
+  void setUpdateGroupSavingFormFields(GroupSaving? goal) {
     if (goal == null) {
       return;
     }
-    Map<String, dynamic> tempGoal = goal.toMapForForm();
-    for (var key in tempGoal.keys) {
-      _updateGoalFormFields[key] = tempGoal[key];
+    Map<String, dynamic> tempGroupSaving = goal.toMapForForm();
+    for (var key in tempGroupSaving.keys) {
+      _updateSavingFormFields[key] = tempGroupSaving[key];
     }
     notifyListeners();
   }
@@ -189,8 +197,10 @@ class FormStateProvider with ChangeNotifier {
       _updateTransactionFormFields.clear();
     } else if (type == FormStateType.updateBudget) {
       _updateBudgetFormFields.clear();
-    } else if (type == FormStateType.updateGoal) {
-      _updateGoalFormFields.clear();
+    } else if (type == FormStateType.updateGroupSaving) {
+      _updateSavingFormFields.clear();
+    } else if (type == FormStateType.groupSaving) {
+      _savingFormFields.clear();
     } else if (type == FormStateType.memberInvitation) {
       _memberInvitationFormFields.clear();
     } else {

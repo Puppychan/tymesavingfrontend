@@ -4,8 +4,8 @@ enum FormStateType {
   updateTransaction('UpdateTransaction'),
   saving('Saving'),
   budget('Budget'),
-  goal('Goal'),
-  updateGoal("UpdateGoal"),
+  groupSaving('GroupSaving'),
+  updateGroupSaving("UpdateGroupSaving"),
   updateBudget('UpdateBudget'),
   // other type of form
   memberInvitation("MemberInvitation");

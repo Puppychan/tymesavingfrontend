@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
-import 'package:tymesavingfrontend/components/common/dialog/delete_confirm_dialog.dart';
-import 'package:tymesavingfrontend/models/goal_model.dart';
-import 'package:tymesavingfrontend/screens/goal/goal_update_page.dart';
-import 'package:tymesavingfrontend/services/goal_service.dart';
-import 'package:tymesavingfrontend/utils/display_success.dart';
+import 'package:tymesavingfrontend/components/group_saving/group_saving_details.dart';
+import 'package:tymesavingfrontend/models/group_saving_model.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
-import 'package:tymesavingfrontend/utils/handling_error.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-// final tempGoal = Goal(
+// final tempGroupSaving = GroupSaving(
 //   id: "1",
 //   hostedBy: "72e4b93000be75dd6e367723",
-//   name: 'Goal Name',
+//   name: 'GroupSaving Name',
 //   description: 'Description',
 //   amount: 50000000,
 //   concurrentAmount: 10000000,
@@ -22,48 +17,24 @@ import 'package:timeago/timeago.dart' as timeago;
 //   participants: [],
 // );
 
-class GoalCard extends StatefulWidget {
-  // final String goalId;
-  final Goal goal;
-  const GoalCard({super.key, required this.goal});
+class GroupSavingCard extends StatefulWidget {
+  // final String groupSavingId;
+  final GroupSaving groupSaving;
+  const GroupSavingCard({super.key, required this.groupSaving});
   @override
-  State<GoalCard> createState() => _GoalCardState();
+  State<GroupSavingCard> createState() => _GroupSavingCardState();
 }
 
-class _GoalCardState extends State<GoalCard> {
+class _GroupSavingCardState extends State<GroupSavingCard> {
   @override
   Widget build(BuildContext context) {
-    // final goal = Provider.of<AuthService>(context).goal;
-    // final goal = tempGoal;
-    final currentProgress = widget.goal.concurrentAmount / widget.goal.amount;
+    // final groupSaving = Provider.of<AuthService>(context).groupSaving;
+    // final groupSaving = tempGroupSaving;
+    final currentProgress = widget.groupSaving.concurrentAmount / widget.groupSaving.amount;
 
-    void onEdit() {
-      // Implement the edit functionality
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => GoalUpdatePage(goalId: widget.goal.id)),
-      );
-    }
-
-    Future showDeleteConfirmationDialog() async {
-      showCustomDeleteConfirmationDialog(
-          context, 'Are you sure you want to delete this goal?', () async {
-        final goalService = Provider.of<GoalService>(context, listen: false);
-        await handleMainPageApi(context, () async {
-          return await goalService.deleteGoal(widget.goal.id);
-          // return result;
-        }, () async {
-          Navigator.of(context).pop();
-          SuccessDisplay.showSuccessToast(
-              "Successfully delete the goal", context);
-        });
-      });
-    }
-
-    // double progress = goal.contribution / maxContribution; // Calculate the progress as a fraction
+    // double progress = groupSaving.contribution / maxContribution; // Calculate the progress as a fraction
     String formattedDate =
-        timeago.format(DateTime.parse(widget.goal.createdDate.toString()));
+        timeago.format(DateTime.parse(widget.groupSaving.createdDate.toString()));
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     return Card(
@@ -75,8 +46,7 @@ class _GoalCardState extends State<GoalCard> {
         onTap: () {
           // debugPrint('Challenge tapped.');
           Navigator.push(context, MaterialPageRoute(builder: (context) {
-            // TODO: Implement the goal details page
-            return GoalUpdatePage(goalId: widget.goal.id);
+            return GroupSavingDetails(groupSavingId: widget.groupSaving.id);
           }));
         },
         borderRadius: BorderRadius.circular(16),
@@ -86,11 +56,11 @@ class _GoalCardState extends State<GoalCard> {
               padding: const EdgeInsets.all(8),
               child: Row(
                 children: [
-                  // CustomCircleAvatar(imagePath: goal.avatarPath),
+                  // CustomCircleAvatar(imagePath: groupSaving.avatarPath),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      widget.goal.name,
+                      widget.groupSaving.name,
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -127,18 +97,18 @@ class _GoalCardState extends State<GoalCard> {
                   const SizedBox(width: 3),
                   Text.rich(TextSpan(children: <TextSpan>[
                     TextSpan(
-                      text: formatAmountToVnd(widget.goal.concurrentAmount),
-                      // text: "Goal Contribution",
+                      text: formatAmountToVnd(widget.groupSaving.concurrentAmount),
+                      // text: "GroupSaving Contribution",
                       style: textTheme.bodyLarge,
                     ),
-                    TextSpan(
+                     TextSpan(
                       text: ' / ',
                       style: textTheme.labelLarge!.copyWith(
                         color: colorScheme.inversePrimary,
                       ),
                     ),
                     TextSpan(
-                      text: formatAmountToVnd(widget.goal.amount),
+                      text: formatAmountToVnd(widget.groupSaving.amount),
                       style: Theme.of(context).textTheme.bodyMedium!,
                     ),
                   ]))
@@ -167,6 +137,6 @@ class _GoalCardState extends State<GoalCard> {
   }
 
   // Widget displayParticipants() {
-  //   return
+  //   return 
   // }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/screens/about_contact/about_us.dart';
 import 'package:tymesavingfrontend/screens/authentication/sign_in_page.dart';
+import 'package:tymesavingfrontend/screens/setting_page.dart';
 import 'package:tymesavingfrontend/screens/tracking_report/spend_tracking.dart';
 import 'package:tymesavingfrontend/screens/tracking_report/report_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
@@ -21,6 +22,12 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
   Future<void> placeHolderFunction() async {
     //Debug here
     debugPrint('function tapped!');
+  }
+  Future<void> settingFunction() async {
+    //Debug here
+    if (!mounted) return;
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const SettingPage()));
   }
 
   Future<void> myWalletRoute() async {
@@ -77,7 +84,7 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
             RowSettingTemplate('My Report', 'Understand your cashflow',
                 const Icon(Icons.help), myReport),
             RowSettingTemplate('Setting', 'Change setting and preference',
-                const Icon(Icons.settings), placeHolderFunction),
+                const Icon(Icons.settings), settingFunction),
             RowSettingTemplate('Contact us', 'Send a email or direct hotline',
                 const Icon(Icons.phone), placeHolderFunction),
             RowSettingTemplate('About', 'Some information about the project',

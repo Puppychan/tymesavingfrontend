@@ -4,47 +4,47 @@ import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
 import 'package:tymesavingfrontend/common/styles/app_padding.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/form/common_form/goal_form.dart';
-import 'package:tymesavingfrontend/models/goal_model.dart';
+import 'package:tymesavingfrontend/models/group_saving_model.dart';
 import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
-import 'package:tymesavingfrontend/services/goal_service.dart';
+import 'package:tymesavingfrontend/services/group_saving_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
-class GoalUpdatePage extends StatefulWidget {
+class GroupSavingUpdatePage extends StatefulWidget {
   final String goalId;
 
-  const GoalUpdatePage({super.key, required this.goalId});
+  const GroupSavingUpdatePage({super.key, required this.goalId});
 
   @override
-  State<GoalUpdatePage> createState() => _GoalUpdatePageState();
+  State<GroupSavingUpdatePage> createState() => _GroupSavingUpdatePageState();
 }
 
-class _GoalUpdatePageState extends State<GoalUpdatePage> {
-  Goal? _goal;
+class _GroupSavingUpdatePageState extends State<GroupSavingUpdatePage> {
+  GroupSaving? _goal;
 
   @override
   void initState() {
     Future.microtask(() async {
       if (!mounted) return;
       final goalService =
-          Provider.of<GoalService>(context, listen: false);
+          Provider.of<GroupSavingService>(context, listen: false);
       await handleMainPageApi(context, () async {
-        return await goalService.fetchGoalDetails(widget.goalId);
+        return await goalService.fetchGroupSavingDetails(widget.goalId);
       }, () async {
         if (!mounted) return;
-        final tempGoal = goalService.currentGoal;
+        final tempGroupSaving = goalService.currentGroupSaving;
         // // set goal to update form
         final formStateService =
             Provider.of<FormStateProvider>(context, listen: false);
-        formStateService.setUpdateGoalFormFields(tempGoal);
+        formStateService.setUpdateGroupSavingFormFields(tempGroupSaving);
         setState(() {
-          _goal = tempGoal;
+          _goal = tempGroupSaving;
         });
 
         // // update state
         // setState(() {
-        //   _goal = tempGoal;
+        //   _goal = tempGroupSaving;
         // });
-        // await _renderUser(tempGoal!.userId);
+        // await _renderUser(tempGroupSaving!.userId);
       });
     });
     super.initState();
@@ -55,7 +55,7 @@ class _GoalUpdatePageState extends State<GoalUpdatePage> {
     final textTheme = Theme.of(context).textTheme;
     return const Scaffold(
         appBar: Heading(
-          title: "Update Goal",
+          title: "Update GroupSaving",
           showBackButton: true,
         ),
         body: SingleChildScrollView(
@@ -85,7 +85,7 @@ class _GoalUpdatePageState extends State<GoalUpdatePage> {
                 //           context: context,
                 //           title: "Category Selection",
                 //           contentWidget: CategorySelectionPage(
-                //               type: FormStateType.updateGoal,
+                //               type: FormStateType.updateGroupSaving,
                 //               onNavigateToNext: () => Navigator.pop(context)));
                 //     },
                 //     child: Text(
@@ -93,8 +93,8 @@ class _GoalUpdatePageState extends State<GoalUpdatePage> {
                 //       style: textTheme.titleSmall,
                 //     )),
                 Divider(),
-                GoalFormMain(
-                    type: FormStateType.updateGoal),
+                GroupSavingFormMain(
+                    type: FormStateType.updateGroupSaving),
               ],
             )));
   }

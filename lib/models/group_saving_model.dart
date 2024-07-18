@@ -1,9 +1,7 @@
 import 'package:tymesavingfrontend/models/base_group_model.dart';
 
-class Budget extends BaseGroup {
-
+class GroupSaving extends BaseGroup {
   @override
-  Budget.fromMap(super.group)
+  GroupSaving.fromMap(super.group)
       : super.fromMap();
-
 }

@@ -4,7 +4,7 @@ import 'package:tymesavingfrontend/common/enum/invitation_type_enum.dart';
 import 'package:tymesavingfrontend/components/common/sheet/bottom_sheet.dart';
 import 'package:tymesavingfrontend/components/common/sheet/icon_text_row.dart';
 import 'package:tymesavingfrontend/screens/budget/budget_update_page.dart';
-import 'package:tymesavingfrontend/screens/goal/goal_update_page.dart';
+import 'package:tymesavingfrontend/screens/group_saving/group_saving_update_page.dart';
 import 'package:tymesavingfrontend/screens/invitation/group_pending_invitation_page.dart';
 import 'package:tymesavingfrontend/screens/user_list/member_list_page.dart';
 
@@ -33,7 +33,7 @@ List<Widget> renderGroupHeadingActions(
         if (isBudget) {
           return BudgetUpdatePage(budgetId: groupId);
         } else {
-          return GoalUpdatePage(goalId: groupId);
+          return GroupSavingUpdatePage(goalId: groupId);
         }
       }));
     }));

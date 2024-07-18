@@ -4,14 +4,14 @@ import 'package:tymesavingfrontend/components/common/sheet/bottom_sheet.dart';
 import 'package:tymesavingfrontend/form/common_form/goal_form.dart';
 // import 'package:tymesavingfrontend/components/multiple_page_sheet/common/add_amount_calculator.dart';
 
-void showGoalFormA(BuildContext context) {
+void showGroupSavingFormA(BuildContext context) {
   // because this sheet open from another sheet -> we need to pop the current sheet
   showStyledBottomSheet(
     context: context,
-    title: 'New Goal Group',
+    title: 'New GroupSaving Group',
     subTitle: 'Define your goal group',
-    contentWidget: const GoalFormMain(
-      type: FormStateType.goal,
+    contentWidget: const GroupSavingFormMain(
+      type: FormStateType.saving,
     ),
     // onNavigateToNextSheet: () => showSecondBottomSheet(context),
   );

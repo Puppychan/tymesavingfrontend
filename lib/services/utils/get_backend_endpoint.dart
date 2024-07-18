@@ -23,7 +23,7 @@ class BackendEndpoints {
   static String get signup => "$baseUrl/user/signup";
   static String get transaction => "$baseUrl/transaction";
   static String get budget => "$baseUrl/sharedBudget";
-  static String get goal => "$baseUrl/groupSaving";
+  static String get groupSaving => "$baseUrl/groupSaving";
   static String get invitation => "$baseUrl/invitation";
 
   // if there is no $baseUrl, the URL will be concatenated with other endpoints
@@ -44,11 +44,11 @@ class BackendEndpoints {
   static String get budgetGetMembers => "member-list";
   
   // goal specific endpoints
-  static String get goalsGetByUserId => "byUser";
-  static String get goalGetSummaryById => "viewGroupFromId";
-  static String get goalUpdateHost => "host/edit";
-  static String get goalRemoveMember => "host/remove-member";
-  static String get goalGetMembers => "member-list";
+  static String get groupSavingsGetByUserId => "byUser";
+  static String get groupSavingGetSummaryById => "viewGroupFromId";
+  static String get groupSavingUpdateHost => "host/edit";
+  static String get groupSavingRemoveMember => "host/remove-member";
+  static String get groupSavingGetMembers => "member-list";
 
   // invitation specific endpoints
   static String get invitationsGetByUserId => "byUser";

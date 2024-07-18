@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
 
 class UnderlineTextField extends StatefulWidget {
@@ -17,6 +18,7 @@ class UnderlineTextField extends StatefulWidget {
   final Function()? onTap;
   final bool? readOnly;
   final void Function(String)? onChange;
+  final List<TextInputFormatter>? inputFormatters;
 
   const UnderlineTextField({
     super.key,
@@ -33,7 +35,7 @@ class UnderlineTextField extends StatefulWidget {
     this.icon,
     this.onTap,
     this.readOnly,
-    this.onChange, this.defaultValue,
+    this.onChange, this.defaultValue, this.inputFormatters,
   });
 
   @override
@@ -62,6 +64,7 @@ class _UnderlineTextFieldState extends State<UnderlineTextField> {
         validator: widget.validator,
         keyboardType: widget.keyboardType,
         readOnly: widget.readOnly ?? false,
+        inputFormatters: [...widget.inputFormatters ?? []],
         style: textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.w500),
         decoration: InputDecoration(
           border: const UnderlineInputBorder(borderSide: BorderSide.none),

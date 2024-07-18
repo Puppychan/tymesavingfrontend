@@ -17,6 +17,7 @@ import 'package:tymesavingfrontend/utils/display_success.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
 import 'package:tymesavingfrontend/utils/format_date.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
+import 'package:tymesavingfrontend/utils/input_format_currency.dart';
 import 'package:tymesavingfrontend/utils/validator.dart';
 
 class BudgetFormMain extends StatefulWidget {
@@ -215,6 +216,7 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
                   icon: Icons.attach_money,
                   placeholder: formattedAmount,
                   keyboardType: TextInputType.number,
+                  inputFormatters: [CurrencyInputFormatter()],
                   onChange: (value) => updateOnChange("amount"),
                   validator: Validator.validateAmount),
               ..._buildComponentGroup(contentWidget: [

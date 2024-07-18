@@ -81,7 +81,7 @@ void showAddOptions(BuildContext context) {
           onTap: () {
             // Handle add new budget plan
             Navigator.of(context).pop();
-            showGoalFormA(context);
+            showGroupSavingFormA(context);
           },
           textTheme: textTheme,
           colorScheme: colorScheme,

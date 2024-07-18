@@ -1,34 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
-import 'package:tymesavingfrontend/components/common/chart/budget_pie_chart.dart';
+import 'package:tymesavingfrontend/components/common/chart/group_saving_pie_chart.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/common_group/group_heading_actions.dart';
 import 'package:tymesavingfrontend/components/transaction/transaction_list.dart';
 import 'package:tymesavingfrontend/main.dart';
-import 'package:tymesavingfrontend/models/budget_model.dart';
+import 'package:tymesavingfrontend/models/group_saving_model.dart';
 import 'package:tymesavingfrontend/models/summary_user_model.dart';
 import 'package:tymesavingfrontend/models/transaction_model.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
-import 'package:tymesavingfrontend/services/budget_service.dart';
+import 'package:tymesavingfrontend/services/group_saving_service.dart';
 import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
 import 'package:tymesavingfrontend/services/user_service.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
-class BudgetDetails extends StatefulWidget {
-  const BudgetDetails({super.key, required this.budgetId});
+class GroupSavingDetails extends StatefulWidget {
+  const GroupSavingDetails({super.key, required this.groupSavingId});
 
-  final String budgetId;
+  final String groupSavingId;
 
   @override
-  State<BudgetDetails> createState() => _BudgetDetailsState();
+  State<GroupSavingDetails> createState() => _GroupSavingDetailsState();
 }
 
-class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
+class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware {
   FormStateProvider? _formStateProvider;
-  Budget? _budget;
+  GroupSaving? _groupSaving;
   double? percentageTaken;
   double? percentageLeft;
   DateTime? endDate;
@@ -57,13 +56,13 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
 
   Future<void> _loadTransactions() async {
     if (!mounted) return;
-    final budgetService = Provider.of<BudgetService>(context, listen: false);
+    final groupSavingService = Provider.of<GroupSavingService>(context, listen: false);
     await handleMainPageApi(context, () async {
-      return await budgetService.fetchBudgetTransactions(widget.budgetId);
+      return await groupSavingService.fetchGroupSavingTransactions(widget.groupSavingId);
     }, () async {
       if (!mounted) return;
       setState(() {
-        _transactions = budgetService.transactions;
+        _transactions = groupSavingService.transactions;
       });
     });
   }
@@ -71,26 +70,26 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
   Future<void> _loadData() async {
     Future.microtask(() async {
       if (!mounted) return;
-      final budgetService = Provider.of<BudgetService>(context, listen: false);
+      final groupSavingService = Provider.of<GroupSavingService>(context, listen: false);
       await handleMainPageApi(context, () async {
-        return await budgetService.fetchBudgetDetails(widget.budgetId);
+        return await groupSavingService.fetchGroupSavingDetails(widget.groupSavingId);
       }, () async {
         if (!mounted) return;
-        final tempBudget = budgetService.currentBudget;
-        // // set budget to update form
-        _formStateProvider?.setUpdateBudgetFormFields(tempBudget);
+        final tempGroupSaving = groupSavingService.currentGroupSaving;
+        // // set groupSaving to update form
+        _formStateProvider?.setUpdateGroupSavingFormFields(tempGroupSaving);
         // render host user
 
-        // set state for budget details
+        // set state for groupSaving details
         setState(() {
-          _budget = tempBudget;
-          percentageTaken = _budget!.amount / _budget!.concurrentAmount * 100;
+          _groupSaving = tempGroupSaving;
+          percentageTaken = _groupSaving!.amount / _groupSaving!.concurrentAmount * 100;
           percentageLeft =
               percentageTaken!.isInfinite ? 100.0 : 100.0 - percentageTaken!;
-          endDate = DateTime.parse(_budget!.endDate);
+          endDate = DateTime.parse(_groupSaving!.endDate);
           daysLeft = calculateDaysLeft(endDate!);
           // check if user is member or host
-          isMember = _budget!.hostedBy.toString() !=
+          isMember = _groupSaving!.hostedBy.toString() !=
               Provider.of<AuthService>(context, listen: false).user?.id;
           isLoading = false;
 
@@ -107,7 +106,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
         });
       });
 
-      await _renderUser(_budget?.hostedBy);
+      await _renderUser(_groupSaving?.hostedBy);
       await _loadTransactions();
     });
   }
@@ -151,12 +150,12 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-        appBar: Heading(title: 'Budget', showBackButton: true, actions: [
+        appBar: Heading(title: 'GroupSaving', showBackButton: true, actions: [
           IconButton(
             icon: const Icon(FontAwesomeIcons.ellipsis),
             onPressed: () {
               showGroupActionBottonSheet(
-                  context, isMember, true, widget.budgetId);
+                  context, isMember, true, widget.groupSavingId);
             },
           )
         ]),
@@ -177,7 +176,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              _budget!.name,
+                              _groupSaving!.name,
                               style: Theme.of(context).textTheme.titleLarge,
                               textAlign: TextAlign.center,
                               maxLines: 2,
@@ -226,7 +225,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                                 });
                               },
                               child: Text(
-                                _budget!.description,
+                                _groupSaving!.description,
                                 style: Theme.of(context).textTheme.bodyMedium,
                                 textAlign: TextAlign.center,
                                 maxLines: _isDisplayRestDescription ? null : 1,
@@ -281,7 +280,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                             const SizedBox(
                               height: 10,
                             ),
-                            Text(formatAmountToVnd(_budget!.concurrentAmount),
+                            Text(formatAmountToVnd(_groupSaving!.concurrentAmount),
                                 style:
                                     Theme.of(context).textTheme.headlineMedium),
                           ],
@@ -289,7 +288,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                       ),
                     ),
                   ),
-                  BudgetPieChart(
+                  GroupSavingPieChart(
                       amount:
                           percentageTaken!.isInfinite ? 0 : percentageTaken!,
                       concurrent: percentageLeft!),

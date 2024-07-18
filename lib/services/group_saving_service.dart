@@ -1,29 +1,28 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/models/budget_model.dart';
+import 'package:tymesavingfrontend/models/group_saving_model.dart';
 import 'package:tymesavingfrontend/models/summary_group_model.dart';
 import 'package:tymesavingfrontend/services/utils/get_backend_endpoint.dart';
 import 'package:tymesavingfrontend/services/utils/network_service.dart';
 import 'package:tymesavingfrontend/models/transaction_model.dart';
 
-class BudgetService extends ChangeNotifier {
-  Budget? _currentBudget;
-  List<Budget> _budgets = [];
+class GroupSavingService extends ChangeNotifier {
+  GroupSaving? _currentGroupSaving;
+  List<GroupSaving> _groupSavings = [];
   SummaryGroup? _summaryGroup;
 
-  Budget? get currentBudget => _currentBudget;
-  List<Budget> get budgets => _budgets;
+  GroupSaving? get currentGroupSaving => _currentGroupSaving;
+  List<GroupSaving> get groupSavings => _groupSavings;
   SummaryGroup? get summaryGroup => _summaryGroup;
 
   List<Transaction> _transactions = [];
 
   List<Transaction> get transactions => _transactions;
 
-  Future<dynamic> fetchBudgetList(String? userId, {String? name, CancelToken? cancelToken}) async {
+  Future<dynamic> fetchGroupSavingList(String? userId, {String? name, CancelToken? cancelToken}) async {
     // if (userId == null) return {'response': 'User ID is required.', 'statusCode': 400};
     String endpoint =
-        "${BackendEndpoints.budget}/${BackendEndpoints.budgetsGetByUserId}/$userId";
-
+        "${BackendEndpoints.groupSaving}/${BackendEndpoints.groupSavingsGetByUserId}/$userId";
     if (name != null) {
       endpoint += "?name=$name";
     }
@@ -31,20 +30,22 @@ class BudgetService extends ChangeNotifier {
     final response = await NetworkService.instance.get(endpoint, cancelToken: cancelToken);
     if (response['response'] != null && response['statusCode'] == 200) {
       final responseData = response['response'];
-      List<Budget> budgetList = [];
+      List<GroupSaving> groupSavingList = [];
       if (responseData != [] && responseData != null) {
-        for (var budget in responseData) {
-          final tempBudget = Budget.fromMap(budget);
-          budgetList.add(tempBudget);
+        for (var groupSaving in responseData) {
+          print("Before group saving");
+          final tempGroupSaving = GroupSaving.fromMap(groupSaving);
+          print("After group saving");
+          groupSavingList.add(tempGroupSaving);
         }
       }
-      _budgets = budgetList;
+      _groupSavings = groupSavingList;
       notifyListeners();
     }
     return response;
   }
 
-  Future<Map<String, dynamic>> addBudgetGroup(
+  Future<Map<String, dynamic>> addGroupSavingGroup(
     String hostedBy,
     String name,
     String description,
@@ -53,7 +54,7 @@ class BudgetService extends ChangeNotifier {
     String endDate,
   ) async {
     final response = await NetworkService.instance.post(
-      BackendEndpoints.budget,
+      BackendEndpoints.groupSaving,
       body: {
         'hostedBy': hostedBy,
         'name': name,
@@ -66,19 +67,19 @@ class BudgetService extends ChangeNotifier {
     return response;
   }
 
-  Future<Map<String, dynamic>> fetchBudgetDetails(id) async {
+  Future<Map<String, dynamic>> fetchGroupSavingDetails(id) async {
     final response = await NetworkService.instance
-        .get("${BackendEndpoints.budget}/$id/info");
+        .get("${BackendEndpoints.groupSaving}/$id/info");
     if (response['response'] != null && response['statusCode'] == 200) {
-      _currentBudget = Budget.fromMap(response['response']);
+      _currentGroupSaving = GroupSaving.fromMap(response['response']);
       notifyListeners();
     }
     return response;
   }
 
-  Future<dynamic> fetchBudgetSummary(id) async {
+  Future<dynamic> fetchGroupSavingSummary(id) async {
     final response = await NetworkService.instance.get(
-        "${BackendEndpoints.budget}/${BackendEndpoints.budgetGetSummaryById}/$id");
+        "${BackendEndpoints.groupSaving}/${BackendEndpoints.groupSavingGetSummaryById}/$id");
     if (response['response'] != null && response['statusCode'] == 200) {
       _summaryGroup = SummaryGroup.fromMap(response['response']);
       notifyListeners();
@@ -86,8 +87,8 @@ class BudgetService extends ChangeNotifier {
     return response;
   }
 
-  Future<Map<String, dynamic>> updateBudgetGroup(
-    String budgetGroupId,
+  Future<Map<String, dynamic>> updateGroupSavingGroup(
+    String groupSavingGroupId,
     String hostedBy,
     String name,
     String description,
@@ -95,7 +96,7 @@ class BudgetService extends ChangeNotifier {
     String endDate,
   ) async {
     final response = await NetworkService.instance.put(
-        "${BackendEndpoints.budget}/$budgetGroupId/${BackendEndpoints.budgetUpdateHost}",
+        "${BackendEndpoints.groupSaving}/$groupSavingGroupId/${BackendEndpoints.groupSavingUpdateHost}",
         body: {
           'name': name,
           'description': description,
@@ -105,27 +106,27 @@ class BudgetService extends ChangeNotifier {
     return response;
   }
 
-  Future<Map<String, dynamic>> deleteBudget(String budgetId) async {
+  Future<Map<String, dynamic>> deleteGroupSaving(String groupSavingId) async {
     final response = await NetworkService.instance
-        .delete("${BackendEndpoints.budget}/$budgetId");
+        .delete("${BackendEndpoints.groupSaving}/$groupSavingId");
     return response;
   }
 
   void disposeDetailGroup() {
-    _currentBudget = null;
+    _currentGroupSaving = null;
     _transactions = [];
     notifyListeners();
   }
 
-  Future<Map<String, dynamic>> fetchBudgetTransactions(
-      String budgetGroupId) async {
-    final response = await NetworkService.instance
-        .get("${BackendEndpoints.budget}/$budgetGroupId/transactions");
+  Future<Map<String, dynamic>> fetchGroupSavingTransactions(
+      String groupSavingGroupId) async {
+    final response = await NetworkService.instance.get(
+        "${BackendEndpoints.groupSaving}/$groupSavingGroupId/transactions");
 
     if (response['response'] != null && response['statusCode'] == 200) {
-      debugPrint("#====== Transactions of Budget ======#");
+      debugPrint("#====== Transactions of GroupSaving ======#");
       debugPrint(response.toString());
-      debugPrint("#====== Transactions of Budget ======#");
+      debugPrint("#====== Transactions of GroupSaving ======#");
       final responseData = response['response'];
       List<Transaction> transactionList = [];
       if (responseData.isNotEmpty) {

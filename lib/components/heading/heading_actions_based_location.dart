@@ -7,7 +7,6 @@ import 'package:tymesavingfrontend/common/enum/user_role_enum.dart';
 import 'package:tymesavingfrontend/components/common/sheet/bottom_sheet.dart';
 import 'package:tymesavingfrontend/components/user/user_sort_filter.dart';
 import 'package:tymesavingfrontend/screens/notifications_page.dart';
-import 'package:tymesavingfrontend/services/theme_service.dart';
 import 'package:tymesavingfrontend/services/user_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
@@ -18,13 +17,13 @@ List<Widget> renderHeadingActionsBasedUserRoleAndLocation(
   Map<UserRole, Map<PageLocation, List<IconButton>>> rolePageLocationIcons = {
       UserRole.admin: {
         PageLocation.homePage: [
-          buildThemeButton(context),
+          // buildThemeButton(context),
           buildUserFilterButton(context)
         ],
         // PageLocation.settingsPage: [Icons.home, Icons.logout],
       },
       UserRole.customer: {
-        PageLocation.homePage: [buildThemeButton(context), buildNotificationButton(context)],
+        PageLocation.homePage: [buildNotificationButton(context)],
         // PageLocation.settingsPage: [Icons.home],
       },
   };
@@ -49,17 +48,17 @@ IconButton buildEditButton(BuildContext context, String type) {
   );
 }
 
-IconButton buildThemeButton(BuildContext context) {
-  final themeProvider = Provider.of<ThemeService>(context);
-  return IconButton(
-    icon: Icon(
-      themeProvider.isDarkMode ? Icons.brightness_7 : Icons.brightness_4,
-    ),
-    onPressed: () {
-      themeProvider.toggleTheme();
-    },
-  );
-}
+// IconButton buildThemeButton(BuildContext context) {
+//   final themeProvider = Provider.of<ThemeService>(context);
+//   return IconButton(
+//     icon: Icon(
+//       themeProvider.isDarkMode ? Icons.brightness_7 : Icons.brightness_4,
+//     ),
+//     onPressed: () {
+//       themeProvider.toggleTheme();
+//     },
+//   );
+// }
 
 IconButton buildNotificationButton(BuildContext context) {
   return IconButton(
