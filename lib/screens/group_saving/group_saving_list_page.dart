@@ -5,6 +5,7 @@ import 'package:tymesavingfrontend/components/group_saving/group_saving_card.dar
 import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/services/group_saving_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
+import 'package:tymesavingfrontend/components/common/not_found_message.dart';
 
 class GroupSavingListPage extends StatefulWidget {
   final User? user;
@@ -17,11 +18,11 @@ class _GroupSavingListPageState extends State<GroupSavingListPage> {
   void _fetchGroupSavings() async {
     Future.microtask(() async {
       if (!mounted) return;
-      final goalService = Provider.of<GroupSavingService>(context, listen: false);
+      final goalService =
+          Provider.of<GroupSavingService>(context, listen: false);
       await handleMainPageApi(context, () async {
         return await goalService.fetchGroupSavingList(widget.user?.id);
-      }, () async {
-      });
+      }, () async {});
     });
   }
 
@@ -35,20 +36,20 @@ class _GroupSavingListPageState extends State<GroupSavingListPage> {
   Widget build(BuildContext context) {
     return Consumer<GroupSavingService>(builder: (context, goalService, child) {
       final groupSavings = goalService.groupSavings;
+
       return Padding(
-          padding: AppPaddingStyles.pagePadding,
-          child: groupSavings.isNotEmpty
-              ? ListView.separated(
-                  itemCount: groupSavings.length,
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(height: 15),
-                  itemBuilder: (context, index) {
-                    return GroupSavingCard(groupSaving: groupSavings[index]);
-                  },
-                )
-              : const Center(
-                  child: CircularProgressIndicator(),
-                ));
+        padding: AppPaddingStyles.pagePadding,
+        child: groupSavings.isNotEmpty
+            ? ListView.separated(
+                itemCount: groupSavings.length,
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: 15),
+                itemBuilder: (context, index) {
+                  return GroupSavingCard(groupSaving: groupSavings[index]);
+                },
+              )
+            : const NotFoundMessage(message: "No group savings found"),
+      );
     });
   }
 }
