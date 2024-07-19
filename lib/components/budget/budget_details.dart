@@ -296,6 +296,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                   const SizedBox(
                     height: 20,
                   ),
+                  Text('Transaction history', style: Theme.of(context).textTheme.headlineMedium,),
                   Expanded(
                     child: TransactionList(transactions: _transactions),
                   ),

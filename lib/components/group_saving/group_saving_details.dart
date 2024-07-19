@@ -306,6 +306,7 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
                   const SizedBox(
                     height: 10,
                   ),
+                  Text('Transaction history', style: Theme.of(context).textTheme.headlineMedium,),
                   Expanded(
                     child: TransactionList(transactions: _transactions),
                   ),
