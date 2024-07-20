@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
+import 'package:tymesavingfrontend/common/enum/transaction_type_enum.dart';
 import 'package:tymesavingfrontend/models/transaction_model.dart';
 import 'package:tymesavingfrontend/models/transaction_report_model.dart';
 import 'package:tymesavingfrontend/services/utils/get_backend_endpoint.dart';
@@ -18,6 +19,16 @@ class TransactionService extends ChangeNotifier {
   NetSpend? _netSpend;
   Map<String, List<Transaction>>? _transactions;
   Transaction? _detailedTransaction;
+  Map<String, String> _filterOptions = {
+    "getTransactionType": 'All',
+    "getCategory": 'All',
+    // "getDateCreated":
+  };
+  Map<String, String> _sortOptions = {
+    "sortDateCreated": 'ascending',
+    "sortDateUpdated": 'ascending',
+    "sortAmount": 'ascending',
+  };
 
   // Getter to access outside of this class
   CompareToLastMonth? get compareToLastMonth => _compareToLastMonth;
@@ -28,6 +39,94 @@ class TransactionService extends ChangeNotifier {
   NetSpend? get netSpend => _netSpend;
   Map<String, List<Transaction>>? get transactions => _transactions;
   Transaction? get getDetailedTransaction => _detailedTransaction;
+  Map<String, String> get filterOptions => _filterOptions;
+  Map<String, String> get sortOptions => _sortOptions;
+
+  String convertOptionToUI(String option) {
+    // Convert sort option to readable string to display in the UI
+    // if (optionType == 'sort') {
+    switch (option) {
+      case 'sortDateCreated':
+        return "Created date";
+      case 'sortDateUpdated':
+        return "Updated date";
+      case 'sortAmount':
+        return "Transaction amount";
+      default:
+        return "";
+    }
+    // }
+    // else {
+    //   switch (option) {
+    //     case 'All':
+    //       return "All";
+    //     case 'Income':
+    //       return "Income";
+    //     case 'Expense':
+    //       return "Expense";
+    //     default:
+    //       return "";
+    //   }
+    // }
+  }
+
+  void setOptions(String type, String newOption, String newValue) {
+    if (type == "sort") {
+      // if type of option is sort
+      String convertedOption;
+      switch (newOption) {
+        case 'sortDateCreated':
+          convertedOption = "Created date";
+          break;
+        case 'sortDateUpdated':
+          convertedOption = "Updated date";
+          break;
+        case 'sortAmount':
+          convertedOption = "Transaction amount";
+          break;
+        default:
+          convertedOption = "";
+      }
+      if (_sortOptions.keys.contains(convertedOption)) {
+        if (newValue == 'ascending' || newValue == 'descending') {
+          _sortOptions = {..._sortOptions, convertedOption: newValue};
+          notifyListeners();
+        }
+      }
+    } else {
+      // if type of option is filter
+      if ((newOption == 'getTransactionType' &&
+              TransactionType.list.contains(newValue)) ||
+          (newOption == 'getCategory' &&
+              TransactionCategory.list.contains(newValue))) {
+        _filterOptions = {..._filterOptions, newOption: newValue};
+        notifyListeners();
+      }
+    }
+  }
+
+  String _convertOptionsToParams() {
+    // used for creating query params for the API for fetching transactions
+
+    // String returnParams = "?sortGroupId=${_sortOptions['sortGroupId']}"
+    //     "&sortGroupType=${_sortOptions['sortGroupType']}"
+    //     "&sortStatus=${_sortOptions['sortStatus']}";
+
+    // "?sortOption1=value1&sortOption2=value2&sortOption3=value3"
+    String returnParams =
+        _sortOptions.entries.map((e) => "${e.key}=${e.value}").join('&');
+    returnParams = "?$returnParams";
+
+    // eliminate if filter option is 'All'
+    for (var key in _filterOptions.keys) {
+      if (_filterOptions[key] != 'All') {
+        // add filter option to the returnParams
+        returnParams += "&$key=${_filterOptions[key]}";
+      }
+    }
+
+    return returnParams;
+  }
 
   Future<Map<String, dynamic>> getChartReport(userid) async {
     final response = await NetworkService.instance.get(
@@ -88,22 +187,15 @@ class TransactionService extends ChangeNotifier {
   }
 
   Future<Map<String, dynamic>> getBothChartReport(userid) async {
-    print("getBothChartReport $userid");
     final expenseResponse = await NetworkService.instance.get(
         "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReport}?transactionType=Expense&userId=$userid");
-    print("getBothChartReport after expenseResponse");
     final incomeResponse = await NetworkService.instance.get(
         "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReport}?transactionType=Income&userId=$userid");
-    print("getBothChartReport after incomeResponse");
     final responseDataExpense = expenseResponse['response'];
-    print("getBothChartReport after responseDataExpense");
     final responseDataIncome = incomeResponse['response'];
-    print("getBothChartReport after responseDataIncome");
     notifyListeners();
     _chartReport = ChartReport.fromJson(responseDataExpense);
-    print("getBothChartReport after _chartReport");
     _chartReportSecondary = ChartReport.fromJson(responseDataIncome);
-    print("getBothChartReport after _chartReportSecondary");
     return expenseResponse;
   }
 
@@ -177,8 +269,9 @@ class TransactionService extends ChangeNotifier {
       }
     }
 
-    final response = await NetworkService.instance.get(
-        "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReportByUser}/$id");
+    String endpoint = "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReportByUser}/$id";
+    endpoint += _convertOptionsToParams();
+    final response = await NetworkService.instance.get(endpoint);
 
     if (response['response'] != null && response['statusCode'] == 200) {
       final responseData = response['response'] as Map<String, dynamic>;

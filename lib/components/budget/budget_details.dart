@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
 import 'package:tymesavingfrontend/components/common/chart/budget_pie_chart.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/common_group/group_heading_actions.dart';
@@ -82,6 +81,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
         // render host user
 
         // set state for budget details
+        if (!mounted) return;
         setState(() {
           _budget = tempBudget;
           percentageTaken = _budget!.amount / _budget!.concurrentAmount * 100;

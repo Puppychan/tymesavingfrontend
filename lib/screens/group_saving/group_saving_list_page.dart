@@ -15,14 +15,21 @@ class GroupSavingListPage extends StatefulWidget {
 }
 
 class _GroupSavingListPageState extends State<GroupSavingListPage> {
+  bool _isLoading = false;
   void _fetchGroupSavings() async {
     Future.microtask(() async {
+      setState(() {
+        _isLoading = true;
+      });
       if (!mounted) return;
       final goalService =
           Provider.of<GroupSavingService>(context, listen: false);
       await handleMainPageApi(context, () async {
         return await goalService.fetchGroupSavingList(widget.user?.id);
       }, () async {});
+      setState(() {
+        _isLoading = false;
+      });
     });
   }
 
@@ -37,19 +44,22 @@ class _GroupSavingListPageState extends State<GroupSavingListPage> {
     return Consumer<GroupSavingService>(builder: (context, goalService, child) {
       final groupSavings = goalService.groupSavings;
 
-      return Padding(
-        padding: AppPaddingStyles.pagePadding,
-        child: groupSavings.isNotEmpty
-            ? ListView.separated(
-                itemCount: groupSavings.length,
-                separatorBuilder: (context, index) =>
-                    const SizedBox(height: 15),
-                itemBuilder: (context, index) {
-                  return GroupSavingCard(groupSaving: groupSavings[index]);
-                },
-              )
-            : const NotFoundMessage(message: "No group savings found"),
-      );
+      return _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Padding(
+              padding: AppPaddingStyles.pagePadding,
+              child: groupSavings.isNotEmpty
+                  ? ListView.separated(
+                      itemCount: groupSavings.length,
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(height: 15),
+                      itemBuilder: (context, index) {
+                        return GroupSavingCard(
+                            groupSaving: groupSavings[index]);
+                      },
+                    )
+                  : const NotFoundMessage(message: "No group savings found"),
+            );
     });
   }
 }

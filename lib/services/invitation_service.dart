@@ -39,9 +39,7 @@ class InvitationService extends ChangeNotifier {
       default:
         sortOption = '';
     }
-    if (sortOption == 'sortGroupId' ||
-        sortOption == 'sortGroupType' ||
-        sortOption == 'sortStatus') {
+    if (_sortOptions.keys.contains(sortOption)) {
       if (sortValue == 'ascending' || sortValue == 'descending') {
         _sortOptions = {..._sortOptions, sortOption: sortValue};
         notifyListeners();
@@ -50,6 +48,7 @@ class InvitationService extends ChangeNotifier {
   }
 
   String convertSortOptionToString(String sortOption) {
+    // Convert sort option to readable string to display in the UI
     switch (sortOption) {
       case 'sortGroupId':
         return "Group Id";
@@ -64,24 +63,15 @@ class InvitationService extends ChangeNotifier {
 
   void setFilterOptions(String filterOption, String filterValue) {
     if ((filterOption == 'getGroupType' &&
-            [
-              'All',
-              InvitationType.budget.toString(),
-              InvitationType.savings.toString()
-            ].contains(filterValue)) ||
+            InvitationType.list.contains(filterValue)) ||
         (filterOption == 'getStatus' &&
-            [
-              'All',
-              InvitationStatus.accepted.toString(),
-              InvitationStatus.pending.toString(),
-              InvitationStatus.cancelled.toString()
-            ].contains(filterValue))) {
+            InvitationStatus.list.contains(filterValue))) {
       _filterOptions = {..._filterOptions, filterOption: filterValue};
       notifyListeners();
     }
   }
 
-  String _convertOptionsToString(String type) {
+  String _convertOptionsToParams(String type) {
     String returnParams = "?sortGroupId=${_sortOptions['sortGroupId']}"
         "&sortGroupType=${_sortOptions['sortGroupType']}"
         "&sortStatus=${_sortOptions['sortStatus']}";
@@ -104,7 +94,7 @@ class InvitationService extends ChangeNotifier {
   Future<dynamic> fetchInvitationsByGroupId(String groupId) async {
     // Fetch invitations from the backend
     final response = await NetworkService.instance.get(
-        "${BackendEndpoints.invitation}/${BackendEndpoints.invitationsGetAll}${_convertOptionsToString("byGroup")}${_assignGroupIdEndpoint(groupId)}");
+        "${BackendEndpoints.invitation}/${BackendEndpoints.invitationsGetAll}${_convertOptionsToParams("byGroup")}${_assignGroupIdEndpoint(groupId)}");
     // print("Filter options: ${_filterOptions.toString()}");
     // print("Response of fetchInvitationsByGroupId: ${BackendEndpoints.invitation}/${BackendEndpoints.invitationsGetAll}${_convertOptionsToString("byGroup")}${_assignGroupIdEndpoint(groupId)}");
 
@@ -126,7 +116,7 @@ class InvitationService extends ChangeNotifier {
   Future<dynamic> fetchInvitations(String userId) async {
     // Fetch invitations from the backend
     final response = await NetworkService.instance.get(
-        "${BackendEndpoints.invitation}/${BackendEndpoints.invitationsGetByUserId}/$userId${_convertOptionsToString("byUser")}");
+        "${BackendEndpoints.invitation}/${BackendEndpoints.invitationsGetByUserId}/$userId${_convertOptionsToParams("byUser")}");
 
     if (response['response'] != null && response['statusCode'] == 200) {
       final responseData = response['response'];

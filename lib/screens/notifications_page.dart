@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:tymesavingfrontend/common/enum/invitation_status_enum.dart';
 import 'package:tymesavingfrontend/common/styles/app_padding.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/common/not_found_message.dart';
@@ -38,9 +39,17 @@ class _NotificationsPageState extends State<NotificationsPage>
 
       // Fetch invitations from the backend
       await handleMainPageApi(context, () async {
-        final intivationService =
+        final invitationService =
             Provider.of<InvitationService>(context, listen: false);
-        return await intivationService.fetchInvitations(_user?.id ?? "");
+        if (_tabController.index == 0) {
+          // Fetch pending invitations
+          invitationService.setFilterOptions(
+              "getStatus", InvitationStatus.pending.toString());
+        } else if (_tabController.index == 1) {
+          invitationService.setFilterOptions(
+              "getStatus", InvitationStatus.cancelled.toString());
+        }
+        return await invitationService.fetchInvitations(_user?.id ?? "");
       }, () async {});
     });
   }
@@ -62,6 +71,12 @@ class _NotificationsPageState extends State<NotificationsPage>
   }
 
   @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
@@ -77,7 +92,8 @@ class _NotificationsPageState extends State<NotificationsPage>
                     onPressed: () {
                       showStyledBottomSheet(
                         context: context,
-                        contentWidget: InvitationSortFilter(updateInvitationList: _fetchInvitations),
+                        contentWidget: InvitationSortFilter(
+                            updateInvitationList: _fetchInvitations),
                       );
                     },
                   )

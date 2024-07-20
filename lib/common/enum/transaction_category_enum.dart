@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 enum TransactionCategory {
+  // additional for filtering
+  all('All'),
+  // others
   dineOut('Dine out'),
   shopping('Shopping'),
   travel('Travel'),
@@ -28,6 +31,10 @@ enum TransactionCategory {
 
   @override
   String toString() => name;
+
+  static List<String> get list {
+    return TransactionCategory.values.map((e) => e.name).toList();
+  }
 
   static TransactionCategory fromString(String name) {
     for (var category in TransactionCategory.values) {

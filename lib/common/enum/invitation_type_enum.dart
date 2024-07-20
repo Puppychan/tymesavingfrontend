@@ -37,4 +37,8 @@ enum InvitationType {
   static List<String> get formattedList {
     return InvitationType.values.map((e) => e.toStringFormatted()).toList();
   }
+
+  static List<String> get list{
+    return InvitationType.values.map((e) => e.toString()).toList();
+  }
 }
