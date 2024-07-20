@@ -42,6 +42,7 @@ class _TransactionSortFilterState extends State<TransactionSortFilter> {
             selectedOrder: transactionService.sortOptions[optionKey] ?? "",
             onSelected: (value) {
               // split selected sort value to get the field and order
+              // "ABC in ascending order" => ["ABC", "in", "ascending", "order"]
               final tempSortValue = value.split(' ')[0];
               final order = value.split(' ')[2];
               // update sort options

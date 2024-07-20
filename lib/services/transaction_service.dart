@@ -55,19 +55,6 @@ class TransactionService extends ChangeNotifier {
       default:
         return "";
     }
-    // }
-    // else {
-    //   switch (option) {
-    //     case 'All':
-    //       return "All";
-    //     case 'Income':
-    //       return "Income";
-    //     case 'Expense':
-    //       return "Expense";
-    //     default:
-    //       return "";
-    //   }
-    // }
   }
 
   void setOptions(String type, String newOption, String newValue) {
@@ -75,14 +62,14 @@ class TransactionService extends ChangeNotifier {
       // if type of option is sort
       String convertedOption;
       switch (newOption) {
-        case 'sortDateCreated':
-          convertedOption = "Created date";
+        case 'Created date':
+          convertedOption = "sortDateCreated";
           break;
-        case 'sortDateUpdated':
-          convertedOption = "Updated date";
+        case 'Updated date':
+          convertedOption = "sortDateUpdated";
           break;
-        case 'sortAmount':
-          convertedOption = "Transaction amount";
+        case 'Transaction amount':
+          convertedOption = "sortAmount";
           break;
         default:
           convertedOption = "";
@@ -107,11 +94,6 @@ class TransactionService extends ChangeNotifier {
 
   String _convertOptionsToParams() {
     // used for creating query params for the API for fetching transactions
-
-    // String returnParams = "?sortGroupId=${_sortOptions['sortGroupId']}"
-    //     "&sortGroupType=${_sortOptions['sortGroupType']}"
-    //     "&sortStatus=${_sortOptions['sortStatus']}";
-
     // "?sortOption1=value1&sortOption2=value2&sortOption3=value3"
     String returnParams =
         _sortOptions.entries.map((e) => "${e.key}=${e.value}").join('&');

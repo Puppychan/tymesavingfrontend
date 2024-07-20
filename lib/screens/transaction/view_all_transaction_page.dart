@@ -79,29 +79,29 @@ class _ViewAllTransactionsPageState extends State<ViewAllTransactionsPage>
     super.dispose();
   }
 
-  List<Transaction> _filterTransactions(String type) {
-    List<Transaction> filteredTransactions = widget.transactions.values
-        .expand((list) => list)
-        .where((transaction) => transaction.type == type)
-        .toList();
+  // List<Transaction> _filterTransactions(String type) {
+  //   List<Transaction> filteredTransactions = widget.transactions.values
+  //       .expand((list) => list)
+  //       .where((transaction) => transaction.type == type)
+  //       .toList();
 
-    switch (_sortOrder) {
-      case 'ascending':
-        filteredTransactions.sort((a, b) => a.amount.compareTo(b.amount));
-        break;
-      case 'descending':
-        filteredTransactions.sort((a, b) => b.amount.compareTo(a.amount));
-        break;
-      case 'newest':
-        filteredTransactions.sort((a, b) => b.date.compareTo(a.date));
-        break;
-      case 'oldest':
-        filteredTransactions.sort((a, b) => a.date.compareTo(b.date));
-        break;
-    }
+  //   switch (_sortOrder) {
+  //     case 'ascending':
+  //       filteredTransactions.sort((a, b) => a.amount.compareTo(b.amount));
+  //       break;
+  //     case 'descending':
+  //       filteredTransactions.sort((a, b) => b.amount.compareTo(a.amount));
+  //       break;
+  //     case 'newest':
+  //       filteredTransactions.sort((a, b) => b.date.compareTo(a.date));
+  //       break;
+  //     case 'oldest':
+  //       filteredTransactions.sort((a, b) => a.date.compareTo(b.date));
+  //       break;
+  //   }
 
-    return filteredTransactions;
-  }
+  //   return filteredTransactions;
+  // }
 
   // void _onSortOrderChanged(String? newValue) {
   //   if (newValue != null) {
@@ -131,6 +131,8 @@ class _ViewAllTransactionsPageState extends State<ViewAllTransactionsPage>
             onPressed: () {
               showStyledBottomSheet(
                 context: context,
+                title: "Sort & Filter",
+                subTitle: "Sort and filter transactions",
                 contentWidget: TransactionSortFilter(
                     updateTransactionList: _fetchTransactions),
               );
