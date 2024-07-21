@@ -12,7 +12,8 @@ import 'package:tymesavingfrontend/services/transaction_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
 class ViewAllTransactionsPage extends StatefulWidget {
-  final Map<String, List<Transaction>> transactions;
+  final dynamic
+      transactions; // Can be List<Transaction> or Map<String, List<Transaction>>
 
   const ViewAllTransactionsPage({super.key, required this.transactions});
 
@@ -114,6 +115,15 @@ class _ViewAllTransactionsPageState extends State<ViewAllTransactionsPage>
   void _handleTabSelection() {
     if (_tabController.indexIsChanging) return;
     _fetchTransactions(); // Fetch invitations when tab changes
+  }
+
+  Widget _buildNoTransactionsMessage() {
+    return Center(
+      child: Text(
+        'No transactions available.',
+        style: TextStyle(fontSize: 18, color: Colors.grey),
+      ),
+    );
   }
 
   @override

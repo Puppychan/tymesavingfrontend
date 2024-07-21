@@ -7,6 +7,7 @@ import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/user/user_detail_widget.dart';
 import 'package:tymesavingfrontend/models/budget_model.dart';
 import 'package:tymesavingfrontend/models/summary_user_model.dart';
+import 'package:tymesavingfrontend/screens/transaction/view_all_transaction_page.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/services/budget_service.dart';
 import 'package:tymesavingfrontend/services/user_service.dart';
@@ -14,6 +15,7 @@ import 'package:tymesavingfrontend/utils/format_amount.dart';
 import 'package:tymesavingfrontend/utils/format_date.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
+import 'package:tymesavingfrontend/services/budget_service.dart';
 
 class MemberDetailPage extends StatefulWidget {
   final SummaryUser user;
@@ -87,8 +89,14 @@ class _MemberDetailPageState extends State<MemberDetailPage>  {
         });
 
         await _fetchOtherUserDetails();
+        await _fetchTransactions();
       });
     });
+  }
+
+  Future<void> _fetchTransactions() async {
+    await Provider.of<BudgetService>(context, listen: false)
+        .fetchTransactionsByUserId(widget.groupId ?? "", widget.user.id ?? "");
   }
 
   @override

@@ -117,6 +117,7 @@ class BudgetService extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Fetch all transaction of current budget
   Future<Map<String, dynamic>> fetchBudgetTransactions(
       String budgetGroupId) async {
     final response = await NetworkService.instance
@@ -126,6 +127,27 @@ class BudgetService extends ChangeNotifier {
       debugPrint("#====== Transactions of Budget ======#");
       debugPrint(response.toString());
       debugPrint("#====== Transactions of Budget ======#");
+      final responseData = response['response'];
+      List<Transaction> transactionList = [];
+      if (responseData.isNotEmpty) {
+        for (var transaction in responseData) {
+          final tempTransaction = Transaction.fromMap(transaction);
+          transactionList.add(tempTransaction);
+        }
+      }
+      _transactions = transactionList;
+      notifyListeners();
+    }
+    return response;
+  }
+
+  // Fetch all transactions of a user by userID
+  Future<Map<String, dynamic>> fetchTransactionsByUserId(
+      String budgetGroupId, String userId) async {
+    final response = await NetworkService.instance.get(
+        "${BackendEndpoints.budget}/$budgetGroupId/transactions?userId=$userId");
+
+    if (response['response'] != null && response['statusCode'] == 200) {
       final responseData = response['response'];
       List<Transaction> transactionList = [];
       if (responseData.isNotEmpty) {
