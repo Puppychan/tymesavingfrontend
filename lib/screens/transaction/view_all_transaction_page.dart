@@ -12,10 +12,7 @@ import 'package:tymesavingfrontend/services/transaction_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
 class ViewAllTransactionsPage extends StatefulWidget {
-  final dynamic
-      transactions; // Can be List<Transaction> or Map<String, List<Transaction>>
-
-  const ViewAllTransactionsPage({super.key, required this.transactions});
+  const ViewAllTransactionsPage({super.key});
 
   @override
   State<ViewAllTransactionsPage> createState() =>
@@ -25,7 +22,6 @@ class ViewAllTransactionsPage extends StatefulWidget {
 class _ViewAllTransactionsPageState extends State<ViewAllTransactionsPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  String _sortOrder = 'newest';
   List<Transaction>? _transactions = [];
 
   void _fetchTransactions() {
@@ -49,8 +45,9 @@ class _ViewAllTransactionsPageState extends State<ViewAllTransactionsPage>
         // Fetch transactions from the backend
         return await transactionService.fetchTransactions(user!.id);
       }, () async {
-        final filteredTransactions =
-            transactionService.transactions?.values.expand((element) => element).toList();
+        final filteredTransactions = transactionService.transactions?.values
+            .expand((element) => element)
+            .toList();
         setState(() {
           _transactions = filteredTransactions;
         });

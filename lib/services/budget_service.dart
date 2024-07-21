@@ -144,6 +144,7 @@ class BudgetService extends ChangeNotifier {
   // Fetch all transactions of a user by userID
   Future<Map<String, dynamic>> fetchTransactionsByUserId(
       String budgetGroupId, String userId) async {
+        print("Endpoint ${"${BackendEndpoints.budget}/$budgetGroupId/transactions?userId=$userId"}");
     final response = await NetworkService.instance.get(
         "${BackendEndpoints.budget}/$budgetGroupId/transactions?userId=$userId");
 

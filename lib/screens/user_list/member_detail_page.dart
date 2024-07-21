@@ -7,6 +7,7 @@ import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/user/user_detail_widget.dart';
 import 'package:tymesavingfrontend/models/budget_model.dart';
 import 'package:tymesavingfrontend/models/summary_user_model.dart';
+import 'package:tymesavingfrontend/models/transaction_model.dart';
 import 'package:tymesavingfrontend/screens/transaction/view_all_transaction_page.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/services/budget_service.dart';
@@ -27,10 +28,11 @@ class MemberDetailPage extends StatefulWidget {
   State<MemberDetailPage> createState() => _MemberDetailPageState();
 }
 
-class _MemberDetailPageState extends State<MemberDetailPage>  {
+class _MemberDetailPageState extends State<MemberDetailPage> {
   Budget? group;
   double groupConcurrentAmount = 0;
   double groupTargetAmount = 0;
+  List<Transaction> transactions = [];
 
   SummaryUser? user;
   double incomeAmount = 0;
@@ -85,7 +87,6 @@ class _MemberDetailPageState extends State<MemberDetailPage>  {
           groupConcurrentAmount = group?.concurrentAmount ?? 0;
           groupTargetAmount = group?.amount ?? 0;
 
-          print("After fetching group: ${group?.name ?? "。。。"}");
         });
 
         await _fetchOtherUserDetails();
@@ -95,8 +96,16 @@ class _MemberDetailPageState extends State<MemberDetailPage>  {
   }
 
   Future<void> _fetchTransactions() async {
-    await Provider.of<BudgetService>(context, listen: false)
-        .fetchTransactionsByUserId(widget.groupId ?? "", widget.user.id ?? "");
+    await handleMainPageApi(context, () async {
+      return await Provider.of<BudgetService>(context, listen: false)
+          .fetchTransactionsByUserId(
+              widget.groupId, widget.user.id);
+    }, () async {
+      setState(() {
+        transactions = Provider.of<BudgetService>(context, listen: false)
+            .transactions;
+      });
+    });
   }
 
   @override
@@ -109,7 +118,6 @@ class _MemberDetailPageState extends State<MemberDetailPage>  {
     //   },
     // );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -126,6 +134,31 @@ class _MemberDetailPageState extends State<MemberDetailPage>  {
             UserDetailWidget(
                 fetchedUser: user, otherDetails: user?.getOtherFields()),
             const SizedBox(height: 10),
+            InkWell(
+                  splashColor: colorScheme.quaternary,
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return const ViewAllTransactionsPage();
+                    }));
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'My Transactions',
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      Text(
+                        'View All',
+                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                              color: Theme.of(context).colorScheme.primary,
+                              decoration: TextDecoration.underline,
+                            ),
+                      ),
+                    ],
+                  ),
+                ),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               Text(
                 "Total Transactions: ${user?.transactionCount ?? 0}",
