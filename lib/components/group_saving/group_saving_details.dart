@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:tymesavingfrontend/components/common/chart/group_saving_pie_chart.dart';
+import 'package:tymesavingfrontend/components/common/chart/group_saving_half_chart.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/common_group/group_heading_actions.dart';
 import 'package:tymesavingfrontend/components/transaction/transaction_list.dart';
@@ -32,6 +33,7 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
   double? percentageLeft;
   DateTime? endDate;
   int? daysLeft;
+  String? endDay;
   SummaryUser? _user;
   bool isMember = false;
   bool isLoading = true;
@@ -88,6 +90,7 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
               percentageTaken!.isInfinite ? 100.0 : 100.0 - percentageTaken!;
           endDate = DateTime.parse(_groupSaving!.endDate);
           daysLeft = calculateDaysLeft(endDate!);
+          endDay = formatDate(endDate!);
           // check if user is member or host
           isMember = _groupSaving!.hostedBy.toString() !=
               Provider.of<AuthService>(context, listen: false).user?.id;
@@ -146,8 +149,15 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
     return difference.inDays;
   }
 
+  String formatDate(DateTime endDate){
+    String formattedDate = DateFormat('MMMM d, y').format(endDate);
+    return formattedDate;
+  }
+
   @override
   Widget build(BuildContext context) {
+    
+    
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
         appBar: Heading(title: 'GroupSaving', showBackButton: true, actions: [
@@ -210,8 +220,58 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
                               textAlign: TextAlign.center,
                             ),
                             const SizedBox(
+                              height: 20,
+                            ),
+                            GroupSavingHalfProgressBar(
+                            amount:
+                                percentageTaken!.isInfinite ? 0 : percentageTaken!,
+                            concurrent: percentageLeft!),                           
+                            const SizedBox(
                               height: 10,
                             ),
+                            Text.rich(
+                              TextSpan(
+                                text: '$daysLeft day${daysLeft != 1 ? 's' : ''} left',
+                                style: Theme.of(context).textTheme.bodyMedium,
+                                children: [
+                                  TextSpan(
+                                    text:
+                                        ' until ', // Display the daysLeft variable here
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge,
+                                  ),
+                                  TextSpan(
+                                    text:
+                                        '$endDay', // Pluralize based on the value of daysLeft
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 30,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text('You have saved', style: Theme.of(context).textTheme.bodyMedium,),
+                                    const Expanded(child: SizedBox()),
+                                    Text('${_groupSaving!.amount}', style: Theme.of(context).textTheme.headlineMedium,),
+                                  ],  
+                                ),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text('Goal target', style: Theme.of(context).textTheme.bodyMedium,),
+                                    const Expanded(child: SizedBox()),
+                                    Text('${_groupSaving!.concurrentAmount}', style: Theme.of(context).textTheme.headlineMedium,),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 50,),
                             const Divider(),
                             const SizedBox(
                               height: 10,
@@ -238,63 +298,15 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
                               height: 10,
                             ),
                             const Divider(),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Text.rich(
-                              TextSpan(
-                                text: 'You have ',
-                                style: Theme.of(context).textTheme.bodyMedium,
-                                children: [
-                                  TextSpan(
-                                    text:
-                                        '$daysLeft', // Display the daysLeft variable here
-                                    style:
-                                        Theme.of(context).textTheme.bodyLarge,
-                                  ),
-                                  TextSpan(
-                                    text:
-                                        ' day${daysLeft != 1 ? 's' : ''} left', // Pluralize based on the value of daysLeft
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Text.rich(
-                              TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: 'Used ',
-                                    style:
-                                        Theme.of(context).textTheme.bodyMedium,
-                                  ),
-                                  TextSpan(
-                                    text: _displayPercentageTaken,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyLarge, // Customize this style as needed
-                                  ),
-                                ],
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Text(formatAmountToVnd(_groupSaving!.concurrentAmount),
-                                style:
-                                    Theme.of(context).textTheme.headlineMedium),
                           ],
                         ),
                       ),
                     ),
                   ),
-                  GroupSavingPieChart(
-                      amount:
-                          percentageTaken!.isInfinite ? 0 : percentageTaken!,
-                      concurrent: percentageLeft!),
                   const SizedBox(
-                    height: 20,
+                    height: 10,
                   ),
+                  Text('Transaction history', style: Theme.of(context).textTheme.headlineMedium,),
                   Expanded(
                     child: TransactionList(transactions: _transactions),
                   ),

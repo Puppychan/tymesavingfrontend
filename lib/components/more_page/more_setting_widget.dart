@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tymesavingfrontend/components/group_saving/group_saving_details.dart';
 import 'package:tymesavingfrontend/screens/about_contact/about_us.dart';
 import 'package:tymesavingfrontend/screens/authentication/sign_in_page.dart';
 import 'package:tymesavingfrontend/screens/setting_page.dart';
@@ -23,6 +24,14 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
     //Debug here
     debugPrint('function tapped!');
   }
+
+  Future<void> sandBox() async {
+    //Debug here
+    if (!mounted) return;
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const GroupSavingDetails(groupSavingId: '093383e3bb46e30bceaf76e8')));
+  }
+
   Future<void> settingFunction() async {
     //Debug here
     if (!mounted) return;
@@ -47,7 +56,7 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
 
   Future<void> about() async {
     //Debug here
-    debugPrint('Report page tapped!');
+    debugPrint('About us tapped!');
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => const AboutUs()));
   }
@@ -86,7 +95,7 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
             RowSettingTemplate('Setting', 'Change setting and preference',
                 const Icon(Icons.settings), settingFunction),
             RowSettingTemplate('Contact us', 'Send a email or direct hotline',
-                const Icon(Icons.phone), placeHolderFunction),
+                const Icon(Icons.phone), sandBox),
             RowSettingTemplate('About', 'Some information about the project',
                 const Icon(Icons.info), about),
             RowSettingTemplate('Logout', 'Logout your account here',
