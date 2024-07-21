@@ -53,11 +53,9 @@ class _InvitationSortFilterState extends State<InvitationSortFilter> {
             options: [newOptionField],
             selectedField: newOptionField,
             selectedOrder: invitationService.sortOptions[optionKey] ?? "",
-            onSelected: (value) {
-              final tempSortValue = value.split(' ')[0];
-              final order = value.split(' ')[2];
+            onSelected: (sortField, order) {
               invitationService.setSortOptions(
-                  tempSortValue, order.toLowerCase());
+                  sortField, order.toLowerCase());
               widget.updateInvitationList();
             });
       }),

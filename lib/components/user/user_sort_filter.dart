@@ -49,10 +49,8 @@ class _UserSortFilterState extends State<UserSortFilter> {
           options: userService.combineOptions(),
           selectedField: userService.sortOption.keys.first,
           selectedOrder: userService.sortOption.values.first,
-          onSelected: (value) {
-            final tempSortValue = value.split(' ')[0];
-            final order = value.split(' ')[2];
-            userService.updateSortOptions(tempSortValue, order);
+          onSelected: (sortField, order) {
+            userService.updateSortOptions(sortField, order);
             widget.updateUserList();
           })
     ]);
