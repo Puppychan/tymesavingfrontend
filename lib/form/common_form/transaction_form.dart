@@ -45,6 +45,7 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
   TimeOfDay _selectedTime = TimeOfDay.now();
   String _chosenGroupType = TransactionGroupType.none.toString();
   SummaryGroup? _selectedGroup;
+  User? _user;
   // String _savingOrBudget = 'For None';
   // init state
   @override
@@ -52,6 +53,10 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
     super.initState();
     final formFields = Provider.of<FormStateProvider>(context, listen: false)
         .getFormField(widget.type);
+    final authService = Provider.of<AuthService>(context, listen: false);
+    setState(() {
+      _user = authService.user;
+    });
     String? formCreatedDate;
     formCreatedDate = formFields['createdDate'];
     if (formCreatedDate != null) {
@@ -86,11 +91,9 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
     updateOnChange("groupType");
     Future.microtask(() async {
       await handleMainPageApi(context, () async {
-        final authService = Provider.of<AuthService>(context, listen: false);
         final formField = Provider.of<FormStateProvider>(context, listen: false)
             .getFormField(widget.type);
         // return null;
-        User? user = authService.user;
 
         final transactionType = widget.type == FormStateType.updateTransaction
             ? formField['type']
@@ -111,7 +114,7 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
         } else {
           return await Provider.of<TransactionService>(context, listen: false)
               .createTransaction(
-                  user?.id ?? "",
+                  _user?.id ?? "",
                   formField['createdDate'],
                   formField['description'],
                   transactionType,
@@ -128,24 +131,31 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
     });
   }
 
-  void updateOnChange(String type) {
+  void updateOnChange(String type, {dynamic value}) {
+    if (!mounted) return;
+    final formStateService =
+        Provider.of<FormStateProvider>(context, listen: false);
     switch (type) {
       case "amount":
-        _onUpdateInputValue("amount", _amountController.text);
+        formStateService.updateFormField(
+            "amount", _amountController.text, widget.type);
         break;
       case "description":
-        _onUpdateInputValue("description", _descriptionController.text);
+        formStateService.updateFormField(
+            "description", _descriptionController.text, widget.type);
         break;
       case "payBy":
-        _onUpdateInputValue("payBy", _payByController.text);
+        formStateService.updateFormField(
+            "payBy", _payByController.text, widget.type);
         break;
       case "date":
         final formattedDateTime =
             combineDateAndTime(_selectedDate, _selectedTime);
-        _onUpdateInputValue("createdDate", formattedDateTime ?? "");
+        formStateService.updateFormField(
+            "createdDate", formattedDateTime ?? "", widget.type);
         break;
       case "groupType":
-        _onUpdateInputValue("groupType", _chosenGroupType);
+        formStateService.updateFormField("groupType", value ?? "", widget.type);
         break;
     }
   }
@@ -157,13 +167,6 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
           Provider.of<FormStateProvider>(context, listen: false);
       formStateService.updateFormCategory(category, widget.type);
     });
-  }
-
-  void _onUpdateInputValue(String key, String value) {
-    if (!mounted) return;
-    final formStateService =
-        Provider.of<FormStateProvider>(context, listen: false);
-    formStateService.updateFormField(key, value, widget.type);
   }
 
   @override
@@ -179,8 +182,8 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
       String formDescription =
           formFields['description'] ?? "Please add description";
       String formpayBy = formFields['payBy'] ?? "Pay by cash?";
-      String chosenGroupType =
-          formFields['groupType'] ?? TransactionGroupType.none.toString();
+      TransactionGroupType chosenGroupType =
+          formFields['groupType'] ?? TransactionGroupType.none;
       String formattedAmount = formStateService.getFormattedAmount(widget.type);
 
       // update text to controller
@@ -190,7 +193,9 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
       _payByController.text = formFields['payBy'] ?? "";
 
       List<Widget> renderCategories(BuildContext context) {
-        return TransactionCategory.values.expand((category) {
+        return TransactionCategory.values
+            .where((category) => category != TransactionCategory.all)
+            .expand((category) {
           final isSelected = selectedCategory.name == category.name;
           Map<String, dynamic> categoryInfo =
               transactionCategoryData[category]!;
@@ -225,14 +230,16 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: renderCategories(context),
                       ))),
-              AssignGroupMultiForm(updateOnChange: (field, value) {
-                if (field == "groupType") {
-                  setState(() {
-                    _chosenGroupType = value;
-                    updateOnChange("groupType");
-                  });
-                } 
-              }, chosenGroupType: _chosenGroupType, defaultOption: chosenGroupType, transactionType: widget.type),
+              ...buildComponentGroup(
+                context: context,
+                label: "ASSIGN GROUP",
+                contentWidget: AssignGroupMultiForm(
+                    updateOnChange: updateOnChange,
+                    userId: _user?.id ?? "",
+                    // formFields: formFields,
+                    chosenGroupType: chosenGroupType,
+                    transactionType: widget.type),
+              ),
               AmountMultiForm(
                   formattedAmount: formattedAmount,
                   updateOnChange: updateOnChange,
