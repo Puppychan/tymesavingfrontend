@@ -14,6 +14,7 @@ import 'package:tymesavingfrontend/services/theme_service.dart';
 import 'package:tymesavingfrontend/services/transaction_service.dart';
 import 'package:tymesavingfrontend/services/user_service.dart';
 import 'package:tymesavingfrontend/services/utils/network_service.dart';
+import 'package:tymesavingfrontend/utils/global_keys.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
@@ -52,8 +53,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       title: 'My App',
+      scaffoldMessengerKey: scaffoldMessengerKey,
       theme: AppThemes.lightTheme,
       darkTheme: AppThemes.darkTheme,
       themeMode: Provider.of<ThemeService>(context).themeMode,

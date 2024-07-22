@@ -14,6 +14,7 @@ import 'package:tymesavingfrontend/components/category_list/category_icon.dart';
 import 'package:tymesavingfrontend/components/common/multi_form_components/amount_multi_form.dart';
 import 'package:tymesavingfrontend/components/common/multi_form_components/assign_group_multi_form.dart';
 import 'package:tymesavingfrontend/components/common/multi_form_components/comonent_multi_form.dart';
+import 'package:tymesavingfrontend/models/base_group_model.dart';
 import 'package:tymesavingfrontend/models/summary_group_model.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/screens/search_page.dart';
@@ -43,14 +44,13 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
 
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _selectedTime = TimeOfDay.now();
-  String _chosenGroupType = TransactionGroupType.none.toString();
-  SummaryGroup? _selectedGroup;
   User? _user;
   // String _savingOrBudget = 'For None';
   // init state
   @override
   void initState() {
     super.initState();
+    if (!mounted) return;
     final formFields = Provider.of<FormStateProvider>(context, listen: false)
         .getFormField(widget.type);
     final authService = Provider.of<AuthService>(context, listen: false);
@@ -60,6 +60,7 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
     String? formCreatedDate;
     formCreatedDate = formFields['createdDate'];
     if (formCreatedDate != null) {
+      if (!mounted) return;
       setState(() {
         final Map<String, dynamic> dateTimeMap =
             setDateTimeFromTimestamp(formCreatedDate);
@@ -84,15 +85,33 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
       }
     }
 
+    final formField = Provider.of<FormStateProvider>(context, listen: false)
+        .getFormField(widget.type);
+    TransactionGroupType currentChosenType =
+        formField["groupType"] ?? TransactionGroupType.none;
+    String? chosenGroupKey = currentChosenType != TransactionGroupType.none
+        ? currentChosenType == TransactionGroupType.budget
+            ? "budgetGroupId"
+            : "savingGroupId"
+        : null;
+    String? currentChosenGroupId = formField[chosenGroupKey];
+    // final validation (custom)
+    if (currentChosenType != TransactionGroupType.none &&
+        currentChosenGroupId == null) {
+      ErrorDisplay.showErrorToast(
+          "You must choose a group if this transaction belongs to a group",
+          context);
+      return;
+    }
+
     updateOnChange("amount");
     updateOnChange("createdDate");
     updateOnChange("description");
     updateOnChange("payBy");
-    updateOnChange("groupType");
+    updateOnChange("groupType", value: currentChosenType);
     Future.microtask(() async {
       await handleMainPageApi(context, () async {
-        final formField = Provider.of<FormStateProvider>(context, listen: false)
-            .getFormField(widget.type);
+        print("Form field $formField");
         // return null;
 
         final transactionType = widget.type == FormStateType.updateTransaction
@@ -100,28 +119,28 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
             : widget.type;
 
         context.loaderOverlay.show();
-        if (widget.type == FormStateType.updateTransaction) {
-          return await Provider.of<TransactionService>(context, listen: false)
-              .updateTransaction(
-                  // user?.id ?? "",
-                  formField['id'],
-                  formField['createdDate'],
-                  formField['description'],
-                  // transactionType,
-                  formField['amount'],
-                  formField['payBy'],
-                  formField['category']);
-        } else {
-          return await Provider.of<TransactionService>(context, listen: false)
-              .createTransaction(
-                  _user?.id ?? "",
-                  formField['createdDate'],
-                  formField['description'],
-                  transactionType,
-                  formField['amount'],
-                  formField['payBy'],
-                  formField['category']);
-        }
+        // if (widget.type == FormStateType.updateTransaction) {
+        //   return await Provider.of<TransactionService>(context, listen: false)
+        //       .updateTransaction(
+        //           // user?.id ?? "",
+        //           formField['id'],
+        //           formField['createdDate'],
+        //           formField['description'],
+        //           // transactionType,
+        //           formField['amount'],
+        //           formField['payBy'],
+        //           formField['category']);
+        // } else {
+        //   return await Provider.of<TransactionService>(context, listen: false)
+        //       .createTransaction(
+        //           _user?.id ?? "",
+        //           formField['createdDate'],
+        //           formField['description'],
+        //           transactionType,
+        //           formField['amount'],
+        //           formField['payBy'],
+        //           formField['category']);
+        // }
       }, () async {
         context.loaderOverlay.hide();
         Navigator.of(context).pop();
@@ -154,8 +173,11 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
         formStateService.updateFormField(
             "createdDate", formattedDateTime ?? "", widget.type);
         break;
-      case "groupType":
-        formStateService.updateFormField("groupType", value ?? "", widget.type);
+      // case "groupType":
+      //   formStateService.updateFormField("groupType", value, widget.type);
+      //   break;
+      default:
+        formStateService.updateFormField(type, value, widget.type);
         break;
     }
   }
@@ -184,6 +206,7 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
       String formpayBy = formFields['payBy'] ?? "Pay by cash?";
       TransactionGroupType chosenGroupType =
           formFields['groupType'] ?? TransactionGroupType.none;
+      BaseGroup? chosenResult = formFields["tempChosenGroup"];
       String formattedAmount = formStateService.getFormattedAmount(widget.type);
 
       // update text to controller
@@ -237,6 +260,7 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
                     updateOnChange: updateOnChange,
                     userId: _user?.id ?? "",
                     // formFields: formFields,
+                    chosenResult: chosenResult,
                     chosenGroupType: chosenGroupType,
                     transactionType: widget.type),
               ),
@@ -256,6 +280,7 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
                       initialDate: _selectedDate,
                       helpText: 'Select Date of Transaction');
                   if (pickedDate != null) {
+                    if (!mounted) return;
                     setState(() {
                       _selectedDate = pickedDate;
                       updateOnChange("date");
@@ -281,6 +306,7 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
 
                   // Check if a time was picked
                   if (pickedTime != null) {
+                    if (!mounted) return;
                     setState(() {
                       _selectedTime = pickedTime;
                       updateOnChange("date");
@@ -308,54 +334,5 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
             ],
           ));
     });
-  }
-
-  Future<void> _showInputDialog(
-    BuildContext context, {
-    required String initialValue,
-    required ValueChanged<String> onSubmitted,
-  }) async {
-    TextEditingController controller =
-        TextEditingController(text: initialValue);
-    await showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          content: SingleChildScrollView(
-            child: IntrinsicHeight(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextField(
-                    controller: controller,
-                    decoration: const InputDecoration(
-                      labelText: 'Edit',
-                      hintText: 'Enter new value',
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                onSubmitted(controller.text);
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
-            ),
-          ],
-        );
-      },
-    );
   }
 }

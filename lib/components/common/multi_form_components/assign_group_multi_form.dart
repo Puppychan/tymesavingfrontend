@@ -6,11 +6,10 @@ import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_group_type_enum.dart';
 import 'package:tymesavingfrontend/components/common/input/radio_field.dart';
 import 'package:tymesavingfrontend/components/common/multi_form_components/group_tile.dart';
+import 'package:tymesavingfrontend/models/base_group_model.dart';
 import 'package:tymesavingfrontend/screens/search_page.dart';
 import 'package:tymesavingfrontend/services/budget_service.dart';
 import 'package:tymesavingfrontend/services/group_saving_service.dart';
-import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
-import 'package:tymesavingfrontend/utils/display_success.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
 class AssignGroupMultiForm extends StatefulWidget {
@@ -18,13 +17,15 @@ class AssignGroupMultiForm extends StatefulWidget {
   final String userId;
   final void Function(String, {dynamic value}) updateOnChange;
   final TransactionGroupType chosenGroupType;
+  final BaseGroup? chosenResult;
 
   const AssignGroupMultiForm(
       {super.key,
       required this.updateOnChange,
       required this.transactionType,
       required this.chosenGroupType,
-      required this.userId});
+      required this.userId,
+      required this.chosenResult});
 
   @override
   State<AssignGroupMultiForm> createState() => _AssignGroupMultiFormState();
@@ -33,11 +34,17 @@ class AssignGroupMultiForm extends StatefulWidget {
 class _AssignGroupMultiFormState extends State<AssignGroupMultiForm> {
   // Define your state variables and methods here
   TransactionGroupType _currentChosenGroupType = TransactionGroupType.none;
+  BaseGroup? _currentChosenResult;
+
+  String _renderFormKeyGroup() {
+    return _isBudget() ? "budgetGroupId" : "savingGroupId";
+  }
 
   @override
   void initState() {
     super.initState();
     _currentChosenGroupType = widget.chosenGroupType;
+    _currentChosenResult = widget.chosenResult;
   }
 
   bool _isBudget() {
@@ -46,7 +53,6 @@ class _AssignGroupMultiFormState extends State<AssignGroupMultiForm> {
 
   void searchCallback(String value, Function(List<dynamic>) updateResults,
       CancelToken? cancelToken) async {
-    print("UpdatedResults $value");
     final budgetService = Provider.of<BudgetService>(context, listen: false);
     final groupSavingService =
         Provider.of<GroupSavingService>(context, listen: false);
@@ -72,13 +78,12 @@ class _AssignGroupMultiFormState extends State<AssignGroupMultiForm> {
   }
 
   void onTapSearchResult(dynamic result) {
-    final multipleFormPageService =
-        Provider.of<FormStateProvider>(context, listen: false);
-    String updateFieldKey = _isBudget() ? "budgetGroupId" : "savingGroupId";
-    multipleFormPageService.updateFormField(
-        updateFieldKey, result.id, widget.transactionType);
+    String updateFieldKey = _renderFormKeyGroup();
+
+    widget.updateOnChange("groupType", value: _currentChosenGroupType);
+    widget.updateOnChange(updateFieldKey, value: result.id);
+    widget.updateOnChange("tempChosenGroup", value: result);
     Navigator.pop(context);
-    SuccessDisplay.showSuccessToast("Add user to invition list", context);
   }
 
   @override
@@ -88,6 +93,12 @@ class _AssignGroupMultiFormState extends State<AssignGroupMultiForm> {
       if (!mounted) return;
       setState(() {
         _currentChosenGroupType = widget.chosenGroupType;
+      });
+    }
+    if (widget.chosenResult != oldWidget.chosenResult) {
+      if (!mounted) return;
+      setState(() {
+        _currentChosenResult = widget.chosenResult;
       });
     }
   }
@@ -100,9 +111,15 @@ class _AssignGroupMultiFormState extends State<AssignGroupMultiForm> {
           label: "Belong to Group?",
           options: TransactionGroupType.formattedList,
           onSelected: (String formattedChosenGroupType) {
-            widget.updateOnChange("groupType",
-                value: TransactionGroupType.fromFormattedString(
-                    formattedChosenGroupType));
+            TransactionGroupType convertGroupType =
+                TransactionGroupType.fromFormattedString(
+                    formattedChosenGroupType);
+            if (convertGroupType != _currentChosenGroupType) {
+              String updateFieldKey = _renderFormKeyGroup();
+              widget.updateOnChange(updateFieldKey, value: null);
+              widget.updateOnChange("tempChosenGroup", value: null);
+            }
+            widget.updateOnChange("groupType", value: convertGroupType);
           },
           defaultOption: _currentChosenGroupType.toStringFormatted()),
       _currentChosenGroupType != TransactionGroupType.none
@@ -139,6 +156,32 @@ class _AssignGroupMultiFormState extends State<AssignGroupMultiForm> {
               ),
             )
           : Container(),
+      if (_currentChosenResult != null) ...[
+        const Divider(),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              children: [
+                Icon(_currentChosenGroupType == TransactionGroupType.budget
+                    ? Icons.savings
+                    : Icons.assessment),
+                const SizedBox(height: 3),
+                Text(_currentChosenResult?.name ?? "",
+                    style: Theme.of(context).textTheme.titleSmall),
+                const SizedBox(height: 3),
+                Text(
+                  _currentChosenResult?.description ?? "",
+                  style: Theme.of(context).textTheme.bodyMedium,
+                  maxLines: 2,
+                  textAlign: TextAlign.center,
+                )
+              ],
+            ),
+          ),
+        )
+      ] else
+        Container(),
     ]);
   }
 }
