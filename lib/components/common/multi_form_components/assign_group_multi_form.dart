@@ -106,6 +106,7 @@ class _AssignGroupMultiFormState extends State<AssignGroupMultiForm> {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
     return Column(children: [
       RadioField(
           label: "Belong to Group?",
@@ -151,7 +152,7 @@ class _AssignGroupMultiFormState extends State<AssignGroupMultiForm> {
                       style: textTheme.titleSmall!
                           .copyWith(fontWeight: FontWeight.w700)),
                   Icon(FontAwesomeIcons.searchengin,
-                      color: Theme.of(context).colorScheme.primary),
+                      color: colorScheme.primary),
                 ],
               ),
             )
@@ -159,6 +160,7 @@ class _AssignGroupMultiFormState extends State<AssignGroupMultiForm> {
       if (_currentChosenResult != null) ...[
         const Divider(),
         Card(
+          shadowColor: colorScheme.onPrimary,
           child: Padding(
             padding: const EdgeInsets.all(10),
             child: Column(
@@ -168,11 +170,11 @@ class _AssignGroupMultiFormState extends State<AssignGroupMultiForm> {
                     : Icons.assessment),
                 const SizedBox(height: 3),
                 Text(_currentChosenResult?.name ?? "",
-                    style: Theme.of(context).textTheme.titleSmall),
+                    style: textTheme.titleSmall),
                 const SizedBox(height: 3),
                 Text(
                   _currentChosenResult?.description ?? "",
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  style: textTheme.bodyMedium,
                   maxLines: 2,
                   textAlign: TextAlign.center,
                 )

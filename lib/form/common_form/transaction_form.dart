@@ -105,7 +105,7 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
     }
 
     updateOnChange("amount");
-    updateOnChange("createdDate");
+    updateOnChange("date");
     updateOnChange("description");
     updateOnChange("payBy");
     updateOnChange("groupType", value: currentChosenType);
@@ -119,28 +119,28 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
             : widget.type;
 
         context.loaderOverlay.show();
-        // if (widget.type == FormStateType.updateTransaction) {
-        //   return await Provider.of<TransactionService>(context, listen: false)
-        //       .updateTransaction(
-        //           // user?.id ?? "",
-        //           formField['id'],
-        //           formField['createdDate'],
-        //           formField['description'],
-        //           // transactionType,
-        //           formField['amount'],
-        //           formField['payBy'],
-        //           formField['category']);
-        // } else {
-        //   return await Provider.of<TransactionService>(context, listen: false)
-        //       .createTransaction(
-        //           _user?.id ?? "",
-        //           formField['createdDate'],
-        //           formField['description'],
-        //           transactionType,
-        //           formField['amount'],
-        //           formField['payBy'],
-        //           formField['category']);
-        // }
+        if (widget.type == FormStateType.updateTransaction) {
+          return await Provider.of<TransactionService>(context, listen: false)
+              .updateTransaction(
+                  // user?.id ?? "",
+                  formField['id'],
+                  formField['createdDate'],
+                  formField['description'],
+                  // transactionType,
+                  formField['amount'],
+                  formField['payBy'],
+                  formField['category']);
+        } else {
+          return await Provider.of<TransactionService>(context, listen: false)
+              .createTransaction(
+                  _user?.id ?? "",
+                  formField['createdDate'],
+                  formField['description'],
+                  transactionType,
+                  formField['amount'],
+                  formField['payBy'],
+                  formField['category']);
+        }
       }, () async {
         context.loaderOverlay.hide();
         Navigator.of(context).pop();
