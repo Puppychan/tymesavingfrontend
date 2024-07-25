@@ -20,8 +20,8 @@ class PrimaryButton extends StatelessWidget {
         child: ElevatedButton(
           onPressed: onPressed,
           style: AppButtonThemeData.getThemes(context)[theme]!.copyWith(
-            elevation: MaterialStateProperty.all(3),
-            padding: MaterialStateProperty.all(
+            elevation: WidgetStateProperty.all(3),
+            padding: WidgetStateProperty.all(
               const EdgeInsets.symmetric(
                   vertical: 13), // Adjust padding to your needs
             ),

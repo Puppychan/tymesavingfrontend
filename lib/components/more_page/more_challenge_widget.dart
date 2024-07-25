@@ -8,7 +8,7 @@ class MoreMenuChallenge extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Card(
-      color: colorScheme.background,
+      color: colorScheme.surface,
       child: InkWell(
           splashColor: colorScheme.tertiary,
           onTap: () {

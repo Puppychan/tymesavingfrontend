@@ -5,7 +5,6 @@ import 'package:tymesavingfrontend/common/constant/temp_constant.dart';
 import 'package:tymesavingfrontend/components/common/images/circle_network_image.dart';
 import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/base_user_model.dart';
-import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/screens/user_profile/user_profile_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
@@ -81,7 +80,7 @@ class _UserBoxState extends State<UserBox> with RouteAware {
       child: Skeletonizer(
           enabled: user == null, // Show the skeleton if user is null
           child: Card.filled(
-            color: colorScheme.background, // Change color if skeleton
+            color: colorScheme.surface, // Change color if skeleton
             elevation: 3.0,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),

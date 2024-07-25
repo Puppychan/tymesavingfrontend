@@ -78,7 +78,7 @@ class _UnderlineTextFieldState extends State<UnderlineTextField> {
             borderSide: BorderSide(color: colorScheme.onError),
           ),
           focusedErrorBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: colorScheme.onBackground),
+            borderSide: BorderSide(color: colorScheme.onSurface),
           ),
           contentPadding: const EdgeInsets.symmetric(vertical: 10),
           // labelStyle: textTheme.bodyLarge,

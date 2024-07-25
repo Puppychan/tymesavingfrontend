@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -63,7 +62,7 @@ class _GroupTileState extends State<GroupTile> {
                 // borderRadius: borderRadius,
                 boxShadow: [
                   BoxShadow(
-                    color: colorScheme.onBackground.withOpacity(0.3),
+                    color: colorScheme.onSurface.withOpacity(0.3),
                     spreadRadius: 1, // Spread radius
                     blurRadius: 2, // Blur radius
                     offset: const Offset(2, 3), // changes position of shadow
@@ -71,7 +70,7 @@ class _GroupTileState extends State<GroupTile> {
                 ],
               ),
             ),
-            Container(
+            SizedBox(
               width: double.infinity,
               child: Padding(
                   padding: const EdgeInsets.all(10),

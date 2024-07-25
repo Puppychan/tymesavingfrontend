@@ -106,7 +106,7 @@ class UserCard extends StatelessWidget {
                       Text(
                         "${user.fullname} ${currentUser?.fullname == user.fullname ? '(You)' : ''}",
                         style: textTheme.bodyLarge!.copyWith(
-                          color: colorScheme.onBackground,
+                          color: colorScheme.onSurface,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -114,7 +114,7 @@ class UserCard extends StatelessWidget {
                         user.email,
                         style: textTheme.bodyMedium!.copyWith(
                           fontStyle: FontStyle.italic,
-                          color: colorScheme.onBackground,
+                          color: colorScheme.onSurface,
                         ),
                       ),
                     ],

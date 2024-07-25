@@ -21,7 +21,7 @@ class _TransactionItemState extends State<TransactionItem> {
     return Card.filled(
       color: colorScheme.primary.withOpacity(0.05),
       child: InkWell(
-        splashColor: colorScheme.onBackground.withOpacity(0.1),
+        splashColor: colorScheme.onSurface.withOpacity(0.1),
         onTap: () async {
           /*
           Cái này sẽ dùng để route khi onTap đến pages riêng của transaction đó

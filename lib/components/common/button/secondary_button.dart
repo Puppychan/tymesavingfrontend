@@ -21,10 +21,10 @@ class SecondaryButton extends StatelessWidget {
         child: ElevatedButton(
           onPressed: onPressed,
           style: AppButtonThemeData.getThemes(context)[theme]!.copyWith(
-            padding: MaterialStateProperty.all(
+            padding: WidgetStateProperty.all(
               const EdgeInsets.symmetric(vertical: 13),
             ),
-            elevation: MaterialStateProperty.all(5),
+            elevation: WidgetStateProperty.all(5),
           ),
           child: Text(title),
         ));

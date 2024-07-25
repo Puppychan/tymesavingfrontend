@@ -45,8 +45,8 @@ class AmountMultiForm extends StatelessWidget {
                     ChoiceChip(
                       // color: MaterialStateProperty.all<Color>(
                       //     colorScheme.tertiary),
-                      color: MaterialStateColor.resolveWith((states) =>
-                          states.contains(MaterialState.selected)
+                      color: WidgetStateColor.resolveWith((states) =>
+                          states.contains(WidgetState.selected)
                               ? colorScheme.primary
                               : colorScheme.tertiary),
                       label: Text(formatAmountToVnd(amount),
