@@ -93,7 +93,7 @@ class _InputPinPageState extends State<InputPinPage> {
           ),
           if (_isLoading)
             Container(
-              color: colorScheme.onSurface,
+              color: colorScheme.onBackground,
               child: const Center(
                 child: CircularProgressIndicator(),
               ),

@@ -90,7 +90,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
       context,
       MaterialPageRoute(
         builder: (context) =>
-            const ViewAllTransactionsPage(),
+            ViewAllTransactionsPage(),
       ),
     );
   }

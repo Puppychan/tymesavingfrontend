@@ -91,10 +91,10 @@ class _TransactionUpdatePageState extends State<TransactionUpdatePage> {
                 const SizedBox(height: 10),
                 TextButton(
                     style: ButtonStyle(
-                      side: WidgetStateProperty.all(
-                        BorderSide(color: Theme.of(context).colorScheme.onSurface, width: 1.5),
+                      side: MaterialStateProperty.all(
+                        BorderSide(color: Theme.of(context).colorScheme.onBackground, width: 1.5),
                       ),
-                      padding: WidgetStateProperty.all(
+                      padding: MaterialStateProperty.all(
                           const EdgeInsets.symmetric(vertical: 10, horizontal: 20)),
                     ),
                     onPressed: () {

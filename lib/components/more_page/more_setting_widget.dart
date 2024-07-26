@@ -79,7 +79,7 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Card.outlined(
-      color: colorScheme.surface,
+      color: colorScheme.background,
       margin: const EdgeInsets.all(0),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 15),
@@ -125,7 +125,7 @@ class _RowSettingTemplateState extends State<RowSettingTemplate> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Card.filled(
-        color: colorScheme.surface,
+        color: colorScheme.background,
         child: InkWell(
             splashColor: colorScheme.primary.withAlpha(50),
             onTap: () async {

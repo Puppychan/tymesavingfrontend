@@ -31,7 +31,7 @@ class UserTile extends StatelessWidget {
               borderRadius: borderRadius,
               boxShadow: [
                 BoxShadow(
-                  color: colorScheme.onSurface.withOpacity(0.3),
+                  color: colorScheme.onBackground.withOpacity(0.3),
                   spreadRadius: 1, // Spread radius
                   blurRadius: 2, // Blur radius
                   offset: const Offset(2, 3), // changes position of shadow
@@ -43,7 +43,7 @@ class UserTile extends StatelessWidget {
             width: double.infinity,
             decoration: BoxDecoration(
               borderRadius: borderRadius,
-              color: colorScheme.surface.withOpacity(0.5),
+              color: colorScheme.background.withOpacity(0.5),
             ),
             child: Padding(
                 padding: const EdgeInsets.all(10),

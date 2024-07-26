@@ -40,7 +40,7 @@ class AppThemes {
         // secondary: AppColors.primaryBlue,
         secondary: AppColors.secondary,
         tertiary: AppColors.tertiary,
-        surface: AppColors.cream,
+        background: AppColors.cream,
         error: AppColors.error,
 
         onPrimary: AppColors.cream,
@@ -48,7 +48,7 @@ class AppThemes {
         onInverseSurface: AppColors.black,
         onSecondary: AppColors.cream,
         onTertiary: AppColors.black,
-        onSurface: AppColors.black,
+        onBackground: AppColors.black,
         onError: AppColors.errorText,
     
         shadow: AppColors.shadow,
@@ -155,14 +155,14 @@ class AppThemes {
       ),
       timePickerTheme: TimePickerThemeData(
         backgroundColor: AppColors.cream,
-        hourMinuteColor: WidgetStateColor.resolveWith((states) =>
-            states.contains(WidgetState.selected)
+        hourMinuteColor: MaterialStateColor.resolveWith((states) =>
+            states.contains(MaterialState.selected)
                 ? AppColors.primaryBlue
                 : AppColors.secondary.withOpacity(0.5)),
         hourMinuteTextColor: AppColors.cream,
         // AM/PM color
-        dayPeriodColor: WidgetStateColor.resolveWith((states) =>
-            states.contains(WidgetState.selected)
+        dayPeriodColor: MaterialStateColor.resolveWith((states) =>
+            states.contains(MaterialState.selected)
                 ? AppColors.primary
                 : AppColors.tertiary.withOpacity(0.5)),
         dayPeriodTextColor: AppColors.black,
@@ -189,8 +189,8 @@ class AppThemes {
         // change mode color
         entryModeIconColor: AppColors.primaryBlue,
         confirmButtonStyle: ButtonStyle(
-          backgroundColor: WidgetStateProperty.all(AppColors.positive),
-          foregroundColor: WidgetStateProperty.all(AppColors.black),
+          backgroundColor: MaterialStateProperty.all(AppColors.positive),
+          foregroundColor: MaterialStateProperty.all(AppColors.black),
         ),
         
         // inputDecorationTheme: const InputDecorationTheme(
@@ -237,7 +237,7 @@ class AppThemes {
         surfaceTint: AppColors.black,
         secondary: AppColors.secondaryDark,
         tertiary: AppColors.tertiaryDark,
-        surface: AppColors.black,
+        background: AppColors.black,
         error: AppColors.errorDark,
 
         onPrimary: AppColors.black,
@@ -245,7 +245,7 @@ class AppThemes {
         onInverseSurface: AppColors.black,
         onSecondary: AppColors.black,
         onTertiary: AppColors.white,
-        onSurface: AppColors.cream,
+        onBackground: AppColors.cream,
         onError: AppColors.errorTextDark,
 
         shadow: AppColors.shadowDark,

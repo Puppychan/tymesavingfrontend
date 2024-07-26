@@ -9,27 +9,27 @@ class AppButtonThemeData {
     return {
       AppButtonTheme.yellowBlack: ButtonStyle(
           backgroundColor:
-              WidgetStateProperty.all<Color>(colorScheme.inversePrimary),
+              MaterialStateProperty.all<Color>(colorScheme.inversePrimary),
           foregroundColor:
-              WidgetStateProperty.all<Color>(colorScheme.onPrimaryContainer),
-          textStyle: WidgetStateProperty.all<TextStyle>(
+              MaterialStateProperty.all<Color>(colorScheme.onPrimaryContainer),
+          textStyle: MaterialStateProperty.all<TextStyle>(
             textStyle.copyWith(color: colorScheme.onPrimaryContainer),
           )),
       AppButtonTheme.blueWhite: ButtonStyle(
-        backgroundColor: WidgetStateProperty.all<Color>(colorScheme.primary),
+        backgroundColor: MaterialStateProperty.all<Color>(colorScheme.primary),
         foregroundColor:
-            WidgetStateProperty.all<Color>(colorScheme.onPrimary),
-        textStyle: WidgetStateProperty.all<TextStyle>(
+            MaterialStateProperty.all<Color>(colorScheme.onPrimary),
+        textStyle: MaterialStateProperty.all<TextStyle>(
           textStyle.copyWith(color: colorScheme.onPrimary),
         ),
       ),
       AppButtonTheme.whiteBlack: ButtonStyle(
         backgroundColor:
-            WidgetStateProperty.all<Color>(colorScheme.tertiary),
+            MaterialStateProperty.all<Color>(colorScheme.tertiary),
         foregroundColor:
-            WidgetStateProperty.all<Color>(colorScheme.onTertiary),
+            MaterialStateProperty.all<Color>(colorScheme.onTertiary),
         // overlayColor: MaterialStateProperty.all<Color>(colorScheme.primary),
-        textStyle: WidgetStateProperty.all<TextStyle>(
+        textStyle: MaterialStateProperty.all<TextStyle>(
           textStyle.copyWith(color: colorScheme.onTertiary),
         ),
       ),

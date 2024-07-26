@@ -14,6 +14,7 @@ import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/group_saving_service.dart';
 import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
 import 'package:tymesavingfrontend/services/user_service.dart';
+import 'package:tymesavingfrontend/utils/format_amount.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
 class GroupSavingDetails extends StatefulWidget {

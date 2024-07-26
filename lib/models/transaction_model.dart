@@ -61,7 +61,7 @@ class Transaction {
       'category': TransactionCategory.fromString(category).toString(),
       'createdDate': date,
       'type': type,
-      'user': user?.toJson(),
+      'user': user != null ? user!.toJson() : null,
     };
   }
 

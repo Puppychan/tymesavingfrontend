@@ -54,7 +54,7 @@ class _ImageUploadPageState extends State<ImageUploadPage> {
           children: <Widget>[
             DottedBorder(
               dashPattern: const [6, 6, 6, 6],
-              color: colorScheme.onSurface,
+              color: colorScheme.onBackground,
               strokeWidth: 2,
               borderType: BorderType.RRect,
               radius: const Radius.circular(30),

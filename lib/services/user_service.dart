@@ -41,7 +41,7 @@ class UserService extends ChangeNotifier {
       case 'sortUsername':
         return {'Username': sortOrder};
       case 'sortCreation':
-        return {'Created Date': sortOrder}; {}
+        return {'Created Date': sortOrder};;
       case 'sortRole':
         return {'Role': sortOrder};
     }

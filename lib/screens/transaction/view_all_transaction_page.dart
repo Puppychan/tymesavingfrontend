@@ -115,7 +115,7 @@ class _ViewAllTransactionsPageState extends State<ViewAllTransactionsPage>
   }
 
   Widget _buildNoTransactionsMessage() {
-    return const Center(
+    return Center(
       child: Text(
         'No transactions available.',
         style: TextStyle(fontSize: 18, color: Colors.grey),

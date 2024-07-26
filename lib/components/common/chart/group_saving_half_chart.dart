@@ -1,13 +1,17 @@
 import 'dart:math';
 
+import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 
 class GroupSavingHalfProgressBar extends StatefulWidget {
   const GroupSavingHalfProgressBar({
-    super.key, 
+    Key? key, 
     required this.amount, 
     required this.concurrent
-  });
+  }) : super(key: key);
 
   final double amount;
   final double concurrent;
