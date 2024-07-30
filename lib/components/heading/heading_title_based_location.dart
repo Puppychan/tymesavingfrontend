@@ -8,13 +8,13 @@ String renderHeadingTitleBasedUserRoleAndLocation(BuildContext context,
   Map<UserRole, Map<PageLocation, String>> rolePageLocationIcons = {
     UserRole.admin: {
       PageLocation.homePage: "Admin Dashboard",
-      // PageLocation.savingPage: "Saving Goals",
+      // PageLocation.savingPage: "Saving GroupSavings",
       PageLocation.settingsPage: "",
     },
     UserRole.customer: {
       PageLocation.homePage: "Hi, $username",
       PageLocation.budgetPage: "Budgets",
-      PageLocation.goals: "Goals",
+      PageLocation.savingPage: "Savings",
       // PageLocation.settingsPage: [Icons.home],
     },
   };

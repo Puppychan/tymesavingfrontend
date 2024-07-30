@@ -15,8 +15,6 @@ import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
 import 'package:tymesavingfrontend/services/user_service.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
-import 'package:tymesavingfrontend/components/transaction/transaction_list.dart';
-import 'package:tymesavingfrontend/models/transaction_model.dart';
 
 class BudgetDetails extends StatefulWidget {
   const BudgetDetails({super.key, required this.budgetId});
@@ -28,6 +26,7 @@ class BudgetDetails extends StatefulWidget {
 }
 
 class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
+  FormStateProvider? _formStateProvider;
   Budget? _budget;
   double? percentageTaken;
   double? percentageLeft;
@@ -39,7 +38,6 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
   String _displayPercentageTaken = '';
   bool _isDisplayRestDescription = false;
   List<Transaction> _transactions = [];
-
 
   Future<void> _renderUser(String? userId) async {
     Future.microtask(() async {
@@ -79,12 +77,11 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
         if (!mounted) return;
         final tempBudget = budgetService.currentBudget;
         // // set budget to update form
-        final formStateService =
-            Provider.of<FormStateProvider>(context, listen: false);
-        formStateService.setUpdateBudgetFormFields(tempBudget);
+        _formStateProvider?.setUpdateBudgetFormFields(tempBudget);
         // render host user
 
         // set state for budget details
+        if (!mounted) return;
         setState(() {
           _budget = tempBudget;
           percentageTaken = _budget!.amount / _budget!.concurrentAmount * 100;
@@ -117,14 +114,16 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
 
   @override
   void initState() {
+    _formStateProvider = Provider.of<FormStateProvider>(context, listen: false);
     _loadData();
     super.initState();
   }
 
   @override
   void dispose() {
-    routeObserver.unsubscribe(this);
+    // _formStateProvider?.resetForm(FormStateType.memberInvitation);
     super.dispose();
+    routeObserver.unsubscribe(this);
   }
 
   @override
@@ -297,6 +296,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                   const SizedBox(
                     height: 20,
                   ),
+                  Text('Transaction history', style: Theme.of(context).textTheme.headlineMedium,),
                   Expanded(
                     child: TransactionList(transactions: _transactions),
                   ),

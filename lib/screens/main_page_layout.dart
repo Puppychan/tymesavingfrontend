@@ -8,6 +8,7 @@ import 'package:tymesavingfrontend/components/main_page_layout/show_add_options.
 import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/screens/budget/budget_list_page.dart';
+import 'package:tymesavingfrontend/screens/group_saving/group_saving_list_page.dart';
 import 'package:tymesavingfrontend/screens/home/home_admin_page.dart';
 import 'package:tymesavingfrontend/screens/home/home_page.dart';
 import 'package:tymesavingfrontend/screens/more_menu/more_page.dart';
@@ -99,8 +100,8 @@ class _MainPageLayoutState extends State<MainPageLayout> with RouteAware {
               ? const HomeAdminPage()
               : HomePage(user: user),
           // TODO: Uncomment when complete goal page
-          // GoalListPage(user: user),
-          const Center(child: Text("Goals Page")),
+          // GroupSavingListPage(user: user),
+          GroupSavingListPage(user: user),
           BudgetListPage(user: user),
           const MoreMenuPage(),
         ],
@@ -132,7 +133,7 @@ class _MainPageLayoutState extends State<MainPageLayout> with RouteAware {
                 context: context,
                 index: 1,
                 icon: Icons.assessment,
-                label: 'Goals',
+                label: 'Savings',
               ),
               const SizedBox(width: 40.0), // The dummy child
               _buildTabItem(
@@ -163,7 +164,7 @@ class _MainPageLayoutState extends State<MainPageLayout> with RouteAware {
         currentPageLocation = PageLocation.homePage;
         break;
       case 1:
-        currentPageLocation = PageLocation.goals;
+        currentPageLocation = PageLocation.savingPage;
         break;
       case 2:
         currentPageLocation = PageLocation.budgetPage;

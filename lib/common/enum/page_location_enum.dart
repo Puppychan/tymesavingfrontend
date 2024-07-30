@@ -2,7 +2,7 @@
 enum PageLocation {
   homePage('Home'),
   budgetPage('Budget'),
-  goals('Goals'),
+  savingPage('GroupSavings'),
   settingsPage('Settings');
   
 

@@ -2,13 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
+import 'package:tymesavingfrontend/common/enum/invitation_type_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
+import 'package:tymesavingfrontend/common/enum/transaction_group_type_enum.dart';
 import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
 import 'package:tymesavingfrontend/components/common/dialog/date_picker_dialog.dart';
 import 'package:tymesavingfrontend/components/common/dialog/time_picker_dialog.dart';
+import 'package:tymesavingfrontend/components/common/input/radio_field.dart';
 import 'package:tymesavingfrontend/components/common/input/underline_text_field.dart';
 import 'package:tymesavingfrontend/components/category_list/category_icon.dart';
+import 'package:tymesavingfrontend/components/common/multi_form_components/amount_multi_form.dart';
+import 'package:tymesavingfrontend/components/common/multi_form_components/assign_group_multi_form.dart';
+import 'package:tymesavingfrontend/components/common/multi_form_components/comonent_multi_form.dart';
+import 'package:tymesavingfrontend/models/base_group_model.dart';
+import 'package:tymesavingfrontend/models/summary_group_model.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
+import 'package:tymesavingfrontend/screens/search_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
 import 'package:tymesavingfrontend/services/transaction_service.dart';
@@ -17,6 +26,7 @@ import 'package:tymesavingfrontend/utils/display_success.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
 import 'package:tymesavingfrontend/utils/format_date.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
+import 'package:tymesavingfrontend/utils/input_format_currency.dart';
 import 'package:tymesavingfrontend/utils/validator.dart';
 
 class TransactionFormMain extends StatefulWidget {
@@ -34,16 +44,23 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
 
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _selectedTime = TimeOfDay.now();
+  User? _user;
   // String _savingOrBudget = 'For None';
   // init state
   @override
   void initState() {
     super.initState();
+    if (!mounted) return;
     final formFields = Provider.of<FormStateProvider>(context, listen: false)
         .getFormField(widget.type);
+    final authService = Provider.of<AuthService>(context, listen: false);
+    setState(() {
+      _user = authService.user;
+    });
     String? formCreatedDate;
     formCreatedDate = formFields['createdDate'];
     if (formCreatedDate != null) {
+      if (!mounted) return;
       setState(() {
         final Map<String, dynamic> dateTimeMap =
             setDateTimeFromTimestamp(formCreatedDate);
@@ -68,21 +85,34 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
       }
     }
 
-    final formattedDateTime = combineDateAndTime(_selectedDate, _selectedTime);
-    onUpdateInputValue("amount", _amountController.text);
-    onUpdateInputValue(
-        "createdDate",
-        formattedDateTime ??
-            ""); // if you accidentally input wrong date, it will be null
-    onUpdateInputValue("description", _descriptionController.text);
-    onUpdateInputValue("payBy", _payByController.text);
+    final formField = Provider.of<FormStateProvider>(context, listen: false)
+        .getFormField(widget.type);
+    TransactionGroupType currentChosenType =
+        formField["groupType"] ?? TransactionGroupType.none;
+    String? chosenGroupKey = currentChosenType != TransactionGroupType.none
+        ? currentChosenType == TransactionGroupType.budget
+            ? "budgetGroupId"
+            : "savingGroupId"
+        : null;
+    String? currentChosenGroupId = formField[chosenGroupKey];
+    // final validation (custom)
+    if (currentChosenType != TransactionGroupType.none &&
+        currentChosenGroupId == null) {
+      ErrorDisplay.showErrorToast(
+          "You must choose a group if this transaction belongs to a group",
+          context);
+      return;
+    }
+
+    updateOnChange("amount");
+    updateOnChange("date");
+    updateOnChange("description");
+    updateOnChange("payBy");
+    updateOnChange("groupType", value: currentChosenType);
     Future.microtask(() async {
       await handleMainPageApi(context, () async {
-        final authService = Provider.of<AuthService>(context, listen: false);
-        final formField = Provider.of<FormStateProvider>(context, listen: false)
-            .getFormField(widget.type);
+        print("Form field $formField");
         // return null;
-        User? user = authService.user;
 
         final transactionType = widget.type == FormStateType.updateTransaction
             ? formField['type']
@@ -103,7 +133,7 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
         } else {
           return await Provider.of<TransactionService>(context, listen: false)
               .createTransaction(
-                  user?.id ?? "",
+                  _user?.id ?? "",
                   formField['createdDate'],
                   formField['description'],
                   transactionType,
@@ -120,21 +150,34 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
     });
   }
 
-  void updateOnChange(String type) {
+  void updateOnChange(String type, {dynamic value}) {
+    if (!mounted) return;
+    final formStateService =
+        Provider.of<FormStateProvider>(context, listen: false);
     switch (type) {
       case "amount":
-        onUpdateInputValue("amount", _amountController.text);
+        formStateService.updateFormField(
+            "amount", _amountController.text, widget.type);
         break;
       case "description":
-        onUpdateInputValue("description", _descriptionController.text);
+        formStateService.updateFormField(
+            "description", _descriptionController.text, widget.type);
         break;
       case "payBy":
-        onUpdateInputValue("payBy", _payByController.text);
+        formStateService.updateFormField(
+            "payBy", _payByController.text, widget.type);
         break;
       case "date":
         final formattedDateTime =
             combineDateAndTime(_selectedDate, _selectedTime);
-        onUpdateInputValue("createdDate", formattedDateTime ?? "");
+        formStateService.updateFormField(
+            "createdDate", formattedDateTime ?? "", widget.type);
+        break;
+      // case "groupType":
+      //   formStateService.updateFormField("groupType", value, widget.type);
+      //   break;
+      default:
+        formStateService.updateFormField(type, value, widget.type);
         break;
     }
   }
@@ -148,15 +191,6 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
     });
   }
 
-  void onUpdateInputValue(String key, String value) {
-    Future.microtask(() async {
-      if (!mounted) return;
-      final formStateService =
-          Provider.of<FormStateProvider>(context, listen: false);
-      formStateService.updateFormField(key, value, widget.type);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -167,18 +201,24 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
           formStateService.getFormField(widget.type);
       TransactionCategory selectedCategory =
           formStateService.getCategory(widget.type);
-      String formattedAmount = formStateService.getFormattedAmount(widget.type);
       String formDescription =
           formFields['description'] ?? "Please add description";
       String formpayBy = formFields['payBy'] ?? "Pay by cash?";
+      TransactionGroupType chosenGroupType =
+          formFields['groupType'] ?? TransactionGroupType.none;
+      BaseGroup? chosenResult = formFields["tempChosenGroup"];
+      String formattedAmount = formStateService.getFormattedAmount(widget.type);
 
       // update text to controller
       _amountController.text = formStateService.getFormattedAmount(widget.type);
+      // _amountController.text = formFields['amount'].toString() ?? 0;
       _descriptionController.text = formFields['description'] ?? "";
       _payByController.text = formFields['payBy'] ?? "";
 
       List<Widget> renderCategories(BuildContext context) {
-        return TransactionCategory.values.expand((category) {
+        return TransactionCategory.values
+            .where((category) => category != TransactionCategory.all)
+            .expand((category) {
           final isSelected = selectedCategory.name == category.name;
           Map<String, dynamic> categoryInfo =
               transactionCategoryData[category]!;
@@ -204,7 +244,8 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ..._buildComponentGroup(
+              ...buildComponentGroup(
+                  context: context,
                   label: "CHOOSE CATEGORY",
                   contentWidget: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
@@ -212,51 +253,21 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: renderCategories(context),
                       ))),
-              UnderlineTextField(
-                  label: "TOTAL AMOUNT",
-                  controller: _amountController,
-                  icon: Icons.attach_money,
-                  placeholder: formattedAmount,
-                  keyboardType: TextInputType.number,
-                  onChange: (value) => updateOnChange("amount"),
-                  validator: Validator.validateAmount),
-              ..._buildComponentGroup(contentWidget: [
-                // SizedBox(height: 10),
-                SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [50000.0, 100000.0, 500000.0, 1000000.0]
-                          .expand((amount) {
-                        final selectedAmount =
-                            convertFormattedAmountToNumber(formattedAmount);
-                        return [
-                          ChoiceChip(
-                            // color: MaterialStateProperty.all<Color>(
-                            //     colorScheme.tertiary),
-                            color: MaterialStateColor.resolveWith((states) =>
-                                states.contains(MaterialState.selected)
-                                    ? colorScheme.primary
-                                    : colorScheme.tertiary),
-                            label: Text(formatAmountToVnd(amount),
-                                style: TextStyle(
-                                  color: selectedAmount == amount
-                                      ? colorScheme.onPrimary
-                                      : colorScheme.onTertiary, // Change colors as needed
-                                )),
-                            selected: selectedAmount == amount,
-                            onSelected: (selected) {
-                              setState(() {
-                                _amountController.text = formatAmountToVnd(amount);
-                                updateOnChange("amount");
-                              });
-                            },
-                          ),
-                          const SizedBox(width: 10)
-                        ];
-                      }).toList(),
-                    ))
-              ]),
+              ...buildComponentGroup(
+                context: context,
+                label: "ASSIGN GROUP",
+                contentWidget: AssignGroupMultiForm(
+                    updateOnChange: updateOnChange,
+                    userId: _user?.id ?? "",
+                    // formFields: formFields,
+                    chosenResult: chosenResult,
+                    chosenGroupType: chosenGroupType,
+                    transactionType: widget.type),
+              ),
+              AmountMultiForm(
+                  formattedAmount: formattedAmount,
+                  updateOnChange: updateOnChange,
+                  amountController: _amountController),
               UnderlineTextField(
                 icon: Icons.calendar_today,
                 label: 'DATE',
@@ -269,6 +280,7 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
                       initialDate: _selectedDate,
                       helpText: 'Select Date of Transaction');
                   if (pickedDate != null) {
+                    if (!mounted) return;
                     setState(() {
                       _selectedDate = pickedDate;
                       updateOnChange("date");
@@ -294,6 +306,7 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
 
                   // Check if a time was picked
                   if (pickedTime != null) {
+                    if (!mounted) return;
                     setState(() {
                       _selectedTime = pickedTime;
                       updateOnChange("date");
@@ -317,89 +330,9 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
                 keyboardType: TextInputType.text,
                 onChange: (value) => updateOnChange("payBy"),
               ),
-              // ..._buildComponentGroup(
-              //     label: "SAVING OR BUDGET",
-              //     contentWidget: [
-              //       Column(
-              //         children: ['For Saving', 'For Budget', 'For None']
-              //             .map((option) {
-              //           return RadioListTile(
-              //             title: Text(option),
-              //             value: option,
-              //             groupValue: _savingOrBudget,
-              //             onChanged: (value) {
-              //               setState(() {
-              //                 _savingOrBudget = value!;
-              //               });
-              //             },
-              //           );
-              //         }).toList(),
-              //       )
-              //     ]),
               PrimaryButton(title: "Add", onPressed: _trySubmit)
             ],
           ));
     });
-  }
-
-  List<Widget> _buildComponentGroup(
-      {required dynamic contentWidget, String? label}) {
-    final textTheme = Theme.of(context).textTheme;
-    return [
-      if (label != null) Text(label, style: textTheme.titleSmall),
-      label != null ? const SizedBox(height: 10) : const SizedBox.shrink(),
-      if (contentWidget is List) ...contentWidget else contentWidget,
-      const SizedBox(height: 5),
-      const Divider(),
-      const SizedBox(height: 30),
-    ];
-  }
-
-  Future<void> _showInputDialog(
-    BuildContext context, {
-    required String initialValue,
-    required ValueChanged<String> onSubmitted,
-  }) async {
-    TextEditingController controller =
-        TextEditingController(text: initialValue);
-    await showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          content: SingleChildScrollView(
-            child: IntrinsicHeight(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextField(
-                    controller: controller,
-                    decoration: const InputDecoration(
-                      labelText: 'Edit',
-                      hintText: 'Enter new value',
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                onSubmitted(controller.text);
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
-            ),
-          ],
-        );
-      },
-    );
   }
 }

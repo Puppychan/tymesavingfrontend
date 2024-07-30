@@ -1,4 +1,5 @@
 enum InvitationStatus {
+  all("All"),
   accepted("Accepted"),
   pending("Pending"),
   cancelled("Cancelled");
@@ -22,4 +23,9 @@ enum InvitationStatus {
     // default to customer
     return InvitationStatus.pending;
   }
+
+  static List<String> get list{
+    return InvitationStatus.values.map((e) => e.toString()).toList();
+  }
+  
 }

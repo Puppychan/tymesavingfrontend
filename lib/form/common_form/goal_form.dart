@@ -10,23 +10,24 @@ import 'package:tymesavingfrontend/components/common/input/underline_text_field.
 import 'package:tymesavingfrontend/components/category_list/category_icon.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
-import 'package:tymesavingfrontend/services/goal_service.dart';
+import 'package:tymesavingfrontend/services/group_saving_service.dart';
 import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
 import 'package:tymesavingfrontend/utils/display_error.dart';
 import 'package:tymesavingfrontend/utils/display_success.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
 import 'package:tymesavingfrontend/utils/format_date.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
+import 'package:tymesavingfrontend/utils/input_format_currency.dart';
 import 'package:tymesavingfrontend/utils/validator.dart';
 
-class GoalFormMain extends StatefulWidget {
+class GroupSavingFormMain extends StatefulWidget {
   final FormStateType type;
-  const GoalFormMain({super.key, required this.type});
+  const GroupSavingFormMain({super.key, required this.type});
   @override
-  State<GoalFormMain> createState() => _GoalFormMainState();
+  State<GroupSavingFormMain> createState() => _GroupSavingFormMainState();
 }
 
-class _GoalFormMainState extends State<GoalFormMain> {
+class _GroupSavingFormMainState extends State<GroupSavingFormMain> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
@@ -34,7 +35,7 @@ class _GoalFormMainState extends State<GoalFormMain> {
 
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _selectedTime = TimeOfDay.now();
-  // String _savingOrGoal = 'For None';
+  // String _savingOrGroupSaving = 'For None';
   // init state
   @override
   void initState() {
@@ -79,9 +80,9 @@ class _GoalFormMainState extends State<GoalFormMain> {
         User? user = authService.user;
 
         context.loaderOverlay.show();
-        if (widget.type == FormStateType.updateGoal) {
-          return await Provider.of<GoalService>(context, listen: false)
-              .updateGoalGroup(
+        if (widget.type == FormStateType.updateGroupSaving) {
+          return await Provider.of<GroupSavingService>(context, listen: false)
+              .updateGroupSavingGroup(
             formField['id'],
             user?.id ?? "",
             formField['name'],
@@ -90,8 +91,8 @@ class _GoalFormMainState extends State<GoalFormMain> {
             formField['endDate'],
           );
         } else {
-          return await Provider.of<GoalService>(context, listen: false)
-              .addGoalGroup(
+          return await Provider.of<GroupSavingService>(context, listen: false)
+              .addGroupSavingGroup(
             user?.id ?? "",
             formField['name'],
             formField['description'],
@@ -167,7 +168,7 @@ class _GoalFormMainState extends State<GoalFormMain> {
       _nameController.text = formFields['name'] ?? "";
 
       List<Widget> renderCategories(BuildContext context) {
-        return TransactionCategory.values.expand((category) {
+        return TransactionCategory.values.where((category) => category != TransactionCategory.all).expand((category) {
           final isSelected = selectedCategory.name == category.name;
           Map<String, dynamic> categoryInfo =
               transactionCategoryData[category]!;
@@ -213,6 +214,7 @@ class _GoalFormMainState extends State<GoalFormMain> {
                   label: "TOTAL AMOUNT",
                   controller: _amountController,
                   icon: Icons.attach_money,
+                  inputFormatters: [CurrencyInputFormatter()],
                   placeholder: formattedAmount,
                   keyboardType: TextInputType.number,
                   onChange: (value) => updateOnChange("amount"),

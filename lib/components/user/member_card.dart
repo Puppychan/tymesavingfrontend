@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
+import 'package:tymesavingfrontend/components/common/dialog/delete_confirm_dialog.dart';
 import 'package:tymesavingfrontend/models/member_model.dart';
 import 'package:tymesavingfrontend/models/summary_user_model.dart';
 import 'package:tymesavingfrontend/screens/user_list/member_detail_page.dart';
@@ -18,7 +19,7 @@ class MemberCard extends StatelessWidget {
   final Member member;
   final double maxContribution = 100.0;
 
-  const MemberCard({
+  const   MemberCard({
     super.key,
     required this.member,
     required this.groupId,
@@ -33,39 +34,17 @@ class MemberCard extends StatelessWidget {
     final bool isHost = member.role == 'Host';
 
     Future showDeleteConfirmationDialog() async {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Remove Confirmation'),
-            content: const Text('Are you sure you want to remove this member?'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Future.microtask(() async {
-                    final userService =
-                        Provider.of<UserService>(context, listen: false);
-                    await handleMainPageApi(context, () async {
-                      return await userService.removeGroupMember(
-                          isBudgetGroup, groupId, user.id ?? "");
-                      // return result;
-                    }, () async {
-                      Navigator.of(context).pop();
-                    });
-                  });
-                },
-                child: const Text('Delete'),
-              ),
-            ],
-          );
-        },
-      );
+      showCustomDeleteConfirmationDialog(
+          context, "Are you sure you want to remove this member?", () async {
+        final userService = Provider.of<UserService>(context, listen: false);
+        await handleMainPageApi(context, () async {
+          return await userService.removeGroupMember(
+              isBudgetGroup, groupId, user.id);
+          // return result;
+        }, () async {
+          Navigator.of(context).pop();
+        });
+      });
     }
 
     // double progress = member.contribution / maxContribution; // Calculate the progress as a fraction

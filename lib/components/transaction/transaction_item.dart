@@ -57,14 +57,25 @@ class TransactionItem extends StatelessWidget {
         ],
       ),
       child: ListTile(
-        contentPadding: const EdgeInsets.all(0),
-        leading: CircleAvatar(
-          backgroundColor: color,
-          child: Icon(
-            icon,
-            color: Colors.white,
-          ),
-        ),
+        contentPadding: const EdgeInsets.all(5),
+        leading: transaction.user != null
+            ? Transform.scale(
+                scale: 1.2,
+                child: CircleAvatar(
+                  backgroundColor: color,
+                  child: Icon(
+                    icon,
+                    color: Colors.white,
+                  ),
+                ),
+              )
+            : CircleAvatar(
+                backgroundColor: color,
+                child: Icon(
+                  icon,
+                  color: Colors.white,
+                ),
+              ),
         title: Text(
           title,
           style: Theme.of(context)

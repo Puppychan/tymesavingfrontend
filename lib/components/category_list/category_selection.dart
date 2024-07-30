@@ -10,16 +10,14 @@ import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
 class CategorySelectionPage extends StatefulWidget {
   final VoidCallback? onNavigateToNext;
   final FormStateType type;
-  const CategorySelectionPage({super.key, this.onNavigateToNext, required this.type});
+  const CategorySelectionPage(
+      {super.key, this.onNavigateToNext, required this.type});
 
   @override
-  State<CategorySelectionPage> createState() =>
-      _CategorySelectionPageState();
+  State<CategorySelectionPage> createState() => _CategorySelectionPageState();
 }
 
-class _CategorySelectionPageState
-    extends State<CategorySelectionPage> {
-
+class _CategorySelectionPageState extends State<CategorySelectionPage> {
   @override
   Widget build(BuildContext context) {
     final formStateService =
@@ -43,11 +41,13 @@ class _CategorySelectionPageState
 
     // function to render the category list
     List<Widget> renderCategories(BuildContext context) {
-      return TransactionCategory.values.expand((category) {
+      return TransactionCategory.values
+          .where((category) => category != TransactionCategory.all)
+          .expand((category) {
         final textTheme = Theme.of(context).textTheme;
         final colorScheme = Theme.of(context).colorScheme;
         final isSelected = selectedCategory.name == category.name;
-        Map<String, dynamic> categoryInfo = transactionCategoryData[category]!;
+        Map<String, dynamic>? categoryInfo = transactionCategoryData[category];
         return [
           Material(
               // color: isSelected ? colorScheme.background : Colors.transparent,
@@ -58,7 +58,8 @@ class _CategorySelectionPageState
                   onTap: () async =>
                       {await onTransactionCategorySelected(context, category)},
                   child: ListTile(
-                    leading: getCategoryIcon(currentCategoryInfo: categoryInfo),
+                    leading: getCategoryIcon(
+                        currentCategoryInfo: categoryInfo ?? {}),
                     title: Text(category.name, style: textTheme.bodyLarge),
                     trailing: isSelected
                         ? RoundedIcon(
