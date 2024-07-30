@@ -60,6 +60,16 @@ IconButton buildEditButton(BuildContext context, String type) {
 //   );
 // }
 
+IconButton buildChallengeButton(BuildContext context) {
+  return IconButton(
+    icon: const Icon(Icons.notifications),
+    onPressed: () {
+      // Navigate to the notification page
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const NotificationsPage()));
+    },
+  );
+}
+
 IconButton buildNotificationButton(BuildContext context) {
   return IconButton(
     icon: const Icon(Icons.notifications),

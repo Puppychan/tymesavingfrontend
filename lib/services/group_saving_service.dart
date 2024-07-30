@@ -108,7 +108,7 @@ class GroupSavingService extends ChangeNotifier {
 
   Future<Map<String, dynamic>> deleteGroupSaving(String groupSavingId) async {
     final response = await NetworkService.instance
-        .delete("${BackendEndpoints.groupSaving}/$groupSavingId");
+        .delete("${BackendEndpoints.groupSaving}/$groupSavingId/${BackendEndpoints.groupSavingDeleteHost}");
     return response;
   }
 

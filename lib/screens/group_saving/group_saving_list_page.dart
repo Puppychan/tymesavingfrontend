@@ -18,6 +18,7 @@ class _GroupSavingListPageState extends State<GroupSavingListPage> {
   bool _isLoading = false;
   void _fetchGroupSavings() async {
     Future.microtask(() async {
+      if (!mounted) return;
       setState(() {
         _isLoading = true;
       });
@@ -27,6 +28,7 @@ class _GroupSavingListPageState extends State<GroupSavingListPage> {
       await handleMainPageApi(context, () async {
         return await goalService.fetchGroupSavingList(widget.user?.id);
       }, () async {});
+      if (!mounted) return;
       setState(() {
         _isLoading = false;
       });

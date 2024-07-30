@@ -66,11 +66,10 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
       }
     }
 
-    final formattedDateTime = combineDateAndTime(_selectedDate, _selectedTime);
-    onUpdateInputValue("name", _nameController.text);
-    onUpdateInputValue("amount", _amountController.text);
-    onUpdateInputValue("endDate", formattedDateTime ?? "");
-    onUpdateInputValue("description", _descriptionController.text);
+    updateOnChange("name");
+    updateOnChange("amount");
+    updateOnChange("endDate");
+    updateOnChange("description");
     Future.microtask(() async {
       await handleMainPageApi(context, () async {
         final authService = Provider.of<AuthService>(context, listen: false);
@@ -105,26 +104,30 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
         context.loaderOverlay.hide();
         Navigator.of(context).pop();
         SuccessDisplay.showSuccessToast(
-            "${widget.type == FormStateType.updateBudget ? "Update" : "Create"} new ${widget.type} successfully", context);
+            "${widget.type == FormStateType.updateBudget ? "Update" : "Create"} new ${widget.type} successfully",
+            context);
       });
     });
   }
 
   void updateOnChange(String type) {
+      if (!mounted) return;
+      final formStateService =
+          Provider.of<FormStateProvider>(context, listen: false);
     switch (type) {
       case "amount":
-        onUpdateInputValue("amount", _amountController.text);
+        formStateService.updateFormField("amount", _amountController.text, widget.type);
         break;
       case "description":
-        onUpdateInputValue("description", _descriptionController.text);
+        formStateService.updateFormField("description", _descriptionController.text, widget.type);
         break;
       case "name":
-        onUpdateInputValue("name", _nameController.text);
+        formStateService.updateFormField("name", _nameController.text, widget.type);
         break;
       case "date":
         final formattedDateTime =
             combineDateAndTime(_selectedDate, _selectedTime);
-        onUpdateInputValue("endDate", formattedDateTime ?? "");
+        formStateService.updateFormField("endDate", formattedDateTime ?? "", widget.type);
         break;
     }
   }
@@ -138,14 +141,6 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
     });
   }
 
-  void onUpdateInputValue(String key, String value) {
-    Future.microtask(() async {
-      if (!mounted) return;
-      final formStateService =
-          Provider.of<FormStateProvider>(context, listen: false);
-      formStateService.updateFormField(key, value, widget.type);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -167,41 +162,41 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
       _descriptionController.text = formFields['description'] ?? "";
       _nameController.text = formFields['name'] ?? "";
 
-      List<Widget> renderCategories(BuildContext context) {
-        return TransactionCategory.values.expand((category) {
-          final isSelected = selectedCategory.name == category.name;
-          Map<String, dynamic> categoryInfo =
-              transactionCategoryData[category]!;
-          return [
-            Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(10),
-                  splashColor: colorScheme.tertiary,
-                  onTap: () async => {onTransactionCategorySelected(category)},
-                  child: getCategoryIcon(
-                      currentCategoryInfo: categoryInfo,
-                      isSelected: isSelected,
-                      colorScheme: colorScheme),
-                )),
-            const SizedBox(width: 10)
-          ];
-        }).toList();
-      }
+      // List<Widget> renderCategories(BuildContext context) {
+      //   return TransactionCategory.values.where((category) => category != TransactionCategory.all).expand((category) {
+      //     final isSelected = selectedCategory.name == category.name;
+      //     Map<String, dynamic> categoryInfo =
+      //         transactionCategoryData[category]!;
+      //     return [
+      //       Material(
+      //           color: Colors.transparent,
+      //           child: InkWell(
+      //             borderRadius: BorderRadius.circular(10),
+      //             splashColor: colorScheme.tertiary,
+      //             onTap: () async => {onTransactionCategorySelected(category)},
+      //             child: getCategoryIcon(
+      //                 currentCategoryInfo: categoryInfo,
+      //                 isSelected: isSelected,
+      //                 colorScheme: colorScheme),
+      //           )),
+      //       const SizedBox(width: 10)
+      //     ];
+      //   }).toList();
+      // }
 
       return Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ..._buildComponentGroup(
-                  label: "CHOOSE CATEGORY",
-                  contentWidget: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: renderCategories(context),
-                      ))),
+              // ..._buildComponentGroup(
+              //     label: "CHOOSE CATEGORY",
+              //     contentWidget: SingleChildScrollView(
+              //         scrollDirection: Axis.horizontal,
+              //         child: Row(
+              //           mainAxisAlignment: MainAxisAlignment.spaceAround,
+              //           children: renderCategories(context),
+              //         ))),
               UnderlineTextField(
                 controller: _nameController,
                 icon: Icons.card_membership,
@@ -247,7 +242,8 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
                             selected: selectedAmount == amount,
                             onSelected: (selected) {
                               setState(() {
-                                _amountController.text = formatAmountToVnd(amount);
+                                _amountController.text =
+                                    formatAmountToVnd(amount);
                                 updateOnChange("amount");
                               });
                             },
@@ -339,7 +335,8 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           content: SingleChildScrollView(
             child: IntrinsicHeight(
               child: Column(

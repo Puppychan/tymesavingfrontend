@@ -40,13 +40,15 @@ class BackendEndpoints {
   static String get budgetsGetByUserId => "byUser";
   static String get budgetGetSummaryById => "viewBudgetFromId";
   static String get budgetUpdateHost => "host/edit";
+  static String get budgetDeleteHost => "host/delete";
   static String get budgetRemoveMember => "host/remove-member";
   static String get budgetGetMembers => "member-list";
-  
+
   // goal specific endpoints
   static String get groupSavingsGetByUserId => "byUser";
   static String get groupSavingGetSummaryById => "viewGroupFromId";
   static String get groupSavingUpdateHost => "host/edit";
+  static String get groupSavingDeleteHost => "host/delete";
   static String get groupSavingRemoveMember => "host/remove-member";
   static String get groupSavingGetMembers => "member-list";
 
