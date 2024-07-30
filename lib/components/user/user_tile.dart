@@ -78,9 +78,7 @@ class UserTile extends StatelessWidget {
 
     do {
       secondIndex = random.nextInt(Colors.primaries.length);
-    } while (secondIndex == firstIndex ||
-        secondIndex == firstIndex - 1 ||
-        secondIndex == firstIndex + 1);
+    } while (secondIndex == firstIndex);
 
     // Use firstIndex and secondIndex to access distinct colors
     Color firstColor = Colors.primaries[firstIndex];

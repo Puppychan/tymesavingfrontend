@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tymesavingfrontend/components/common/filter_box.dart';
 import 'package:tymesavingfrontend/components/common/sort_box.dart';
 import 'package:tymesavingfrontend/services/transaction_service.dart';
 

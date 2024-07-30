@@ -13,6 +13,7 @@ class SearchPage extends StatefulWidget {
   final String searchPlaceholder;
   final Widget? sideDisplay;
   final Widget Function(dynamic result) resultWidgetFunction;
+  final double? customResultSize;
   final Future<void> Function(
       String value,
       Function(List<dynamic>) updateResults,
@@ -25,7 +26,7 @@ class SearchPage extends StatefulWidget {
       required this.searchPlaceholder,
       required this.resultWidgetFunction,
       required this.searchCallback,
-      this.sideDisplay});
+      this.sideDisplay, this.customResultSize});
 
   @override
   State<SearchPage> createState() => _SearchPageState();
@@ -60,7 +61,7 @@ class _SearchPageState extends State<SearchPage> {
               Expanded(
                 child: ((_results ?? []).isNotEmpty && _results != null)
                     ? GridView.count(
-                        childAspectRatio: 1,
+                        childAspectRatio: widget.customResultSize ?? 1.0,
                         crossAxisCount: 2,
                         padding: const EdgeInsets.all(2.0),
                         mainAxisSpacing: 10.0,
@@ -98,6 +99,7 @@ class _SearchPageState extends State<SearchPage> {
 
     // Set a new timer with a 500ms (or your desired) delay
     _debounce = Timer(const Duration(milliseconds: 500), () async {
+      if (!mounted) return;
       setState(() {
         _input = value;
       });
@@ -106,6 +108,7 @@ class _SearchPageState extends State<SearchPage> {
         // null is a sentinal value that allows us more control the UI
         // for a better user experience. instead of showing 'No results for ''",
         // if this is null, it will just show nothing
+        if (!mounted) return;
         setState(() {
           _results = null;
         });
@@ -115,6 +118,7 @@ class _SearchPageState extends State<SearchPage> {
       _cancelToken = CancelToken();
 
       await widget.searchCallback(value, (results) {
+        if (!mounted) return;
         setState(() {
           _results = results;
         });

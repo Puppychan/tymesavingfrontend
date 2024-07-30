@@ -3,14 +3,11 @@ import 'package:tymesavingfrontend/components/common/text_align.dart';
 
 void showStyledBottomSheet({
   required BuildContext context,
-  // required List<dynamic> itemList, // Replace dynamic with your actual item type
   String? title,
   String? subTitle,
-  required Widget contentWidget, // Adjust the type accordingly
-
+  required Widget contentWidget,
   bool isTransparentBackground = false,
   double initialChildSize = 0.5, // -1 if want to fit the content
-  // Widget? headingButtons,
   VoidCallback?
       onNavigateToPreviousSheet, // Callback for navigating to previous sheet
 }) {
@@ -21,7 +18,9 @@ void showStyledBottomSheet({
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
     builder: (BuildContext modalContext) {
-      return makeDismissible(
+      return Scaffold(
+        backgroundColor: Colors.transparent,
+          body: makeDismissible(
         context: modalContext,
         child: DraggableScrollableSheet(
           initialChildSize: initialChildSize,
@@ -54,8 +53,7 @@ void showStyledBottomSheet({
                     CustomAlignText(
                         text: title, style: textTheme.headlineLarge),
                   const SizedBox(height: 10),
-                  if (subTitle !=
-                      null) // Use collection-if to conditionally add a widget
+                  if (subTitle != null)
                     CustomAlignText(
                         text: subTitle, style: textTheme.headlineMedium),
                   const SizedBox(height: 12),
@@ -67,7 +65,7 @@ void showStyledBottomSheet({
                 ],
               )),
         ),
-      );
+      ));
     },
   );
 }

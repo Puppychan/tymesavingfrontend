@@ -29,6 +29,17 @@ enum TransactionGroupType {
     return TransactionGroupType.budget;
   }
 
+  static TransactionGroupType fromFormattedString(String formattedString) {
+    // get the transactionGroup type from the formatted string
+    for (var type in TransactionGroupType.values) {
+      if (type.toStringFormatted() == formattedString) {
+        return type;
+      }
+    }
+    // default to customer
+    return TransactionGroupType.budget;
+  }
+
   static TransactionGroupType fromIndex(int index) {
     return TransactionGroupType.values[index];
   }

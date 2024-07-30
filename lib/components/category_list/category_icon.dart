@@ -6,7 +6,7 @@ Widget getCategoryIcon(
     bool? isSelected,
     ColorScheme? colorScheme}) {
   final bool isMarked = isSelected != null && isSelected;
-  
+
   // return RoundedIcon(iconData: currentCategoryInfo['icon'], backgroundColor: currentCategoryInfo['color'], iconColor: Colors.white);
   return Stack(
     alignment: Alignment.center,
@@ -16,7 +16,7 @@ Widget getCategoryIcon(
               ? const EdgeInsets.all(10)
               : const EdgeInsets.all(0),
           child: RoundedIcon(
-              iconData: currentCategoryInfo['icon'],
+              iconData: currentCategoryInfo['icon'] ?? Icons.category,
               backgroundColor: currentCategoryInfo['color'],
               // padding: isMarked ? const EdgeInsets.all(10) : null,
               iconColor: Colors.white)),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/screens/error_page.dart';
+import 'package:tymesavingfrontend/utils/global_keys.dart';
 
 class ErrorDisplay {
   static void showErrorToast(String? message, BuildContext context) {
@@ -13,7 +14,8 @@ class ErrorDisplay {
       backgroundColor: colorScheme.error,
       content: Text(message, style: TextStyle(color: colorScheme.onError)),
     );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    // ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    scaffoldMessengerKey.currentState?.showSnackBar(snackBar);
   }
 
   static void navigateToErrorPage(

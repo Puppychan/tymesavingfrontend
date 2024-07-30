@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tymesavingfrontend/common/enum/theme_mode_type_enum.dart';
 import 'package:tymesavingfrontend/common/styles/app_padding.dart';
 import 'package:tymesavingfrontend/components/common/filter_box.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
@@ -15,22 +16,20 @@ class SettingPage extends StatelessWidget {
 
     // Determine the initial index based on the current theme
     int initialIndex = 0;
-    if (themeService.useSystemThemeBasedOnTime) {
-      initialIndex = 3;
-    } else {
-      switch (themeService.themeMode) {
-        case ThemeMode.light:
+    switch (themeService.themeModeType) {
+      case ThemeModeType.custom:
+        if (themeService.themeMode == ThemeMode.light) {
           initialIndex = 0;
           break;
-        case ThemeMode.dark:
-          initialIndex = 1;
-          break;
-        case ThemeMode.system:
-          initialIndex = 2;
-          break;
-        default:
-          initialIndex = 2; // Fallback to System Default
-      }
+        }
+        initialIndex = 1;
+        break;
+      case ThemeModeType.system:
+        initialIndex = 2;
+        break;
+      default:
+        // case ThemeModeType.time:
+        initialIndex = 3;
     }
 
     return Scaffold(
@@ -49,16 +48,18 @@ class SettingPage extends StatelessWidget {
                 onToggle: (index) {
                   switch (index) {
                     case 0:
-                      themeService.setTheme(ThemeMode.light);
+                      themeService.setTheme(ThemeModeType.custom,
+                          mode: ThemeMode.light);
                       break;
                     case 1:
-                      themeService.setTheme(ThemeMode.dark);
+                      themeService.setTheme(ThemeModeType.custom,
+                          mode: ThemeMode.dark);
                       break;
                     case 2:
-                      themeService.setTheme(ThemeMode.system);
+                      themeService.setTheme(ThemeModeType.system);
                       break;
                     case 3:
-                      themeService.toggleSystemThemeBasedOnTime();
+                      themeService.setTheme(ThemeModeType.time);
                       break;
                     default:
                       break;

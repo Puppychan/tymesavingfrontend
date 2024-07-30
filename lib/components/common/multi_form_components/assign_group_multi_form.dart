@@ -6,24 +6,26 @@ import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_group_type_enum.dart';
 import 'package:tymesavingfrontend/components/common/input/radio_field.dart';
 import 'package:tymesavingfrontend/components/common/multi_form_components/group_tile.dart';
+import 'package:tymesavingfrontend/models/base_group_model.dart';
 import 'package:tymesavingfrontend/screens/search_page.dart';
 import 'package:tymesavingfrontend/services/budget_service.dart';
 import 'package:tymesavingfrontend/services/group_saving_service.dart';
-import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
-import 'package:tymesavingfrontend/utils/display_success.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
 class AssignGroupMultiForm extends StatefulWidget {
   final FormStateType transactionType;
-  final Function(String, String) updateOnChange;
-  final String defaultOption;
-  final String chosenGroupType;
+  final String userId;
+  final void Function(String, {dynamic value}) updateOnChange;
+  final TransactionGroupType chosenGroupType;
+  final BaseGroup? chosenResult;
 
   const AssignGroupMultiForm(
       {super.key,
       required this.updateOnChange,
+      required this.transactionType,
       required this.chosenGroupType,
-      required this.defaultOption, required this.transactionType});
+      required this.userId,
+      required this.chosenResult});
 
   @override
   State<AssignGroupMultiForm> createState() => _AssignGroupMultiFormState();
@@ -31,29 +33,40 @@ class AssignGroupMultiForm extends StatefulWidget {
 
 class _AssignGroupMultiFormState extends State<AssignGroupMultiForm> {
   // Define your state variables and methods here
+  TransactionGroupType _currentChosenGroupType = TransactionGroupType.none;
+  BaseGroup? _currentChosenResult;
 
-  bool _isBudget() {
-    return TransactionGroupType.fromString(widget.chosenGroupType) ==
-        TransactionGroupType.budget;
+  String _renderFormKeyGroup() {
+    return _isBudget() ? "budgetGroupId" : "savingGroupId";
   }
 
-  void searchGroups(String value, Function(List<dynamic>) updateResults,
+  @override
+  void initState() {
+    super.initState();
+    _currentChosenGroupType = widget.chosenGroupType;
+    _currentChosenResult = widget.chosenResult;
+  }
+
+  bool _isBudget() {
+    return _currentChosenGroupType == TransactionGroupType.budget;
+  }
+
+  void searchCallback(String value, Function(List<dynamic>) updateResults,
       CancelToken? cancelToken) async {
     final budgetService = Provider.of<BudgetService>(context, listen: false);
     final groupSavingService =
         Provider.of<GroupSavingService>(context, listen: false);
     await handleMainPageApi(context, () async {
       if (_isBudget()) {
-        return await budgetService
-            .fetchBudgetList(value, cancelToken: cancelToken);
+        return await budgetService.fetchBudgetList(widget.userId,
+            name: value, cancelToken: cancelToken);
       } else {
-        return await groupSavingService
-            .fetchGroupSavingList(value, cancelToken: cancelToken);
+        return await groupSavingService.fetchGroupSavingList(widget.userId,
+            name: value, cancelToken: cancelToken);
       }
-      
     }, () async {
       if (_isBudget()) {
-      updateResults(budgetService.budgets);
+        updateResults(budgetService.budgets);
       } else {
         updateResults(groupSavingService.groupSavings);
       }
@@ -64,18 +77,53 @@ class _AssignGroupMultiFormState extends State<AssignGroupMultiForm> {
     });
   }
 
+  void onTapSearchResult(dynamic result) {
+    String updateFieldKey = _renderFormKeyGroup();
+
+    widget.updateOnChange("groupType", value: _currentChosenGroupType);
+    widget.updateOnChange(updateFieldKey, value: result.id);
+    widget.updateOnChange("tempChosenGroup", value: result);
+    Navigator.pop(context);
+  }
+
+  @override
+  void didUpdateWidget(AssignGroupMultiForm oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.chosenGroupType != oldWidget.chosenGroupType) {
+      if (!mounted) return;
+      setState(() {
+        _currentChosenGroupType = widget.chosenGroupType;
+      });
+    }
+    if (widget.chosenResult != oldWidget.chosenResult) {
+      if (!mounted) return;
+      setState(() {
+        _currentChosenResult = widget.chosenResult;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
     return Column(children: [
       RadioField(
           label: "Belong to Group?",
           options: TransactionGroupType.formattedList,
-          onSelected: (String chosenGroupType) {
-            widget.updateOnChange("groupType", chosenGroupType);
+          onSelected: (String formattedChosenGroupType) {
+            TransactionGroupType convertGroupType =
+                TransactionGroupType.fromFormattedString(
+                    formattedChosenGroupType);
+            if (convertGroupType != _currentChosenGroupType) {
+              String updateFieldKey = _renderFormKeyGroup();
+              widget.updateOnChange(updateFieldKey, value: null);
+              widget.updateOnChange("tempChosenGroup", value: null);
+            }
+            widget.updateOnChange("groupType", value: convertGroupType);
           },
-          defaultOption: widget.defaultOption),
-      widget.chosenGroupType != TransactionGroupType.none.toString()
+          defaultOption: _currentChosenGroupType.toStringFormatted()),
+      _currentChosenGroupType != TransactionGroupType.none
           ? InkWell(
               onTap: () {
                 Navigator.push(
@@ -85,23 +133,15 @@ class _AssignGroupMultiFormState extends State<AssignGroupMultiForm> {
                           title: "Search Group",
                           searchLabel: "Search using name",
                           searchPlaceholder: "Search group name here...",
+                          customResultSize: (1 / 1.2),
                           searchCallback: (value, updateResults,
                                   cancelToken) async =>
-                              searchGroups(value, updateResults, cancelToken),
+                              searchCallback(value, updateResults, cancelToken),
                           resultWidgetFunction: (result) => GroupTile(
-                              type: TransactionGroupType.fromString(
-                                  widget.chosenGroupType),
+                              type: _currentChosenGroupType,
                               baseGroup: result,
                               onTap: () {
-                                // userController.text = result.id;
-                                final multipleFormPageService =
-                                    Provider.of<FormStateProvider>(context,
-                                        listen: false);
-                                        String updateFieldKey = _isBudget() ? "budgetGroupId" : "savingGroupId";
-                                multipleFormPageService.updateFormField(updateFieldKey, result.id, widget.transactionType);
-                                Navigator.pop(context);
-                                SuccessDisplay.showSuccessToast(
-                                    "Add user to invition list", context);
+                                onTapSearchResult(result);
                               })),
                     ));
               },
@@ -112,11 +152,38 @@ class _AssignGroupMultiFormState extends State<AssignGroupMultiForm> {
                       style: textTheme.titleSmall!
                           .copyWith(fontWeight: FontWeight.w700)),
                   Icon(FontAwesomeIcons.searchengin,
-                      color: Theme.of(context).colorScheme.primary),
+                      color: colorScheme.primary),
                 ],
               ),
             )
           : Container(),
+      if (_currentChosenResult != null) ...[
+        const Divider(),
+        Card(
+          shadowColor: colorScheme.onPrimary,
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              children: [
+                Icon(_currentChosenGroupType == TransactionGroupType.budget
+                    ? Icons.savings
+                    : Icons.assessment),
+                const SizedBox(height: 3),
+                Text(_currentChosenResult?.name ?? "",
+                    style: textTheme.titleSmall),
+                const SizedBox(height: 3),
+                Text(
+                  _currentChosenResult?.description ?? "",
+                  style: textTheme.bodyMedium,
+                  maxLines: 2,
+                  textAlign: TextAlign.center,
+                )
+              ],
+            ),
+          ),
+        )
+      ] else
+        Container(),
     ]);
   }
 }

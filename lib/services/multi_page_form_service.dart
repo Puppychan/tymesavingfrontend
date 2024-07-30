@@ -77,6 +77,7 @@ class FormStateProvider with ChangeNotifier {
 
   Map<String, dynamic> getFormField(FormStateType type) {
     if (type == FormStateType.income) {
+      print("Current income form $_incomeFormFields");
       return _incomeFormFields;
     } else if (type == FormStateType.expense) {
       return _expenseFormFields;
@@ -177,7 +178,6 @@ class FormStateProvider with ChangeNotifier {
   void updateFormCategory(TransactionCategory category, FormStateType type) {
     if (type == FormStateType.income) {
       _incomeFormFields['category'] = category;
-      debugPrint("Income form fields: $_incomeFormFields");
     } else if (type == FormStateType.expense) {
       _expenseFormFields['category'] = category;
     } else if (type == FormStateType.updateTransaction) {
