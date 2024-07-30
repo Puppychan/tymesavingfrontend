@@ -27,21 +27,21 @@ class ChallengePage extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10.0),
                 child: ListView(
-                  children: [
+                  children: const [
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 20.0),
+                      padding: EdgeInsets.only(bottom: 20.0),
                       child: ChallengeCard(),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 20.0),
+                      padding: EdgeInsets.only(bottom: 20.0),
                       child: ChallengeCard(),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 20.0),
+                      padding: EdgeInsets.only(bottom: 20.0),
                       child: ChallengeCard(),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 20.0),
+                      padding: EdgeInsets.only(bottom: 20.0),
                       child: ChallengeCard(),
                     ),
                   ],
