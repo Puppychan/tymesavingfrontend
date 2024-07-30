@@ -151,7 +151,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-        appBar: Heading(title: 'Budget', showBackButton: true, actions: [
+        appBar: Heading(title: 'Budget Group', showBackButton: true, actions: [
           IconButton(
             icon: const Icon(FontAwesomeIcons.ellipsis),
             onPressed: () {

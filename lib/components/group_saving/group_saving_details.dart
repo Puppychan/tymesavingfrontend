@@ -160,7 +160,7 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
     
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-        appBar: Heading(title: 'GroupSaving', showBackButton: true, actions: [
+        appBar: Heading(title: 'Group Saving', showBackButton: true, actions: [
           IconButton(
             icon: const Icon(FontAwesomeIcons.ellipsis),
             onPressed: () {

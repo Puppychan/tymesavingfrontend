@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/components/group_saving/group_saving_details.dart';
 import 'package:tymesavingfrontend/screens/about_contact/about_us.dart';
 import 'package:tymesavingfrontend/screens/authentication/sign_in_page.dart';
+import 'package:tymesavingfrontend/screens/challenge/challenge_details.dart';
 import 'package:tymesavingfrontend/screens/setting_page.dart';
 import 'package:tymesavingfrontend/screens/tracking_report/spend_tracking.dart';
 import 'package:tymesavingfrontend/screens/tracking_report/report_page.dart';
@@ -29,7 +30,7 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
     //Debug here
     if (!mounted) return;
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const GroupSavingDetails(groupSavingId: '093383e3bb46e30bceaf76e8')));
+        context, MaterialPageRoute(builder: (context) => const ChallengeDetails()));
   }
 
   Future<void> settingFunction() async {
