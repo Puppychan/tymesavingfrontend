@@ -55,4 +55,7 @@ class BackendEndpoints {
   static String get invitationsGetAll => "admin";
   static String get invitationsAccept => "acceptInvitation";
   static String get invitationsReject => "cancelInvitation";
+
+  // challenge specific endpoints
+  static String get challengeById => "financialChallenge";
 }

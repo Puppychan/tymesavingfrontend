@@ -91,10 +91,6 @@ class _ChallengeDetailsState extends State<ChallengeDetails> {
                       )
                     ),
                   ),
-
-                  
-                  
-
                 ],
               ),
             ),
