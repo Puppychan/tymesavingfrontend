@@ -19,9 +19,11 @@ class ChallengeService extends ChangeNotifier {
   RewardModel? get rewardModel => _rewardModel;
 
   Future<dynamic> fetchChallengeDetails(String? challengeId, {String? name, CancelToken? cancelToken}) async {
-    // if (userId == null) return {'response': 'User ID is required.', 'statusCode': 400};
     String endpoint =
         "${BackendEndpoints.challengeById}/$challengeId";
+
+    debugPrint(endpoint);
+
     if (name != null) {
       endpoint += "?name=$name";
     }
@@ -32,5 +34,7 @@ class ChallengeService extends ChangeNotifier {
       _challengeModel = ChallengeModel.fromMap(responseData);
       notifyListeners();
     }
+    debugPrint(response);
+    return response;
   }
 }

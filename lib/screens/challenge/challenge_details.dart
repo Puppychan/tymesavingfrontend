@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
+import 'package:tymesavingfrontend/models/challenge_model.dart';
+import 'package:tymesavingfrontend/services/challenge_service.dart';
+import 'package:tymesavingfrontend/utils/handling_error.dart';
 
 class ChallengeDetails extends StatefulWidget {
   const ChallengeDetails({super.key});
@@ -9,8 +13,31 @@ class ChallengeDetails extends StatefulWidget {
 }
 
 class _ChallengeDetailsState extends State<ChallengeDetails> {
+  ChallengeModel? _challengeModel;
 
   bool _isDisplayRestDescription = false;
+
+
+  Future<void> _loadChallenge(String? challengeId) async {
+    Future.microtask(() async {
+      if(!mounted) return;
+      final challengeService = Provider.of<ChallengeService>(context, listen: false);
+      await handleMainPageApi(context, () async {
+        return await challengeService.fetchChallengeDetails(challengeId);
+      }, () async {
+        if (!mounted) return;
+        setState(() {
+         _challengeModel = challengeService.challengeModel;
+        });
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    _loadChallenge('69aa2c6b9b7fbb182d820d30');
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
