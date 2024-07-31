@@ -25,6 +25,7 @@ class BackendEndpoints {
   static String get budget => "$baseUrl/sharedBudget";
   static String get groupSaving => "$baseUrl/groupSaving";
   static String get invitation => "$baseUrl/invitation";
+  static String get challenge => "$baseUrl/financialChallenge";
 
   // if there is no $baseUrl, the URL will be concatenated with other endpoints
   static String get userUpdate => "update";
