@@ -2,31 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
-import 'package:tymesavingfrontend/common/enum/invitation_type_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_group_type_enum.dart';
 import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
 import 'package:tymesavingfrontend/components/common/dialog/date_picker_dialog.dart';
 import 'package:tymesavingfrontend/components/common/dialog/time_picker_dialog.dart';
-import 'package:tymesavingfrontend/components/common/input/radio_field.dart';
 import 'package:tymesavingfrontend/components/common/input/underline_text_field.dart';
 import 'package:tymesavingfrontend/components/category_list/category_icon.dart';
 import 'package:tymesavingfrontend/components/common/multi_form_components/amount_multi_form.dart';
 import 'package:tymesavingfrontend/components/common/multi_form_components/assign_group_multi_form.dart';
 import 'package:tymesavingfrontend/components/common/multi_form_components/comonent_multi_form.dart';
 import 'package:tymesavingfrontend/models/base_group_model.dart';
-import 'package:tymesavingfrontend/models/summary_group_model.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
-import 'package:tymesavingfrontend/screens/search_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
 import 'package:tymesavingfrontend/services/transaction_service.dart';
 import 'package:tymesavingfrontend/utils/display_error.dart';
 import 'package:tymesavingfrontend/utils/display_success.dart';
-import 'package:tymesavingfrontend/utils/format_amount.dart';
 import 'package:tymesavingfrontend/utils/format_date.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
-import 'package:tymesavingfrontend/utils/input_format_currency.dart';
 import 'package:tymesavingfrontend/utils/validator.dart';
 
 class TransactionFormMain extends StatefulWidget {
@@ -51,12 +45,15 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
   void initState() {
     super.initState();
     if (!mounted) return;
+    // get the form fields
     final formFields = Provider.of<FormStateProvider>(context, listen: false)
         .getFormField(widget.type);
     final authService = Provider.of<AuthService>(context, listen: false);
+    // get current logged in user
     setState(() {
       _user = authService.user;
     });
+    // get default date and time
     String? formCreatedDate;
     formCreatedDate = formFields['createdDate'];
     if (formCreatedDate != null) {
@@ -85,6 +82,7 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
       }
     }
 
+    // validate saving or budget group
     final formField = Provider.of<FormStateProvider>(context, listen: false)
         .getFormField(widget.type);
     TransactionGroupType currentChosenType =
@@ -135,14 +133,20 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
               .createTransaction(
                   _user?.id ?? "",
                   formField['createdDate'],
-                  formField['description'],
+                  formField['description'] ?? "",
                   transactionType,
                   formField['amount'],
-                  formField['payBy'],
-                  formField['category']);
+                  formField['payBy'] ?? "",
+                  formField['category'],
+                  savingGroupId: formField['savingGroupId'],
+                  budgetGroupId: formField['budgetGroupId'],
+                  );
         }
       }, () async {
         context.loaderOverlay.hide();
+        if (!mounted) return;
+        Provider.of<FormStateProvider>(context, listen: false).resetForm(
+            widget.type);
         Navigator.of(context).pop();
         SuccessDisplay.showSuccessToast(
             "Create new ${widget.type} successfully", context);

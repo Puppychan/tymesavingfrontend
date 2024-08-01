@@ -14,7 +14,7 @@ class BudgetListPage extends StatefulWidget {
   State<BudgetListPage> createState() => _BudgetListPageState();
 }
 
-class _BudgetListPageState extends State<BudgetListPage> {
+class _BudgetListPageState extends State<BudgetListPage> with RouteAware {
   bool _isLoading = false;
   void _fetchBudgets() async {
     Future.microtask(() async {
@@ -38,6 +38,18 @@ class _BudgetListPageState extends State<BudgetListPage> {
   @override
   void initState() {
     super.initState();
+    _fetchBudgets();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _fetchBudgets();
+  }
+
+  @override
+  void didPopNext() {
+    super.didPopNext();
     _fetchBudgets();
   }
 

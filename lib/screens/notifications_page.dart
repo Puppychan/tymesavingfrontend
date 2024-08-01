@@ -21,7 +21,7 @@ class NotificationsPage extends StatefulWidget {
 }
 
 class _NotificationsPageState extends State<NotificationsPage>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, RouteAware {
   late TabController _tabController;
   bool _isDataFetched = false;
   User? _user;
@@ -68,6 +68,12 @@ class _NotificationsPageState extends State<NotificationsPage>
     setState(() {
       _isDataFetched = true;
     });
+  }
+
+  @override
+  void didPopNext() {
+    // Fetch invitations when the page is navigated back to
+    _fetchInvitations();
   }
 
   @override

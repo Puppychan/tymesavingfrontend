@@ -95,7 +95,7 @@ class UserService extends ChangeNotifier {
       endpoint =
           "${BackendEndpoints.budget}/$groupId/${BackendEndpoints.budgetGetMembers}";
     } else {
-      endpoint = "${BackendEndpoints.groupSaving}/$groupId/${BackendEndpoints.groupSaving}";
+      endpoint = "${BackendEndpoints.groupSaving}/$groupId/${BackendEndpoints.groupSavingGetMembers}";
     }
     final response = await NetworkService.instance.get(endpoint);
     if (response['response'] != null && response['statusCode'] == 200) {

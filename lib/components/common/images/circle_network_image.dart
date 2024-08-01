@@ -27,6 +27,20 @@ class CustomCircleAvatar extends StatelessWidget {
         child: CircleAvatar(
           radius: radius,
           backgroundImage: NetworkImage(imagePath),
+          onBackgroundImageError: (_, __) {
+            // Handle the error by showing a fallback widget
+          },
+          child: Image.network(
+            imagePath,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return Icon(
+                Icons.wifi_off,
+                size: radius,
+                color: Theme.of(context).colorScheme.error,
+              );
+            },
+          ),
         ));
   }
 }

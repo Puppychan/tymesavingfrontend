@@ -1,8 +1,8 @@
 // this file is used for rendering Icons based on the user role and location onto the AppBar in heading.dart
 enum PageLocation {
   homePage('Home'),
-  budgetPage('Budget'),
   savingPage('GroupSavings'),
+  budgetPage('Budget'),
   settingsPage('Settings');
   
 

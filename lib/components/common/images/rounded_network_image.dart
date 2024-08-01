@@ -29,6 +29,18 @@ class CustomRoundedAvatar extends StatelessWidget {
           image: NetworkImage(imagePath),
         ),
       ),
+       child: Image.network(
+        imagePath,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Center(
+            child: Icon(
+              Icons.wifi_off,
+              color: Theme.of(context).colorScheme.error,
+            ),
+          );
+        },
+      ),
     );
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -25,9 +27,10 @@ class GroupPendingInvitationPage extends StatefulWidget {
 }
 
 class _GroupPendingInvitationPageState extends State<GroupPendingInvitationPage>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, RouteAware {
   bool _isDataFetched = false;
   late TabController _tabController;
+  Timer? _timer;
 
   void _fetchInvitations() {
     Future.microtask(() async {
@@ -57,12 +60,19 @@ class _GroupPendingInvitationPageState extends State<GroupPendingInvitationPage>
     _fetchInvitations(); // Fetch invitations when tab changes
   }
 
+  void _startPolling() {
+    _timer = Timer.periodic(const Duration(seconds: 10), (timer) {
+      _fetchInvitations(); // Polling every 10 seconds
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(_handleTabSelection);
     _fetchInvitations();
+    _startPolling();
     setState(() {
       _isDataFetched = true;
     });
@@ -80,6 +90,13 @@ class _GroupPendingInvitationPageState extends State<GroupPendingInvitationPage>
     _tabController.removeListener(_handleTabSelection);
     _tabController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didPopNext() {
+    super.didPopNext();
+    // Fetch invitations when the page is navigated back to
+    _fetchInvitations();
   }
 
   @override
@@ -108,7 +125,9 @@ class _GroupPendingInvitationPageState extends State<GroupPendingInvitationPage>
                     onPressed: () {
                       showStyledBottomSheet(
                         context: context,
-                        contentWidget: InvitationSortFilter(updateInvitationList: _fetchInvitations),
+                        initialChildSize: 0.7,
+                        contentWidget: InvitationSortFilter(
+                            updateInvitationList: _fetchInvitations),
                       );
                     },
                   )

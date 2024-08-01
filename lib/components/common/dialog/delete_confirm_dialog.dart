@@ -6,7 +6,7 @@ Future showCustomDeleteConfirmationDialog(BuildContext context, String confirmMe
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Remove Confirmation'),
-            content: Text(confirmMessage),
+            content: Text(confirmMessage, maxLines: 5,),
             actions: [
               TextButton(
                 onPressed: () {

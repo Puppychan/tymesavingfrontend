@@ -14,7 +14,8 @@ class GroupSavingListPage extends StatefulWidget {
   State<GroupSavingListPage> createState() => _GroupSavingListPageState();
 }
 
-class _GroupSavingListPageState extends State<GroupSavingListPage> {
+class _GroupSavingListPageState extends State<GroupSavingListPage>
+    with RouteAware {
   bool _isLoading = false;
   void _fetchGroupSavings() async {
     Future.microtask(() async {
@@ -38,6 +39,18 @@ class _GroupSavingListPageState extends State<GroupSavingListPage> {
   @override
   void initState() {
     super.initState();
+    _fetchGroupSavings();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _fetchGroupSavings();
+  }
+
+  @override
+  void didPopNext() {
+    super.didPopNext();
     _fetchGroupSavings();
   }
 

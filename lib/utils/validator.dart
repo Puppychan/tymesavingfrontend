@@ -112,6 +112,16 @@ class Validator {
     return null;
   }
 
+  static String? validateGroupName(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter a group name';
+    }
+    if (value.length < 4) {
+      return 'Group name must be at least 4 characters long';
+    }
+    return null;
+  }
+
   static String? validateAmount(String? value) {
     print("Validate amount: $value");
     const minAmount = 100;

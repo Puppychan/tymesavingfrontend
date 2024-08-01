@@ -71,15 +71,6 @@ class _BudgetCardState extends State<BudgetCard> {
                       maxLines: 2,
                     ),
                   ),
-                  // Text(
-                  //     widget.budget.name,
-                  //     style: const TextStyle(
-                  //       fontSize: 18,
-                  //       fontWeight: FontWeight.bold,
-                  //     ),
-                  //     maxLines: 2,
-
-                  //   ),
                   Expanded(
                     child: CustomAlignText(
                       text: "Created $formattedDate",

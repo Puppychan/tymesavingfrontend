@@ -132,7 +132,9 @@ class TransactionService extends ChangeNotifier {
       FormStateType type,
       double amount,
       String payBy,
-      TransactionCategory category) async {
+      TransactionCategory category,
+      {String? savingGroupId,
+      String? budgetGroupId}) async {
     // print type of all
     final response =
         await NetworkService.instance.post(BackendEndpoints.transaction, body: {
@@ -143,6 +145,8 @@ class TransactionService extends ChangeNotifier {
       'amount': amount,
       'payBy': payBy,
       'category': category.name,
+      if (savingGroupId != null) 'savingGroupId': savingGroupId,
+      if (budgetGroupId != null) 'budgetGroupId': budgetGroupId,
     });
     return response;
   }
@@ -251,7 +255,8 @@ class TransactionService extends ChangeNotifier {
       }
     }
 
-    String endpoint = "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReportByUser}/$id";
+    String endpoint =
+        "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReportByUser}/$id";
     endpoint += _convertOptionsToParams();
     final response = await NetworkService.instance.get(endpoint);
 

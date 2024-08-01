@@ -17,14 +17,15 @@ import 'package:tymesavingfrontend/utils/handling_error.dart';
 import 'package:tymesavingfrontend/components/heading/heading_actions_based_location.dart';
 
 class MainPageLayout extends StatefulWidget {
-  const MainPageLayout({super.key});
+  final int customPageIndex;
+  const MainPageLayout({super.key, this.customPageIndex = 0});
 
   @override
   State<MainPageLayout> createState() => _MainPageLayoutState();
 }
 
 class _MainPageLayoutState extends State<MainPageLayout> with RouteAware {
-  int _selectedIndex = 0;
+  late int _selectedIndex;
   User? user;
   late PageController _pageController;
 
@@ -45,10 +46,9 @@ class _MainPageLayoutState extends State<MainPageLayout> with RouteAware {
   @override
   void initState() {
     super.initState();
+    _selectedIndex = widget.customPageIndex;
     _pageController = PageController(initialPage: _selectedIndex);
-    print("MainPageLayout initState");
     _fetchCurrentUser();
-    print("After fetchCurrentUser");
   }
 
   @override
@@ -99,8 +99,6 @@ class _MainPageLayoutState extends State<MainPageLayout> with RouteAware {
           user?.role == UserRole.admin
               ? const HomeAdminPage()
               : HomePage(user: user),
-          // TODO: Uncomment when complete goal page
-          // GroupSavingListPage(user: user),
           GroupSavingListPage(user: user),
           BudgetListPage(user: user),
           const MoreMenuPage(),

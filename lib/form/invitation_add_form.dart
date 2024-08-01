@@ -8,6 +8,7 @@ import 'package:tymesavingfrontend/components/common/button/primary_button.dart'
 import 'package:tymesavingfrontend/components/common/input/underline_text_field.dart';
 import 'package:tymesavingfrontend/components/invitation/widget_invitation_user_selected.dart';
 import 'package:tymesavingfrontend/components/user/user_tile.dart';
+import 'package:tymesavingfrontend/screens/invitation/group_pending_invitation_page.dart';
 import 'package:tymesavingfrontend/screens/search_page.dart';
 import 'package:tymesavingfrontend/services/invitation_service.dart';
 import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
@@ -61,7 +62,9 @@ class InvitationAddForm extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) => SearchPage(
                         title: "Search User",
-                        sideDisplay: InvitationUserSelectedWidget(formUsers: formUsers,),
+                        sideDisplay: InvitationUserSelectedWidget(
+                          formUsers: formUsers,
+                        ),
                         searchLabel: "Search using username - email - name",
                         searchPlaceholder: "Search potential members here...",
                         searchCallback:
@@ -96,7 +99,9 @@ class InvitationAddForm extends StatelessWidget {
             ),
           ),
           const Divider(),
-          InvitationUserSelectedWidget(formUsers: formUsers,),
+          InvitationUserSelectedWidget(
+            formUsers: formUsers,
+          ),
           const Divider(),
           const SizedBox(height: 16),
           UnderlineTextField(
@@ -107,18 +112,29 @@ class InvitationAddForm extends StatelessWidget {
             defaultValue: "Join us now!",
           ),
           const SizedBox(height: 16),
-          PrimaryButton(title: "Send Invitation ➤", onPressed: () async {
-            await handleMainPageApi(context, () async {
-              return await Provider.of<InvitationService>(context, listen: false)
-                  .sendInvitation(
-                      descriptionController.text, type, groupId, formUsers);
-            }, () async {
-              formStateService.resetForm(FormStateType.memberInvitation);
-              Navigator.pop(context);
-              SuccessDisplay.showSuccessToast(
-                  "Invitation sent successfully", context);
-            });
-          })
+          PrimaryButton(
+              title: "Send Invitation ➤",
+              onPressed: () {
+                Future.microtask(() async {
+                  await handleMainPageApi(context, () async {
+                    return await Provider.of<InvitationService>(context,
+                            listen: false)
+                        .sendInvitation(descriptionController.text, type,
+                            groupId, formUsers);
+                  }, () async {
+                    formStateService.resetForm(FormStateType.memberInvitation);
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => GroupPendingInvitationPage(
+                              groupId: groupId, type: type),
+                        ),
+                        (route) => false);
+                    SuccessDisplay.showSuccessToast(
+                        "Invitation sent successfully", context);
+                  });
+                });
+              })
         ],
       );
     });

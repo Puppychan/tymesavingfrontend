@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
 import 'package:tymesavingfrontend/common/styles/app_padding.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
-import 'package:tymesavingfrontend/form/common_form/goal_form.dart';
+import 'package:tymesavingfrontend/form/common_form/group_saving_form.dart';
 import 'package:tymesavingfrontend/models/group_saving_model.dart';
 import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
 import 'package:tymesavingfrontend/services/group_saving_service.dart';
@@ -55,7 +55,7 @@ class _GroupSavingUpdatePageState extends State<GroupSavingUpdatePage> {
     final textTheme = Theme.of(context).textTheme;
     return const Scaffold(
         appBar: Heading(
-          title: "Update GroupSaving",
+          title: "Update Group Saving",
           showBackButton: true,
         ),
         body: SingleChildScrollView(

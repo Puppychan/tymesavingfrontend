@@ -140,14 +140,13 @@ class InvitationService extends ChangeNotifier {
     List<dynamic> users,
   ) async {
     List<String> userIds = users.map((user) => user.id as String).toList();
-    final String convertedUserIds = '["' + userIds.join('", "') + '"]';
-
+    final String convertedUserIds = '[' + userIds.join(',') + ']';
     final response =
         await NetworkService.instance.post(BackendEndpoints.invitation, body: {
       "description": description,
       "type": type.toString(),
       "groupId": groupId,
-      "userIds": convertedUserIds
+      "users": convertedUserIds,
     });
     return response;
   }

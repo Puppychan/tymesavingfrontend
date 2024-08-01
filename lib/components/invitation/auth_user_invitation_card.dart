@@ -11,6 +11,7 @@ import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/budget_service.dart';
 import 'package:tymesavingfrontend/services/group_saving_service.dart';
 import 'package:tymesavingfrontend/services/invitation_service.dart';
+import 'package:tymesavingfrontend/utils/display_success.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 class AuthUserInvitationCard extends StatefulWidget {
   final Invitation invitation;
@@ -64,7 +65,15 @@ class _AuthUserInvitationCardState extends State<AuthUserInvitationCard> {
         return await invitationService.declineInvitation(
             userId ?? "", widget.invitation.invitationId);
       }
-    }, () async {});
+    }, () async {
+      if (isAccept) {
+        // Remove the invitation from the list
+        SuccessDisplay.showSuccessToast("Invitation accepted", context);
+      } else {
+        // Remove the invitation from the list
+        SuccessDisplay.showSuccessToast("Invitation declined", context);
+      }
+    });
   }
 
   @override

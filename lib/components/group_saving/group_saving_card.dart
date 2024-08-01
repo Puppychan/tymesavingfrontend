@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
+import 'package:tymesavingfrontend/components/common/text_align.dart';
 import 'package:tymesavingfrontend/components/group_saving/group_saving_details.dart';
 import 'package:tymesavingfrontend/models/group_saving_model.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
@@ -30,11 +31,12 @@ class _GroupSavingCardState extends State<GroupSavingCard> {
   Widget build(BuildContext context) {
     // final groupSaving = Provider.of<AuthService>(context).groupSaving;
     // final groupSaving = tempGroupSaving;
-    final currentProgress = widget.groupSaving.concurrentAmount / widget.groupSaving.amount;
+    final currentProgress =
+        widget.groupSaving.concurrentAmount / widget.groupSaving.amount;
 
     // double progress = groupSaving.contribution / maxContribution; // Calculate the progress as a fraction
-    String formattedDate =
-        timeago.format(DateTime.parse(widget.groupSaving.createdDate.toString()));
+    String formattedDate = timeago
+        .format(DateTime.parse(widget.groupSaving.createdDate.toString()));
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     return Card(
@@ -55,9 +57,10 @@ class _GroupSavingCardState extends State<GroupSavingCard> {
             Padding(
               padding: const EdgeInsets.all(8),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   // CustomCircleAvatar(imagePath: groupSaving.avatarPath),
-                  const SizedBox(width: 10),
+                  // const SizedBox(width: 10),
                   Expanded(
                     child: Text(
                       widget.groupSaving.name,
@@ -65,11 +68,16 @@ class _GroupSavingCardState extends State<GroupSavingCard> {
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
+                      maxLines: 2,
                     ),
                   ),
-                  Text(
-                    "Created $formattedDate",
-                    style: Theme.of(context).textTheme.bodySmall!,
+                  Expanded(
+                    child: CustomAlignText(
+                      text: "Created $formattedDate",
+                      alignment: Alignment.centerRight,
+                      style: Theme.of(context).textTheme.bodySmall!,
+                      maxLines: 2,
+                    ),
                   ),
                 ],
               ),
@@ -97,11 +105,12 @@ class _GroupSavingCardState extends State<GroupSavingCard> {
                   const SizedBox(width: 3),
                   Text.rich(TextSpan(children: <TextSpan>[
                     TextSpan(
-                      text: formatAmountToVnd(widget.groupSaving.concurrentAmount),
+                      text: formatAmountToVnd(
+                          widget.groupSaving.concurrentAmount),
                       // text: "GroupSaving Contribution",
                       style: textTheme.bodyLarge,
                     ),
-                     TextSpan(
+                    TextSpan(
                       text: ' / ',
                       style: textTheme.labelLarge!.copyWith(
                         color: colorScheme.inversePrimary,
@@ -137,6 +146,6 @@ class _GroupSavingCardState extends State<GroupSavingCard> {
   }
 
   // Widget displayParticipants() {
-  //   return 
+  //   return
   // }
 }
