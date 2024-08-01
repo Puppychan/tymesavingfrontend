@@ -151,7 +151,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-        appBar: Heading(title: 'Budget', showBackButton: true, actions: [
+        appBar: Heading(title: 'Budget Group', showBackButton: true, actions: [
           IconButton(
             icon: const Icon(FontAwesomeIcons.ellipsis),
             onPressed: () {
@@ -210,38 +210,8 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                               ),
                               textAlign: TextAlign.center,
                             ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            const Divider(),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            InkWell(
-                              onTap: () {
-                                // Action to view the rest of the description. This could open a dialog, a new page, or expand the text in place.
-                                setState(() {
-                                  _isDisplayRestDescription =
-                                      !_isDisplayRestDescription;
-                                });
-                              },
-                              child: Text(
-                                _budget!.description,
-                                style: Theme.of(context).textTheme.bodyMedium,
-                                textAlign: TextAlign.center,
-                                maxLines: _isDisplayRestDescription ? null : 1,
-                                overflow: _isDisplayRestDescription
-                                    ? TextOverflow.visible
-                                    : TextOverflow.fade,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            const Divider(),
-                            const SizedBox(
-                              height: 10,
-                            ),
+                            
+                            
                             Text.rich(
                               TextSpan(
                                 text: 'You have ',
@@ -296,6 +266,38 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                   const SizedBox(
                     height: 20,
                   ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 30),
+                    child: InkWell(
+                      onTap: () {
+                        // Action to view the rest of the description. This could open a dialog, a new page, or expand the text in place.
+                        setState(() {
+                            _isDisplayRestDescription =
+                                !_isDisplayRestDescription;
+                          });
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            _budget!.description,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                            textAlign: TextAlign.justify,
+                            maxLines: _isDisplayRestDescription ? null : 2,
+                            overflow: _isDisplayRestDescription
+                                ? TextOverflow.visible
+                                : TextOverflow.fade,
+                          ),
+                          if (!_isDisplayRestDescription)
+                          Text(
+                            "Tap for more",
+                            style: Theme.of(context).textTheme.labelMedium,
+                          )
+                        ],
+                      )
+                    ),
+                  ),
+                  const SizedBox(height: 20,),
                   Text('Transaction history', style: Theme.of(context).textTheme.headlineMedium,),
                   Expanded(
                     child: TransactionList(transactions: _transactions),
