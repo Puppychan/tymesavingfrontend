@@ -83,6 +83,7 @@ Widget build(BuildContext context) {
 
 
   return Scaffold(
+    backgroundColor: colorScheme.tertiaryContainer,
     body: isLoading 
       ? const Center(child: CircularProgressIndicator())
       : CustomScrollView(
@@ -98,7 +99,7 @@ Widget build(BuildContext context) {
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 background: Container(
-                  color: colorScheme.inversePrimary,
+                  color: colorScheme.tertiary,
                   child: Center(
                     child: Text(
                       "Financial",
@@ -178,27 +179,40 @@ Widget build(BuildContext context) {
                             ),
                           ),
                         ),
-                        if (_challengeDetailMemberModelList != null && _challengeDetailMemberModelList!.isNotEmpty)
-                        Container(
-                          margin: const EdgeInsets.symmetric(vertical: 10),
-                          height: 300, // Specify the height here
-                          child: ListView.builder(
-                            itemCount: _challengeDetailMemberModelList!.length,
-                            itemBuilder: (context, index) {
-                              final member = _challengeDetailMemberModelList![index];
-                              return SimpleCard(
-                                username: member.username,
-                                fullname: member.fullname,
-                                avatar: member.avatar,
-                                rank: member.tymeReward,
-                              );
-                            },
-                          ),
-                        ),
+                        SizedBox(height: 500,),
                       ],
                     ),
                   ),
                 ),
+                if (_challengeDetailMemberModelList != null && _challengeDetailMemberModelList!.isNotEmpty)
+                Card.filled(
+                  margin: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 20,),
+                      Text(
+                          "Member participating",
+                          style: Theme.of(context).textTheme.headlineMedium,
+                        ),
+                      Container(
+                              margin: const EdgeInsets.symmetric(vertical: 10),
+                              height: 300, // Specify the height here
+                              child: ListView.builder(
+                                itemCount: _challengeDetailMemberModelList!.length,
+                                itemBuilder: (context, index) {
+                                  final member = _challengeDetailMemberModelList![index];
+                                  return UserCard(
+                                    username: member.username,
+                                    fullname: member.fullname,
+                                    avatar: member.avatar,
+                                    rank: member.tymeReward,
+                                  );
+                                },
+                              ),
+                            ),
+                    ],
+                  ),
+                )
               ]),
             ),
           ],
