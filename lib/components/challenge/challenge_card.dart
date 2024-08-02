@@ -52,12 +52,12 @@ class ChallengeCard extends StatelessWidget {
                                 .titleSmall
                                 ?.copyWith(fontSize: 16),
                           ),
-                          Spacer(),
+                          const Spacer(),
                           IconButton(
                               onPressed: () {
-                                print("Tapped");
+                                debugPrint("Tapped");
                               },
-                              icon: Icon(Icons.more_horiz))
+                              icon: const Icon(Icons.more_horiz))
                         ],
                       ),
                       Text(

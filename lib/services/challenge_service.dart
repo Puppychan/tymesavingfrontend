@@ -1,16 +1,10 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/models/challenge_model.dart';
 import 'package:tymesavingfrontend/models/checkpoint_model.dart';
-import 'package:tymesavingfrontend/models/group_saving_model.dart';
 import 'package:tymesavingfrontend/models/reward_model.dart';
-import 'package:tymesavingfrontend/models/summary_group_model.dart';
-import 'package:tymesavingfrontend/screens/challenge/challenge_details.dart';
 import 'package:tymesavingfrontend/services/utils/get_backend_endpoint.dart';
 import 'package:tymesavingfrontend/services/utils/network_service.dart';
-import 'package:tymesavingfrontend/models/transaction_model.dart';
 
 class ChallengeService extends ChangeNotifier {
   ChallengeModel? _challengeModel;
@@ -18,12 +12,14 @@ class ChallengeService extends ChangeNotifier {
   RewardModel? _rewardModel;
   ChallengeDetailMemberModel? _challengeDetailMemberModel;
   List<ChallengeDetailMemberModel>? _challengeDetailMemberModelList;
+  List<CheckPointModel>? _checkPointModelList;
   
   ChallengeModel? get challengeModel => _challengeModel;
   CheckPointModel? get checkPointModel => _checkPointModel;
   RewardModel? get rewardModel => _rewardModel;
   ChallengeDetailMemberModel? get challengeDetailMemberModel => _challengeDetailMemberModel;
   List<ChallengeDetailMemberModel>? get challengeDetailMemberModelList => _challengeDetailMemberModelList;
+  List<CheckPointModel>? get checkPointModelList => _checkPointModelList;
 
   Future<dynamic> fetchChallengeDetails(String challengeId, {String? name, CancelToken? cancelToken}) async {
   String endpoint = "${BackendEndpoints.challenge}/$challengeId";
@@ -47,6 +43,12 @@ class ChallengeService extends ChangeNotifier {
             .map((memberMap) => ChallengeDetailMemberModel.fromMap(memberMap as Map<String, dynamic>))
             .toList();
         }
+
+      if (responseData['checkpoints'] != null) {
+        _checkPointModelList = (responseData['checkpoints'] as List<dynamic>)
+        .map((checkpointMap) => CheckPointModel.fromMap(checkpointMap as Map<String, dynamic>))
+        .toList();
+      }
 
       notifyListeners();
     } else {
