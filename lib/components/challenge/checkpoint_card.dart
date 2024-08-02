@@ -1,20 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:tymesavingfrontend/components/challenge/checkpoint_details.dart';
 import 'package:tymesavingfrontend/models/checkpoint_model.dart';
+import 'package:tymesavingfrontend/utils/format_amount.dart';
 
 class CheckPointCard extends StatefulWidget {
-  const CheckPointCard({super.key, required this.checkpoint});
+  const CheckPointCard({super.key, required this.checkpoint, required this.challengeId});
   final CheckPointModel checkpoint;
+  final String challengeId;
 
   @override
   State<CheckPointCard> createState() => _CheckPointCardState();
 }
 
 class _CheckPointCardState extends State<CheckPointCard> {
+  //Re route to checkpoint details pages
+  Future<void> routeCheckpointDetails() async {
+    //Debug here
+    if (!mounted) return;
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => CheckPointDetails(checkpointId: widget.checkpoint.id, challengeId: widget.challengeId)));
+  }
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      splashColor: Theme.of(context).colorScheme.tertiary,
+      radius: 100,
+      onTap: () async {
+        if(!mounted) return;
+        await routeCheckpointDetails();
+      },
       child: Card.outlined(
         margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 50),
         child: Padding(
@@ -24,7 +39,7 @@ class _CheckPointCardState extends State<CheckPointCard> {
               Text(widget.checkpoint.name, style: Theme.of(context).textTheme.labelLarge, softWrap: true, overflow: TextOverflow.clip,),
               Row(
                 children: [
-                  Text('Value of ${widget.checkpoint.checkPointValue} points'),
+                  Text('Reached checkpoint at ${formatAmountToVnd(widget.checkpoint.checkPointValue)}'),
                 ],
               )
             ],

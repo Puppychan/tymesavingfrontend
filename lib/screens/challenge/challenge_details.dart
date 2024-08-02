@@ -189,7 +189,7 @@ Widget build(BuildContext context) {
                         if (_checkPointModelList != null)
                           Column(
                             children: _checkPointModelList!.map((checkpoint) {
-                              return CheckPointCard(checkpoint: checkpoint);
+                              return CheckPointCard(checkpoint: checkpoint, challengeId: _challengeModel!.id,);
                             }).toList(),
                           ),
                         const SizedBox(height: 10),
