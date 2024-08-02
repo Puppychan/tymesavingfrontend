@@ -78,15 +78,9 @@ class ChallengeService extends ChangeNotifier {
       debugPrint("API Response: ${response.toString()}");
 
       if (response != null && response is Map<String, dynamic>) {
-        final statusCode = response['statusCode'];
-        final responseData = response['response'] as Map<String, dynamic>;
+        final responseData = response['response'];
         debugPrint(responseData.toString());
-
-        if (statusCode == 200) {
-          _checkPointModel = CheckPointModel.fromMap(responseData);
-        } else {
-          debugPrint("Unexpected response status code or data");
-        }
+        _checkPointModel = CheckPointModel.fromMap(responseData);
       } else {
         debugPrint("Unexpected response format: $response");
       }

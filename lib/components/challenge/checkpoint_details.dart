@@ -18,6 +18,7 @@ class CheckPointDetails extends StatefulWidget {
 
 class _CheckPointDetailsState extends State<CheckPointDetails> {
   CheckPointModel? _checkPointModel;
+  bool isLoading = true;
 
   Future<void> _loadCheckPoint () async {
     Future.microtask(() async {
@@ -30,6 +31,7 @@ class _CheckPointDetailsState extends State<CheckPointDetails> {
       });
       setState(() {
         _checkPointModel = challengeService.checkPointModel;
+        isLoading = false;
       });
     });
   }
@@ -61,7 +63,7 @@ class _CheckPointDetailsState extends State<CheckPointDetails> {
           ),
           // I stacked this on top of the background image
           Center(
-            child: _checkPointModel != null ?
+            child: isLoading ?
             const Center(child: CircularProgressIndicator()) :
             Card(
               margin: const EdgeInsets.all(16.0),
