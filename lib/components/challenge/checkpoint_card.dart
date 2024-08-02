@@ -13,13 +13,6 @@ class CheckPointCard extends StatefulWidget {
 }
 
 class _CheckPointCardState extends State<CheckPointCard> {
-  //Re route to checkpoint details pages
-  Future<void> routeCheckpointDetails() async {
-    //Debug here
-    if (!mounted) return;
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => CheckPointDetails(checkpointId: widget.checkpoint.id, challengeId: widget.challengeId)));
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +20,9 @@ class _CheckPointCardState extends State<CheckPointCard> {
       splashColor: Theme.of(context).colorScheme.tertiary,
       radius: 100,
       onTap: () async {
-        if(!mounted) return;
-        await routeCheckpointDetails();
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return CheckPointDetails(checkpointId: widget.checkpoint.id, challengeId: widget.challengeId);
+        }));
       },
       child: Card.outlined(
         margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 50),

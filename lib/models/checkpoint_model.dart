@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class CheckPointModel {
   final String id;
   final String challengeId;

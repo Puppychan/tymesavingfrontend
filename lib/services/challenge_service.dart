@@ -22,46 +22,79 @@ class ChallengeService extends ChangeNotifier {
   List<CheckPointModel>? get checkPointModelList => _checkPointModelList;
 
   Future<dynamic> fetchChallengeDetails(String challengeId, {String? name, CancelToken? cancelToken}) async {
-  String endpoint = "${BackendEndpoints.challenge}/$challengeId";
+    String endpoint = "${BackendEndpoints.challenge}/$challengeId";
 
-  // debugPrint(endpoint);
+    // debugPrint(endpoint);
 
-  if (name != null) {
-    endpoint += "?name=$name";
-  }
-
-  try {
-    final response = await NetworkService.instance.get(endpoint, cancelToken: cancelToken);
-    if (response is Map<String, dynamic> && response['response'] != null && response['statusCode'] == 200) {
-      final responseData = response['response'] as Map<String, dynamic>;
-
-      // Create the ChallengeModel
-      _challengeModel = ChallengeModel.fromMap(responseData);
-      
-      if (responseData['members'] != null) {
-          _challengeDetailMemberModelList = (responseData['members'] as List<dynamic>)
-            .map((memberMap) => ChallengeDetailMemberModel.fromMap(memberMap as Map<String, dynamic>))
-            .toList();
-        }
-
-      if (responseData['checkpoints'] != null) {
-        _checkPointModelList = (responseData['checkpoints'] as List<dynamic>)
-        .map((checkpointMap) => CheckPointModel.fromMap(checkpointMap as Map<String, dynamic>))
-        .toList();
-      }
-
-      notifyListeners();
-    } else {
-      debugPrint("Error: Response does not contain the expected structure.");
+    if (name != null) {
+      endpoint += "?name=$name";
     }
 
-    // Debug print response using jsonEncode to ensure it's printed as a string
-    // debugPrint("DEBUG PRINT FOR SERVICE: ${jsonEncode(response)}");
-    return response;
+    try {
+      final response = await NetworkService.instance.get(endpoint, cancelToken: cancelToken);
+      if (response is Map<String, dynamic> && response['response'] != null && response['statusCode'] == 200) {
+        final responseData = response['response'] as Map<String, dynamic>;
 
-  } catch (e) {
-    debugPrint("Error fetching challenge details: $e");
-    rethrow; // Rethrow the error after logging it
+        // Create the ChallengeModel
+        _challengeModel = ChallengeModel.fromMap(responseData);
+        
+        if (responseData['members'] != null) {
+            _challengeDetailMemberModelList = (responseData['members'] as List<dynamic>)
+              .map((memberMap) => ChallengeDetailMemberModel.fromMap(memberMap as Map<String, dynamic>))
+              .toList();
+          }
+
+        if (responseData['checkpoints'] != null) {
+          _checkPointModelList = (responseData['checkpoints'] as List<dynamic>)
+          .map((checkpointMap) => CheckPointModel.fromMap(checkpointMap as Map<String, dynamic>))
+          .toList();
+        }
+
+        notifyListeners();
+      } else {
+        debugPrint("Error: Response does not contain the expected structure.");
+      }
+
+      // Debug print response using jsonEncode to ensure it's printed as a string
+      // debugPrint("DEBUG PRINT FOR SERVICE: ${jsonEncode(response)}");
+      return response;
+
+    } catch (e) {
+      debugPrint("Error fetching challenge details: $e");
+      rethrow; // Rethrow the error after logging it
+    }
   }
-}
+
+  Future<dynamic> fetchCheckpointDetails(String challengeId, String checkpointId, {String? name, CancelToken? cancelToken}) async {
+    String endpoint = "${BackendEndpoints.challenge}/$challengeId/${BackendEndpoints.checkpoint}$checkpointId";
+    debugPrint("End point is $endpoint");
+
+    if (name != null) {
+      endpoint += "?name=$name";
+    }
+
+    try {
+      final response = await NetworkService.instance.get(endpoint, cancelToken: cancelToken);
+      debugPrint("API Response: ${response.toString()}");
+
+      if (response != null && response is Map<String, dynamic>) {
+        final statusCode = response['statusCode'];
+        final responseData = response['response'] as Map<String, dynamic>;
+        debugPrint(responseData.toString());
+
+        if (statusCode == 200) {
+          _checkPointModel = CheckPointModel.fromMap(responseData);
+        } else {
+          debugPrint("Unexpected response status code or data");
+        }
+      } else {
+        debugPrint("Unexpected response format: $response");
+      }
+      
+      notifyListeners();
+    } catch (e) {
+      debugPrint("Error fetching challenge details: $e");
+      rethrow; // Rethrow the error after logging it
+    }
+  }
 }

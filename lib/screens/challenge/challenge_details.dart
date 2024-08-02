@@ -70,7 +70,6 @@ class _ChallengeDetailsState extends State<ChallengeDetails> {
 
   Future<void> loadData() async {
     await _loadChallenge('69aa2c6b9b7fbb182d820d30');
-    
   }
 
   @override
