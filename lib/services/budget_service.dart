@@ -107,7 +107,7 @@ class BudgetService extends ChangeNotifier {
 
   Future<Map<String, dynamic>> deleteBudget(String budgetId) async {
     final response = await NetworkService.instance
-        .delete("${BackendEndpoints.budget}/$budgetId");
+        .delete("${BackendEndpoints.budget}/$budgetId/${BackendEndpoints.budgetDeleteHost}");
     return response;
   }
 

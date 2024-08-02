@@ -18,6 +18,7 @@ class _BudgetListPageState extends State<BudgetListPage> {
   bool _isLoading = false;
   void _fetchBudgets() async {
     Future.microtask(() async {
+      if (!mounted) return;
       setState(() {
         _isLoading = true;
       });
@@ -27,6 +28,7 @@ class _BudgetListPageState extends State<BudgetListPage> {
         return await budgetService.fetchBudgetList(widget.user?.id);
       }, () async {
       });
+      if (!mounted) return;
       setState(() {
         _isLoading = false;
       });

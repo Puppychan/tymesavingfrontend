@@ -1,8 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
+import 'package:tymesavingfrontend/screens/challenge/challenge_page.dart';
 
-class MoreMenuChallenge extends StatelessWidget {
+class MoreMenuChallenge extends StatefulWidget {
   const MoreMenuChallenge({super.key});
+
+  @override
+  State<MoreMenuChallenge> createState() => _MoreMenuChallengeState();
+}
+
+class _MoreMenuChallengeState extends State<MoreMenuChallenge> {
+  Future<void> challengePageRoute() async {
+    //Debug here
+    if (!mounted) return;
+    debugPrint('Tracking page tapped!');
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => const ChallengePage()));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,6 +27,7 @@ class MoreMenuChallenge extends StatelessWidget {
           splashColor: colorScheme.tertiary,
           onTap: () {
             debugPrint('Challenge tapped.');
+            challengePageRoute();
           },
           child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),

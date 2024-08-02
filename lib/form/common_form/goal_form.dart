@@ -168,7 +168,7 @@ class _GroupSavingFormMainState extends State<GroupSavingFormMain> {
       _nameController.text = formFields['name'] ?? "";
 
       List<Widget> renderCategories(BuildContext context) {
-        return TransactionCategory.values.expand((category) {
+        return TransactionCategory.values.where((category) => category != TransactionCategory.all).expand((category) {
           final isSelected = selectedCategory.name == category.name;
           Map<String, dynamic> categoryInfo =
               transactionCategoryData[category]!;
