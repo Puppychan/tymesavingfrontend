@@ -84,7 +84,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
         if (!mounted) return;
         setState(() {
           _budget = tempBudget;
-          percentageTaken = _budget!.amount / _budget!.concurrentAmount * 100;
+          percentageTaken = _budget!.concurrentAmount / _budget!.amount * 100;
           percentageLeft =
               percentageTaken!.isInfinite ? 100.0 : 100.0 - percentageTaken!;
           endDate = DateTime.parse(_budget!.endDate);
@@ -211,10 +211,9 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                               textAlign: TextAlign.center,
                             ),
                             
-                            
                             Text.rich(
                               TextSpan(
-                                text: 'You have ',
+                                text: daysLeft! > 0 ? "You have " : "Budget expire by ",
                                 style: Theme.of(context).textTheme.bodyMedium,
                                 children: [
                                   TextSpan(
@@ -225,35 +224,67 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                                   ),
                                   TextSpan(
                                     text:
-                                        ' day${daysLeft != 1 ? 's' : ''} left', // Pluralize based on the value of daysLeft
+                                        ' day${daysLeft != 1 ? 's' : ''}', // Pluralize based on the value of daysLeft
+                                  ),
+                                  TextSpan(
+                                    text:
+                                        daysLeft! > 0 ? " left" : "", // Pluralize based on the value of daysLeft
                                   ),
                                 ],
                               ),
-                            ),
-                            Text.rich(
-                              TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: 'Used ',
-                                    style:
-                                        Theme.of(context).textTheme.bodyMedium,
-                                  ),
-                                  TextSpan(
-                                    text: _displayPercentageTaken,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyLarge, // Customize this style as needed
-                                  ),
-                                ],
-                              ),
-                              textAlign: TextAlign.center,
                             ),
                             const SizedBox(
                               height: 10,
                             ),
-                            Text(formatAmountToVnd(_budget!.concurrentAmount),
-                                style:
-                                    Theme.of(context).textTheme.headlineMedium),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text('Your initial budget', style: Theme.of(context).textTheme.bodyMedium,),
+                                    const Expanded(child: SizedBox()),
+                                    Text(formatAmountToVnd(_budget!.amount), style: Theme.of(context).textTheme.headlineMedium,),
+                                  ],  
+                                ),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text('Current budget left', style: Theme.of(context).textTheme.bodyMedium,),
+                                    const Expanded(child: SizedBox()),
+                                    Text(formatAmountToVnd(_budget!.concurrentAmount), style: Theme.of(context).textTheme.headlineMedium,),
+                                  ],
+                                ),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text('Budget remain', style: Theme.of(context).textTheme.bodyMedium,),
+                                    const Expanded(child: SizedBox()),
+                                    Text(_displayPercentageTaken, style: Theme.of(context).textTheme.headlineMedium,),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              mainAxisSize: MainAxisSize.min, // Adjusts the row size to fit its children
+                              children: [
+                                Text(
+                                  "Color ",
+                                  style: Theme.of(context).textTheme.bodyMedium
+                                ),
+                                Container(
+                                  width: 10,  // Width of the color box
+                                  height: 10, // Height of the color box
+                                  color: colorScheme.primary, // Color of the box
+                                  margin: EdgeInsets.only(right: 4), // Space between the box and the text
+                                ),
+                                Text(
+                                  ' indicate percentages of budget left',
+                                  style: Theme.of(context).textTheme.bodyMedium, // Customize your text style
+                                ),
+                              ],
+                            )
                           ],
                         ),
                       ),
