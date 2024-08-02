@@ -231,22 +231,24 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
                             ),
                             Text.rich(
                               TextSpan(
-                                text: '$daysLeft day${daysLeft != 1 ? 's' : ''} left',
+                                text: '$daysLeft day${daysLeft != 1 ? 's' : ''}',
                                 style: Theme.of(context).textTheme.bodyMedium,
                                 children: [
+                                  if(daysLeft! > 0)
                                   TextSpan(
                                     text:
-                                        ' until ', // Display the daysLeft variable here
+                                        ' left until $endDay', // Display the daysLeft variable here
                                     style:
                                         Theme.of(context).textTheme.bodyLarge,
                                   ),
-                                  TextSpan(
-                                    text:
-                                        '$endDay', // Pluralize based on the value of daysLeft
+                                  const TextSpan(
+                                    text: ' missed by initial deadline of', // Pluralize based on the value of daysLeft
                                   ),
                                 ],
                               ),
                             ),
+                            if(daysLeft! < 0)
+                            Text('$endDay'),
                             const SizedBox(
                               height: 30,
                             ),
@@ -258,7 +260,7 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
                                   children: [
                                     Text('You have saved', style: Theme.of(context).textTheme.bodyMedium,),
                                     const Expanded(child: SizedBox()),
-                                    Text('${_groupSaving!.amount}', style: Theme.of(context).textTheme.headlineMedium,),
+                                    Text(formatAmountToVnd(_groupSaving!.amount), style: Theme.of(context).textTheme.headlineMedium,),
                                   ],  
                                 ),
                                 Row(
@@ -266,7 +268,7 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
                                   children: [
                                     Text('Goal target', style: Theme.of(context).textTheme.bodyMedium,),
                                     const Expanded(child: SizedBox()),
-                                    Text('${_groupSaving!.concurrentAmount}', style: Theme.of(context).textTheme.headlineMedium,),
+                                    Text(formatAmountToVnd(_groupSaving!.concurrentAmount), style: Theme.of(context).textTheme.headlineMedium,),
                                   ],
                                 ),
                               ],
