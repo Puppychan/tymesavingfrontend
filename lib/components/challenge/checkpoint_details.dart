@@ -97,88 +97,84 @@ class _CheckPointDetailsState extends State<CheckPointDetails> {
           Center(
             child: isLoading ?
             const Center(child: CircularProgressIndicator()) :
-            Column(
-              children: [
-                Card(
-                  margin: const EdgeInsets.all(16.0),
-                  elevation: 8,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
+            Card(
+              margin: const EdgeInsets.all(16.0),
+              elevation: 8,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      _checkPointModel!.name,
+                      style: Theme.of(context).textTheme.headlineSmall,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 10,),
+                    Row(
                       children: [
-                        Text(
-                          _checkPointModel!.name,
-                          style: Theme.of(context).textTheme.headlineSmall,
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 10,),
-                        Row(
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Checkpoint by', style: Theme.of(context).textTheme.bodyMedium),
-                                const SizedBox(height: 10,),
-                                Text('Start on', style: Theme.of(context).textTheme.bodyMedium),
-                                const SizedBox(height: 10,),
-                                Text('End on', style: Theme.of(context).textTheme.bodyMedium),
-                                const SizedBox(height: 10,),
-                                Text('Milestone amount', style: Theme.of(context).textTheme.bodyMedium),
-                              ],
-                            ),
-                            const Expanded(child: SizedBox()),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(_challengeOwner!.fullname, style: Theme.of(context).textTheme.bodyMedium),
-                                const SizedBox(height: 10,),
-                                Text(createDateFormatted ?? '', style: Theme.of(context).textTheme.bodyMedium),
-                                const SizedBox(height: 10,),
-                                Text(endDateFormatted ?? '', style: Theme.of(context).textTheme.bodyMedium),
-                                const SizedBox(height: 10,),
-                                Text(formatAmountToVnd(_checkPointModel!.checkPointValue), style: Theme.of(context).textTheme.bodyMedium),
-                              ],
-                            )
+                            Text('Checkpoint by', style: Theme.of(context).textTheme.bodyMedium),
+                            const SizedBox(height: 10,),
+                            Text('Start on', style: Theme.of(context).textTheme.bodyMedium),
+                            const SizedBox(height: 10,),
+                            Text('End on', style: Theme.of(context).textTheme.bodyMedium),
+                            const SizedBox(height: 10,),
+                            Text('Milestone amount', style: Theme.of(context).textTheme.bodyMedium),
                           ],
                         ),
-                        const SizedBox(height: 20),
-                        Text("Description", style: Theme.of(context).textTheme.titleSmall),
-                        const SizedBox(height: 5),
-                        InkWell(
-                              onTap: () {
-                                setState(() {
-                                  _isDisplayRestDescription = !_isDisplayRestDescription;
-                                });
-                              },
-                              child: Container(
-                                margin: const EdgeInsets.symmetric(horizontal: 20),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      _checkPointModel!.description,
-                                      style: Theme.of(context).textTheme.bodyMedium,
-                                      textAlign: TextAlign.center,
-                                      maxLines: _isDisplayRestDescription ? null : 2,
-                                      overflow: _isDisplayRestDescription
-                                          ? TextOverflow.visible
-                                          : TextOverflow.fade,
-                                    ),
-                                    if (!_isDisplayRestDescription)
-                                      Text(
-                                        "Tap for more",
-                                        style: Theme.of(context).textTheme.labelMedium,
-                                      ),
-                                  ],
-                                ),
-                              ),
-                            ),
+                        const Expanded(child: SizedBox()),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(_challengeOwner!.fullname, style: Theme.of(context).textTheme.bodyMedium),
+                            const SizedBox(height: 10,),
+                            Text(createDateFormatted ?? '', style: Theme.of(context).textTheme.bodyMedium),
+                            const SizedBox(height: 10,),
+                            Text(endDateFormatted ?? '', style: Theme.of(context).textTheme.bodyMedium),
+                            const SizedBox(height: 10,),
+                            Text(formatAmountToVnd(_checkPointModel!.checkPointValue), style: Theme.of(context).textTheme.bodyMedium),
+                          ],
+                        )
                       ],
                     ),
-                  ),
+                    const SizedBox(height: 20),
+                    Text("Description", style: Theme.of(context).textTheme.titleSmall),
+                    const SizedBox(height: 20),
+                    InkWell(
+                          onTap: () {
+                            setState(() {
+                              _isDisplayRestDescription = !_isDisplayRestDescription;
+                            });
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  _checkPointModel!.description,
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                  textAlign: TextAlign.center,
+                                  maxLines: _isDisplayRestDescription ? null : 2,
+                                  overflow: _isDisplayRestDescription
+                                      ? TextOverflow.visible
+                                      : TextOverflow.fade,
+                                ),
+                                if (!_isDisplayRestDescription)
+                                  Text(
+                                    "Tap for more",
+                                    style: Theme.of(context).textTheme.labelMedium,
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ],
