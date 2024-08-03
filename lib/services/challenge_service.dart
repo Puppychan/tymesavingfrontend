@@ -79,8 +79,9 @@ class ChallengeService extends ChangeNotifier {
 
       if (response != null && response is Map<String, dynamic>) {
         final responseData = response['response'];
-        // debugPrint(responseData.toString());
+        debugPrint(responseData.toString());
         _checkPointModel = CheckPointModel.fromMap(responseData);
+        _rewardModel = RewardModel.fromMap(responseData['rewardDetails'] as Map<String, dynamic>);
       } else {
         debugPrint("Unexpected response format: $response");
       }

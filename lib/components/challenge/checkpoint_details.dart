@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/models/checkpoint_model.dart';
+import 'package:tymesavingfrontend/models/reward_model.dart';
 import 'package:tymesavingfrontend/models/summary_user_model.dart';
 import 'package:tymesavingfrontend/services/challenge_service.dart';
 import 'package:tymesavingfrontend/services/user_service.dart';
@@ -23,6 +24,8 @@ class CheckPointDetails extends StatefulWidget {
 class _CheckPointDetailsState extends State<CheckPointDetails> {
   CheckPointModel? _checkPointModel;
   SummaryUser? _challengeOwner;
+  RewardModel? _rewardModel;
+
   String? createDateFormatted;
   String? endDateFormatted;
 
@@ -40,6 +43,7 @@ class _CheckPointDetailsState extends State<CheckPointDetails> {
       });
       setState(() {
         _checkPointModel = challengeService.checkPointModel;
+        _rewardModel = challengeService.rewardModel;
         createDateFormatted = formatDate(DateTime.parse(_checkPointModel!.startDate));
         endDateFormatted = formatDate(DateTime.parse(_checkPointModel!.endDate));
       });
