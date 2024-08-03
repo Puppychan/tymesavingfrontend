@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/models/checkpoint_model.dart';
 import 'package:tymesavingfrontend/services/challenge_service.dart';
+import 'package:tymesavingfrontend/utils/format_amount.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
 class CheckPointDetails extends StatefulWidget {
@@ -19,6 +21,8 @@ class CheckPointDetails extends StatefulWidget {
 class _CheckPointDetailsState extends State<CheckPointDetails> {
   CheckPointModel? _checkPointModel;
   bool isLoading = true;
+  String? createDateFormatted;
+  String? endDateFormatted;
 
   Future<void> _loadCheckPoint () async {
     Future.microtask(() async {
@@ -31,6 +35,8 @@ class _CheckPointDetailsState extends State<CheckPointDetails> {
       });
       setState(() {
         _checkPointModel = challengeService.checkPointModel;
+        createDateFormatted = formatDate(DateTime.parse(_checkPointModel!.startDate));
+        endDateFormatted = formatDate(DateTime.parse(_checkPointModel!.endDate));
         isLoading = false;
       });
     });
@@ -46,6 +52,11 @@ class _CheckPointDetailsState extends State<CheckPointDetails> {
     super.initState();
   }
 
+  String formatDate(DateTime date){
+    String formattedDate = DateFormat('MMMM d, y').format(date);
+    return formattedDate;
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,9 +85,39 @@ class _CheckPointDetailsState extends State<CheckPointDetails> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      // _checkPointModel!.name,
-                      "test",
-                      style: Theme.of(context).textTheme.headlineLarge,
+                      _checkPointModel!.name,
+                      style: Theme.of(context).textTheme.headlineSmall,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(),
+                    Row(
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Checkpoint by', style: Theme.of(context).textTheme.bodyMedium),
+                            const SizedBox(height: 10,),
+                            Text('Start on', style: Theme.of(context).textTheme.bodyMedium),
+                            const SizedBox(height: 10,),
+                            Text('End on', style: Theme.of(context).textTheme.bodyMedium),
+                            const SizedBox(height: 10,),
+                            Text('Milestone amount', style: Theme.of(context).textTheme.bodyMedium),
+                          ],
+                        ),
+                        const Expanded(child: SizedBox()),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text("name", style: Theme.of(context).textTheme.bodyMedium),
+                            const SizedBox(height: 10,),
+                            Text(createDateFormatted ?? '', style: Theme.of(context).textTheme.bodyMedium),
+                            const SizedBox(height: 10,),
+                            Text(endDateFormatted ?? '', style: Theme.of(context).textTheme.bodyMedium),
+                            const SizedBox(height: 10,),
+                            Text(formatAmountToVnd(_checkPointModel!.checkPointValue), style: Theme.of(context).textTheme.bodyMedium),
+                          ],
+                        )
+                      ],
                     ),
                     // Add more details here
                   ],

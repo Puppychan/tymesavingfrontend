@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 class CheckPointModel {
   final String id;

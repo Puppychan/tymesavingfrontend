@@ -75,17 +75,17 @@ class ChallengeService extends ChangeNotifier {
 
     try {
       final response = await NetworkService.instance.get(endpoint, cancelToken: cancelToken);
-      debugPrint("API Response: ${response.toString()}");
+      // debugPrint("API Response: ${response.toString()}");
 
       if (response != null && response is Map<String, dynamic>) {
         final responseData = response['response'];
-        debugPrint(responseData.toString());
+        // debugPrint(responseData.toString());
         _checkPointModel = CheckPointModel.fromMap(responseData);
       } else {
         debugPrint("Unexpected response format: $response");
       }
-      
       notifyListeners();
+      return response;
     } catch (e) {
       debugPrint("Error fetching challenge details: $e");
       rethrow; // Rethrow the error after logging it
