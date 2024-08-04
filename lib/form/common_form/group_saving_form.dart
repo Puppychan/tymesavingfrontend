@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
+import 'package:tymesavingfrontend/common/enum/page_location_enum.dart';
 import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
 import 'package:tymesavingfrontend/components/common/dialog/date_picker_dialog.dart';
 import 'package:tymesavingfrontend/components/common/dialog/time_picker_dialog.dart';
 import 'package:tymesavingfrontend/components/common/input/underline_text_field.dart';
 import 'package:tymesavingfrontend/components/common/multi_form_components/amount_multi_form.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
+import 'package:tymesavingfrontend/screens/main_page_layout.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/group_saving_service.dart';
 import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
@@ -15,7 +17,6 @@ import 'package:tymesavingfrontend/utils/display_error.dart';
 import 'package:tymesavingfrontend/utils/display_success.dart';
 import 'package:tymesavingfrontend/utils/format_date.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
-import 'package:tymesavingfrontend/utils/input_format_currency.dart';
 import 'package:tymesavingfrontend/utils/validator.dart';
 
 class GroupSavingFormMain extends StatefulWidget {
@@ -109,9 +110,18 @@ class _GroupSavingFormMainState extends State<GroupSavingFormMain> {
         context.loaderOverlay.hide();
         Provider.of<FormStateProvider>(context, listen: false)
             .resetForm(widget.type);
-        Navigator.of(context).pop();
+        if (widget.type == FormStateType.updateGroupSaving) {
+          Navigator.of(context).pop();
+        } else {
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => MainPageLayout(
+                    customPageIndex: PageLocation.savingPage.index),
+              ),
+              (route) => false);
+        }
         SuccessDisplay.showSuccessToast(
-            "${widget.type == FormStateType.updateBudget ? "Update" : "Create"} new ${widget.type} successfully",
+            "${widget.type == FormStateType.updateGroupSaving ? "Update" : "Create"} new ${widget.type} successfully",
             context);
       });
     });
