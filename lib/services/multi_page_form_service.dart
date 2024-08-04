@@ -189,6 +189,7 @@ class FormStateProvider with ChangeNotifier {
   }
 
   void resetForm(FormStateType type) {
+    print("Type in reset form $type");
     if (type == FormStateType.income) {
       _incomeFormFields.clear();
     } else if (type == FormStateType.expense) {
@@ -201,6 +202,7 @@ class FormStateProvider with ChangeNotifier {
       _updateSavingFormFields.clear();
     } else if (type == FormStateType.groupSaving) {
       _savingFormFields.clear();
+      print("Saving form fields cleared $_savingFormFields");
     } else if (type == FormStateType.memberInvitation) {
       _memberInvitationFormFields.clear();
     } else {

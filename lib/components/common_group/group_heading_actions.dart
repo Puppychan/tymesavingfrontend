@@ -66,7 +66,7 @@ List<Widget> renderGroupHeadingActions(
                 context,
                 MaterialPageRoute(
                   builder: (context) => MainPageLayout(
-                      customPageIndex: PageLocation.budgetPage.index),
+                      customPageIndex: isBudget ? PageLocation.budgetPage.index : PageLocation.savingPage.index),
                 ),
                 (_) => false);
           });

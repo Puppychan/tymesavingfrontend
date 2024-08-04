@@ -11,7 +11,7 @@ void showGroupSavingFormA(BuildContext context) {
     title: 'New GroupSaving Group',
     subTitle: 'Define your goal group',
     contentWidget: const GroupSavingFormMain(
-      type: FormStateType.saving,
+      type: FormStateType.groupSaving,
     ),
     // onNavigateToNextSheet: () => showSecondBottomSheet(context),
   );
