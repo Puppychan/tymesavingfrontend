@@ -86,7 +86,7 @@ class _CheckPointDetailsState extends State<CheckPointDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const Heading(
-        title: "",
+        title: "Checkpoint details",
         showBackButton: true,
       ),
       body: Stack(
@@ -176,6 +176,26 @@ class _CheckPointDetailsState extends State<CheckPointDetails> {
                             ),
                           ),
                         ),
+                        const SizedBox(height: 20,),
+                        Text('Reward', style: Theme.of(context).textTheme.headlineMedium),
+                        const SizedBox(height: 5,),
+                        Text(_rewardModel!.name, style: Theme.of(context).textTheme.titleSmall, overflow: TextOverflow.visible, textAlign: TextAlign.center,),
+                        const SizedBox(height: 10,),
+                        Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Text(_rewardModel!.description, style: Theme.of(context).textTheme.bodyMedium, overflow: TextOverflow.visible,)
+                        ),
+                        ListView.builder(
+                          shrinkWrap: true, // Use shrinkWrap to prevent unbounded height error
+                          itemCount: _rewardModel!.prize.length,
+                          itemBuilder: (context, index) {
+                            final prize = _rewardModel!.prize[index];
+                            return ListTile(
+                              title: Text(prize['category'] ?? 'Unknown Category'),
+                              subtitle: Text('Value of ${prize['value'] ?? 'Unknown Value'}'),
+                            );
+                          },
+                        )
                   ],
                 ),
               ),
