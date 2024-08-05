@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
+import 'package:tymesavingfrontend/models/base_user_model.dart';
 import 'package:tymesavingfrontend/screens/challenge/challenge_page.dart';
+import 'package:tymesavingfrontend/services/auth_service.dart';
+import 'package:tymesavingfrontend/utils/handling_error.dart';
 
 class MoreMenuChallenge extends StatefulWidget {
   const MoreMenuChallenge({super.key});
@@ -10,12 +14,32 @@ class MoreMenuChallenge extends StatefulWidget {
 }
 
 class _MoreMenuChallengeState extends State<MoreMenuChallenge> {
+  UserBase? user;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() async {
+      final authService = Provider.of<AuthService>(context, listen: false);
+      await handleMainPageApi(context, () async {
+        return await authService.getCurrentUserData();
+        // return result;
+      }, () async {
+        setState(() {
+          user = authService.user;
+          isLoading = false;
+        });
+      });
+    });
+  }
+  
   Future<void> challengePageRoute() async {
     //Debug here
     if (!mounted) return;
     debugPrint('Tracking page tapped!');
     Navigator.push(context,
-        MaterialPageRoute(builder: (context) => const ChallengePage()));
+        MaterialPageRoute(builder: (context) => ChallengePage(userId: user!.id,)));
   }
 
   @override
@@ -23,7 +47,9 @@ class _MoreMenuChallengeState extends State<MoreMenuChallenge> {
     final colorScheme = Theme.of(context).colorScheme;
     return Card(
       color: colorScheme.background,
-      child: InkWell(
+      child: (isLoading) ?
+      const CircularProgressIndicator() : 
+      InkWell(
           splashColor: colorScheme.tertiary,
           onTap: () {
             debugPrint('Challenge tapped.');
