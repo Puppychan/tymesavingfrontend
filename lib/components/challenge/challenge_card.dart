@@ -77,22 +77,6 @@ class _ChallengeCardState extends State<ChallengeCard> {
                 )
               ],
             ),
-            Row(
-              children: [
-                Text(
-                  widget.challengeModel!.scope,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall
-                      ?.copyWith(fontSize: 12),
-                ),
-                const Spacer(),
-                Text("2 days left",
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        fontSize: 10,
-                        color: Theme.of(context).colorScheme.primary)),
-              ],
-            ),
 
             // Progress bar
             // Padding(
