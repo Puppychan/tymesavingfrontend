@@ -1,4 +1,5 @@
-class CheckPointModel{
+
+class CheckPointModel {
   final String id;
   final String challengeId;
   final String name;
@@ -8,18 +9,31 @@ class CheckPointModel{
   final String startDate;
   final String endDate;
 
-  CheckPointModel.fromMap(Map<String,dynamic> map):
-  id = map['_id'],
-  challengeId = map['challengeId'],
-  name = map['name'],
-  description = map['description'],
-  checkPointValue = map['checkpointValue'],
-  createdBy = map['createdBy'],
-  startDate = map['startDate'],
-  endDate = map['endDate']
-  ;
+  CheckPointModel({
+    required this.id,
+    required this.challengeId,
+    required this.name,
+    required this.description,
+    required this.checkPointValue,
+    required this.createdBy,
+    required this.startDate,
+    required this.endDate,
+  });
 
-  Map<String,dynamic> toMapForForm() {
+  factory CheckPointModel.fromMap(Map<String, dynamic> map) {
+    return CheckPointModel(
+      id: map['_id'] ?? '',
+      challengeId: map['challengeId'] ?? '',
+      name: map['name'] ?? '',
+      description: map['description'] ?? '',
+      checkPointValue: (map['checkpointValue'] as num?)?.toDouble() ?? 0.0,
+      createdBy: map['createdBy'] ?? '',
+      startDate: map['startDate'] ?? '',
+      endDate: map['endDate'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toMapForForm() {
     return {
       'id': id,
       'challengeId': challengeId,
@@ -31,6 +45,4 @@ class CheckPointModel{
       'endDate': endDate,
     };
   }
-
-
 }

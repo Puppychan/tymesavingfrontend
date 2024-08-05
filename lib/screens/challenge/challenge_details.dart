@@ -1,10 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
 import 'package:tymesavingfrontend/components/challenge/challenge_details_member.dart';
-import 'package:tymesavingfrontend/components/common/heading.dart';
+import 'package:tymesavingfrontend/components/challenge/checkpoint_card.dart';
 import 'package:tymesavingfrontend/models/challenge_model.dart';
+import 'package:tymesavingfrontend/models/checkpoint_model.dart';
 import 'package:tymesavingfrontend/models/summary_user_model.dart';
 import 'package:tymesavingfrontend/services/challenge_service.dart';
 import 'package:tymesavingfrontend/services/user_service.dart';
@@ -21,6 +23,7 @@ class _ChallengeDetailsState extends State<ChallengeDetails> {
   ChallengeModel? _challengeModel;
   SummaryUser? _challengeOwner;
   List<ChallengeDetailMemberModel>? _challengeDetailMemberModelList;
+  List<CheckPointModel>? _checkPointModelList;
 
   bool _isDisplayRestDescription = false;
   bool isLoading = true;
@@ -40,11 +43,10 @@ class _ChallengeDetailsState extends State<ChallengeDetails> {
         return await challengeService.fetchChallengeDetails(challengeId!);
       }, () async {
         if (!mounted) return;
-        setState(() {
-         _challengeModel = challengeService.challengeModel;
-        _challengeDetailMemberModelList = challengeService.challengeDetailMemberModelList;
-         createdDate = formatDate(_challengeModel!.startDate);
-        });
+          _challengeModel = challengeService.challengeModel;
+          _challengeDetailMemberModelList = challengeService.challengeDetailMemberModelList;
+          _checkPointModelList = challengeService.checkPointModelList;
+          createdDate = formatDate(_challengeModel!.startDate);
       });
       await _loadChallengeUser(_challengeModel?.createdBy);
     });
@@ -68,7 +70,6 @@ class _ChallengeDetailsState extends State<ChallengeDetails> {
 
   Future<void> loadData() async {
     await _loadChallenge('69aa2c6b9b7fbb182d820d30');
-    
   }
 
   @override
@@ -80,7 +81,6 @@ class _ChallengeDetailsState extends State<ChallengeDetails> {
   @override
 Widget build(BuildContext context) {
   final colorScheme = Theme.of(context).colorScheme;
-
 
   return Scaffold(
     backgroundColor: colorScheme.tertiaryContainer,
@@ -179,7 +179,19 @@ Widget build(BuildContext context) {
                             ),
                           ),
                         ),
-                        SizedBox(height: 500,),
+                        const SizedBox(height: 20),
+                        Text(
+                                "Challenge checkpoints",
+                                style: Theme.of(context).textTheme.headlineMedium,
+                              ),
+                        const SizedBox(height: 10),
+                        if (_checkPointModelList != null)
+                          Column(
+                            children: _checkPointModelList!.map((checkpoint) {
+                              return CheckPointCard(checkpoint: checkpoint, challengeId: _challengeModel!.id,);
+                            }).toList(),
+                          ),
+                        const SizedBox(height: 10),
                       ],
                     ),
                   ),

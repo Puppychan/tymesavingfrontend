@@ -11,6 +11,7 @@ double convertFormattedAmountToNumber(String formattedAmount) {
 
 String formatAmountToVnd(double amount) {
   final NumberFormat formatter =
-      NumberFormat.currency(locale: 'vi_VN', symbol: '₫');
+      NumberFormat.currency(decimalDigits: 0, symbol: '₫');
+      // #,###,### ₫
   return formatter.format(amount);
 }

@@ -14,7 +14,7 @@ import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/group_saving_service.dart';
 import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
 import 'package:tymesavingfrontend/services/user_service.dart';
-import 'package:tymesavingfrontend/utils/format_date.dart';
+import 'package:tymesavingfrontend/utils/format_amount.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
 class GroupSavingDetails extends StatefulWidget {
@@ -33,6 +33,7 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
   double? percentageLeft;
   DateTime? endDate;
   int? daysLeft;
+  String? endDay;
   SummaryUser? _user;
   bool isMember = false;
   bool isLoading = true;
@@ -82,7 +83,6 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
         // render host user
 
         // set state for groupSaving details
-        if (!mounted) return;
         setState(() {
           _groupSaving = tempGroupSaving;
           percentageTaken = _groupSaving!.amount / _groupSaving!.concurrentAmount * 100;
@@ -90,6 +90,7 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
               percentageTaken!.isInfinite ? 100.0 : 100.0 - percentageTaken!;
           endDate = DateTime.parse(_groupSaving!.endDate);
           daysLeft = calculateDaysLeft(endDate!);
+          endDay = formatDate(endDate!);
           // check if user is member or host
           isMember = _groupSaving!.hostedBy.toString() !=
               Provider.of<AuthService>(context, listen: false).user?.id;
@@ -148,6 +149,11 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
     return difference.inDays;
   }
 
+  String formatDate(DateTime endDate){
+    String formattedDate = DateFormat('MMMM d, y').format(endDate);
+    return formattedDate;
+  }
+
   @override
   Widget build(BuildContext context) {
     
@@ -159,7 +165,7 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
             icon: const Icon(FontAwesomeIcons.ellipsis),
             onPressed: () {
               showGroupActionBottonSheet(
-                  context, isMember, false, widget.groupSavingId);
+                  context, isMember, true, widget.groupSavingId);
             },
           )
         ]),
@@ -225,22 +231,24 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
                             ),
                             Text.rich(
                               TextSpan(
-                                text: '$daysLeft day${daysLeft != 1 ? 's' : ''} left',
+                                text: '$daysLeft day${daysLeft != 1 ? 's' : ''}',
                                 style: Theme.of(context).textTheme.bodyMedium,
                                 children: [
+                                  if(daysLeft! > 0)
                                   TextSpan(
                                     text:
-                                        ' until ', // Display the daysLeft variable here
+                                        ' left until $endDay', // Display the daysLeft variable here
                                     style:
                                         Theme.of(context).textTheme.bodyLarge,
                                   ),
-                                  TextSpan(
-                                    text:
-                                       convertDateTimeToReadableString(endDate), // Pluralize based on the value of daysLeft
+                                  const TextSpan(
+                                    text: ' missed by initial deadline of', // Pluralize based on the value of daysLeft
                                   ),
                                 ],
                               ),
                             ),
+                            if(daysLeft! < 0)
+                            Text('$endDay'),
                             const SizedBox(
                               height: 30,
                             ),
@@ -252,7 +260,7 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
                                   children: [
                                     Text('You have saved', style: Theme.of(context).textTheme.bodyMedium,),
                                     const Expanded(child: SizedBox()),
-                                    Text('${_groupSaving!.amount}', style: Theme.of(context).textTheme.headlineMedium,),
+                                    Text(formatAmountToVnd(_groupSaving!.amount), style: Theme.of(context).textTheme.headlineMedium,),
                                   ],  
                                 ),
                                 Row(
@@ -260,7 +268,7 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
                                   children: [
                                     Text('Goal target', style: Theme.of(context).textTheme.bodyMedium,),
                                     const Expanded(child: SizedBox()),
-                                    Text('${_groupSaving!.concurrentAmount}', style: Theme.of(context).textTheme.headlineMedium,),
+                                    Text(formatAmountToVnd(_groupSaving!.concurrentAmount), style: Theme.of(context).textTheme.headlineMedium,),
                                   ],
                                 ),
                               ],

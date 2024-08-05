@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tymesavingfrontend/components/group_saving/group_saving_details.dart';
 import 'package:tymesavingfrontend/screens/about_contact/about_us.dart';
 import 'package:tymesavingfrontend/screens/authentication/sign_in_page.dart';
 import 'package:tymesavingfrontend/screens/challenge/challenge_details.dart';

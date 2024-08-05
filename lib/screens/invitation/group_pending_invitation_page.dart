@@ -127,6 +127,7 @@ class _GroupPendingInvitationPageState extends State<GroupPendingInvitationPage>
                         context: context,
                         initialChildSize: 0.7,
                         contentWidget: InvitationSortFilter(
+                            isGroupPage: true,
                             updateInvitationList: _fetchInvitations),
                       );
                     },

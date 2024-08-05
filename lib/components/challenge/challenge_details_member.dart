@@ -19,7 +19,6 @@ class UserCard extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       elevation: 4,
-      
       child: ListTile(
         leading: avatar != null
             ? CircleAvatar(backgroundImage: NetworkImage(avatar!))
