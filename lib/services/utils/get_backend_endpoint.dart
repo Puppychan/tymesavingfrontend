@@ -61,5 +61,6 @@ class BackendEndpoints {
 
   // challenge specific endpoints
   static String get challengeById => "financialChallenge";
-  static String get checkpoint => "checkpoint/";
+  static String get checkpoint => "checkpoint";
+  static String get challengeByUser => "byUser";
 }
