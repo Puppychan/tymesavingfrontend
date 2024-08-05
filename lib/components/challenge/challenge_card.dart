@@ -1,11 +1,22 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
 import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
+import 'package:tymesavingfrontend/models/challenge_model.dart';
+import 'package:tymesavingfrontend/screens/challenge/challenge_details.dart';
 
-class ChallengeCard extends StatelessWidget {
+class ChallengeCard extends StatefulWidget {
   const ChallengeCard({
     super.key,
+    required this.challengeModel
   });
+  
+  final ChallengeModel? challengeModel;
+
+  @override
+  State<ChallengeCard> createState() => _ChallengeCardState();
+}
+
+class _ChallengeCardState extends State<ChallengeCard> {
 
   @override
   Widget build(BuildContext context) {
@@ -15,53 +26,32 @@ class ChallengeCard extends StatelessWidget {
         color: Theme.of(context).colorScheme.tertiaryContainer,
         borderRadius: BorderRadius.circular(8),
       ),
-      child: SizedBox(
-        height: 180,
+      child: InkWell(
+        onTap: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => ChallengeDetails(challengeId:  widget.challengeModel!.id)));
+        },
         child: Column(
           children: [
             // Image, title and description
             Row(
               children: [
-                // Circle Image
-                Padding(
-                  padding: const EdgeInsets.only(right: 12.0),
-                  child: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color:
-                          Color((math.Random().nextDouble() * 0xFFFFFF).toInt())
-                              .withOpacity(1.0),
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                ),
-
                 // Title & Description
                 Flexible(
                   child: Column(
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            "Save your money",
+                      Text(
+                            widget.challengeModel!.name,
                             style: Theme.of(context)
                                 .textTheme
-                                .titleSmall
+                                .headlineLarge
                                 ?.copyWith(fontSize: 16),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 3,
+                            softWrap: true,
                           ),
-                          const Spacer(),
-                          IconButton(
-                              onPressed: () {
-                                debugPrint("Tapped");
-                              },
-                              icon: const Icon(Icons.more_horiz))
-                        ],
-                      ),
+                      const SizedBox(height: 10),
                       Text(
-                        "Put your money into saving, for every 25k vnd you get 1 points!",
+                        widget.challengeModel!.description,
                         maxLines: 3,
                         style: Theme.of(context)
                             .textTheme
@@ -73,16 +63,13 @@ class ChallengeCard extends StatelessWidget {
                 ),
               ],
             ),
-
-            const Spacer(),
-
-            // Author name
+            const SizedBox(height: 10,),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               mainAxisSize: MainAxisSize.max,
               children: [
                 Text(
-                  "By Zing L’s Amor",
+                  "By ${widget.challengeModel!.createdBy}",
                   style: Theme.of(context)
                       .textTheme
                       .bodySmall
@@ -90,12 +77,10 @@ class ChallengeCard extends StatelessWidget {
                 )
               ],
             ),
-
-            // Point and Day Left
             Row(
               children: [
                 Text(
-                  "20 out of 21 points",
+                  widget.challengeModel!.scope,
                   style: Theme.of(context)
                       .textTheme
                       .bodySmall
@@ -110,19 +95,19 @@ class ChallengeCard extends StatelessWidget {
             ),
 
             // Progress bar
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: LinearProgressIndicator(
-                  value: 0.4,
-                  backgroundColor: Theme.of(context).colorScheme.quaternary,
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                      Theme.of(context).colorScheme.inversePrimary),
-                  minHeight: 8,
-                ),
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.only(top: 10.0),
+            //   child: ClipRRect(
+            //     borderRadius: BorderRadius.circular(4),
+            //     child: LinearProgressIndicator(
+            //       value: 0.4,
+            //       backgroundColor: Theme.of(context).colorScheme.quaternary,
+            //       valueColor: AlwaysStoppedAnimation<Color>(
+            //           Theme.of(context).colorScheme.inversePrimary),
+            //       minHeight: 8,
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),

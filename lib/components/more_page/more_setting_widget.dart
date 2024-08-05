@@ -28,8 +28,6 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
   Future<void> sandBox() async {
     //Debug here
     if (!mounted) return;
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const ChallengeDetails()));
   }
 
   Future<void> settingFunction() async {
