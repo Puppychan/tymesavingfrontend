@@ -13,6 +13,7 @@ class ChallengeService extends ChangeNotifier {
   ChallengeDetailMemberModel? _challengeDetailMemberModel;
   List<ChallengeDetailMemberModel>? _challengeDetailMemberModelList;
   List<CheckPointModel>? _checkPointModelList;
+  List<ChallengeModel>? _challengeModelList;
   
   ChallengeModel? get challengeModel => _challengeModel;
   CheckPointModel? get checkPointModel => _checkPointModel;
@@ -20,6 +21,7 @@ class ChallengeService extends ChangeNotifier {
   ChallengeDetailMemberModel? get challengeDetailMemberModel => _challengeDetailMemberModel;
   List<ChallengeDetailMemberModel>? get challengeDetailMemberModelList => _challengeDetailMemberModelList;
   List<CheckPointModel>? get checkPointModelList => _checkPointModelList;
+  List<ChallengeModel>? get challengeModelList => _challengeModelList;
 
   Future<dynamic> fetchChallengeDetails(String challengeId, {String? name, CancelToken? cancelToken}) async {
     String endpoint = "${BackendEndpoints.challenge}/$challengeId";
@@ -66,7 +68,7 @@ class ChallengeService extends ChangeNotifier {
   }
 
   Future<dynamic> fetchCheckpointDetails(String challengeId, String checkpointId, {String? name, CancelToken? cancelToken}) async {
-    String endpoint = "${BackendEndpoints.challenge}/$challengeId/${BackendEndpoints.checkpoint}$checkpointId";
+    String endpoint = "${BackendEndpoints.challenge}/$challengeId/${BackendEndpoints.checkpoint}/$checkpointId";
     debugPrint("End point is $endpoint");
 
     if (name != null) {
@@ -82,6 +84,36 @@ class ChallengeService extends ChangeNotifier {
         debugPrint(responseData.toString());
         _checkPointModel = CheckPointModel.fromMap(responseData);
         _rewardModel = RewardModel.fromMap(responseData['rewardDetails'] as Map<String, dynamic>);
+      } else {
+        debugPrint("Unexpected response format: $response");
+      }
+      notifyListeners();
+      return response;
+    } catch (e) {
+      debugPrint("Error fetching challenge details: $e");
+      rethrow; // Rethrow the error after logging it
+    }
+  }
+
+  Future<dynamic> fetchChallengeList(String userId, {String? name, CancelToken? cancelToken}) async {
+    String endpoint = "${BackendEndpoints.challenge}/${BackendEndpoints.challengeByUser}/$userId";
+    // debugPrint("End point is $endpoint");
+
+    if (name != null) {
+      endpoint += "?name=$name";
+    }
+
+    try {
+      final response = await NetworkService.instance.get(endpoint, cancelToken: cancelToken);
+      debugPrint("API Response: ${response.toString()}");
+
+      if (response != null && response is Map<String, dynamic>) {
+        final responseData = response['response'];
+        debugPrint(responseData.toString());
+        _challengeModelList = (responseData as List<dynamic>)
+          .map((challengeMap) => ChallengeModel.fromMap(challengeMap as Map<String, dynamic>))
+          .toList();
+
       } else {
         debugPrint("Unexpected response format: $response");
       }

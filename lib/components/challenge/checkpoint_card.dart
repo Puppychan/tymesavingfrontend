@@ -25,17 +25,14 @@ class _CheckPointCardState extends State<CheckPointCard> {
         }));
       },
       child: Card.outlined(
-        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 50),
+        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 30),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
               Text(widget.checkpoint.name, style: Theme.of(context).textTheme.labelLarge, softWrap: true, overflow: TextOverflow.clip,),
-              Row(
-                children: [
-                  Text('Reached checkpoint at ${formatAmountToVnd(widget.checkpoint.checkPointValue)}'),
-                ],
-              )
+              Text('Reached checkpoint at', style: Theme.of(context).textTheme.bodyMedium,),
+              Text(formatAmountToVnd(widget.checkpoint.checkPointValue), style: Theme.of(context).textTheme.bodyMedium),
             ],
           ),
         ),

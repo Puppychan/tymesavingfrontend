@@ -13,8 +13,8 @@ import 'package:tymesavingfrontend/services/user_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
 class ChallengeDetails extends StatefulWidget {
-  const ChallengeDetails({super.key});
-
+  const ChallengeDetails({super.key, required this.challengeId});
+  final String challengeId;
   @override
   State<ChallengeDetails> createState() => _ChallengeDetailsState();
 }
@@ -69,7 +69,7 @@ class _ChallengeDetailsState extends State<ChallengeDetails> {
   }
 
   Future<void> loadData() async {
-    await _loadChallenge('69aa2c6b9b7fbb182d820d30');
+    await _loadChallenge(widget.challengeId);
   }
 
   @override
