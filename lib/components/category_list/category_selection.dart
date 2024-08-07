@@ -41,9 +41,15 @@ class _CategorySelectionPageState extends State<CategorySelectionPage> {
 
     // function to render the category list
     List<Widget> renderCategories(BuildContext context) {
-      return TransactionCategory.values
-          .where((category) => category != TransactionCategory.all)
-          .expand((category) {
+      List<TransactionCategory> categories = [];
+      // render the categories based on the type of form
+      // TODO: handle updating the category based on the form typeÇ
+      if (widget.type == FormStateType.income) {
+        categories = TransactionCategory.incomeCategories;
+      } else {
+        categories = TransactionCategory.expenseCategories;
+      }
+      return categories.expand((category) {
         final textTheme = Theme.of(context).textTheme;
         final colorScheme = Theme.of(context).colorScheme;
         final isSelected = selectedCategory.name == category.name;

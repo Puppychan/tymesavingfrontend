@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
+import 'package:tymesavingfrontend/common/enum/invitation_type_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_group_type_enum.dart';
 import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
@@ -131,22 +132,22 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
         } else {
           return await Provider.of<TransactionService>(context, listen: false)
               .createTransaction(
-                  _user?.id ?? "",
-                  formField['createdDate'],
-                  formField['description'] ?? "",
-                  transactionType,
-                  formField['amount'],
-                  formField['payBy'] ?? "",
-                  formField['category'],
-                  savingGroupId: formField['savingGroupId'],
-                  budgetGroupId: formField['budgetGroupId'],
-                  );
+            _user?.id ?? "",
+            formField['createdDate'],
+            formField['description'] ?? "",
+            transactionType,
+            formField['amount'],
+            formField['payBy'] ?? "",
+            formField['category'],
+            savingGroupId: formField['savingGroupId'],
+            budgetGroupId: formField['budgetGroupId'],
+          );
         }
       }, () async {
         context.loaderOverlay.hide();
         if (!mounted) return;
-        Provider.of<FormStateProvider>(context, listen: false).resetForm(
-            widget.type);
+        Provider.of<FormStateProvider>(context, listen: false)
+            .resetForm(widget.type);
         Navigator.of(context).pop();
         SuccessDisplay.showSuccessToast(
             "Create new ${widget.type} successfully", context);
@@ -220,12 +221,18 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
       _payByController.text = formFields['payBy'] ?? "";
 
       List<Widget> renderCategories(BuildContext context) {
-        return TransactionCategory.values
-            .where((category) => category != TransactionCategory.all)
-            .expand((category) {
+        List<TransactionCategory> categories = [];
+        // TODO: handle update transaction
+        if (widget.type == FormStateType.income) {
+          categories = TransactionCategory.incomeCategories;
+        } else if (widget.type == FormStateType.expense) {
+          categories = TransactionCategory.expenseCategories;
+        }
+        return categories.expand((category) {
           final isSelected = selectedCategory.name == category.name;
           Map<String, dynamic> categoryInfo =
               transactionCategoryData[category]!;
+
           return [
             Material(
                 color: Colors.transparent,

@@ -33,16 +33,17 @@ class FormStateProvider with ChangeNotifier {
   TransactionCategory getCategory(FormStateType type) {
     if (type == FormStateType.income) {
       return _validateFieldNull(
-          'category', _incomeFormFields, TransactionCategory.defaultCategory());
+          'category', _incomeFormFields, TransactionCategory.defaultIncomeCategory());
     } else if (type == FormStateType.expense) {
       // return categoryExpense;
       return _validateFieldNull('category', _expenseFormFields,
-          TransactionCategory.defaultCategory());
+          TransactionCategory.defaultExpenseCategory());
     } else if (type == FormStateType.updateTransaction) {
       return _validateFieldNull('category', _updateTransactionFormFields,
-          TransactionCategory.defaultCategory());
+      // TODO: add update for income and expense separately
+          TransactionCategory.defaultExpenseCategory());
     } else {
-      return TransactionCategory.defaultCategory();
+      return TransactionCategory.defaultExpenseCategory();
     }
   }
 

@@ -82,6 +82,7 @@ class TransactionService extends ChangeNotifier {
       }
     } else {
       // if type of option is filter
+
       if ((newOption == 'getTransactionType' &&
               TransactionType.list.contains(newValue)) ||
           (newOption == 'getCategory' &&
