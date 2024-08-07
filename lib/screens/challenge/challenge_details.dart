@@ -122,6 +122,7 @@ Widget build(BuildContext context) {
                               _challengeModel!.name,
                               style: Theme.of(context).textTheme.headlineMedium,
                               textAlign: TextAlign.center,
+                              overflow: TextOverflow.visible,
                             ),
                         Text(
                           _challengeModel!.category,

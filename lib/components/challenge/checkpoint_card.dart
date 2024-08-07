@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:tymesavingfrontend/components/challenge/checkpoint_details.dart';
 import 'package:tymesavingfrontend/models/checkpoint_model.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
@@ -25,14 +27,40 @@ class _CheckPointCardState extends State<CheckPointCard> {
         }));
       },
       child: Card.outlined(
-        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 30),
+        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 25),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(widget.checkpoint.name, style: Theme.of(context).textTheme.labelLarge, softWrap: true, overflow: TextOverflow.clip,),
-              Text('Reached checkpoint at', style: Theme.of(context).textTheme.bodyMedium,),
-              Text(formatAmountToVnd(widget.checkpoint.checkPointValue), style: Theme.of(context).textTheme.bodyMedium),
+              Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.all(5),
+                      child: Text(
+                        formatAmountToVnd(widget.checkpoint.checkPointValue), 
+                        style: Theme.of(context).textTheme.labelLarge,
+                        overflow: TextOverflow.visible,
+                        maxLines: 10,
+                        textAlign: TextAlign.center,
+                      )
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.all(5),
+                      child: Text(
+                        widget.checkpoint.name, 
+                        style: Theme.of(context).textTheme.bodyMedium, 
+                        overflow: TextOverflow.visible,
+                        softWrap: true, 
+                        maxLines: 10,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
