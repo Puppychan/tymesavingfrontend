@@ -7,6 +7,7 @@ import 'package:tymesavingfrontend/components/common/dialog/delete_confirm_dialo
 import 'package:tymesavingfrontend/components/common/sheet/bottom_sheet.dart';
 import 'package:tymesavingfrontend/components/common/sheet/icon_text_row.dart';
 import 'package:tymesavingfrontend/screens/budget/budget_update_page.dart';
+import 'package:tymesavingfrontend/screens/challenge/challenge_page.dart';
 import 'package:tymesavingfrontend/screens/group_saving/group_saving_update_page.dart';
 import 'package:tymesavingfrontend/screens/invitation/group_pending_invitation_page.dart';
 import 'package:tymesavingfrontend/screens/main_page_layout.dart';
@@ -35,6 +36,14 @@ List<Widget> renderGroupHeadingActions(
             type: isBudget ? InvitationType.budget : InvitationType.savings);
       }));
     }),
+    ...actionRow(context, FontAwesomeIcons.trophy, "Group Challenge", () {
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return ChallengePage(
+            budgetGroupId: isBudget ? groupId : null,
+            savingGroupId: isBudget ? null : groupId
+        );
+      }));
+    })
   ];
   // if host
   if (!isMember) {

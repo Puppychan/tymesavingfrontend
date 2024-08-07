@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/components/challenge/challenge_card.dart';
 
@@ -8,8 +9,11 @@ import 'package:tymesavingfrontend/services/challenge_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
 class ChallengePage extends StatefulWidget {
-  const ChallengePage({super.key, required this.userId});
-  final String userId;
+  final String? userId;
+  final String? budgetGroupId;
+  final String? savingGroupId;
+  const ChallengePage(
+      {super.key, this.userId, this.budgetGroupId, this.savingGroupId});
   @override
   State<ChallengePage> createState() => _ChallengePageState();
 }
@@ -20,10 +24,18 @@ class _ChallengePageState extends State<ChallengePage> {
 
   Future<void> _loadChallengeList(String? userId) async {
     Future.microtask(() async {
-      if(!mounted) return;
-      final challengeService = Provider.of<ChallengeService>(context, listen: false);
+      if (!mounted) return;
+      final challengeService =
+          Provider.of<ChallengeService>(context, listen: false);
       await handleMainPageApi(context, () async {
-        return await challengeService.fetchChallengeList(userId!);
+        // TODO: remove later
+        final tempUserId = "72e4b93000be75dd6e367723";
+        if (userId != null) {
+          return await challengeService.fetchChallengeList(userId);
+        } else {
+          // TODO: implement rendering of challenges based on group id
+          return await challengeService.fetchChallengeList(tempUserId);
+        }
       }, () async {
         if (!mounted) return;
         setState(() {
@@ -33,7 +45,7 @@ class _ChallengePageState extends State<ChallengePage> {
       });
     });
   }
-  
+
   @override
   void initState() {
     _loadChallengeList(widget.userId);
@@ -45,7 +57,12 @@ class _ChallengePageState extends State<ChallengePage> {
     return Scaffold(
       appBar: Heading(
         title: "Challenges",
-        actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert))],
+        actions: [
+          if (widget.savingGroupId != null || widget.budgetGroupId != null)
+            IconButton(
+                onPressed: () {}, icon: const Icon(FontAwesomeIcons.plus)),
+          IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert))
+        ],
         showBackButton: true,
       ),
       body: Padding(
@@ -57,23 +74,23 @@ class _ChallengePageState extends State<ChallengePage> {
               maxLines: 3,
               style: Theme.of(context).textTheme.bodySmall,
             ),
-            (isLoading) ?
-              const CircularProgressIndicator() : 
-            Expanded (
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
-                child: ListView.builder(
-                  itemCount: _challengeModelList!.length,
-                  itemBuilder: (context, index) {
-                    final challenge = _challengeModelList![index];
-                    return Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: ChallengeCard(challengeModel: challenge),
-                    );
-                  },
-                ),
-              ),
-            )
+            (isLoading)
+                ? const CircularProgressIndicator()
+                : Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: ListView.builder(
+                        itemCount: _challengeModelList!.length,
+                        itemBuilder: (context, index) {
+                          final challenge = _challengeModelList![index];
+                          return Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: ChallengeCard(challengeModel: challenge),
+                          );
+                        },
+                      ),
+                    ),
+                  )
           ],
         ),
       ),
