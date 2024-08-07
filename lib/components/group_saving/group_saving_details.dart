@@ -85,7 +85,7 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
         // set state for groupSaving details
         setState(() {
           _groupSaving = tempGroupSaving;
-          percentageTaken = _groupSaving!.amount / _groupSaving!.concurrentAmount * 100;
+          percentageTaken = _groupSaving!.concurrentAmount / _groupSaving!.amount * 100;
           percentageLeft =
               percentageTaken!.isInfinite ? 100.0 : 100.0 - percentageTaken!;
           endDate = DateTime.parse(_groupSaving!.endDate);
@@ -260,7 +260,7 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
                                   children: [
                                     Text('You have saved', style: Theme.of(context).textTheme.bodyMedium,),
                                     const Expanded(child: SizedBox()),
-                                    Text(formatAmountToVnd(_groupSaving!.amount), style: Theme.of(context).textTheme.headlineMedium,),
+                                    Text(formatAmountToVnd(_groupSaving!.concurrentAmount), style: Theme.of(context).textTheme.headlineMedium,),
                                   ],  
                                 ),
                                 Row(
@@ -268,7 +268,7 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
                                   children: [
                                     Text('Goal target', style: Theme.of(context).textTheme.bodyMedium,),
                                     const Expanded(child: SizedBox()),
-                                    Text(formatAmountToVnd(_groupSaving!.concurrentAmount), style: Theme.of(context).textTheme.headlineMedium,),
+                                    Text(formatAmountToVnd(_groupSaving!.amount), style: Theme.of(context).textTheme.headlineMedium,),
                                   ],
                                 ),
                               ],
