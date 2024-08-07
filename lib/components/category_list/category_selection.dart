@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
-import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
+import 'package:tymesavingfrontend/common/enum/expense_transaction_category_enum.dart';
 import 'package:tymesavingfrontend/components/common/rounded_icon.dart';
 import 'package:tymesavingfrontend/components/category_list/category_icon.dart';
 import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
@@ -41,6 +41,10 @@ class _CategorySelectionPageState extends State<CategorySelectionPage> {
 
     // function to render the category list
     List<Widget> renderCategories(BuildContext context) {
+
+      if (widget.type == FormStateType.income) {
+
+      }
       return TransactionCategory.values
           .where((category) => category != TransactionCategory.all)
           .expand((category) {

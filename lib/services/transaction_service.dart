@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
-import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
+import 'package:tymesavingfrontend/common/enum/expense_transaction_category_enum.dart';
+import 'package:tymesavingfrontend/common/enum/income_transaction_category_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_type_enum.dart';
 import 'package:tymesavingfrontend/models/transaction_model.dart';
 import 'package:tymesavingfrontend/models/transaction_report_model.dart';
@@ -82,10 +83,12 @@ class TransactionService extends ChangeNotifier {
       }
     } else {
       // if type of option is filter
+
+      
       if ((newOption == 'getTransactionType' &&
               TransactionType.list.contains(newValue)) ||
           (newOption == 'getCategory' &&
-              TransactionCategory.list.contains(newValue))) {
+              newValue == TransactionType.expense.toString() ? ExpenseTransactionCategory.list.contains(newValue) : IncomeTransactionCategory.list.contains(newValue))) {
         _filterOptions = {..._filterOptions, newOption: newValue};
         notifyListeners();
       }

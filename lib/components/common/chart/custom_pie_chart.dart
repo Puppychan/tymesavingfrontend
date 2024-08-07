@@ -1,6 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
+import 'package:tymesavingfrontend/common/enum/expense_transaction_category_enum.dart';
 import 'package:tymesavingfrontend/models/transaction_report_model.dart';
 
 class CustomPieChart extends StatefulWidget {

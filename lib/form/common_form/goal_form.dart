@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
-import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
+import 'package:tymesavingfrontend/common/enum/expense_transaction_category_enum.dart';
 import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
 import 'package:tymesavingfrontend/components/common/dialog/date_picker_dialog.dart';
 import 'package:tymesavingfrontend/components/common/dialog/time_picker_dialog.dart';

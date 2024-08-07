@@ -3,7 +3,7 @@ import 'package:loader_overlay/loader_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
 import 'package:tymesavingfrontend/common/enum/invitation_type_enum.dart';
-import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
+import 'package:tymesavingfrontend/common/enum/expense_transaction_category_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_group_type_enum.dart';
 import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
 import 'package:tymesavingfrontend/components/common/dialog/date_picker_dialog.dart';
@@ -220,8 +220,22 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
             .where((category) => category != TransactionCategory.all)
             .expand((category) {
           final isSelected = selectedCategory.name == category.name;
-          Map<String, dynamic> categoryInfo =
-              transactionCategoryData[category]!;
+          Map<String, dynamic> categoryInfo;
+          switch (widget.type.value) {
+            case 'Income':
+              categoryInfo = incomeCategoryData[category]!;
+              break;
+            case 'Expense':
+              categoryInfo = expenseCategoryData[category]!;
+              break;
+
+            default:
+              // Handle any other case or set a default value
+              categoryInfo = {};
+              break;
+          }
+
+
           return [
             Material(
                 color: Colors.transparent,

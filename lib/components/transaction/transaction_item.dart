@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/components/transaction/transaction_dialog.dart';
 import 'package:tymesavingfrontend/models/transaction_model.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
-import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart'; // Ensure this import
+import 'package:tymesavingfrontend/common/enum/expense_transaction_category_enum.dart'; // Ensure this import
 
 class TransactionItem extends StatelessWidget {
   final Transaction transaction;

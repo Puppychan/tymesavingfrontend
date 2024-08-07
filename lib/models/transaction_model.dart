@@ -1,4 +1,6 @@
-import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
+import 'package:tymesavingfrontend/common/enum/expense_transaction_category_enum.dart';
+import 'package:tymesavingfrontend/common/enum/income_transaction_category_enum.dart';
+import 'package:tymesavingfrontend/common/enum/transaction_type_enum.dart';
 
 class Transaction {
   final String id;
@@ -58,7 +60,8 @@ class Transaction {
       'description': description,
       'payBy': payBy,
       'amount': amount,
-      'category': TransactionCategory.fromString(category).toString(),
+      'category': type == TransactionType.expense.toString() ? ExpenseTransactionCategory.fromString(category).toString()
+      : IncomeTransactionCategory.fromString(category).toString(),
       'createdDate': date,
       'type': type,
       'user': user != null ? user!.toJson() : null,
