@@ -110,7 +110,9 @@ class _AssignGroupMultiFormState extends State<AssignGroupMultiForm> {
     return Column(children: [
       RadioField(
           label: "Belong to Group?",
-          options: TransactionGroupType.formattedList,
+          options: widget.transactionType == FormStateType.expense ?
+          TransactionGroupType.formattedExpenseList: 
+          TransactionGroupType.formattedIncomeList,
           onSelected: (String formattedChosenGroupType) {
             TransactionGroupType convertGroupType =
                 TransactionGroupType.fromFormattedString(
