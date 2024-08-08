@@ -25,9 +25,11 @@ class _ReportFlowState extends State<ReportFlow> {
     final textTheme = Theme.of(context).textTheme;
     return Column(
       children: [
-        Card.filled(
+        Card.outlined(
+          elevation: 6,
+          shadowColor: colorScheme.onPrimary,
           margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          color: Colors.transparent.withOpacity(0),
+          color: colorScheme.surface,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
             child: Row(
@@ -57,9 +59,11 @@ class _ReportFlowState extends State<ReportFlow> {
             ),
           ),
         ),
-        Card.filled(
+        Card.outlined(
+          elevation: 6,
+          shadowColor: colorScheme.onPrimary,
           margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          color: Colors.transparent.withOpacity(0),
+          color: colorScheme.surface,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
             child: Row(

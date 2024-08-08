@@ -19,7 +19,8 @@ class _ReportDetailState extends State<ReportDetail> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return SizedBox(
+        height: 400,
         child: ListView.builder(
             itemCount: widget.topCategories.length,
             itemBuilder: (context, index) {
@@ -51,7 +52,7 @@ class _CategoryCardItemState extends State<CategoryCardItem> {
         {'icon': Icons.money_off, 'color': colorScheme.error};
     final IconData iconData = category['icon'];
     final Color color = category['color'];
-    return Card.filled(
+    return Card.outlined(
       color: colorScheme.onPrimary,
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Padding(

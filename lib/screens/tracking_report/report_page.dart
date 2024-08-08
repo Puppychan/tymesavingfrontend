@@ -67,30 +67,32 @@ class _ReportPageState extends State<ReportPage> {
       ),
       body: Skeletonizer(
         enabled: compareToLastMonth == null, // Show skeleton if user is null
-        child: Column(
-          children: [
-            ReportFlow(
-                inflowCurrent: compareToLastMonth?.currentIncome ?? 0,
-                inflowPercentage: compareToLastMonth?.incomePercentage ?? '0',
-                outflowCurrent: compareToLastMonth?.currentExpense ?? 0,
-                outflowPercentage:
-                    compareToLastMonth?.expensePercentage ?? '0'),
-            const SizedBox(
-              height: 20,
-            ),
-            const OutflowHeader(),
-            if (topCategoriesList == null)
-              const EmptyCaseOutFlow()
-            else
-              CustomPieChart(topCategories: topCategoriesList!.topCategory),
-            const SizedBox(
-              height: 20,
-            ),
-            if (topCategoriesList == null)
-              const SizedBox()
-            else
-              ReportDetail(topCategories: topCategoriesList!.topCategory),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              ReportFlow(
+                  inflowCurrent: compareToLastMonth?.currentIncome ?? 0,
+                  inflowPercentage: compareToLastMonth?.incomePercentage ?? '0',
+                  outflowCurrent: compareToLastMonth?.currentExpense ?? 0,
+                  outflowPercentage:
+                      compareToLastMonth?.expensePercentage ?? '0'),
+              const SizedBox(
+                height: 20,
+              ),
+              const OutflowHeader(),
+              if (topCategoriesList == null)
+                const EmptyCaseOutFlow()
+              else
+                CustomPieChart(topCategories: topCategoriesList!.topCategory),
+              const SizedBox(
+                height: 20,
+              ),
+              if (topCategoriesList == null)
+                const SizedBox()
+              else
+                ReportDetail(topCategories: topCategoriesList!.topCategory),
+            ],
+          ),
         ),
       ),
     );

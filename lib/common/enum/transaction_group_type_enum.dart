@@ -1,7 +1,7 @@
 enum TransactionGroupType {
-  budget("SharedBudget"),
-  savings("GroupSaving"),
-  none("None");
+  budget("Shared budget"),
+  savings("Group saving"),
+  none("Personal use");
 
   const TransactionGroupType(this.value);
 
