@@ -26,7 +26,29 @@ class GroupSavingCard extends StatefulWidget {
   State<GroupSavingCard> createState() => _GroupSavingCardState();
 }
 
-class _GroupSavingCardState extends State<GroupSavingCard> {
+class _GroupSavingCardState extends State<GroupSavingCard> with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _glowAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+      lowerBound: 0.5,
+      upperBound: 1.5,
+    )..repeat(reverse: true);
+
+    _glowAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     // final groupSaving = Provider.of<AuthService>(context).groupSaving;
@@ -39,6 +61,7 @@ class _GroupSavingCardState extends State<GroupSavingCard> {
         .format(DateTime.parse(widget.groupSaving.createdDate.toString()));
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
+    final isOverFullProgress = currentProgress > 1.0;
     return Card(
       color: colorScheme.tertiary,
       shadowColor: colorScheme.shadow,
@@ -55,35 +78,30 @@ class _GroupSavingCardState extends State<GroupSavingCard> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(8),
-              child: Row(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // CustomCircleAvatar(imagePath: groupSaving.avatarPath),
-                  // const SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      widget.groupSaving.name,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      maxLines: 2,
+                  Text(
+                    widget.groupSaving.name,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    overflow: TextOverflow.clip,  
                     ),
+                    maxLines: 2,
                   ),
-                  Expanded(
-                    child: CustomAlignText(
-                      text: "Created $formattedDate",
-                      alignment: Alignment.centerRight,
-                      style: Theme.of(context).textTheme.bodySmall!,
-                      maxLines: 2,
-                    ),
+                  CustomAlignText(
+                    text: "Created $formattedDate",
+                    alignment: Alignment.center,
+                    style: Theme.of(context).textTheme.bodySmall!,
+                    maxLines: 2,
                   ),
                 ],
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -96,8 +114,12 @@ class _GroupSavingCardState extends State<GroupSavingCard> {
                         TextSpan(
                           children: <TextSpan>[
                             TextSpan(
-                              text: 'Progress ',
-                              style: Theme.of(context).textTheme.bodyMedium!,
+                              text: currentProgress < 1.0
+                                ? 'Progress'
+                                : currentProgress == 1.0
+                                    ? 'Completed'
+                                    : 'Exceeding!',
+                              style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ],
                         ),
@@ -108,7 +130,7 @@ class _GroupSavingCardState extends State<GroupSavingCard> {
                       text: formatAmountToVnd(
                           widget.groupSaving.concurrentAmount),
                       // text: "GroupSaving Contribution",
-                      style: textTheme.bodyLarge,
+                      style: textTheme.labelLarge,
                     ),
                     TextSpan(
                       text: ' / ',
@@ -118,27 +140,55 @@ class _GroupSavingCardState extends State<GroupSavingCard> {
                     ),
                     TextSpan(
                       text: formatAmountToVnd(widget.groupSaving.amount),
-                      style: Theme.of(context).textTheme.bodyMedium!,
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ]))
                 ],
               ),
             ),
+            
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: LinearProgressIndicator(
-                  value: currentProgress.clamp(
-                      0.0, 1.0), // Ensuring the value is between 0 and 1
-                  // value: 0.4, // Ensuring the value is between 0 and 1
-                  backgroundColor: colorScheme.quaternary,
-                  valueColor:
-                      AlwaysStoppedAnimation<Color>(colorScheme.primary),
-                  minHeight: 8,
-                ),
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+              child: Stack(
+              alignment: Alignment.center,
+              children: [
+                // Glowing effect
+                        if (isOverFullProgress)
+                          AnimatedBuilder(
+                            animation: _animationController,
+                            builder: (context, child) {
+                              return Positioned.fill(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    gradient: RadialGradient(
+                                      center: Alignment.center,
+                                      radius: _glowAnimation.value,
+                                      colors: [Colors.transparent, Colors.amber.withOpacity(0.6)],
+                                      stops: const [0.6, 1.0],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        // Linear Progress Bar
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: LinearProgressIndicator(
+                            value: currentProgress.clamp(0.0, 1.0),
+                            backgroundColor: colorScheme.quaternary,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              currentProgress < 1.0
+                                ? colorScheme.primary.withOpacity(0.9)
+                                : currentProgress == 1.0 ? Color.fromARGB(255, 131, 230, 134) : colorScheme.inversePrimary,
+                            ),
+                            minHeight: 8,
+                          ),
+                        ),
+                      ],
               ),
             ),
+            const SizedBox(height: 10,),
           ],
         ),
       ),

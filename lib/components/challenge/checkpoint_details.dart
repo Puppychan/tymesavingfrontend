@@ -28,6 +28,7 @@ class _CheckPointDetailsState extends State<CheckPointDetails> {
 
   String? createDateFormatted;
   String? endDateFormatted;
+  late Map<String,dynamic> prize;
 
   bool _isDisplayRestDescription = false;
   bool isLoading = true;
@@ -46,6 +47,7 @@ class _CheckPointDetailsState extends State<CheckPointDetails> {
         _rewardModel = challengeService.rewardModel;
         createDateFormatted = formatDate(DateTime.parse(_checkPointModel!.startDate));
         endDateFormatted = formatDate(DateTime.parse(_checkPointModel!.endDate));
+        prize = _rewardModel!.prize[0];
       });
       await _loadUser(_checkPointModel?.createdBy);
     });
@@ -109,44 +111,63 @@ class _CheckPointDetailsState extends State<CheckPointDetails> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    Text('Reward', style: Theme.of(context).textTheme.headlineMedium),
+                        const SizedBox(height: 5,),
+                        Text(_rewardModel!.name, style: Theme.of(context).textTheme.titleSmall, overflow: TextOverflow.visible, textAlign: TextAlign.center,),
+                        const SizedBox(height: 10,),
+                        
+                    const SizedBox(height: 10,),
+                    Text('${prize['value']} points', style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontStyle: FontStyle.italic, fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.primary)),
+                    const SizedBox(height: 10,),
+                    Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Text(_rewardModel!.description, style: Theme.of(context).textTheme.bodyMedium, overflow: TextOverflow.visible, textAlign: TextAlign.justify,)
+                        ),
+                    const SizedBox(height: 5,),    
+                    const Divider(),
+                    const SizedBox(height: 10,),
                     Text(
                       _checkPointModel!.name,
                       style: Theme.of(context).textTheme.headlineSmall,
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 10,),
-                    Row(
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Checkpoint by', style: Theme.of(context).textTheme.bodyMedium),
-                            const SizedBox(height: 10,),
-                            Text('Start on', style: Theme.of(context).textTheme.bodyMedium),
-                            const SizedBox(height: 10,),
-                            Text('End on', style: Theme.of(context).textTheme.bodyMedium),
-                            const SizedBox(height: 10,),
-                            Text('Milestone amount', style: Theme.of(context).textTheme.bodyMedium),
-                          ],
-                        ),
-                        const Expanded(child: SizedBox()),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(_challengeOwner!.fullname, style: Theme.of(context).textTheme.bodyMedium),
-                            const SizedBox(height: 10,),
-                            Text(createDateFormatted ?? '', style: Theme.of(context).textTheme.bodyMedium),
-                            const SizedBox(height: 10,),
-                            Text(endDateFormatted ?? '', style: Theme.of(context).textTheme.bodyMedium),
-                            const SizedBox(height: 10,),
-                            Text(formatAmountToVnd(_checkPointModel!.checkPointValue), style: Theme.of(context).textTheme.bodyMedium),
-                          ],
-                        )
-                      ],
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 15),
+                      child: Row(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Checkpoint by', style: Theme.of(context).textTheme.bodyMedium),
+                              const SizedBox(height: 10,),
+                              Text('Start on', style: Theme.of(context).textTheme.bodyMedium),
+                              const SizedBox(height: 10,),
+                              Text('End on', style: Theme.of(context).textTheme.bodyMedium),
+                              const SizedBox(height: 10,),
+                              Text('Milestone amount', style: Theme.of(context).textTheme.bodyMedium),
+                            ],
+                          ),
+                          const Expanded(child: SizedBox()),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(_challengeOwner!.fullname, style: Theme.of(context).textTheme.bodyMedium),
+                              const SizedBox(height: 10,),
+                              Text(createDateFormatted ?? '', style: Theme.of(context).textTheme.bodyMedium),
+                              const SizedBox(height: 10,),
+                              Text(endDateFormatted ?? '', style: Theme.of(context).textTheme.bodyMedium),
+                              const SizedBox(height: 10,),
+                              Text(formatAmountToVnd(_checkPointModel!.checkPointValue), 
+                                style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontStyle: FontStyle.italic, fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.primary)),
+                            ],
+                          )
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 20),
                     Text("Description", style: Theme.of(context).textTheme.titleSmall),
-                    const SizedBox(height: 20),
                     InkWell(
                           onTap: () {
                             setState(() {
@@ -177,25 +198,7 @@ class _CheckPointDetailsState extends State<CheckPointDetails> {
                           ),
                         ),
                         const SizedBox(height: 20,),
-                        Text('Reward', style: Theme.of(context).textTheme.headlineMedium),
-                        const SizedBox(height: 5,),
-                        Text(_rewardModel!.name, style: Theme.of(context).textTheme.titleSmall, overflow: TextOverflow.visible, textAlign: TextAlign.center,),
-                        const SizedBox(height: 10,),
-                        Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Text(_rewardModel!.description, style: Theme.of(context).textTheme.bodyMedium, overflow: TextOverflow.visible,)
-                        ),
-                        ListView.builder(
-                          shrinkWrap: true, // Use shrinkWrap to prevent unbounded height error
-                          itemCount: _rewardModel!.prize.length,
-                          itemBuilder: (context, index) {
-                            final prize = _rewardModel!.prize[index];
-                            return ListTile(
-                              title: Text(prize['category'] ?? 'Unknown Category'),
-                              subtitle: Text('Value of ${prize['value'] ?? 'Unknown Value'}'),
-                            );
-                          },
-                        )
+                        
                   ],
                 ),
               ),

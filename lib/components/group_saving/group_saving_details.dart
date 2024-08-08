@@ -229,6 +229,13 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
                             const SizedBox(
                               height: 10,
                             ),
+                            if (percentageTaken! > 100) 
+                            Column(
+                              children: [
+                                Text (' You have reached your goal and beyond!', style:Theme.of(context).textTheme.bodyMedium?.copyWith(fontStyle: FontStyle.italic,fontWeight: FontWeight.bold),),
+                                const SizedBox(height: 5,),
+                              ],
+                            ),
                             Text.rich(
                               TextSpan(
                                 text: '$daysLeft day${daysLeft != 1 ? 's' : ''}',

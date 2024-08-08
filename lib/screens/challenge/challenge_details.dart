@@ -111,7 +111,7 @@ Widget build(BuildContext context) {
             ),
             SliverList(
               delegate: SliverChildListDelegate([
-                Card(
+                Card.outlined(
                   margin: const EdgeInsets.all(16.0),
                   child: Padding(
                     padding: const EdgeInsets.all(10),
@@ -122,6 +122,7 @@ Widget build(BuildContext context) {
                               _challengeModel!.name,
                               style: Theme.of(context).textTheme.headlineMedium,
                               textAlign: TextAlign.center,
+                              overflow: TextOverflow.visible,
                             ),
                         Text(
                           _challengeModel!.category,
@@ -134,11 +135,11 @@ Widget build(BuildContext context) {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                "By ${_challengeOwner!.fullname}",
+                                "$createdDate",
                                 style: Theme.of(context).textTheme.labelMedium,
                               ),
                               Text(
-                                "$createdDate",
+                                "By ${_challengeOwner!.fullname}",
                                 style: Theme.of(context).textTheme.labelMedium,
                               ),
                             ],
@@ -197,7 +198,7 @@ Widget build(BuildContext context) {
                   ),
                 ),
                 if (_challengeDetailMemberModelList != null && _challengeDetailMemberModelList!.isNotEmpty)
-                Card.filled(
+                Card.outlined(
                   margin: const EdgeInsets.all(16.0),
                   child: Column(
                     children: [
@@ -210,6 +211,7 @@ Widget build(BuildContext context) {
                               margin: const EdgeInsets.symmetric(vertical: 10),
                               height: 300, // Specify the height here
                               child: ListView.builder(
+                                padding: const EdgeInsets.all(0),
                                 itemCount: _challengeDetailMemberModelList!.length,
                                 itemBuilder: (context, index) {
                                   final member = _challengeDetailMemberModelList![index];

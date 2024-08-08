@@ -30,9 +30,10 @@ class _GroupSavingHalfProgressBarState extends State<GroupSavingHalfProgressBar>
               CustomPaint(
                 size: const Size(200, 100),
                 painter: HalfProgressBarPainter(
-                  amount: widget.amount,
+                  amount: widget.amount > 100 ? 100 : widget.amount,
                   backgroundColor: Colors.grey,
-                  progressColor: colorScheme.primary,
+                  progressColor: widget.amount > 100 ? const Color(0xFFFFD700) : colorScheme.primary,
+                  
                 ),
               ),
               Column(
@@ -44,7 +45,7 @@ class _GroupSavingHalfProgressBarState extends State<GroupSavingHalfProgressBar>
                       style: Theme.of(context).textTheme.headlineMedium,
                     ),
                   ),
-                  Text('complete', style: Theme.of(context).textTheme.headlineMedium,)
+                  Text('completion', style: Theme.of(context).textTheme.headlineMedium,)
                 ]
               )
             ]
@@ -81,8 +82,6 @@ class HalfProgressBarPainter extends CustomPainter {
       ..strokeWidth = 20
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
-
-    double radius = min(size.width / 2, size.height);
 
     canvas.drawArc(
       Rect.fromCenter(center: Offset(size.width / 2, size.height), width: size.width, height: size.height * 2),

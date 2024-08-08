@@ -111,8 +111,9 @@ class ChallengeService extends ChangeNotifier {
         final responseData = response['response'];
         debugPrint(responseData.toString());
         _challengeModelList = (responseData as List<dynamic>)
-          .map((challengeMap) => ChallengeModel.fromMap(challengeMap as Map<String, dynamic>))
-          .toList();
+        .map((challengeMap) => ChallengeModel.fromMap(challengeMap as Map<String, dynamic>))
+        .where((challenge) => challenge.isPublished == true) // Filter out if isPublished is false
+        .toList();
 
       } else {
         debugPrint("Unexpected response format: $response");

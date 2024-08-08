@@ -5,6 +5,7 @@ import 'package:tymesavingfrontend/components/common/text_align.dart';
 import 'package:tymesavingfrontend/models/budget_model.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'dart:math' as math;
 
 // final tempBudget = Budget(
 //   id: "1",
@@ -127,14 +128,23 @@ class _BudgetCardState extends State<BudgetCard> {
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(4),
-                child: LinearProgressIndicator(
-                  value: currentProgress.clamp(
-                      0.0, 1.0), // Ensuring the value is between 0 and 1
-                  // value: 0.4, // Ensuring the value is between 0 and 1
-                  backgroundColor: colorScheme.quaternary,
-                  valueColor:
-                      AlwaysStoppedAnimation<Color>(colorScheme.primary),
-                  minHeight: 8,
+                child: Transform(
+                  alignment: Alignment.center,
+                  transform: Matrix4.rotationY(math.pi),
+                  child: LinearProgressIndicator(
+                    value: currentProgress.clamp(
+                        0.0, 1.0), // Ensuring the value is between 0 and 1
+                    // value: 0.4, // Ensuring the value is between 0 and 1
+                    backgroundColor: colorScheme.quaternary,
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      currentProgress == 1 ? 
+                    const Color(0xFF4CAF50) :
+                    currentProgress < 0.30 ?
+                    const Color(0xFFF44336) : 
+                    colorScheme.primary
+                    ),
+                    minHeight: 8,
+                  ),
                 ),
               ),
             ),

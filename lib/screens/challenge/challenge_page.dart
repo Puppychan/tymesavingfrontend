@@ -68,6 +68,7 @@ class _ChallengePageState extends State<ChallengePage> {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
         child: Column(
+          
           children: [
             Text(
               "Embrace the challenge, for within it lies the opportunity to discover your true potential and ignite the fire within",

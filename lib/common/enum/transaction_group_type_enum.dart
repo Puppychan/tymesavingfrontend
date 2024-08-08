@@ -44,8 +44,17 @@ enum TransactionGroupType {
     return TransactionGroupType.values[index];
   }
 
-  // list
-  static List<String> get formattedList {
-    return TransactionGroupType.values.map((e) => e.toStringFormatted()).toList();
+  static List<String> get formattedExpenseList {
+    return TransactionGroupType.values
+        .where((e) => e == TransactionGroupType.none || e == TransactionGroupType.budget)
+        .map((e) => e.toStringFormatted())
+        .toList();
+  }
+
+  static List<String> get formattedIncomeList {
+    return TransactionGroupType.values
+        .where((e) => e == TransactionGroupType.none || e == TransactionGroupType.savings)
+        .map((e) => e.toStringFormatted())
+        .toList();
   }
 }
