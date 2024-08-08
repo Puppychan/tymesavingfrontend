@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tymesavingfrontend/common/enum/invitation_status_enum.dart';
 import 'package:tymesavingfrontend/common/enum/invitation_type_enum.dart';
 import 'package:tymesavingfrontend/components/common/sheet/bottom_sheet.dart';
 import 'package:tymesavingfrontend/components/common/text_align.dart';
@@ -13,6 +14,7 @@ import 'package:tymesavingfrontend/services/group_saving_service.dart';
 import 'package:tymesavingfrontend/services/invitation_service.dart';
 import 'package:tymesavingfrontend/utils/display_success.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
+
 class AuthUserInvitationCard extends StatefulWidget {
   final Invitation invitation;
 
@@ -24,34 +26,7 @@ class AuthUserInvitationCard extends StatefulWidget {
 
 class _AuthUserInvitationCardState extends State<AuthUserInvitationCard> {
   bool _isDataFetched = false;
-  SummaryGroup? groupSummary;
 
-  void _fetchData() async {
-    if (!_isDataFetched && mounted) {
-      await handleMainPageApi(context, () async {
-        if (widget.invitation.type == InvitationType.budget) {
-          // Fetch budget details
-          return await Provider.of<BudgetService>(context, listen: false)
-              .fetchBudgetSummary(widget.invitation.groupId);
-        } else if (widget.invitation.type == InvitationType.savings) {
-          // Fetch goal details
-          return await Provider.of<GroupSavingService>(context, listen: false)
-              .fetchGroupSavingSummary(widget.invitation.groupId);
-        }
-      }, () async {
-        setState(() {
-          groupSummary =
-              Provider.of<BudgetService>(context, listen: false).summaryGroup;
-        });
-      });
-
-      if (mounted) {
-        setState(() {
-          _isDataFetched = true;
-        });
-      }
-    }
-  }
 
   Future<void> acceptDeclineInvitation(bool isAccept) async {
     final userId = Provider.of<AuthService>(context, listen: false).user?.id;
@@ -79,7 +54,6 @@ class _AuthUserInvitationCardState extends State<AuthUserInvitationCard> {
   @override
   void initState() {
     super.initState();
-    _fetchData();
   }
 
   @override
@@ -98,7 +72,7 @@ class _AuthUserInvitationCardState extends State<AuthUserInvitationCard> {
           showStyledBottomSheet(
             context: context,
             title: widget.invitation.type.toStringFormatted(),
-            contentWidget: detailedSummaryGroup(context, groupSummary),
+            contentWidget: detailedSummaryGroup(context, widget.invitation.summaryGroup),
           );
         },
         child: Card(
@@ -137,7 +111,7 @@ class _AuthUserInvitationCardState extends State<AuthUserInvitationCard> {
                   ),
                   const SizedBox(height: 8.0),
                   CustomAlignText(
-                    text: "Invite from ${groupSummary?.name ?? "Loading..."}",
+                    text: "Invite from ${widget.invitation.summaryGroup?.name ?? "Loading..."}",
                     style: textTheme.bodyLarge!.copyWith(
                       color: colorScheme.secondary,
                       fontWeight: FontWeight.w600,
@@ -153,29 +127,30 @@ class _AuthUserInvitationCardState extends State<AuthUserInvitationCard> {
                     ),
                     maxLines: 2,
                   ),
-                  Row(
-                    children: [
-                      TextButton(
-                        onPressed: () async {
-                          await acceptDeclineInvitation(true);
-                        },
-                        child: Text('Accept',
-                            style: textTheme.bodyMedium!.copyWith(
-                                color: colorScheme.primary,
-                                fontWeight: FontWeight.w600)),
-                      ),
-                      TextButton(
+                  if (widget.invitation.status == InvitationStatus.pending)
+                    Row(
+                      children: [
+                        TextButton(
                           onPressed: () async {
-                            await acceptDeclineInvitation(false);
+                            await acceptDeclineInvitation(true);
                           },
-                          child: Text(
-                            'Decline',
-                            style: textTheme.bodyMedium!.copyWith(
-                                color: colorScheme.secondary,
-                                fontWeight: FontWeight.w500),
-                          )),
-                    ],
-                  ),
+                          child: Text('Accept',
+                              style: textTheme.bodyMedium!.copyWith(
+                                  color: colorScheme.primary,
+                                  fontWeight: FontWeight.w600)),
+                        ),
+                        TextButton(
+                            onPressed: () async {
+                              await acceptDeclineInvitation(false);
+                            },
+                            child: Text(
+                              'Decline',
+                              style: textTheme.bodyMedium!.copyWith(
+                                  color: colorScheme.secondary,
+                                  fontWeight: FontWeight.w500),
+                            )),
+                      ],
+                    ),
                 ],
               )),
         ));
