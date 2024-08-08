@@ -27,16 +27,17 @@ class _BudgetPieChartState extends State<BudgetPieChart> {
           children: [
             PieChart(
               PieChartData(
+                startDegreeOffset: -90,
                 sections: [
                   PieChartSectionData(
                     value: double.parse(widget.amount.toStringAsFixed(2)),
-                    color: colorScheme.inversePrimary, // Example color
+                    color: colorScheme.primary, // Example color
                     title: '',
                     showTitle: false,
                   ),
                   PieChartSectionData(
                     value: double.parse(widget.concurrent.toStringAsFixed(2)),
-                    color: colorScheme.primary, // Example color
+                    color: Colors.grey, // Example color
                     title: '',
                     showTitle: false,
                   ),

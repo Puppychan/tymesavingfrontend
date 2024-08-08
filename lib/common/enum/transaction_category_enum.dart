@@ -1,6 +1,18 @@
 import 'package:flutter/material.dart';
 
 enum TransactionCategory {
+  // additional for filtering
+  all('All'),
+
+  // Income Categories
+  salary('Salary'),
+  businessProfits('Business Profits'),
+  investmentIncome('Investment Income'),
+  freelanceWork('Freelance Work'),
+  rentalIncome('Rental Income'),
+  otherIncome('Other Income'),
+
+  // Outcomes Categories
   dineOut('Dine out'),
   shopping('Shopping'),
   travel('Travel'),
@@ -15,12 +27,7 @@ enum TransactionCategory {
   groceries('Groceries'),
   gifts('Gifts'),
   work('Work'),
-  otherExpenses('Other expenses'),
-  salary('Salary'), // New
-  businessProfits('Business Profits'), // New
-  investmentIncome('Investment Income'), // New
-  freelanceWork('Freelance Work'), // New
-  rentalIncome('Rental Income'); // New
+  otherExpenses('Other expenses'); // New
 
   const TransactionCategory(this.name);
 
@@ -28,6 +35,10 @@ enum TransactionCategory {
 
   @override
   String toString() => name;
+
+  static List<String> get list {
+    return TransactionCategory.values.map((e) => e.name).toList();
+  }
 
   static TransactionCategory fromString(String name) {
     for (var category in TransactionCategory.values) {
@@ -39,12 +50,27 @@ enum TransactionCategory {
     return TransactionCategory.otherExpenses;
   }
 
-  static TransactionCategory defaultCategory() {
+  static TransactionCategory defaultIncomeCategory() {
+    return TransactionCategory.otherIncome;
+  }
+
+  static TransactionCategory defaultExpenseCategory() {
     return TransactionCategory.otherExpenses;
   }
+
+  static List<TransactionCategory> get incomeCategories =>
+      TransactionCategory.values
+          .where((category) => category.index >= 1 && category.index <= 6)
+          .toList();
+
+  static List<TransactionCategory> get expenseCategories =>
+      TransactionCategory.values
+          .where((category) => category.index >= 7 && category.index <= 21)
+          .toList();
 }
 
-final Map<TransactionCategory, Map<String, dynamic>> transactionCategoryData = {
+final Map<TransactionCategory, Map<String, dynamic>>
+    transactionExpenseCategoryData = {
   TransactionCategory.dineOut: {
     'icon': Icons.restaurant,
     'color': Colors.red[900]
@@ -99,6 +125,10 @@ final Map<TransactionCategory, Map<String, dynamic>> transactionCategoryData = {
     'icon': Icons.money_off,
     'color': Colors.blueGrey[400]
   },
+};
+
+final Map<TransactionCategory, Map<String, dynamic>>
+    incomeTransactionCategoryData = {
   TransactionCategory.salary: {
     'icon': Icons.attach_money,
     'color': Colors.green[700]
@@ -119,4 +149,13 @@ final Map<TransactionCategory, Map<String, dynamic>> transactionCategoryData = {
     'icon': Icons.home_work,
     'color': Colors.brown[700]
   },
+  TransactionCategory.otherIncome: {
+    'icon': Icons.money_off,
+    'color': Colors.blueGrey[400]
+  }
+};
+
+final Map<TransactionCategory, Map<String, dynamic>> transactionCategoryData = {
+  ...transactionExpenseCategoryData,
+  ...incomeTransactionCategoryData
 };

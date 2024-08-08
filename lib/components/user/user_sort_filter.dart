@@ -14,20 +14,21 @@ class UserSortFilter extends StatefulWidget {
 
 class _UserSortFilterState extends State<UserSortFilter> {
   final List<String> filterRoleData = ["All", "Admin", "Customer"];
-  final List<String> options = ["Username", "Created Date", "Role"];
-  List<String> convertOptionsToText() {
-    return options.expand((option) {
-      return [
-        '$option in ascending order',
-        '$option in descending order',
-      ];
-    }).toList();
-  }
+  // final List<String> options = ["Username", "Created Date", "Role"];
+  // List<String> convertOptionsToText() {
+  //   return options.expand((option) {
+  //     return [
+  //       '$option in ascending order',
+  //       '$option in descending order',
+  //     ];
+  //   }).toList();
+  // }'
 
   @override
   Widget build(BuildContext context) {
     final userService = Provider.of<UserService>(context, listen: false);
-    debugPrint("User Service Sort Options: ${userService.sortOption}"); // "Username in ascending order
+    debugPrint(
+        "User Service Sort Options: ${userService.sortOption}"); // "Username in ascending order
 
     return Column(children: [
       FilterBox(
@@ -45,10 +46,11 @@ class _UserSortFilterState extends State<UserSortFilter> {
       const SizedBox(height: 10),
       SortBox(
           label: "Sort Options",
-          options: convertOptionsToText(),
-          selectedOption: userService.sortOption,
-          onSelected: (value) {
-            userService.updateSortOptions(value);
+          options: userService.combineOptions(),
+          selectedField: userService.sortOption.keys.first,
+          selectedOrder: userService.sortOption.values.first,
+          onSelected: (sortField, order) {
+            userService.updateSortOptions(sortField, order);
             widget.updateUserList();
           })
     ]);

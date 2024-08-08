@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
+import 'package:tymesavingfrontend/utils/format_amount.dart';
 
 class IncomeCard extends StatefulWidget {
   const IncomeCard({super.key,required this.currentMonthIncome, required this.currentNetSpend});
@@ -37,19 +38,16 @@ class _IncomeCardState extends State<IncomeCard> {
                           .titleSmall!, // Default style for the first part
                       children: <TextSpan>[
                         TextSpan(
-                          text: '${widget.currentMonthIncome} ',
+                          text: ' ${formatAmountToVnd(widget.currentMonthIncome.toDouble())} ',
                           style: textTheme.titleSmall!.copyWith(
                               color: colorScheme
                                   .primary), // Same style for the expense value
                         ),
-                        TextSpan(
-                          text: 'vnd',
-                          style: textTheme.titleSmall!.copyWith(
-                              color: colorScheme
-                                  .primary), // Different color for "vnd"
-                        ),
                       ],
                     ),
+                  ),
+                  const SizedBox(
+                    height: 5,
                   ),
                   Text.rich(
                     TextSpan(
@@ -58,16 +56,10 @@ class _IncomeCardState extends State<IncomeCard> {
                           .titleSmall!, // Default style for the first part
                       children: <TextSpan>[
                         TextSpan(
-                          text: '${widget.currentNetSpend} ',
+                          text: '${formatAmountToVnd(widget.currentNetSpend.toDouble())} ',
                           style: textTheme.titleSmall!.copyWith(
                               color: colorScheme
                                   .primary), // Same style for the expense value
-                        ),
-                        TextSpan(
-                          text: 'vnd',
-                          style: textTheme.titleSmall!.copyWith(
-                              color: colorScheme
-                                  .primary), // Different color for "vnd"
                         ),
                       ],
                     ),

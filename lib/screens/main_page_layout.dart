@@ -8,6 +8,7 @@ import 'package:tymesavingfrontend/components/main_page_layout/show_add_options.
 import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/screens/budget/budget_list_page.dart';
+import 'package:tymesavingfrontend/screens/group_saving/group_saving_list_page.dart';
 import 'package:tymesavingfrontend/screens/home/home_admin_page.dart';
 import 'package:tymesavingfrontend/screens/home/home_page.dart';
 import 'package:tymesavingfrontend/screens/more_menu/more_page.dart';
@@ -16,14 +17,15 @@ import 'package:tymesavingfrontend/utils/handling_error.dart';
 import 'package:tymesavingfrontend/components/heading/heading_actions_based_location.dart';
 
 class MainPageLayout extends StatefulWidget {
-  const MainPageLayout({super.key});
+  final int customPageIndex;
+  const MainPageLayout({super.key, this.customPageIndex = 0});
 
   @override
   State<MainPageLayout> createState() => _MainPageLayoutState();
 }
 
 class _MainPageLayoutState extends State<MainPageLayout> with RouteAware {
-  int _selectedIndex = 0;
+  late int _selectedIndex;
   User? user;
   late PageController _pageController;
 
@@ -44,10 +46,9 @@ class _MainPageLayoutState extends State<MainPageLayout> with RouteAware {
   @override
   void initState() {
     super.initState();
+    _selectedIndex = widget.customPageIndex;
     _pageController = PageController(initialPage: _selectedIndex);
-    print("MainPageLayout initState");
     _fetchCurrentUser();
-    print("After fetchCurrentUser");
   }
 
   @override
@@ -98,9 +99,7 @@ class _MainPageLayoutState extends State<MainPageLayout> with RouteAware {
           user?.role == UserRole.admin
               ? const HomeAdminPage()
               : HomePage(user: user),
-          // TODO: Uncomment when complete goal page
-          // GoalListPage(user: user),
-          const Center(child: Text("Goals Page")),
+          GroupSavingListPage(user: user),
           BudgetListPage(user: user),
           const MoreMenuPage(),
         ],
@@ -132,7 +131,7 @@ class _MainPageLayoutState extends State<MainPageLayout> with RouteAware {
                 context: context,
                 index: 1,
                 icon: Icons.assessment,
-                label: 'Goals',
+                label: 'Savings',
               ),
               const SizedBox(width: 40.0), // The dummy child
               _buildTabItem(
@@ -163,7 +162,7 @@ class _MainPageLayoutState extends State<MainPageLayout> with RouteAware {
         currentPageLocation = PageLocation.homePage;
         break;
       case 1:
-        currentPageLocation = PageLocation.goals;
+        currentPageLocation = PageLocation.savingPage;
         break;
       case 2:
         currentPageLocation = PageLocation.budgetPage;

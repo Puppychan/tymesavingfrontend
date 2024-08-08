@@ -15,8 +15,6 @@ import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
 import 'package:tymesavingfrontend/services/user_service.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
-import 'package:tymesavingfrontend/components/transaction/transaction_list.dart';
-import 'package:tymesavingfrontend/models/transaction_model.dart';
 
 class BudgetDetails extends StatefulWidget {
   const BudgetDetails({super.key, required this.budgetId});
@@ -28,6 +26,7 @@ class BudgetDetails extends StatefulWidget {
 }
 
 class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
+  FormStateProvider? _formStateProvider;
   Budget? _budget;
   double? percentageTaken;
   double? percentageLeft;
@@ -39,7 +38,6 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
   String _displayPercentageTaken = '';
   bool _isDisplayRestDescription = false;
   List<Transaction> _transactions = [];
-
 
   Future<void> _renderUser(String? userId) async {
     Future.microtask(() async {
@@ -79,15 +77,14 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
         if (!mounted) return;
         final tempBudget = budgetService.currentBudget;
         // // set budget to update form
-        final formStateService =
-            Provider.of<FormStateProvider>(context, listen: false);
-        formStateService.setUpdateBudgetFormFields(tempBudget);
+        _formStateProvider?.setUpdateBudgetFormFields(tempBudget);
         // render host user
 
         // set state for budget details
+        if (!mounted) return;
         setState(() {
           _budget = tempBudget;
-          percentageTaken = _budget!.amount / _budget!.concurrentAmount * 100;
+          percentageTaken = _budget!.concurrentAmount / _budget!.amount * 100;
           percentageLeft =
               percentageTaken!.isInfinite ? 100.0 : 100.0 - percentageTaken!;
           endDate = DateTime.parse(_budget!.endDate);
@@ -117,14 +114,16 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
 
   @override
   void initState() {
+    _formStateProvider = Provider.of<FormStateProvider>(context, listen: false);
     _loadData();
     super.initState();
   }
 
   @override
   void dispose() {
-    routeObserver.unsubscribe(this);
+    // _formStateProvider?.resetForm(FormStateType.memberInvitation);
     super.dispose();
+    routeObserver.unsubscribe(this);
   }
 
   @override
@@ -152,7 +151,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-        appBar: Heading(title: 'Budget', showBackButton: true, actions: [
+        appBar: Heading(title: 'Budget Group', showBackButton: true, actions: [
           IconButton(
             icon: const Icon(FontAwesomeIcons.ellipsis),
             onPressed: () {
@@ -211,41 +210,10 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                               ),
                               textAlign: TextAlign.center,
                             ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            const Divider(),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            InkWell(
-                              onTap: () {
-                                // Action to view the rest of the description. This could open a dialog, a new page, or expand the text in place.
-                                setState(() {
-                                  _isDisplayRestDescription =
-                                      !_isDisplayRestDescription;
-                                });
-                              },
-                              child: Text(
-                                _budget!.description,
-                                style: Theme.of(context).textTheme.bodyMedium,
-                                textAlign: TextAlign.center,
-                                maxLines: _isDisplayRestDescription ? null : 1,
-                                overflow: _isDisplayRestDescription
-                                    ? TextOverflow.visible
-                                    : TextOverflow.fade,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            const Divider(),
-                            const SizedBox(
-                              height: 10,
-                            ),
+                            
                             Text.rich(
                               TextSpan(
-                                text: 'You have ',
+                                text: daysLeft! > 0 ? "You have " : "Budget expire by ",
                                 style: Theme.of(context).textTheme.bodyMedium,
                                 children: [
                                   TextSpan(
@@ -256,35 +224,67 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                                   ),
                                   TextSpan(
                                     text:
-                                        ' day${daysLeft != 1 ? 's' : ''} left', // Pluralize based on the value of daysLeft
+                                        ' day${daysLeft != 1 ? 's' : ''}', // Pluralize based on the value of daysLeft
+                                  ),
+                                  TextSpan(
+                                    text:
+                                        daysLeft! > 0 ? " left" : "", // Pluralize based on the value of daysLeft
                                   ),
                                 ],
                               ),
-                            ),
-                            Text.rich(
-                              TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: 'Used ',
-                                    style:
-                                        Theme.of(context).textTheme.bodyMedium,
-                                  ),
-                                  TextSpan(
-                                    text: _displayPercentageTaken,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyLarge, // Customize this style as needed
-                                  ),
-                                ],
-                              ),
-                              textAlign: TextAlign.center,
                             ),
                             const SizedBox(
                               height: 10,
                             ),
-                            Text(formatAmountToVnd(_budget!.concurrentAmount),
-                                style:
-                                    Theme.of(context).textTheme.headlineMedium),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text('Your initial budget', style: Theme.of(context).textTheme.bodyMedium,),
+                                    const Expanded(child: SizedBox()),
+                                    Text(formatAmountToVnd(_budget!.amount), style: Theme.of(context).textTheme.headlineMedium,),
+                                  ],  
+                                ),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text('Current budget left', style: Theme.of(context).textTheme.bodyMedium,),
+                                    const Expanded(child: SizedBox()),
+                                    Text(formatAmountToVnd(_budget!.concurrentAmount), style: Theme.of(context).textTheme.headlineMedium,),
+                                  ],
+                                ),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text('Budget remain', style: Theme.of(context).textTheme.bodyMedium,),
+                                    const Expanded(child: SizedBox()),
+                                    Text(_displayPercentageTaken, style: Theme.of(context).textTheme.headlineMedium,),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              mainAxisSize: MainAxisSize.min, // Adjusts the row size to fit its children
+                              children: [
+                                Text(
+                                  "Color ",
+                                  style: Theme.of(context).textTheme.bodyMedium
+                                ),
+                                Container(
+                                  width: 10,  // Width of the color box
+                                  height: 10, // Height of the color box
+                                  color: colorScheme.primary, // Color of the box
+                                  margin: EdgeInsets.only(right: 4), // Space between the box and the text
+                                ),
+                                Text(
+                                  ' indicate percentages of budget left',
+                                  style: Theme.of(context).textTheme.bodyMedium, // Customize your text style
+                                ),
+                              ],
+                            )
                           ],
                         ),
                       ),
@@ -297,6 +297,39 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                   const SizedBox(
                     height: 20,
                   ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 30),
+                    child: InkWell(
+                      onTap: () {
+                        // Action to view the rest of the description. This could open a dialog, a new page, or expand the text in place.
+                        setState(() {
+                            _isDisplayRestDescription =
+                                !_isDisplayRestDescription;
+                          });
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            _budget!.description,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                            textAlign: TextAlign.justify,
+                            maxLines: _isDisplayRestDescription ? null : 2,
+                            overflow: _isDisplayRestDescription
+                                ? TextOverflow.visible
+                                : TextOverflow.fade,
+                          ),
+                          if (!_isDisplayRestDescription)
+                          Text(
+                            "Tap for more",
+                            style: Theme.of(context).textTheme.labelMedium,
+                          )
+                        ],
+                      )
+                    ),
+                  ),
+                  const SizedBox(height: 20,),
+                  Text('Transaction history', style: Theme.of(context).textTheme.headlineMedium,),
                   Expanded(
                     child: TransactionList(transactions: _transactions),
                   ),

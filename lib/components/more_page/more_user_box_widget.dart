@@ -4,7 +4,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:tymesavingfrontend/common/constant/temp_constant.dart';
 import 'package:tymesavingfrontend/components/common/images/circle_network_image.dart';
 import 'package:tymesavingfrontend/main.dart';
-import 'package:tymesavingfrontend/models/user_model.dart';
+import 'package:tymesavingfrontend/models/base_user_model.dart';
 import 'package:tymesavingfrontend/screens/user_profile/user_profile_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
@@ -17,7 +17,7 @@ class UserBox extends StatefulWidget {
 }
 
 class _UserBoxState extends State<UserBox> with RouteAware {
-  User? user;
+  UserBase? user;
 
   @override
   void initState() {
@@ -89,7 +89,7 @@ class _UserBoxState extends State<UserBox> with RouteAware {
                 children: [
                   ListTile(
                     leading:
-                        const CustomCircleAvatar(imagePath: TEMP_AVATAR_IMAGE),
+                        CustomCircleAvatar(imagePath: user?.avatar ?? TEMP_AVATAR_IMAGE),
                     title: Text(user?.fullname ?? 'Loading...',
                         style: Theme.of(context).textTheme.titleMedium!),
                     subtitle: Text(user?.email ?? 'Loading mail...',

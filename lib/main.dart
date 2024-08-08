@@ -7,13 +7,15 @@ import 'package:tymesavingfrontend/common/styles/app_theme.dart';
 import 'package:tymesavingfrontend/screens/splash_screen.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/budget_service.dart';
-import 'package:tymesavingfrontend/services/goal_service.dart';
+import 'package:tymesavingfrontend/services/challenge_service.dart';
+import 'package:tymesavingfrontend/services/group_saving_service.dart';
 import 'package:tymesavingfrontend/services/invitation_service.dart';
 import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
 import 'package:tymesavingfrontend/services/theme_service.dart';
 import 'package:tymesavingfrontend/services/transaction_service.dart';
 import 'package:tymesavingfrontend/services/user_service.dart';
 import 'package:tymesavingfrontend/services/utils/network_service.dart';
+import 'package:tymesavingfrontend/utils/global_keys.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
@@ -32,11 +34,12 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => FormStateProvider()),
         ChangeNotifierProvider(create: (_) => AuthService()),
         ChangeNotifierProvider(create: (_) => BudgetService()),
-        ChangeNotifierProvider(create: (_) => GoalService()),
+        ChangeNotifierProvider(create: (_) => GroupSavingService()),
         ChangeNotifierProvider(create: (_) => UserService()),
         ChangeNotifierProvider(create: (_) => ThemeService()),
         ChangeNotifierProvider(create: (_) => InvitationService()),
-        ChangeNotifierProvider(create: (_) => TransactionService())
+        ChangeNotifierProvider(create: (_) => TransactionService()),
+        ChangeNotifierProvider(create: (_) => ChallengeService()),
       ],
       child: GlobalLoaderOverlay(
         useDefaultLoading: true,
@@ -52,8 +55,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       title: 'My App',
+      scaffoldMessengerKey: scaffoldMessengerKey,
       theme: AppThemes.lightTheme,
       darkTheme: AppThemes.darkTheme,
       themeMode: Provider.of<ThemeService>(context).themeMode,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
 
 class UnderlineTextField extends StatefulWidget {
@@ -13,9 +14,11 @@ class UnderlineTextField extends StatefulWidget {
   final String? Function(String?)? validator;
   final IconData? suffixIcon;
   final IconData? icon;
+  final String? defaultValue;
   final Function()? onTap;
   final bool? readOnly;
   final void Function(String)? onChange;
+  final List<TextInputFormatter>? inputFormatters;
 
   const UnderlineTextField({
     super.key,
@@ -32,7 +35,7 @@ class UnderlineTextField extends StatefulWidget {
     this.icon,
     this.onTap,
     this.readOnly,
-    this.onChange,
+    this.onChange, this.defaultValue, this.inputFormatters,
   });
 
   @override
@@ -40,6 +43,13 @@ class UnderlineTextField extends StatefulWidget {
 }
 
 class _UnderlineTextFieldState extends State<UnderlineTextField> {
+  @override
+  void initState() {
+    super.initState();
+    if (widget.defaultValue != null) {
+      widget.controller!.text = widget.defaultValue!;
+    }
+  }
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
@@ -54,6 +64,7 @@ class _UnderlineTextFieldState extends State<UnderlineTextField> {
         validator: widget.validator,
         keyboardType: widget.keyboardType,
         readOnly: widget.readOnly ?? false,
+        inputFormatters: [...widget.inputFormatters ?? []],
         style: textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.w500),
         decoration: InputDecoration(
           border: const UnderlineInputBorder(borderSide: BorderSide.none),

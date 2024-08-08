@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
 import 'package:tymesavingfrontend/components/budget/budget_details.dart';
+import 'package:tymesavingfrontend/components/common/text_align.dart';
 import 'package:tymesavingfrontend/models/budget_model.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -30,7 +31,8 @@ class _BudgetCardState extends State<BudgetCard> {
   Widget build(BuildContext context) {
     // final budget = Provider.of<AuthService>(context).budget;
     // final budget = tempBudget;
-    final currentProgress = widget.budget.concurrentAmount / widget.budget.amount;
+    final currentProgress =
+        widget.budget.concurrentAmount / widget.budget.amount;
 
     // double progress = budget.contribution / maxContribution; // Calculate the progress as a fraction
     String formattedDate =
@@ -55,9 +57,10 @@ class _BudgetCardState extends State<BudgetCard> {
             Padding(
               padding: const EdgeInsets.all(8),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   // CustomCircleAvatar(imagePath: budget.avatarPath),
-                  const SizedBox(width: 10),
+                  // const SizedBox(width: 10),
                   Expanded(
                     child: Text(
                       widget.budget.name,
@@ -65,11 +68,16 @@ class _BudgetCardState extends State<BudgetCard> {
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
+                      maxLines: 2,
                     ),
                   ),
-                  Text(
-                    "Created $formattedDate",
-                    style: Theme.of(context).textTheme.bodySmall!,
+                  Expanded(
+                    child: CustomAlignText(
+                      text: "Created $formattedDate",
+                      alignment: Alignment.centerRight,
+                      style: Theme.of(context).textTheme.bodySmall!,
+                      maxLines: 2,
+                    ),
                   ),
                 ],
               ),
@@ -101,7 +109,7 @@ class _BudgetCardState extends State<BudgetCard> {
                       // text: "Budget Contribution",
                       style: textTheme.bodyLarge,
                     ),
-                     TextSpan(
+                    TextSpan(
                       text: ' / ',
                       style: textTheme.labelLarge!.copyWith(
                         color: colorScheme.inversePrimary,
@@ -137,6 +145,6 @@ class _BudgetCardState extends State<BudgetCard> {
   }
 
   // Widget displayParticipants() {
-  //   return 
+  //   return
   // }
 }

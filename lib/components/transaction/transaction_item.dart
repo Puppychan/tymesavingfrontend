@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
 import 'package:tymesavingfrontend/components/transaction/transaction_dialog.dart';
 import 'package:tymesavingfrontend/models/transaction_model.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
-import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart'; // Ensure this import
 
 class TransactionItem extends StatelessWidget {
   final Transaction transaction;
@@ -57,14 +57,25 @@ class TransactionItem extends StatelessWidget {
         ],
       ),
       child: ListTile(
-        contentPadding: const EdgeInsets.all(0),
-        leading: CircleAvatar(
-          backgroundColor: color,
-          child: Icon(
-            icon,
-            color: Colors.white,
-          ),
-        ),
+        contentPadding: const EdgeInsets.all(5),
+        leading: transaction.user != null
+            ? Transform.scale(
+                scale: 1.2,
+                child: CircleAvatar(
+                  backgroundColor: color,
+                  child: Icon(
+                    icon,
+                    color: Colors.white,
+                  ),
+                ),
+              )
+            : CircleAvatar(
+                backgroundColor: color,
+                child: Icon(
+                  icon,
+                  color: Colors.white,
+                ),
+              ),
         title: Text(
           title,
           style: Theme.of(context)

@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/models/budget_model.dart';
 import 'package:tymesavingfrontend/models/summary_group_model.dart';
@@ -18,10 +19,16 @@ class BudgetService extends ChangeNotifier {
 
   List<Transaction> get transactions => _transactions;
 
-  Future<dynamic> fetchBudgetList(String? userId) async {
+  Future<dynamic> fetchBudgetList(String? userId, {String? name, CancelToken? cancelToken}) async {
     // if (userId == null) return {'response': 'User ID is required.', 'statusCode': 400};
-    final response = await NetworkService.instance.get(
-        "${BackendEndpoints.budget}/${BackendEndpoints.budgetsGetByUserId}/$userId");
+    String endpoint =
+        "${BackendEndpoints.budget}/${BackendEndpoints.budgetsGetByUserId}/$userId";
+
+    if (name != null) {
+      endpoint += "?name=$name";
+    }
+
+    final response = await NetworkService.instance.get(endpoint, cancelToken: cancelToken);
     if (response['response'] != null && response['statusCode'] == 200) {
       final responseData = response['response'];
       List<Budget> budgetList = [];
@@ -45,6 +52,7 @@ class BudgetService extends ChangeNotifier {
     double concurrentAmount,
     String endDate,
   ) async {
+    print("Before sending backend: $hostedBy, $name, $description, $amount, $concurrentAmount, $endDate");
     final response = await NetworkService.instance.post(
       BackendEndpoints.budget,
       body: {
@@ -56,6 +64,7 @@ class BudgetService extends ChangeNotifier {
         'endDate': endDate,
       },
     );
+    print("Response when creating budget $response");
     return response;
   }
 
@@ -100,7 +109,7 @@ class BudgetService extends ChangeNotifier {
 
   Future<Map<String, dynamic>> deleteBudget(String budgetId) async {
     final response = await NetworkService.instance
-        .delete("${BackendEndpoints.budget}/$budgetId");
+        .delete("${BackendEndpoints.budget}/$budgetId/${BackendEndpoints.budgetDeleteHost}");
     return response;
   }
 
@@ -110,6 +119,7 @@ class BudgetService extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Fetch all transaction of current budget
   Future<Map<String, dynamic>> fetchBudgetTransactions(
       String budgetGroupId) async {
     final response = await NetworkService.instance
@@ -119,6 +129,28 @@ class BudgetService extends ChangeNotifier {
       debugPrint("#====== Transactions of Budget ======#");
       debugPrint(response.toString());
       debugPrint("#====== Transactions of Budget ======#");
+      final responseData = response['response'];
+      List<Transaction> transactionList = [];
+      if (responseData.isNotEmpty) {
+        for (var transaction in responseData) {
+          final tempTransaction = Transaction.fromMap(transaction);
+          transactionList.add(tempTransaction);
+        }
+      }
+      _transactions = transactionList;
+      notifyListeners();
+    }
+    return response;
+  }
+
+  // Fetch all transactions of a user by userID
+  Future<Map<String, dynamic>> fetchTransactionsByUserId(
+      String budgetGroupId, String userId) async {
+        print("Endpoint ${"${BackendEndpoints.budget}/$budgetGroupId/transactions?userId=$userId"}");
+    final response = await NetworkService.instance.get(
+        "${BackendEndpoints.budget}/$budgetGroupId/transactions?userId=$userId");
+
+    if (response['response'] != null && response['statusCode'] == 200) {
       final responseData = response['response'];
       List<Transaction> transactionList = [];
       if (responseData.isNotEmpty) {

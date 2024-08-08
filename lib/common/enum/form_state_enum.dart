@@ -2,11 +2,12 @@ enum FormStateType {
   income('Income'),
   expense('Expense'),
   updateTransaction('UpdateTransaction'),
-  saving('Saving'),
   budget('Budget'),
-  goal('Goal'),
-  updateGoal("UpdateGoal"),
-  updateBudget('UpdateBudget');
+  groupSaving('GroupSaving'),
+  updateGroupSaving("UpdateGroupSaving"),
+  updateBudget('UpdateBudget'),
+  // other type of form
+  memberInvitation("MemberInvitation");
 
   final String value;
   const FormStateType(this.value);

@@ -29,6 +29,7 @@ class NotFoundMessage extends StatelessWidget {
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
             color: Theme.of(context).colorScheme.secondary,
           ),
+          maxLines: 3,
           textAlign: TextAlign.center,
         )
       ],

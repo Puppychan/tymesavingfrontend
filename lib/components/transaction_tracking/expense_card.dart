@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tymesavingfrontend/utils/format_amount.dart';
 
 class ExpenseCard extends StatefulWidget {
   const ExpenseCard({super.key, required this.month, required this.expense});
@@ -36,13 +37,10 @@ class _ExpenseCardState extends State<ExpenseCard> {
                       style: textTheme.titleSmall!, // Default style for the first part
                       children: <TextSpan>[
                         TextSpan(
-                          text: '${widget.expense} ',
+                          text: ' ${formatAmountToVnd(widget.expense.toDouble())} ',
                           style: textTheme.titleSmall!.copyWith(color: colorScheme.primary), // Same style for the expense value
                         ),
-                        TextSpan(
-                          text: 'vnd',
-                          style: textTheme.titleSmall!.copyWith(color: colorScheme.primary), // Different color for "vnd"
-                        ),
+                        
                       ],
                     ),
                   ),

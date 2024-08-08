@@ -1,12 +1,20 @@
 {
     "java.compile.nullAnalysis.mode": "automatic",
     "cSpell.words": [
+        "dotenv",
         "Duong",
         "fullname",
         "Giang",
+        "horiz",
         "Khanh",
+        "microtask",
         "Nhung",
+        "signin",
+        "signup",
+        "skeletonizer",
         "Trong",
+        "tyme",
+        "tymesavingfrontend",
         "Viet"
     ]
 }

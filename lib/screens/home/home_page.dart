@@ -90,13 +90,15 @@ class _HomePageState extends State<HomePage> with RouteAware {
       context,
       MaterialPageRoute(
         builder: (context) =>
-            ViewAllTransactionsPage(transactions: transactions!),
+            ViewAllTransactionsPage(),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+
     if (isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -125,9 +127,23 @@ class _HomePageState extends State<HomePage> with RouteAware {
               ],
             )
           else
-            CustomBarChart(
-              totalsExpense: chartReport!.totals,
-              totalsIncome: chartReportSecondary!.totals,
+            Container(
+              decoration: BoxDecoration(
+              color: colorScheme.tertiary,
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
+              boxShadow: [
+                  BoxShadow(
+                    color: colorScheme.secondary,
+                    spreadRadius: 0.1,
+                    blurRadius: 4,
+                    offset: const Offset(0, 1), // changes position of shadow
+                  ),
+                ],
+              ),
+              child: CustomBarChart(
+                totalsExpense: chartReport!.totals,
+                totalsIncome: chartReportSecondary!.totals,
+              ),
             ),
 
           const SizedBox(height: 12), // Add some spacing between sections
@@ -160,7 +176,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
           const SizedBox(height: 4), // Add some spacing between sections
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.4,
-            child: TransactionSection(transactions: transactions!),
+            child: TransactionSection(transactions: transactions ?? {}),
           ),
         ],
       ),

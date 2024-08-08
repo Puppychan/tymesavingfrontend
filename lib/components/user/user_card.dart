@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/constant/temp_constant.dart';
 import 'package:tymesavingfrontend/common/enum/user_role_enum.dart';
 import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
+import 'package:tymesavingfrontend/components/common/dialog/delete_confirm_dialog.dart';
 import 'package:tymesavingfrontend/components/common/images/circle_network_image.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/screens/user_list/user_detail_page.dart';
@@ -34,39 +35,16 @@ class UserCard extends StatelessWidget {
     }
 
     Future showDeleteConfirmationDialog() async {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Delete Confirmation'),
-            content: const Text('Are you sure you want to delete this user?'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Future.microtask(() async {
-                    final userService =
-                        Provider.of<UserService>(context, listen: false);
-                    await handleMainPageApi(context, () async {
-                      return await userService.deleteUser(user.username);
-                      // return result;
-                    }, () async {
-                      Navigator.of(context).pop();
-                    });
-                  });
-                  // onDelete();
-                },
-                child: const Text('Delete'),
-              ),
-            ],
-          );
-        },
-      );
+      showCustomDeleteConfirmationDialog(
+          context, 'Are you sure you want to delete this user?', () async {
+        final userService = Provider.of<UserService>(context, listen: false);
+        await handleMainPageApi(context, () async {
+          return await userService.deleteUser(user.username);
+          // return result;
+        }, () async {
+          Navigator.of(context).pop();
+        });
+      });
     }
 
     // double progress = user.contribution / maxContribution; // Calculate the progress as a fraction
