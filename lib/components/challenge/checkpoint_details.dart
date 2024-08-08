@@ -132,36 +132,39 @@ class _CheckPointDetailsState extends State<CheckPointDetails> {
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 10,),
-                    Row(
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Checkpoint by', style: Theme.of(context).textTheme.bodyMedium),
-                            const SizedBox(height: 10,),
-                            Text('Start on', style: Theme.of(context).textTheme.bodyMedium),
-                            const SizedBox(height: 10,),
-                            Text('End on', style: Theme.of(context).textTheme.bodyMedium),
-                            const SizedBox(height: 10,),
-                            Text('Milestone amount', style: Theme.of(context).textTheme.bodyMedium),
-                          ],
-                        ),
-                        const Expanded(child: SizedBox()),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(_challengeOwner!.fullname, style: Theme.of(context).textTheme.bodyMedium),
-                            const SizedBox(height: 10,),
-                            Text(createDateFormatted ?? '', style: Theme.of(context).textTheme.bodyMedium),
-                            const SizedBox(height: 10,),
-                            Text(endDateFormatted ?? '', style: Theme.of(context).textTheme.bodyMedium),
-                            const SizedBox(height: 10,),
-                            Text(formatAmountToVnd(_checkPointModel!.checkPointValue), 
-                              style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontStyle: FontStyle.italic, fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.primary)),
-                          ],
-                        )
-                      ],
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 15),
+                      child: Row(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Checkpoint by', style: Theme.of(context).textTheme.bodyMedium),
+                              const SizedBox(height: 10,),
+                              Text('Start on', style: Theme.of(context).textTheme.bodyMedium),
+                              const SizedBox(height: 10,),
+                              Text('End on', style: Theme.of(context).textTheme.bodyMedium),
+                              const SizedBox(height: 10,),
+                              Text('Milestone amount', style: Theme.of(context).textTheme.bodyMedium),
+                            ],
+                          ),
+                          const Expanded(child: SizedBox()),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(_challengeOwner!.fullname, style: Theme.of(context).textTheme.bodyMedium),
+                              const SizedBox(height: 10,),
+                              Text(createDateFormatted ?? '', style: Theme.of(context).textTheme.bodyMedium),
+                              const SizedBox(height: 10,),
+                              Text(endDateFormatted ?? '', style: Theme.of(context).textTheme.bodyMedium),
+                              const SizedBox(height: 10,),
+                              Text(formatAmountToVnd(_checkPointModel!.checkPointValue), 
+                                style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontStyle: FontStyle.italic, fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.primary)),
+                            ],
+                          )
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 20),
                     Text("Description", style: Theme.of(context).textTheme.titleSmall),
