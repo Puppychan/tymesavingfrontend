@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
+import 'package:tymesavingfrontend/utils/format_amount.dart';
 
 class ReportFlow extends StatefulWidget {
   const ReportFlow(
@@ -46,7 +47,7 @@ class _ReportFlowState extends State<ReportFlow> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      widget.inflowCurrent.toString(),
+                      formatAmountToVnd(widget.inflowCurrent.toDouble()),
                       style: Theme.of(context).textTheme.titleLarge!,
                     ),
                     Text(
@@ -80,7 +81,7 @@ class _ReportFlowState extends State<ReportFlow> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      widget.outflowCurrent.toString(),
+                      formatAmountToVnd(widget.outflowCurrent.toDouble()),
                       style: Theme.of(context).textTheme.titleLarge!,
                     ),
                     Text(
