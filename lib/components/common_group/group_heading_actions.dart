@@ -86,7 +86,7 @@ List<Widget> renderGroupHeadingActions(
   return actions;
 }
 
-void showGroupActionBottonSheet(
+void showGroupActionBottomSheet(
     BuildContext context, bool isMember, bool isBudget, String groupId) {
   showStyledBottomSheet(
       context: context,

@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:tymesavingfrontend/common/styles/button_theme_data.dart';
+import 'package:tymesavingfrontend/components/budget/budget_approve_page.dart';
+import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
+import 'package:tymesavingfrontend/components/common/button/secondary_button.dart';
 import 'package:tymesavingfrontend/components/common/chart/budget_pie_chart.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/common_group/group_heading_actions.dart';
@@ -35,6 +39,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
   int? daysLeft;
   SummaryUser? _user;
   bool isMember = false;
+  bool approval = true;
   bool isLoading = true;
   String _displayPercentageTaken = '';
   bool _isDisplayRestDescription = false;
@@ -96,7 +101,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
           isLoading = false;
 
           // set display string
-          print(
+          debugPrint(
               "percentageTaken: $percentageTaken, ${percentageTaken! > 199}, $percentageLeft");
           if (percentageTaken! < 0) {
             _displayPercentageTaken = '0%';
@@ -156,8 +161,8 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
           IconButton(
             icon: const Icon(FontAwesomeIcons.ellipsis),
             onPressed: () {
-              showGroupActionBottonSheet(
-                  context, isMember, true, widget.budgetId);
+              showGroupActionBottomSheet(
+                  context, isMember, true, widget.budgetId,);
             },
           )
         ]),
@@ -332,6 +337,38 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                     ),
                     const SizedBox(height: 20,),
                     Text('Transaction history', style: Theme.of(context).textTheme.headlineMedium,),
+                    if (approval)
+                    Text.rich(
+                      TextSpan(
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        children: [
+                          const TextSpan(text: 'Currently there are '),
+                          TextSpan(
+                            text: '0',
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: colorScheme.primary, // Customize the color here
+                              fontWeight: FontWeight.w500, // Optional: make the number bold
+                            ),
+                          ),
+                          const TextSpan(text: ' request'),
+                        ],
+                      ),
+                    ),
+                    if (approval && !isMember)
+                    const SizedBox(height: 20,),
+                    if (approval && !isMember)
+                    SizedBox(
+                          width: 225,
+                          height: 50,
+                          child: SecondaryButton(onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                return BudgetApprovePage();
+                              }));
+                          } 
+                          , title: "Approving transaction",
+                        ),
+                      ),
+                    const SizedBox(height: 20,),
                     SizedBox(
                       height: 500,
                       child: TransactionList(transactions: _transactions),
