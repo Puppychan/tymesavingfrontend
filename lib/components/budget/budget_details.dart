@@ -362,7 +362,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                           height: 50,
                           child: SecondaryButton(onPressed: () {
                             Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                return BudgetApprovePage();
+                                return const BudgetApprovePage();
                               }));
                           } 
                           , title: "Approving transaction",
