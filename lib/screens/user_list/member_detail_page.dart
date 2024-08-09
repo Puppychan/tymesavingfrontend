@@ -134,31 +134,9 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
             UserDetailWidget(
                 fetchedUser: user, otherDetails: user?.getOtherFields()),
             const SizedBox(height: 10),
-            InkWell(
-                  splashColor: colorScheme.quaternary,
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return const ViewAllTransactionsPage();
-                    }));
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Transactions details',
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      Text(
-                        'View All',
-                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                              color: Theme.of(context).colorScheme.primary,
-                              decoration: TextDecoration.underline,
-                            ),
-                      ),
-                    ],
-                  ),
-                ),
+            Text('Transactions details',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               Text(
                 "Total Transactions: ${user?.transactionCount ?? 0}",
@@ -231,33 +209,33 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
             const SizedBox(height: 35),
             const Divider(),
             const SizedBox(height: 10),
-            Text("General Progress",
-                style: Theme.of(context).textTheme.titleSmall),
-            Text(group?.name ?? "Loading group...",
-                style: Theme.of(context).textTheme.bodyLarge),
-            Text(
-                "From ${convertTimestamptzToReadableDate(group?.createdDate)} - To ${convertTimestamptzToReadableDate(group?.endDate)}",
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      fontStyle: FontStyle.italic,
-                    )),
-            const SizedBox(height: 20),
-            AnimatedProgressBar(
-              title: "Group Target Amount vs Group Concurrent Amount",
-              base: {
-                "text": "Group Target Amount",
-                "value": groupTargetAmount,
-              },
-              progressList: [
-                {
-                  'progress': groupTargetProgress,
-                  'progressColor': colorScheme.error,
-                  'progressText': 'Group Concurrent Progress',
-                  'originValue': groupConcurrentAmount,
-                },
-              ],
-              backgroundColor: colorScheme.quaternary,
-            ),
-            const SizedBox(height: 20),
+            // Text("General Progress",
+            //     style: Theme.of(context).textTheme.titleSmall),
+            // Text(group?.name ?? "Loading group...",
+            //     style: Theme.of(context).textTheme.bodyLarge),
+            // Text(
+            //     "From ${convertTimestamptzToReadableDate(group?.createdDate)} - To ${convertTimestamptzToReadableDate(group?.endDate)}",
+            //     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+            //           fontStyle: FontStyle.italic,
+            //         )),
+            // const SizedBox(height: 20),
+      //       AnimatedProgressBar(
+      //         title: "Group Target Amount vs Group Concurrent Amount",
+      //         base: {
+      //           "text": "Group Target Amount",
+      //           "value": groupTargetAmount,
+      //         },
+      //         progressList: [
+      //           {
+      //             'progress': groupTargetProgress,
+      //             'progressColor': colorScheme.error,
+      //             'progressText': 'Group Concurrent Progress',
+      //             'originValue': groupConcurrentAmount,
+      //           },
+      //         ],
+      //         backgroundColor: colorScheme.quaternary,
+      //       ),
+      //       const SizedBox(height: 20),
           ],
         ),
       ),
