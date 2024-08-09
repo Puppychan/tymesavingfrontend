@@ -112,17 +112,15 @@ class _CheckPointDetailsState extends State<CheckPointDetails> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text('Reward', style: Theme.of(context).textTheme.headlineMedium),
-                        const SizedBox(height: 5,),
-                        Text(_rewardModel!.name, style: Theme.of(context).textTheme.titleSmall, overflow: TextOverflow.visible, textAlign: TextAlign.center,),
-                        const SizedBox(height: 10,),
-                        
+                        // Text(_rewardModel!.name, style: Theme.of(context).textTheme.titleSmall, overflow: TextOverflow.visible, textAlign: TextAlign.center,),
                     const SizedBox(height: 10,),
                     Text('${prize['value']} points', style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontStyle: FontStyle.italic, fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.primary)),
                     const SizedBox(height: 10,),
-                    Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Text(_rewardModel!.description, style: Theme.of(context).textTheme.bodyMedium, overflow: TextOverflow.visible, textAlign: TextAlign.justify,)
-                        ),
+                    // This is vault since design is over suffocated with UI
+                    // Container(
+                    //       margin: const EdgeInsets.symmetric(horizontal: 20),
+                    //       child: Text(_rewardModel!.description, style: Theme.of(context).textTheme.bodyMedium, overflow: TextOverflow.visible, textAlign: TextAlign.justify,)
+                    //     ),
                     const SizedBox(height: 5,),    
                     const Divider(),
                     const SizedBox(height: 10,),
@@ -141,8 +139,6 @@ class _CheckPointDetailsState extends State<CheckPointDetails> {
                             children: [
                               Text('Checkpoint by', style: Theme.of(context).textTheme.bodyMedium),
                               const SizedBox(height: 10,),
-                              Text('Start on', style: Theme.of(context).textTheme.bodyMedium),
-                              const SizedBox(height: 10,),
                               Text('End on', style: Theme.of(context).textTheme.bodyMedium),
                               const SizedBox(height: 10,),
                               Text('Milestone amount', style: Theme.of(context).textTheme.bodyMedium),
@@ -153,8 +149,6 @@ class _CheckPointDetailsState extends State<CheckPointDetails> {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(_challengeOwner!.fullname, style: Theme.of(context).textTheme.bodyMedium),
-                              const SizedBox(height: 10,),
-                              Text(createDateFormatted ?? '', style: Theme.of(context).textTheme.bodyMedium),
                               const SizedBox(height: 10,),
                               Text(endDateFormatted ?? '', style: Theme.of(context).textTheme.bodyMedium),
                               const SizedBox(height: 10,),

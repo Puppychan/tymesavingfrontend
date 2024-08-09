@@ -109,7 +109,7 @@ class _AssignGroupMultiFormState extends State<AssignGroupMultiForm> {
     final colorScheme = Theme.of(context).colorScheme;
     return Column(children: [
       RadioField(
-          label: "Belong to Group?",
+          label: "This transaction is for: ",
           options: widget.transactionType == FormStateType.expense ?
           TransactionGroupType.formattedExpenseList: 
           TransactionGroupType.formattedIncomeList,

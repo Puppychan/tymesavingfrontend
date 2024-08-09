@@ -39,7 +39,7 @@ class _SignUpViewState extends State<SignUpView> {
             //     width: media.width * 0.5, fit: BoxFit.contain),
             //  const Heading(title: 'Sign Up', showBackButton: true),
             CustomAlignText(
-                text: 'Become a part to use this app',
+                text: 'Become a new user now!',
                 style: Theme.of(context).textTheme.headlineMedium!),
             const SizedBox(
               height: 24,
@@ -57,11 +57,11 @@ class _SignUpViewState extends State<SignUpView> {
               TextSpan(
                 children: [
                   TextSpan(
-                    text: 'Already Have an Account? ',
+                    text: 'Already have an account? ',
                     style: Theme.of(context).textTheme.bodyMedium!,
                   ),
                   TextSpan(
-                    text: ' Login Here',
+                    text: ' Login here',
                     recognizer: signInRecognizer, // Attach the recognizer here
                     style: AppTextStyles.paragraphLinkBlue(context),
                   ),

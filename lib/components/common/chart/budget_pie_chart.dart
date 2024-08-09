@@ -31,7 +31,7 @@ class _BudgetPieChartState extends State<BudgetPieChart> {
                 sections: [
                   PieChartSectionData(
                     value: double.parse(widget.amount.toStringAsFixed(2)),
-                    color: colorScheme.primary, // Example color
+                    color: widget.amount == 100 ? const Color(0xFF4CAF50) : colorScheme.primary, // Example color
                     title: '',
                     showTitle: false,
                   ),

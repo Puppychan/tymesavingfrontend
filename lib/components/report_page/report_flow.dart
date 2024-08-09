@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
+import 'package:tymesavingfrontend/utils/format_amount.dart';
 
 class ReportFlow extends StatefulWidget {
   const ReportFlow(
@@ -25,9 +26,11 @@ class _ReportFlowState extends State<ReportFlow> {
     final textTheme = Theme.of(context).textTheme;
     return Column(
       children: [
-        Card.filled(
+        Card.outlined(
+          elevation: 6,
+          shadowColor: colorScheme.onPrimary,
           margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          color: Colors.transparent.withOpacity(0),
+          color: colorScheme.surface,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
             child: Row(
@@ -44,7 +47,7 @@ class _ReportFlowState extends State<ReportFlow> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      widget.inflowCurrent.toString(),
+                      formatAmountToVnd(widget.inflowCurrent.toDouble()),
                       style: Theme.of(context).textTheme.titleLarge!,
                     ),
                     Text(
@@ -57,9 +60,11 @@ class _ReportFlowState extends State<ReportFlow> {
             ),
           ),
         ),
-        Card.filled(
+        Card.outlined(
+          elevation: 6,
+          shadowColor: colorScheme.onPrimary,
           margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          color: Colors.transparent.withOpacity(0),
+          color: colorScheme.surface,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
             child: Row(
@@ -76,7 +81,7 @@ class _ReportFlowState extends State<ReportFlow> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      widget.outflowCurrent.toString(),
+                      formatAmountToVnd(widget.outflowCurrent.toDouble()),
                       style: Theme.of(context).textTheme.titleLarge!,
                     ),
                     Text(

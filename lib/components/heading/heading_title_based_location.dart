@@ -13,8 +13,8 @@ String renderHeadingTitleBasedUserRoleAndLocation(BuildContext context,
     },
     UserRole.customer: {
       PageLocation.homePage: "Hi, $username",
-      PageLocation.budgetPage: "Budgets",
-      PageLocation.savingPage: "Savings",
+      PageLocation.budgetPage: "Budget groups",
+      PageLocation.savingPage: "Saving groups",
       // PageLocation.settingsPage: [Icons.home],
     },
   };

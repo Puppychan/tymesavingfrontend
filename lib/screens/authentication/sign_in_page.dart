@@ -60,13 +60,18 @@ class _SignInViewState extends State<SignInView> {
               TextSpan(
                 children: [
                   TextSpan(
-                    text: 'New to brainy academy? ',
+                    text: 'New to this application? ',
                     style: Theme.of(context).textTheme.bodyMedium!,
                   ),
                   TextSpan(
-                    text: ' Sign up here',
+                    text: ' Sign up',
                     recognizer: signUpRecognizer, // Attach the recognizer here
                     style: AppTextStyles.paragraphLinkYellow(context),
+                  ),
+                  TextSpan(
+                    text: ' now',
+                    recognizer: signUpRecognizer, // Attach the recognizer here
+                    style: Theme.of(context).textTheme.bodyMedium!,
                   ),
                 ],
               ),

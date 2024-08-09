@@ -266,7 +266,7 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
                       ))),
               ...buildComponentGroup(
                 context: context,
-                label: "ASSIGN GROUP",
+                label: "ASSIGN TO",
                 contentWidget: AssignGroupMultiForm(
                     updateOnChange: updateOnChange,
                     userId: _user?.id ?? "",
