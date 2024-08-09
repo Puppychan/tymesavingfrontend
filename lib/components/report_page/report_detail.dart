@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
 import 'package:tymesavingfrontend/models/transaction_report_model.dart';
+import 'package:tymesavingfrontend/utils/format_amount.dart';
 
 class ReportDetail extends StatefulWidget {
   const ReportDetail({super.key, required this.topCategories});
@@ -54,7 +55,7 @@ class _CategoryCardItemState extends State<CategoryCardItem> {
     final Color color = category['color'];
     return Card.outlined(
       color: colorScheme.onPrimary,
-      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      margin: const EdgeInsets.symmetric(horizontal: 100, vertical: 10),
       child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Row(
@@ -75,7 +76,7 @@ class _CategoryCardItemState extends State<CategoryCardItem> {
                   ),
                   Text.rich(
                     TextSpan(
-                      text: '${widget.amountSpend} ₫',
+                      text: formatAmountToVnd(widget.amountSpend.toDouble()),
                       style: textTheme
                           .bodyLarge!, // Default style for the first part
                     ),

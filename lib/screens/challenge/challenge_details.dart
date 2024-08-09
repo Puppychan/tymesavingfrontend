@@ -209,7 +209,7 @@ Widget build(BuildContext context) {
                         ),
                       Container(
                               margin: const EdgeInsets.symmetric(vertical: 10),
-                              height: 300, // Specify the height here
+                              height: 350, // Specify the height here
                               child: ListView.builder(
                                 padding: const EdgeInsets.all(0),
                                 itemCount: _challengeDetailMemberModelList!.length,

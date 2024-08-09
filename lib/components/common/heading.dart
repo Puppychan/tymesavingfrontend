@@ -19,7 +19,7 @@ class Heading extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: CustomAlignText(
-          text: title, style: Theme.of(context).textTheme.headlineLarge),
+          text: title, style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontSize: 25, fontStyle: FontStyle.italic, fontWeight: FontWeight.w500)),
       leading: showBackButton
           ? IconButton(
               onPressed: () {

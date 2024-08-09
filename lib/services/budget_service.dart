@@ -52,7 +52,7 @@ class BudgetService extends ChangeNotifier {
     double concurrentAmount,
     String endDate,
   ) async {
-    print("Before sending backend: $hostedBy, $name, $description, $amount, $concurrentAmount, $endDate");
+    debugPrint("Before sending backend: $hostedBy, $name, $description, $amount, $concurrentAmount, $endDate");
     final response = await NetworkService.instance.post(
       BackendEndpoints.budget,
       body: {
@@ -64,7 +64,7 @@ class BudgetService extends ChangeNotifier {
         'endDate': endDate,
       },
     );
-    print("Response when creating budget $response");
+    debugPrint("Response when creating budget $response");
     return response;
   }
 
@@ -124,11 +124,10 @@ class BudgetService extends ChangeNotifier {
       String budgetGroupId) async {
     final response = await NetworkService.instance
         .get("${BackendEndpoints.budget}/$budgetGroupId/transactions");
-
     if (response['response'] != null && response['statusCode'] == 200) {
-      debugPrint("#====== Transactions of Budget ======#");
-      debugPrint(response.toString());
-      debugPrint("#====== Transactions of Budget ======#");
+      // debugPrint("#====== Transactions of Budget ======#");
+      // debugPrint(response.toString());
+      // debugPrint("#====== Transactions of Budget ======#");
       final responseData = response['response'];
       List<Transaction> transactionList = [];
       if (responseData.isNotEmpty) {
