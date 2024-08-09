@@ -122,7 +122,7 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: Heading(
-        title: user?.fullname ?? "。。。",
+        title: user?.fullname ?? "",
         showBackButton: true,
       ),
       body: user == null ?
@@ -188,32 +188,32 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
             const SizedBox(height: 10),
             Text("Transaction Summary",
                 style: Theme.of(context).textTheme.titleSmall),
-            const SizedBox(height: 30),
+            const SizedBox(height: 20),
+            // AnimatedProgressBar(
+            //   title: "Expense Progress",
+            //   base: {
+            //     "text": "User Total Amount",
+            //     "value": totalAmount,
+            //   },
+            //   progressList: [
+            //     {
+            //       'progress': incomeProgress,
+            //       'progressColor': colorScheme.error,
+            //       'progressText': 'User Income',
+            //       'originValue': incomeAmount,
+            //     },
+            //     {
+            //       'progress': expenseProgress,
+            //       'progressColor': colorScheme.inversePrimary,
+            //       'progressText': 'User Expense',
+            //       'originValue': expenseAmount,
+            //     },
+            //   ],
+            //   backgroundColor: colorScheme.quaternary,
+            // ),
+            // const SizedBox(height: 35),
             AnimatedProgressBar(
-              title: "User Income & Expense Progress",
-              base: {
-                "text": "User Total Amount",
-                "value": totalAmount,
-              },
-              progressList: [
-                {
-                  'progress': incomeProgress,
-                  'progressColor': colorScheme.error,
-                  'progressText': 'User Income',
-                  'originValue': incomeAmount,
-                },
-                {
-                  'progress': expenseProgress,
-                  'progressColor': colorScheme.inversePrimary,
-                  'progressText': 'User Expense',
-                  'originValue': expenseAmount,
-                },
-              ],
-              backgroundColor: colorScheme.quaternary,
-            ),
-            const SizedBox(height: 35),
-            AnimatedProgressBar(
-              title: "User Total Amount towards Group Concurrent Amount",
+              title: "Members total expense compare to concurrent budget",
               base: {
                 "text": "Group Current Amount",
                 "value": groupConcurrentAmount,

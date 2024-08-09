@@ -176,38 +176,58 @@ class _AnimatedProgressBarState extends State<AnimatedProgressBar>
   Widget _buildExplanation(Map<String, dynamic> progressValue,
       Map<String, dynamic> base, TextTheme textTheme) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      RichText(
-        text: TextSpan(
-          children: [
-            WidgetSpan(
-              child: Icon(FontAwesomeIcons.fishFins,
+      Row(
+        children: [
+          Icon(FontAwesomeIcons.userTie,
                   color: progressValue['progressColor'], size: 16),
-            ),
-            const TextSpan(text: "   "), // Equivalent to SizedBox(width: 4)
-            TextSpan(
-              text: "${progressValue['progressText']} >< ${base['text']}",
-              style: textTheme.bodyMedium,
-            ),
-          ],
-        ),
+          const SizedBox(width: 5,),
+          Text(progressValue['progressText'],style: Theme.of(context).textTheme.bodyMedium),
+          const Expanded(child: SizedBox()),
+          Text(formatAmountToVnd(progressValue['originValue']),style: Theme.of(context).textTheme.bodyMedium)
+        ],
       ),
-      RichText(
-        text: TextSpan(
-          children: [
-            WidgetSpan(
-              child: Icon(FontAwesomeIcons.moneyBill,
-                  color: progressValue['progressColor'].withOpacity(0.7),
-                  size: 16),
-            ),
-            const TextSpan(text: "   "), // Equivalent to SizedBox(width: 4)
-            TextSpan(
-              text:
-                  "${formatAmountToVnd(progressValue['originValue'])} >< ${formatAmountToVnd(base['value'])}",
-              style: textTheme.bodyMedium,
-            ),
-          ],
-        ),
+      Row(
+        children: [
+          Icon(FontAwesomeIcons.userGroup,
+                  color: progressValue['progressColor'], size: 16),
+          const SizedBox(width: 5,),
+          Text(base['text'],style: Theme.of(context).textTheme.bodyMedium),
+          const Expanded(child: SizedBox()),
+          Text(formatAmountToVnd(base['value']),style: Theme.of(context).textTheme.bodyMedium)
+        ],
       ),
+      // RichText(
+      //   text: TextSpan(
+      //     children: [
+      //       WidgetSpan(
+      //         child: Icon(FontAwesomeIcons.fishFins,
+      //             color: progressValue['progressColor'], size: 16),
+      //       ),
+      //       const TextSpan(text: "   "), // Equivalent to SizedBox(width: 4)
+      //       // TextSpan(
+      //       //   text: "${progressValue['progressText']} >< ${base['text']}",
+      //       //   style: textTheme.bodyMedium,
+      //       // ),
+      //     ],
+      //   ),
+      // ),
+      // RichText(
+      //   text: TextSpan(
+      //     children: [
+      //       WidgetSpan(
+      //         child: Icon(FontAwesomeIcons.moneyBill,
+      //             color: progressValue['progressColor'].withOpacity(0.7),
+      //             size: 16),
+      //       ),
+      //       const TextSpan(text: "   "), // Equivalent to SizedBox(width: 4)
+      //       TextSpan(
+      //         text:
+      //             "${formatAmountToVnd(progressValue['originValue'])} >< ${formatAmountToVnd(base['value'])}",
+      //         style: textTheme.bodyMedium,
+      //       ),
+      //     ],
+      //   ),
+      // ),
       const SizedBox(height: 5),
     ]);
   }
