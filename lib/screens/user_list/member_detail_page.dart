@@ -125,7 +125,9 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
         title: user?.fullname ?? "。。。",
         showBackButton: true,
       ),
-      body: SingleChildScrollView(
+      body: user == null ?
+      const Center(child: CircularProgressIndicator())
+       : SingleChildScrollView(
         padding: AppPaddingStyles.pagePaddingIncludeSubText,
         child: Column(
           children: [
@@ -144,7 +146,7 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'My Transactions',
+                        'Transactions details',
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                       Text(
@@ -177,7 +179,7 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildTransactionSummaryCard(true, incomeAmount, context),
+                // _buildTransactionSummaryCard(true, incomeAmount, context),
                 _buildTransactionSummaryCard(false, expenseAmount, context),
               ],
             ),
