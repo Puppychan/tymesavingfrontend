@@ -25,27 +25,10 @@ class AuthUserInvitationCard extends StatefulWidget {
 
 class _AuthUserInvitationCardState extends State<AuthUserInvitationCard> {
   bool _isDataFetched = false;
-  SummaryGroup? groupSummary;
   Timer? _debounce;
 
   void _fetchData() async {
     if (!_isDataFetched && mounted) {
-      await handleMainPageApi(context, () async {
-        if (widget.invitation.type == InvitationType.budget) {
-          // Fetch budget details
-          return await Provider.of<BudgetService>(context, listen: false)
-              .fetchBudgetSummary(widget.invitation.groupId);
-        } else if (widget.invitation.type == InvitationType.savings) {
-          // Fetch goal details
-          return await Provider.of<GroupSavingService>(context, listen: false)
-              .fetchGroupSavingSummary(widget.invitation.groupId);
-        }
-      }, () async {
-        setState(() {
-          groupSummary =
-              Provider.of<BudgetService>(context, listen: false).summaryGroup;
-        });
-      });
 
       if (mounted) {
         setState(() {
@@ -98,7 +81,7 @@ class _AuthUserInvitationCardState extends State<AuthUserInvitationCard> {
               showStyledBottomSheet(
                 context: context,
                 title: widget.invitation.type.toStringFormatted(),
-                contentWidget: detailedSummaryGroup(context, groupSummary),
+                contentWidget: detailedSummaryGroup(context, widget.invitation.summaryGroup),
               );
             },
             child: Card(
@@ -139,7 +122,7 @@ class _AuthUserInvitationCardState extends State<AuthUserInvitationCard> {
                       const SizedBox(height: 8.0),
                       CustomAlignText(
                         text:
-                            "Invite from ${groupSummary?.name ?? "Loading..."}",
+                            "Invite from ${widget.invitation.summaryGroup?.name ?? "Loading..."}",
                         style: textTheme.bodyLarge!.copyWith(
                           color: colorScheme.secondary,
                           fontWeight: FontWeight.w600,

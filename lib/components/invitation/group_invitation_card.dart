@@ -6,10 +6,7 @@ import 'package:tymesavingfrontend/common/enum/invitation_status_enum.dart';
 import 'package:tymesavingfrontend/common/enum/invitation_type_enum.dart';
 import 'package:tymesavingfrontend/components/common/text_align.dart';
 import 'package:tymesavingfrontend/models/invitation_model.dart';
-import 'package:tymesavingfrontend/models/summary_group_model.dart';
 import 'package:tymesavingfrontend/models/summary_user_model.dart';
-import 'package:tymesavingfrontend/services/budget_service.dart';
-import 'package:tymesavingfrontend/services/group_saving_service.dart';
 import 'package:tymesavingfrontend/services/user_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
@@ -24,29 +21,10 @@ class GroupInvitationCard extends StatefulWidget {
 
 class _GroupInvitationCardState extends State<GroupInvitationCard> {
   bool _isDataFetched = false;
-  SummaryGroup? groupSummary;
   SummaryUser? summaryUser;
 
   void _fetchData() async {
     if (!_isDataFetched && mounted) {
-      // Fetch group details
-      await handleMainPageApi(context, () async {
-        if (widget.invitation.type == InvitationType.budget) {
-          // Fetch budget details
-          return await Provider.of<BudgetService>(context, listen: false)
-              .fetchBudgetSummary(widget.invitation.groupId);
-        } else if (widget.invitation.type == InvitationType.savings) {
-          // Fetch goal details
-          return await Provider.of<GroupSavingService>(context, listen: false)
-              .fetchGroupSavingSummary(widget.invitation.groupId);
-        }
-      }, () async {
-        setState(() {
-          groupSummary =
-              Provider.of<BudgetService>(context, listen: false).summaryGroup;
-        });
-      });
-
       if (mounted) {
         setState(() {
           _isDataFetched = true;

@@ -1,6 +1,8 @@
 enum FormStateType {
   income('Income'),
   expense('Expense'),
+  updateIncome('UpdateIncome'),
+  updateExpense('UpdateExpense'),
   updateTransaction('UpdateTransaction'),
   budget('Budget'),
   groupSaving('GroupSaving'),

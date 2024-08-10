@@ -5,6 +5,7 @@ import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
 import 'package:tymesavingfrontend/common/enum/invitation_type_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_group_type_enum.dart';
+import 'package:tymesavingfrontend/common/enum/transaction_type_enum.dart';
 import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
 import 'package:tymesavingfrontend/components/common/dialog/date_picker_dialog.dart';
 import 'package:tymesavingfrontend/components/common/dialog/time_picker_dialog.dart';
@@ -113,12 +114,15 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
         print("Form field $formField");
         // return null;
 
-        final transactionType = widget.type == FormStateType.updateTransaction
-            ? formField['type']
-            : widget.type;
+        FormStateType transactionType = widget.type;
+        if (widget.type == FormStateType.income || widget.type == FormStateType.updateIncome) {
+          transactionType = FormStateType.income;
+        } else if (widget.type == FormStateType.expense) {
+          transactionType = FormStateType.expense;
+        }
 
         context.loaderOverlay.show();
-        if (widget.type == FormStateType.updateTransaction) {
+        if (widget.type == FormStateType.updateExpense || widget.type == FormStateType.updateIncome) {
           return await Provider.of<TransactionService>(context, listen: false)
               .updateTransaction(
                   // user?.id ?? "",
