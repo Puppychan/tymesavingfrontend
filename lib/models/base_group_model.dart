@@ -7,6 +7,7 @@ class BaseGroup {
   final double concurrentAmount;
   final String createdDate;
   final String endDate;
+  final String defaultApproveStatus;
 
 
   BaseGroup.fromMap(Map<String, dynamic> map):
@@ -17,7 +18,8 @@ class BaseGroup {
       amount = map['amount'].toDouble(),
       concurrentAmount = map['concurrentAmount'].toDouble(),
       createdDate = map['createdDate'],
-      endDate = map['endDate'];
+      endDate = map['endDate'],
+      defaultApproveStatus = map['defaultApproveStatus'];
 
   Map<String, dynamic> toMapForForm() {
     return {
@@ -29,6 +31,7 @@ class BaseGroup {
       'concurrentAmount': concurrentAmount,
       'createdDate': createdDate,
       'endDate': endDate,
+      'defaultApproveStatus': defaultApproveStatus,
       // 'participants': participants,
       // Assuming participants is a List<String>. If participants should be converted from List<IUser>, you might need to map each IUser to its map representation.
     };
