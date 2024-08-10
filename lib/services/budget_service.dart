@@ -16,8 +16,12 @@ class BudgetService extends ChangeNotifier {
   SummaryGroup? get summaryGroup => _summaryGroup;
 
   List<Transaction> _transactions = [];
+  List<Transaction> _awaitingApprovalTransaction = [];
+  List<Transaction> _cancelledTransaction = [];
 
+  List<Transaction> get awaitingApprovalTransaction => _awaitingApprovalTransaction;
   List<Transaction> get transactions => _transactions;
+  List<Transaction> get cancelledTransaction => _cancelledTransaction;
 
   Future<dynamic> fetchBudgetList(String? userId, {String? name, CancelToken? cancelToken}) async {
     // if (userId == null) return {'response': 'User ID is required.', 'statusCode': 400};
@@ -130,13 +134,50 @@ class BudgetService extends ChangeNotifier {
       // debugPrint("#====== Transactions of Budget ======#");
       final responseData = response['response'];
       List<Transaction> transactionList = [];
+      List<Transaction> awaitingApprovalTransaction= [];
       if (responseData.isNotEmpty) {
         for (var transaction in responseData) {
-          final tempTransaction = Transaction.fromMap(transaction);
-          transactionList.add(tempTransaction);
+          if(transaction['approveStatus'] == 'Approved') {
+            final tempTransaction = Transaction.fromMap(transaction);
+            transactionList.add(tempTransaction);
+          } else if (transaction['approveStatus'] == 'Pending') {
+            final tempTransaction = Transaction.fromMap(transaction);
+            awaitingApprovalTransaction.add(tempTransaction);
+          }
         }
       }
       _transactions = transactionList;
+      _awaitingApprovalTransaction = awaitingApprovalTransaction;
+      notifyListeners();
+    }
+    return response;
+  }
+
+  // Fetch all transaction of current budget
+  Future<Map<String, dynamic>> fetchAwaitingApprovalTransactions(
+      String budgetGroupId) async {
+    final response = await NetworkService.instance
+        .get("${BackendEndpoints.budget}/$budgetGroupId/transactions");
+    if (response['response'] != null && response['statusCode'] == 200) {
+      // debugPrint("#====== Transactions of Budget ======#");
+      // debugPrint(response.toString());
+      // debugPrint("#====== Transactions of Budget ======#");
+      final responseData = response['response'];
+      List<Transaction> transactionPendingList = [];
+      List<Transaction> transactionCancelledList = [];
+      if (responseData.isNotEmpty) {
+        for (var transaction in responseData) {
+          if(transaction['approveStatus'] == 'Pending') {
+            final tempTransaction = Transaction.fromMap(transaction);
+            transactionPendingList.add(tempTransaction);
+          } else if (transaction['approveStatus'] == 'Declined') {
+            final tempTransaction = Transaction.fromMap(transaction);
+            transactionCancelledList.add(tempTransaction);
+          }
+        }
+      }
+      _awaitingApprovalTransaction = transactionPendingList;
+      _cancelledTransaction = transactionCancelledList;
       notifyListeners();
     }
     return response;
