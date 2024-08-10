@@ -39,11 +39,12 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
   int? daysLeft;
   SummaryUser? _user;
   bool isMember = false;
-  bool approval = true;
+  bool approval = false;
   bool isLoading = true;
   String _displayPercentageTaken = '';
   bool _isDisplayRestDescription = false;
   List<Transaction> _transactions = [];
+  List<Transaction> _awaitingApprovalTransaction = [];
 
   Future<void> _renderUser(String? userId) async {
     Future.microtask(() async {
@@ -69,6 +70,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
       if (!mounted) return;
       setState(() {
         _transactions = budgetService.transactions;
+        _awaitingApprovalTransaction = budgetService.awaitingApprovalTransaction;
       });
     });
   }
@@ -99,10 +101,11 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
           isMember = _budget!.hostedBy.toString() !=
               Provider.of<AuthService>(context, listen: false).user?.id;
           isLoading = false;
-
-          // set display string
-          debugPrint(
-              "percentageTaken: $percentageTaken, ${percentageTaken! > 199}, $percentageLeft");
+          if(_budget!.defaultApproveStatus == "Declined") {
+            approval = true;
+          }
+          // debugPrint(
+          //     "percentageTaken: $percentageTaken, ${percentageTaken! > 199}, $percentageLeft");
           if (percentageTaken! < 0) {
             _displayPercentageTaken = '0%';
           } else if (percentageTaken! > 199) {
@@ -344,7 +347,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                         children: [
                           const TextSpan(text: 'Currently there are '),
                           TextSpan(
-                            text: '0',
+                            text: _awaitingApprovalTransaction.length.toString(),
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               color: colorScheme.primary, // Customize the color here
                               fontWeight: FontWeight.w500, // Optional: make the number bold
@@ -362,7 +365,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                           height: 50,
                           child: SecondaryButton(onPressed: () {
                             Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                return const BudgetApprovePage();
+                                return BudgetApprovePage(budgetId: widget.budgetId,);
                               }));
                           } 
                           , title: "Approving transaction",
