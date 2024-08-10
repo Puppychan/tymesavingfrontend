@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
+import 'package:tymesavingfrontend/components/full_screen_image.dart';
 import 'package:tymesavingfrontend/models/transaction_model.dart';
 import 'package:tymesavingfrontend/services/budget_service.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
@@ -122,7 +123,7 @@ class _BudgetApprovePageState extends State<BudgetApprovePage> {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ListTile(
-                      onTap: () => _showAcceptDeclinePrompt(context),
+                      onTap: () => _showAcceptDeclinePrompt(context, transaction.transactionImage!),
                       tileColor: colorScheme.tertiary,
                       title: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -229,28 +230,46 @@ class _BudgetApprovePageState extends State<BudgetApprovePage> {
   }
 }
 
-void _showAcceptDeclinePrompt(BuildContext context) {
+void _showAcceptDeclinePrompt(BuildContext context, String transactionImage) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Confirmation"),
-          content: Text("Do you accept or decline this action?"),
+          title: Text("Confirm", style: Theme.of(context).textTheme.headlineSmall,),
+          content: Text("Do you approve or decline this transaction?", style: Theme.of(context).textTheme.bodyMedium, overflow: TextOverflow.visible,),
           actions: <Widget>[
-            TextButton(
-              child: Text("Decline"),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FullScreenImage(imageUrl: transactionImage!),
+                  ),
+                );
+              },
+              child: transactionImage != ""
+                ? Image.network(transactionImage!)
+                : const SizedBox(),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+              child: Text("Accept", style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w500)),
               onPressed: () {
                 Navigator.of(context).pop();
                 // Handle the decline action here
               },
             ),
             TextButton(
-              child: Text("Accept"),
+              child: Text("Decline", style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w500)),
               onPressed: () {
                 Navigator.of(context).pop();
                 // Handle the accept action here
               },
             ),
+              ],
+            )
           ],
         );
       },
