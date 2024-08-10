@@ -10,6 +10,7 @@ class Transaction {
   final String? payBy;
   final String? userId;
   final TransactionUser? user;
+  final String? transactionImage;
 
   Transaction({
     required this.id,
@@ -21,6 +22,7 @@ class Transaction {
     this.payBy,
     this.userId,
     this.user,
+    this.transactionImage,
   });
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
@@ -35,6 +37,7 @@ class Transaction {
       userId: json['userId'] ?? '',
       user:
           json['user'] != null ? TransactionUser.fromJson(json['user']) : null,
+      transactionImage: json['transactionImages'] != null ? json['transactionImages'][0] : null,
     );
   }
 
@@ -49,7 +52,11 @@ class Transaction {
         date = transaction['createdDate'],
         user = transaction['user'] != null
             ? TransactionUser.fromJson(transaction['user'])
-            : null;
+            : null,
+        transactionImage = (transaction['transactionImages'] != null &&
+              transaction['transactionImages'].isNotEmpty)
+          ? transaction['transactionImages'][0]
+          : null;
 
   Map<String, dynamic> toMapForForm() {
     return {
@@ -62,6 +69,7 @@ class Transaction {
       'createdDate': date,
       'type': type,
       'user': user != null ? user!.toJson() : null,
+      'transactionImage': transactionImage,
     };
   }
 

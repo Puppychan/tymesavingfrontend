@@ -8,11 +8,9 @@ import 'package:tymesavingfrontend/components/user/user_detail_widget.dart';
 import 'package:tymesavingfrontend/models/budget_model.dart';
 import 'package:tymesavingfrontend/models/summary_user_model.dart';
 import 'package:tymesavingfrontend/models/transaction_model.dart';
-import 'package:tymesavingfrontend/screens/transaction/view_all_transaction_page.dart';
 import 'package:tymesavingfrontend/services/budget_service.dart';
 import 'package:tymesavingfrontend/services/user_service.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
-import 'package:tymesavingfrontend/utils/format_date.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
 
@@ -122,41 +120,21 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: Heading(
-        title: user?.fullname ?? "。。。",
+        title: user?.fullname ?? "",
         showBackButton: true,
       ),
-      body: SingleChildScrollView(
+      body: user == null ?
+      const Center(child: CircularProgressIndicator())
+       : SingleChildScrollView(
         padding: AppPaddingStyles.pagePaddingIncludeSubText,
         child: Column(
           children: [
             UserDetailWidget(
                 fetchedUser: user, otherDetails: user?.getOtherFields()),
             const SizedBox(height: 10),
-            InkWell(
-                  splashColor: colorScheme.quaternary,
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return const ViewAllTransactionsPage();
-                    }));
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'My Transactions',
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      Text(
-                        'View All',
-                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                              color: Theme.of(context).colorScheme.primary,
-                              decoration: TextDecoration.underline,
-                            ),
-                      ),
-                    ],
-                  ),
-                ),
+            Text('Transactions details',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               Text(
                 "Total Transactions: ${user?.transactionCount ?? 0}",
@@ -177,7 +155,7 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildTransactionSummaryCard(true, incomeAmount, context),
+                // _buildTransactionSummaryCard(true, incomeAmount, context),
                 _buildTransactionSummaryCard(false, expenseAmount, context),
               ],
             ),
@@ -186,32 +164,32 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
             const SizedBox(height: 10),
             Text("Transaction Summary",
                 style: Theme.of(context).textTheme.titleSmall),
-            const SizedBox(height: 30),
+            const SizedBox(height: 20),
+            // AnimatedProgressBar(
+            //   title: "Expense Progress",
+            //   base: {
+            //     "text": "User Total Amount",
+            //     "value": totalAmount,
+            //   },
+            //   progressList: [
+            //     {
+            //       'progress': incomeProgress,
+            //       'progressColor': colorScheme.error,
+            //       'progressText': 'User Income',
+            //       'originValue': incomeAmount,
+            //     },
+            //     {
+            //       'progress': expenseProgress,
+            //       'progressColor': colorScheme.inversePrimary,
+            //       'progressText': 'User Expense',
+            //       'originValue': expenseAmount,
+            //     },
+            //   ],
+            //   backgroundColor: colorScheme.quaternary,
+            // ),
+            // const SizedBox(height: 35),
             AnimatedProgressBar(
-              title: "User Income & Expense Progress",
-              base: {
-                "text": "User Total Amount",
-                "value": totalAmount,
-              },
-              progressList: [
-                {
-                  'progress': incomeProgress,
-                  'progressColor': colorScheme.error,
-                  'progressText': 'User Income',
-                  'originValue': incomeAmount,
-                },
-                {
-                  'progress': expenseProgress,
-                  'progressColor': colorScheme.inversePrimary,
-                  'progressText': 'User Expense',
-                  'originValue': expenseAmount,
-                },
-              ],
-              backgroundColor: colorScheme.quaternary,
-            ),
-            const SizedBox(height: 35),
-            AnimatedProgressBar(
-              title: "User Total Amount towards Group Concurrent Amount",
+              title: "Members total expense compare to concurrent budget",
               base: {
                 "text": "Group Current Amount",
                 "value": groupConcurrentAmount,
@@ -229,33 +207,33 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
             const SizedBox(height: 35),
             const Divider(),
             const SizedBox(height: 10),
-            Text("General Progress",
-                style: Theme.of(context).textTheme.titleSmall),
-            Text(group?.name ?? "Loading group...",
-                style: Theme.of(context).textTheme.bodyLarge),
-            Text(
-                "From ${convertTimestamptzToReadableDate(group?.createdDate)} - To ${convertTimestamptzToReadableDate(group?.endDate)}",
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      fontStyle: FontStyle.italic,
-                    )),
-            const SizedBox(height: 20),
-            AnimatedProgressBar(
-              title: "Group Target Amount vs Group Concurrent Amount",
-              base: {
-                "text": "Group Target Amount",
-                "value": groupTargetAmount,
-              },
-              progressList: [
-                {
-                  'progress': groupTargetProgress,
-                  'progressColor': colorScheme.error,
-                  'progressText': 'Group Concurrent Progress',
-                  'originValue': groupConcurrentAmount,
-                },
-              ],
-              backgroundColor: colorScheme.quaternary,
-            ),
-            const SizedBox(height: 20),
+            // Text("General Progress",
+            //     style: Theme.of(context).textTheme.titleSmall),
+            // Text(group?.name ?? "Loading group...",
+            //     style: Theme.of(context).textTheme.bodyLarge),
+            // Text(
+            //     "From ${convertTimestamptzToReadableDate(group?.createdDate)} - To ${convertTimestamptzToReadableDate(group?.endDate)}",
+            //     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+            //           fontStyle: FontStyle.italic,
+            //         )),
+            // const SizedBox(height: 20),
+      //       AnimatedProgressBar(
+      //         title: "Group Target Amount vs Group Concurrent Amount",
+      //         base: {
+      //           "text": "Group Target Amount",
+      //           "value": groupTargetAmount,
+      //         },
+      //         progressList: [
+      //           {
+      //             'progress': groupTargetProgress,
+      //             'progressColor': colorScheme.error,
+      //             'progressText': 'Group Concurrent Progress',
+      //             'originValue': groupConcurrentAmount,
+      //           },
+      //         ],
+      //         backgroundColor: colorScheme.quaternary,
+      //       ),
+      //       const SizedBox(height: 20),
           ],
         ),
       ),
