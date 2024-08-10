@@ -284,4 +284,48 @@ class TransactionService extends ChangeNotifier {
     }
     return response;
   }
+
+  // Get transaction list of month and year
+  Future<List<Transaction>> fetchTransactionsByMonthAndYear(
+      String userId, int year, int month) async {
+    // Ensure that month is two digits
+    String monthStr = month.toString().padLeft(2, '0');
+    String yearStr = year.toString();
+
+    // Construct the endpoint with the provided year and month
+    String endpoint =
+        "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReportByUser}/$userId";
+
+    // Add the filter for the specified month and year
+    endpoint += "?getDateCreated=$yearStr-$monthStr";
+
+    // Convert any sort and filter options to query parameters
+    endpoint += _convertOptionsToParams();
+
+    final response = await NetworkService.instance.get(endpoint);
+
+    if (response['response'] != null && response['statusCode'] == 200) {
+      final responseData = response['response'] as Map<String, dynamic>;
+
+      if (responseData.isNotEmpty) {
+        // Extract the first key (month) from the response data
+        final monthKey = responseData.keys.first;
+
+        // Extract the transactions list for the month
+        final transactionsList =
+            (responseData[monthKey]['transactions'] as List<dynamic>)
+                .map((transaction) => Transaction.fromJson(transaction))
+                .toList();
+
+        return transactionsList;
+      } else {
+        print('No transactions found for the specified month and year.');
+        return []; // Return an empty list if the response is empty
+      }
+    } else {
+      print(
+          'Failed to load transactions. Status code: ${response['statusCode']}');
+      return []; // Return an empty list in case of failure
+    }
+  }
 }
