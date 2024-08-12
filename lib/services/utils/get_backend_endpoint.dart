@@ -27,6 +27,10 @@ class BackendEndpoints {
   static String get invitation => "$baseUrl/invitation";
   static String get challenge => "$baseUrl/financialChallenge";
 
+  // transaction
+  static String get approveTransaction => "approve";
+  static String get cancelledTransaction => "decline";
+
   // if there is no $baseUrl, the URL will be concatenated with other endpoints
   static String get userUpdate => "update";
   static String get userPasswordUpdate => "update/password";
