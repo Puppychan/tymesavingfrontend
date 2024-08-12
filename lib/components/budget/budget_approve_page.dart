@@ -6,6 +6,7 @@ import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/transaction_model.dart';
 import 'package:tymesavingfrontend/services/budget_service.dart';
 import 'package:tymesavingfrontend/services/transaction_service.dart';
+import 'package:tymesavingfrontend/utils/display_success.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
@@ -45,14 +46,15 @@ class _BudgetApprovePageState extends State<BudgetApprovePage> with RouteAware {
 
   @override
     void didPopNext() {
-      _loadTransactions();
       super.didPopNext();
+      _loadTransactions();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute<dynamic>);
+    _loadTransactions();
   }
 
   @override
@@ -198,7 +200,6 @@ class _BudgetApprovePageState extends State<BudgetApprovePage> with RouteAware {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ListTile(
-                      
                       tileColor: colorScheme.tertiary,
                       title: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -266,7 +267,7 @@ void _showAcceptDeclinePrompt(BuildContext context, String? transactionImage, St
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => FullScreenImage(imageUrl: transactionImage!),
+                    builder: (context) => FullScreenImage(imageUrl: transactionImage),
                   ),
                 );
               },
@@ -282,6 +283,7 @@ void _showAcceptDeclinePrompt(BuildContext context, String? transactionImage, St
                     if (context.mounted){ 
                       Navigator.of(context).pop();
                       await transactionService.approveTransaction(transactionId);
+                      SuccessDisplay.showSuccessToast("Successfully approved transaction", context);
                     }
                   },
                 ),
@@ -290,6 +292,7 @@ void _showAcceptDeclinePrompt(BuildContext context, String? transactionImage, St
                   onPressed: () async {
                     Navigator.of(context).pop();
                     await transactionService.cancelledTransaction(transactionId);
+                    SuccessDisplay.showSuccessToast("Successfully cancelled transaction", context);
                   },
                 ),
               ],
