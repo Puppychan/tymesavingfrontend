@@ -101,7 +101,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
           isMember = _budget!.hostedBy.toString() !=
               Provider.of<AuthService>(context, listen: false).user?.id;
           isLoading = false;
-          if(_budget!.defaultApproveStatus == "Declined") {
+          if(_budget!.defaultApproveStatus == "Pending") {
             approval = true;
           }
           // debugPrint(

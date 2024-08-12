@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/full_screen_image.dart';
+import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/transaction_model.dart';
 import 'package:tymesavingfrontend/services/budget_service.dart';
+import 'package:tymesavingfrontend/services/transaction_service.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
@@ -15,7 +17,7 @@ class BudgetApprovePage extends StatefulWidget {
   State<BudgetApprovePage> createState() => _BudgetApprovePageState();
 }
 
-class _BudgetApprovePageState extends State<BudgetApprovePage> {
+class _BudgetApprovePageState extends State<BudgetApprovePage> with RouteAware {
   List<Transaction> _awaitingApprovalTransaction = [];
   List<Transaction> _cancelledTransaction = [];
   bool showingPending = true;
@@ -34,6 +36,7 @@ class _BudgetApprovePageState extends State<BudgetApprovePage> {
     });
   }
 
+  
   @override
   void initState() {
     _loadTransactions();
@@ -41,10 +44,28 @@ class _BudgetApprovePageState extends State<BudgetApprovePage> {
   }
 
   @override
+    void didPopNext() {
+      _loadTransactions();
+      super.didPopNext();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute<dynamic>);
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+  
+  @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: const Heading(title: "Approval page", ),
+      appBar: const Heading(title: "Approval page"),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -123,7 +144,7 @@ class _BudgetApprovePageState extends State<BudgetApprovePage> {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ListTile(
-                      onTap: () => _showAcceptDeclinePrompt(context, transaction.transactionImage!),
+                      onTap: () => _showAcceptDeclinePrompt(context, transaction.transactionImage, transaction.id),
                       tileColor: colorScheme.tertiary,
                       title: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -230,7 +251,8 @@ class _BudgetApprovePageState extends State<BudgetApprovePage> {
   }
 }
 
-void _showAcceptDeclinePrompt(BuildContext context, String transactionImage) {
+void _showAcceptDeclinePrompt(BuildContext context, String? transactionImage, String transactionId) {
+  final transactionService = Provider.of<TransactionService>(context, listen: false);
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -238,6 +260,7 @@ void _showAcceptDeclinePrompt(BuildContext context, String transactionImage) {
           title: Text("Confirm", style: Theme.of(context).textTheme.headlineSmall,),
           content: Text("Do you approve or decline this transaction?", style: Theme.of(context).textTheme.bodyMedium, overflow: TextOverflow.visible,),
           actions: <Widget>[
+            transactionImage != null ?
             GestureDetector(
               onTap: () {
                 Navigator.push(
@@ -247,27 +270,28 @@ void _showAcceptDeclinePrompt(BuildContext context, String transactionImage) {
                   ),
                 );
               },
-              child: transactionImage != ""
-                ? Image.network(transactionImage!)
-                : const SizedBox(),
-            ),
+              child: Image.network(transactionImage)
+            ) :
+            const SizedBox(height: 10,),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 TextButton(
-              child: Text("Accept", style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w500)),
-              onPressed: () {
-                Navigator.of(context).pop();
-                // Handle the decline action here
-              },
-            ),
-            TextButton(
-              child: Text("Decline", style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w500)),
-              onPressed: () {
-                Navigator.of(context).pop();
-                // Handle the accept action here
-              },
-            ),
+                  child: Text("Accept", style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w500)),
+                  onPressed: () async { 
+                    if (context.mounted){ 
+                      Navigator.of(context).pop();
+                      await transactionService.approveTransaction(transactionId);
+                    }
+                  },
+                ),
+                TextButton(
+                  child: Text("Decline", style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w500)),
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+                    await transactionService.cancelledTransaction(transactionId);
+                  },
+                ),
               ],
             )
           ],
