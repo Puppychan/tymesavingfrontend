@@ -35,6 +35,7 @@ class SettingPage extends StatelessWidget {
     return Scaffold(
         appBar: const Heading(title: "Setting page", showBackButton: true),
         body: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
           padding: AppPaddingStyles.pagePaddingIncludeSubText,
           child: Column(
             children: [
@@ -42,6 +43,9 @@ class SettingPage extends StatelessWidget {
                   style: Theme.of(context).textTheme.headlineMedium),
               const SizedBox(height: 20),
               const Divider(),
+              Text('Tips: Scroll to the right to see more option!', 
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontStyle: FontStyle.italic), 
+              overflow: TextOverflow.visible,),
               FilterBox(
                 filterData: themeList,
                 label: "Choose Theme",
