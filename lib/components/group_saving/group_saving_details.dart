@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:tymesavingfrontend/components/common/button/secondary_button.dart';
 import 'package:tymesavingfrontend/components/common/chart/group_saving_half_chart.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/common_group/group_heading_actions.dart';
+import 'package:tymesavingfrontend/components/group_saving/saving_approve_page.dart';
 import 'package:tymesavingfrontend/components/transaction/transaction_list.dart';
 import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/group_saving_model.dart';
@@ -37,9 +39,11 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
   SummaryUser? _user;
   bool isMember = false;
   bool isLoading = true;
+  bool approval = false;
   String _displayPercentageTaken = '';
   bool _isDisplayRestDescription = false;
   List<Transaction> _transactions = [];
+  List<Transaction> _awaitingApprovalTransaction = [];
 
   Future<void> _renderUser(String? userId) async {
     Future.microtask(() async {
@@ -65,6 +69,7 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
       if (!mounted) return;
       setState(() {
         _transactions = groupSavingService.transactions;
+        _awaitingApprovalTransaction = groupSavingService.awaitingApprovalTransaction;
       });
     });
   }
@@ -95,7 +100,10 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
           isMember = _groupSaving!.hostedBy.toString() !=
               Provider.of<AuthService>(context, listen: false).user?.id;
           isLoading = false;
-
+          // check group status
+          if(_groupSaving!.defaultApproveStatus == "Pending") {
+            approval = true;
+          }
           // set display string
           print(
               "percentageTaken: $percentageTaken, ${percentageTaken! > 199}, $percentageLeft");
@@ -322,6 +330,37 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
                     height: 10,
                   ),
                   Text('Transaction history', style: Theme.of(context).textTheme.headlineMedium,),
+                  if (approval)
+                    Text.rich(
+                      TextSpan(
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        children: [
+                          const TextSpan(text: 'Currently there are '),
+                          TextSpan(
+                            text: _awaitingApprovalTransaction.length.toString(),
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: colorScheme.primary, // Customize the color here
+                              fontWeight: FontWeight.w500, // Optional: make the number bold
+                            ),
+                          ),
+                          const TextSpan(text: ' request'),
+                        ],
+                      ),
+                    ),
+                    if (approval && !isMember)
+                    const SizedBox(height: 20,),
+                    if (approval && !isMember)
+                    SizedBox(
+                          width: 225,
+                          height: 50,
+                          child: SecondaryButton(onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                return SavingApprovePage(savingId: widget.groupSavingId,);
+                              }));
+                          } 
+                          , title: "Approving transaction",
+                        ),
+                      ),
                   Expanded(
                     child: TransactionList(transactions: _transactions),
                   ),
