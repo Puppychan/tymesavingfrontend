@@ -16,8 +16,12 @@ class GroupSavingService extends ChangeNotifier {
   SummaryGroup? get summaryGroup => _summaryGroup;
 
   List<Transaction> _transactions = [];
+  List<Transaction> _awaitingApprovalTransaction = [];
+  List<Transaction> _cancelledTransaction = [];
 
   List<Transaction> get transactions => _transactions;
+  List<Transaction> get awaitingApprovalTransaction => _awaitingApprovalTransaction;
+  List<Transaction> get cancelledTransaction => _cancelledTransaction;
 
   Future<dynamic> fetchGroupSavingList(String? userId, {String? name, CancelToken? cancelToken}) async {
     // if (userId == null) return {'response': 'User ID is required.', 'statusCode': 400};
@@ -136,6 +140,35 @@ class GroupSavingService extends ChangeNotifier {
         }
       }
       _transactions = transactionList;
+      notifyListeners();
+    }
+    return response;
+  }
+
+  Future<Map<String, dynamic>> fetchAwaitingApprovalTransactions(
+      String savingGroupId) async {
+    final response = await NetworkService.instance
+        .get("${BackendEndpoints.groupSaving}/$savingGroupId/transactions");
+    if (response['response'] != null && response['statusCode'] == 200) {
+      // debugPrint("#====== Transactions of Budget ======#");
+      // debugPrint(response.toString());
+      // debugPrint("#====== Transactions of Budget ======#");
+      final responseData = response['response'];
+      List<Transaction> transactionPendingList = [];
+      List<Transaction> transactionCancelledList = [];
+      if (responseData.isNotEmpty) {
+        for (var transaction in responseData) {
+          if(transaction['approveStatus'] == 'Pending') {
+            final tempTransaction = Transaction.fromMap(transaction);
+            transactionPendingList.add(tempTransaction);
+          } else if (transaction['approveStatus'] == 'Declined') {
+            final tempTransaction = Transaction.fromMap(transaction);
+            transactionCancelledList.add(tempTransaction);
+          }
+        }
+      }
+      _awaitingApprovalTransaction = transactionPendingList;
+      _cancelledTransaction = transactionCancelledList;
       notifyListeners();
     }
     return response;
