@@ -4,7 +4,6 @@ import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/full_screen_image.dart';
 import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/transaction_model.dart';
-import 'package:tymesavingfrontend/services/budget_service.dart';
 import 'package:tymesavingfrontend/services/group_saving_service.dart';
 import 'package:tymesavingfrontend/services/transaction_service.dart';
 import 'package:tymesavingfrontend/utils/display_success.dart';
@@ -198,7 +197,6 @@ class _SavingApprovePageState extends State<SavingApprovePage> with RouteAware {
                               ),
                             ),
                             Text(transaction.description ?? '', style: Theme.of(context).textTheme.bodyMedium, overflow: TextOverflow.visible,),
-                        
                           ],
                         ),
                       ),
