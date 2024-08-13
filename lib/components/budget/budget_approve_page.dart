@@ -22,6 +22,7 @@ class _BudgetApprovePageState extends State<BudgetApprovePage> with RouteAware {
   List<Transaction> _awaitingApprovalTransaction = [];
   List<Transaction> _cancelledTransaction = [];
   bool showingPending = true;
+  bool isLoading = true;
 
   Future<void> _loadTransactions() async {
     if (!mounted) return;
@@ -33,13 +34,20 @@ class _BudgetApprovePageState extends State<BudgetApprovePage> with RouteAware {
       setState(() {
         _awaitingApprovalTransaction = budgetService.awaitingApprovalTransaction;
         _cancelledTransaction = budgetService.cancelledTransaction;
+        isLoading = false;
       });
     });
   }
 
-  
+  void _showSuccess(String message) {
+  if (mounted) {
+    SuccessDisplay.showSuccessToast(message, context);
+  }
+}
+
   @override
   void initState() {
+    isLoading = true;
     _loadTransactions();
     super.initState();
   }
@@ -47,6 +55,7 @@ class _BudgetApprovePageState extends State<BudgetApprovePage> with RouteAware {
   @override
     void didPopNext() {
       super.didPopNext();
+      isLoading = true;
       _loadTransactions();
   }
 
@@ -54,7 +63,6 @@ class _BudgetApprovePageState extends State<BudgetApprovePage> with RouteAware {
   void didChangeDependencies() {
     super.didChangeDependencies();
     routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute<dynamic>);
-    _loadTransactions();
   }
 
   @override
@@ -136,7 +144,12 @@ class _BudgetApprovePageState extends State<BudgetApprovePage> with RouteAware {
                 ),
               ],
             ),
-            const SizedBox(height: 16), // Add some spacing before the list
+            const SizedBox(height: 16),
+            isLoading ? 
+            const Padding(
+              padding: EdgeInsets.all(15),
+              child: CircularProgressIndicator(),
+            ) :
             Expanded(
               child: showingPending ?
               ListView.builder(
@@ -146,7 +159,7 @@ class _BudgetApprovePageState extends State<BudgetApprovePage> with RouteAware {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ListTile(
-                      onTap: () => _showAcceptDeclinePrompt(context, transaction.transactionImage, transaction.id),
+                      onTap: () => _showAcceptDeclinePrompt(context, this, transaction.transactionImage, transaction.id),
                       tileColor: colorScheme.tertiary,
                       title: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -244,61 +257,71 @@ class _BudgetApprovePageState extends State<BudgetApprovePage> with RouteAware {
                   );
                 },
               ),
-            ),
+            ) 
           ],
         ),
       ),
     );
   }
-}
 
-void _showAcceptDeclinePrompt(BuildContext context, String? transactionImage, String transactionId) {
-  final transactionService = Provider.of<TransactionService>(context, listen: false);
+  void _showAcceptDeclinePrompt(BuildContext context, _BudgetApprovePageState state, String? transactionImage, String transactionId) {
+    final transactionService = Provider.of<TransactionService>(context, listen: false);
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Confirm", style: Theme.of(context).textTheme.headlineSmall,),
-          content: Text("Do you approve or decline this transaction?", style: Theme.of(context).textTheme.bodyMedium, overflow: TextOverflow.visible,),
+          title: Text("Confirm", style: Theme.of(context).textTheme.headlineSmall),
+          content: Text("Do you approve or decline this transaction?", style: Theme.of(context).textTheme.bodyMedium, overflow: TextOverflow.visible),
           actions: <Widget>[
-            transactionImage != null ?
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => FullScreenImage(imageUrl: transactionImage),
-                  ),
-                );
-              },
-              child: Image.network(transactionImage)
-            ) :
-            const SizedBox(height: 10,),
+            if (transactionImage != null)
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FullScreenImage(imageUrl: transactionImage),
+                    ),
+                  );
+                },
+                child: Image.network(transactionImage),
+              )
+            else
+              const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 TextButton(
-                  child: Text("Accept", style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w500)),
-                  onPressed: () async { 
-                    if (context.mounted){ 
-                      Navigator.of(context).pop();
-                      await transactionService.approveTransaction(transactionId);
-                      SuccessDisplay.showSuccessToast("Successfully approved transaction", context);
-                    }
+                  child: Text(
+                    "Accept",
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w500),
+                  ),
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+                    await transactionService.approveTransaction(transactionId);
+                    isLoading = true;
+                    await _loadTransactions();
+                    _showSuccess('Successfully approve transaction');
                   },
                 ),
                 TextButton(
-                  child: Text("Decline", style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w500)),
+                  child: Text(
+                    "Decline",
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w500),
+                  ),
                   onPressed: () async {
                     Navigator.of(context).pop();
                     await transactionService.cancelledTransaction(transactionId);
-                    SuccessDisplay.showSuccessToast("Successfully cancelled transaction", context);
+                    isLoading = true;
+                    await _loadTransactions();
+                    _showSuccess('Successfully decline transaction');
                   },
                 ),
               ],
-            )
+            ),
           ],
         );
       },
     );
   }
+}
+
