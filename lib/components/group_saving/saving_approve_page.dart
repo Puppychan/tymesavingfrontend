@@ -45,6 +45,13 @@ class _SavingApprovePageState extends State<SavingApprovePage> with RouteAware {
   }
 }
 
+  void _changeLoading(){
+    if(!mounted) return;
+    setState(() {
+      isLoading = true;
+    });
+  }
+  
   @override
   void initState() {
     isLoading = true;
@@ -296,8 +303,8 @@ class _SavingApprovePageState extends State<SavingApprovePage> with RouteAware {
                   ),
                   onPressed: () async {
                     Navigator.of(context).pop();
+                    _changeLoading();
                     await transactionService.approveTransaction(transactionId);
-                    isLoading = true;
                     await _loadTransactions();
                     _showSuccess('Successfully approve transaction');
                   },
@@ -309,8 +316,8 @@ class _SavingApprovePageState extends State<SavingApprovePage> with RouteAware {
                   ),
                   onPressed: () async {
                     Navigator.of(context).pop();
+                    _changeLoading();
                     await transactionService.cancelledTransaction(transactionId);
-                    isLoading = true;
                     await _loadTransactions();
                     _showSuccess('Successfully decline transaction');
                   },
