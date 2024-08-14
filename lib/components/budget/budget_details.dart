@@ -6,7 +6,6 @@ import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_group_type_enum.dart';
 import 'package:tymesavingfrontend/common/styles/button_theme_data.dart';
 import 'package:tymesavingfrontend/components/budget/budget_approve_page.dart';
-import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
 import 'package:tymesavingfrontend/components/common/button/secondary_button.dart';
 import 'package:tymesavingfrontend/components/common/chart/budget_pie_chart.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
@@ -105,7 +104,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
           isMember = _budget!.hostedBy.toString() !=
               Provider.of<AuthService>(context, listen: false).user?.id;
           isLoading = false;
-          if(_budget!.defaultApproveStatus == "Declined") {
+          if(_budget!.defaultApproveStatus == "Pending") {
             approval = true;
           }
           // debugPrint(

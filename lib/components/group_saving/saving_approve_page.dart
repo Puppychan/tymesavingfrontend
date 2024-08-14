@@ -4,21 +4,21 @@ import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/full_screen_image.dart';
 import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/transaction_model.dart';
-import 'package:tymesavingfrontend/services/budget_service.dart';
+import 'package:tymesavingfrontend/services/group_saving_service.dart';
 import 'package:tymesavingfrontend/services/transaction_service.dart';
 import 'package:tymesavingfrontend/utils/display_success.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
-class BudgetApprovePage extends StatefulWidget {
-  const BudgetApprovePage({super.key, required this.budgetId});
-  final String budgetId;
+class SavingApprovePage extends StatefulWidget {
+  const SavingApprovePage({super.key, required this.savingId});
+  final String savingId;
 
   @override
-  State<BudgetApprovePage> createState() => _BudgetApprovePageState();
+  State<SavingApprovePage> createState() => _SavingApprovePageState();
 }
 
-class _BudgetApprovePageState extends State<BudgetApprovePage> with RouteAware {
+class _SavingApprovePageState extends State<SavingApprovePage> with RouteAware {
   List<Transaction> _awaitingApprovalTransaction = [];
   List<Transaction> _cancelledTransaction = [];
   bool showingPending = true;
@@ -26,23 +26,16 @@ class _BudgetApprovePageState extends State<BudgetApprovePage> with RouteAware {
 
   Future<void> _loadTransactions() async {
     if (!mounted) return;
-    final budgetService = Provider.of<BudgetService>(context, listen: false);
+    final savingService = Provider.of<GroupSavingService>(context, listen: false);
     await handleMainPageApi(context, () async {
-      return await budgetService.fetchAwaitingApprovalTransactions(widget.budgetId);
+      return await savingService.fetchAwaitingApprovalTransactions(widget.savingId);
     }, () async {
       if (!mounted) return;
       setState(() {
-        _awaitingApprovalTransaction = budgetService.awaitingApprovalTransaction;
-        _cancelledTransaction = budgetService.cancelledTransaction;
+        _awaitingApprovalTransaction = savingService.awaitingApprovalTransaction;
+        _cancelledTransaction = savingService.cancelledTransaction;
         isLoading = false;
       });
-    });
-  }
-
-  void _changeLoading(){
-    if(!mounted) return;
-    setState(() {
-      isLoading = true;
     });
   }
 
@@ -52,6 +45,13 @@ class _BudgetApprovePageState extends State<BudgetApprovePage> with RouteAware {
   }
 }
 
+  void _changeLoading(){
+    if(!mounted) return;
+    setState(() {
+      isLoading = true;
+    });
+  }
+  
   @override
   void initState() {
     isLoading = true;
@@ -204,7 +204,6 @@ class _BudgetApprovePageState extends State<BudgetApprovePage> with RouteAware {
                               ),
                             ),
                             Text(transaction.description ?? '', style: Theme.of(context).textTheme.bodyMedium, overflow: TextOverflow.visible,),
-                        
                           ],
                         ),
                       ),
@@ -271,7 +270,7 @@ class _BudgetApprovePageState extends State<BudgetApprovePage> with RouteAware {
     );
   }
 
-  void _showAcceptDeclinePrompt(BuildContext context, _BudgetApprovePageState state, String? transactionImage, String transactionId) {
+  void _showAcceptDeclinePrompt(BuildContext context, _SavingApprovePageState state, String? transactionImage, String transactionId) {
     final transactionService = Provider.of<TransactionService>(context, listen: false);
     showDialog(
       context: context,
@@ -331,4 +330,3 @@ class _BudgetApprovePageState extends State<BudgetApprovePage> with RouteAware {
     );
   }
 }
-

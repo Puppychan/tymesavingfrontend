@@ -328,4 +328,18 @@ class TransactionService extends ChangeNotifier {
       return []; // Return an empty list in case of failure
     }
   }
+
+  Future<Map<String, dynamic>> approveTransaction(String transactionId) async {
+    final response = await NetworkService.instance.post(
+    "${BackendEndpoints.transaction}/$transactionId/${BackendEndpoints.approveTransaction}"
+    );
+    return response;
+  }
+
+  Future<Map<String, dynamic>> cancelledTransaction(String transactionId) async {
+    final response = await NetworkService.instance.post(
+    "${BackendEndpoints.transaction}/$transactionId/${BackendEndpoints.cancelledTransaction}"
+    );
+    return response;
+  }
 }

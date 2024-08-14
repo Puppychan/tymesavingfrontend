@@ -37,7 +37,9 @@ class Transaction {
       userId: json['userId'] ?? '',
       user:
           json['user'] != null ? TransactionUser.fromJson(json['user']) : null,
-      transactionImage: json['transactionImages'] != null ? json['transactionImages'][0] : null,
+      transactionImage: json['transactionImages'] != null && json['transactionImages'].isNotEmpty 
+      ? json['transactionImages'][0] 
+      : null,
     );
   }
 
