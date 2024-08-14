@@ -254,7 +254,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                                     children: [
                                       Text('Your initial budget', style: Theme.of(context).textTheme.bodyMedium,),
                                       const Expanded(child: SizedBox()),
-                                      Text(formatAmountToVnd(_budget!.amount), style: Theme.of(context).textTheme.headlineMedium,),
+                                      Text(formatAmountToVnd(_budget!.amount), style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontSize: 15),),
                                     ],  
                                   ),
                                   Row(
@@ -262,7 +262,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                                     children: [
                                       Text('Current budget left', style: Theme.of(context).textTheme.bodyMedium,),
                                       const Expanded(child: SizedBox()),
-                                      Text(formatAmountToVnd(_budget!.concurrentAmount), style: Theme.of(context).textTheme.headlineMedium,),
+                                      Text(formatAmountToVnd(_budget!.concurrentAmount), style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontSize: 15),),
                                     ],
                                   ),
                                   Row(
@@ -270,7 +270,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                                     children: [
                                       Text('Budget remain', style: Theme.of(context).textTheme.bodyMedium,),
                                       const Expanded(child: SizedBox()),
-                                      Text(_displayPercentageTaken, style: Theme.of(context).textTheme.headlineMedium,),
+                                      Text(_displayPercentageTaken, style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontSize: 15),),
                                     ],
                                   ),
                                 ],

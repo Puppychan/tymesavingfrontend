@@ -276,7 +276,7 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
                                     children: [
                                       Text('You have saved', style: Theme.of(context).textTheme.bodyMedium,),
                                       const Expanded(child: SizedBox()),
-                                      Text(formatAmountToVnd(_groupSaving!.concurrentAmount), style: Theme.of(context).textTheme.headlineMedium,),
+                                      Text(formatAmountToVnd(_groupSaving!.concurrentAmount), style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontSize: 15),),
                                     ],  
                                   ),
                                   Row(
@@ -284,7 +284,7 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
                                     children: [
                                       Text('Goal target', style: Theme.of(context).textTheme.bodyMedium,),
                                       const Expanded(child: SizedBox()),
-                                      Text(formatAmountToVnd(_groupSaving!.amount), style: Theme.of(context).textTheme.headlineMedium,),
+                                      Text(formatAmountToVnd(_groupSaving!.amount), style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontSize: 15),),
                                     ],
                                   ),
                                 ],
