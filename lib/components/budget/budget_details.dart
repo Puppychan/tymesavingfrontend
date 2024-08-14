@@ -41,6 +41,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
   bool isLoading = true;
   String _displayPercentageTaken = '';
   bool _isDisplayRestDescription = false;
+
   List<Transaction> _transactions = [];
   List<Transaction> _awaitingApprovalTransaction = [];
 
@@ -144,6 +145,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
 
   @override
   void didPopNext() {
+    isLoading = true;
     _loadData();
     super.didPopNext();
   }
@@ -274,25 +276,53 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                                 ],
                               ),
                               const SizedBox(height: 10),
-                              Row(
-                                mainAxisSize: MainAxisSize.min, // Adjusts the row size to fit its children
-                                children: [
-                                  Text(
-                                    "Color ",
-                                    style: Theme.of(context).textTheme.bodyMedium
-                                  ),
-                                  Container(
-                                    width: 10,  // Width of the color box
-                                    height: 10, // Height of the color box
-                                    color: colorScheme.primary, // Color of the box
-                                    margin: const EdgeInsets.only(right: 4), // Space between the box and the text
-                                  ),
-                                  Text(
-                                    ' indicate percentages of budget left',
-                                    style: Theme.of(context).textTheme.bodyMedium, // Customize your text style
-                                  ),
-                                ],
-                              )
+                              Wrap(
+                                alignment: WrapAlignment.center,
+                                spacing: 2,
+                                runSpacing: 8,
+                                children:[ 
+                                    Text(
+                                      "Color ",
+                                      style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 12)
+                                    ),
+                                    Container(
+                                      width: 10,  // Width of the color box
+                                      height: 10, // Height of the color box
+                                      color: colorScheme.primary, // Color of the box
+                                      margin: const EdgeInsets.only(right: 4), // Space between the box and the text
+                                    ),
+                                    Text(
+                                      ' indicate',
+                                      style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 12),
+                                      overflow: TextOverflow.visible,
+                                      softWrap: true,
+                                    ),
+                                    Text(
+                                      ' percentages',
+                                      style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 12),
+                                      overflow: TextOverflow.visible,
+                                      softWrap: true,
+                                    ),
+                                    Text(
+                                      ' of',
+                                      style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 12),
+                                      overflow: TextOverflow.visible,
+                                      softWrap: true,
+                                    ),
+                                    Text(
+                                      ' budget',
+                                      style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 12),
+                                      overflow: TextOverflow.visible,
+                                      softWrap: true,
+                                    ),
+                                    Text(
+                                      ' left',
+                                      style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 12),
+                                      overflow: TextOverflow.visible,
+                                      softWrap: true,
+                                    ),
+
+                            ])
                             ],
                           ),
                         ),
@@ -372,10 +402,14 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                     const SizedBox(height: 20,),
                     SizedBox(
                       height: 500,
-                      child: TransactionList(transactions: _transactions),
+                      child: RefreshIndicator(onRefresh: _pullRefresh, child: TransactionList(transactions: _transactions)),
                     ),
                   ],
                 ),
             ));
+  }
+
+  Future<void> _pullRefresh() async {
+    _loadTransactions();
   }
 }
