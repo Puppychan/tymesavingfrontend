@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:tymesavingfrontend/utils/format_amount.dart';
 
 class CustomLineChart extends StatefulWidget {
   const CustomLineChart({
@@ -27,7 +28,7 @@ class _CustomLineChartState extends State<CustomLineChart> {
       keyValuePairs.add(MapEntry(key, value));
     });
 
-    for (int i = 0; i < keyValuePairs.length; i++) {
+    for (int i = 6; i < keyValuePairs.length; i++) {
       var entry = keyValuePairs[i];
       debugPrint('Month: ${entry.key}, Value: ${entry.value}');
       flSpots.add(FlSpot(i.toDouble(), entry.value.toDouble()));
@@ -79,13 +80,29 @@ class _CustomLineChartState extends State<CustomLineChart> {
                 LineChartBarData(
                   spots: flSpots,
                   color: colorScheme.inversePrimary,
-                  barWidth: 5,
+                  barWidth: 2.5,
                   isCurved: true,
-                  curveSmoothness: 0.55,
+                  curveSmoothness: 0.3,
                   preventCurveOverShooting: true,
-                  dotData: const FlDotData(show: false),
+                  dotData: const FlDotData(show: true),
                 )
-              ]),
+              ],
+               lineTouchData: LineTouchData(
+              touchTooltipData: LineTouchTooltipData(
+                getTooltipItems: (List<LineBarSpot> touchedSpots) {
+                  return touchedSpots.map((touchedSpot) {
+                    return LineTooltipItem(
+                      formatAmountToVnd(touchedSpot.y),
+                      const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    );
+                  }).toList();
+                },
+              ),
+            ),
+            ), 
         ),
       ),
     );
@@ -97,25 +114,43 @@ class _CustomLineChartState extends State<CustomLineChart> {
     Widget text;
     switch (value.toInt()) {
       case 0:
-        text = Text(keyValuePairs[0].key, style: style);
+        text = Text(keyValuePairs[0].key.toLowerCase(), style: style);
+        break;
+      case 1:
+        text = Text(keyValuePairs[1].key.toLowerCase(), style: style);
         break;
       case 2:
-        text = Text(keyValuePairs[2].key, style: style);
+        text = Text(keyValuePairs[2].key.toLowerCase(), style: style);
+        break;
+      case 3:
+        text = Text(keyValuePairs[3].key.toLowerCase(), style: style);
         break;
       case 4:
-        text = Text(keyValuePairs[4].key, style: style);
+        text = Text(keyValuePairs[4].key.toLowerCase(), style: style);
+        break;
+      case 5:
+        text = Text(keyValuePairs[5].key.toLowerCase(), style: style);
         break;
       case 6:
-        text = Text(keyValuePairs[6].key, style: style);
+        text = Text(keyValuePairs[6].key.toLowerCase(), style: style);
+        break;
+      case 7:
+        text = Text(keyValuePairs[7].key.toLowerCase(), style: style);
         break;
       case 8:
-        text = Text(keyValuePairs[8].key, style: style);
+        text = Text(keyValuePairs[8].key.toLowerCase(), style: style);
+        break;
+      case 9:
+        text = Text(keyValuePairs[9].key.toLowerCase(), style: style);
         break;
       case 10:
-        text = Text(keyValuePairs[10].key, style: style);
+        text = Text(keyValuePairs[10].key.toLowerCase(), style: style);
+        break;
+      case 11:
+        text = Text(keyValuePairs[11].key.toLowerCase(), style: style);
         break;
       case 12:
-        text = Text(keyValuePairs[12].key, style: style);
+        text = Text(keyValuePairs[12].key.toLowerCase(), style: style);
         break;
       default:
         text = Text('', style: style);

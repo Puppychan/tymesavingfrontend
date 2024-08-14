@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/styles/app_padding.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
@@ -52,25 +53,39 @@ class _MemberListPageState extends State<MemberListPage> {
         ),
         body: Consumer<UserService>(builder: (context, memberService, child) {
           final members = memberService.members;
-          return Padding(
-            padding: AppPaddingStyles.pagePadding,
-            child: members.isNotEmpty
-                ? ListView.separated(
-                    itemCount: members.length,
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(height: 15),
-                    itemBuilder: (context, index) {
-                      return MemberCard(
-                        member: members[index],
-                        isCurrentUserHost: !widget.isMember,
-                        groupId: widget.groupId,
-                        isBudgetGroup: widget.isBudgetGroup,
-                      );
-                    },
-                  )
-                : const Center(
-                    child: CircularProgressIndicator(),
-                  ),
+          return Column(
+            children: [
+              SizedBox(
+                height: 35,
+                child: Text('Tips: You can view contribution of each member by clicking on the member card', 
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontStyle: FontStyle.italic),
+                overflow: TextOverflow.visible,
+                textAlign: TextAlign.center,),
+              ),
+              Padding(
+                padding: AppPaddingStyles.pagePadding,
+                child: members.isNotEmpty
+                    ? Container(
+                      height: MediaQuery.of(context).size.height - 200,
+                      child: ListView.separated(
+                          itemCount: members.length,
+                          separatorBuilder: (context, index) =>
+                              const SizedBox(height: 15),
+                          itemBuilder: (context, index) {
+                            return MemberCard(
+                              member: members[index],
+                              isCurrentUserHost: !widget.isMember,
+                              groupId: widget.groupId,
+                              isBudgetGroup: widget.isBudgetGroup,
+                            );
+                          },
+                        ),
+                    )
+                    : const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+              ),
+            ],
           );
         }));
   }

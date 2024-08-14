@@ -24,12 +24,11 @@ class UserCard extends StatelessWidget {
             ? CircleAvatar(backgroundImage: NetworkImage(avatar!))
             : CircleAvatar(backgroundColor: Colors.transparent, 
             child: Icon(Icons.person_2_outlined, color: Theme.of(context).colorScheme.primary,size: 35,)),
-        title: Text(username, style: Theme.of(context).textTheme.labelLarge,),
-        subtitle: Row(
+        title: Text(username, style: Theme.of(context).textTheme.labelLarge, overflow: TextOverflow.fade),
+        subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(fullname, style: Theme.of(context).textTheme.bodyMedium,),
-            const Expanded(child: SizedBox(),),
+            Text(fullname, style: Theme.of(context).textTheme.bodyMedium, overflow: TextOverflow.fade,),
             Text(rank, style: Theme.of(context).textTheme.bodyMedium,),
           ],
         ),

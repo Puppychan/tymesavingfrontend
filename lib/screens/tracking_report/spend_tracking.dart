@@ -63,59 +63,64 @@ class _SpendTrackingState extends State<SpendTracking> {
         title: 'Tracking',
         showBackButton: true,
       ),
-      body: Column(children: [
-        const SizedBox(
-          height: 10,
-        ),
-        Text(
-          'Spending trend (past 12 month)',
-          style: textTheme.titleMedium,
-          textAlign: TextAlign.start,
-        ),
-        const SizedBox(
-          height: 1.5,
-        ),
-        Text(
-          'Transform your spending habits by uncovering ',
-          style: textTheme.bodySmall,
-          textAlign: TextAlign.start,
-        ),
-        Text(
-          'the patterns of your expense!',
-          style: textTheme.bodySmall,
-          textAlign: TextAlign.start,
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        Skeletonizer(
-          enabled: chartReport == null,
-          child: CustomLineChart(
-            totals: chartReport?.totals ??
-                {'JAN': 0, 'FEB': 0, 'MAR': 0, 'APR': 0, 'MAY': 0, 'JUN': 0},
+      body: SingleChildScrollView(
+        child: Column(children: [
+          const SizedBox(
+            height: 10,
           ),
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        if (currentMonthReport == null)
-          // Display a loading indicator or placeholder widget
-          const CircularProgressIndicator(),
-        Skeletonizer(
-          enabled: chartReport == null,
-          child: ExpenseCard(
-              month: currentMonthReport?.currentMonth ?? '',
-              expense: currentMonthReport?.totalAmount ?? 0),
-        ),
-        Skeletonizer(
+          Text(
+            'Expense trend of past 6 month',
+            style: textTheme.titleMedium,
+            textAlign: TextAlign.start,
+          ),
+          const SizedBox(
+            height: 1.5,
+          ),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 15),
+            child: Text(
+              'Tips: Touching the line of each points reveal the total amount of expense for that month *wink*',
+              style: textTheme.bodySmall,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.visible,
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Skeletonizer(
             enabled: chartReport == null,
-            child: IncomeCard(
-                currentMonthIncome: netSpend?.currentMonthIncome ?? 0,
-                currentNetSpend: netSpend?.currentNetSpend ?? 0)),
-        Skeletonizer(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              child: CustomLineChart(
+                totals: chartReport?.totals ??
+                    {'JAN': 0, 'FEB': 0, 'MAR': 0, 'APR': 0, 'MAY': 0, 'JUN': 0},
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          if (currentMonthReport == null)
+            // Display a loading indicator or placeholder widget
+            const CircularProgressIndicator(),
+          Skeletonizer(
             enabled: chartReport == null,
-            child: TipCard(netSpend: netSpend?.currentNetSpend ?? 0)),
-      ]),
+            child: ExpenseCard(
+                month: currentMonthReport?.currentMonth ?? '',
+                expense: currentMonthReport?.totalAmount ?? 0),
+          ),
+          Skeletonizer(
+              enabled: chartReport == null,
+              child: IncomeCard(
+                  currentMonthIncome: netSpend?.currentMonthIncome ?? 0,
+                  currentNetSpend: netSpend?.currentNetSpend ?? 0)),
+          Skeletonizer(
+              enabled: chartReport == null,
+              child: TipCard(netSpend: netSpend?.currentNetSpend ?? 0)),
+          const SizedBox(height: 10),
+        ]),
+      ),
     );
   }
 }

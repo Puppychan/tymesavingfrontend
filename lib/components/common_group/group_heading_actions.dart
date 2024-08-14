@@ -57,7 +57,7 @@ List<Widget> renderGroupHeadingActions(
           }
         }));
       }),
-      ...actionRow(context, FontAwesomeIcons.trashCan, "Delete Group??", () {
+      ...actionRow(context, FontAwesomeIcons.trashCan, "Delete Group", () {
         showCustomDeleteConfirmationDialog(context,
             "Are you sure you want to delete this group? You cannot undo once you confirm",
             () async {

@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 
 class CustomBarChart extends StatefulWidget {
@@ -65,96 +66,104 @@ class _CustomBarChartState extends State<CustomBarChart> {
       return groups;
     }
 
-    return AspectRatio(
-        aspectRatio: 1.9,
-        child: Card.filled(
-          color: Colors.transparent.withOpacity(0),
-          shadowColor: Theme.of(context).colorScheme.onTertiary,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: BarChart(
-                swapAnimationCurve: Curves.linear,
-                swapAnimationDuration: const Duration(milliseconds: 150),
-                BarChartData(
-                  barTouchData: BarTouchData(
-                    enabled: false,
-                  ),
-                    titlesData: FlTitlesData(
-                        show: true,
-                        topTitles: const AxisTitles(
-                          sideTitles: SideTitles(showTitles: false),
-                        ),
-                        leftTitles: const AxisTitles(
-                          sideTitles: SideTitles(showTitles: false),
-                        ),
-                        rightTitles: const AxisTitles(
-                          sideTitles: SideTitles(showTitles: false),
-                        ),
-                         bottomTitles: AxisTitles(
-                          sideTitles: SideTitles(
-                            showTitles: true,
-                            reservedSize: 50,
-                            interval: 1,
-                            getTitlesWidget: (value, meta) =>
-                              bottomTitleWidgets(value, meta),
-                          ),
+    return SizedBox(
+      width: double.infinity,
+      height: 200,
+      child: Card.filled(
+        color: Colors.transparent.withOpacity(0),
+        shadowColor: Theme.of(context).colorScheme.onTertiary,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: Column(
+            children: [
+              Expanded(
+                child: BarChart(
+                    swapAnimationCurve: Curves.linear,
+                    swapAnimationDuration: const Duration(milliseconds: 150),
+                    BarChartData(
+                      barTouchData: BarTouchData(
+                        enabled: false,
                       ),
-                    ),
-                    gridData: const FlGridData(show: false),
-                    borderData: FlBorderData(
-                        border: const Border(
-                      top: BorderSide.none,
-                      right: BorderSide.none,
-                      left: BorderSide.none,
-                      bottom: BorderSide.none,
-                    )),
-                    groupsSpace: 10,
-                    barGroups: createBarGroups())),
+                        titlesData: FlTitlesData(
+                            show: true,
+                            topTitles: const AxisTitles(
+                              sideTitles: SideTitles(showTitles: false),
+                            ),
+                            leftTitles: const AxisTitles(
+                              sideTitles: SideTitles(showTitles: false),
+                            ),
+                            rightTitles: const AxisTitles(
+                              sideTitles: SideTitles(showTitles: false),
+                            ),
+                             bottomTitles: AxisTitles(
+                              sideTitles: SideTitles(
+                                showTitles: true,
+                                reservedSize: 50,
+                                interval: 1,
+                                getTitlesWidget: (value, meta) =>
+                                  bottomTitleWidgets(value, meta),
+                              ),
+                          ),
+                        ),
+                        gridData: const FlGridData(show: false),
+                        borderData: FlBorderData(
+                            border: const Border(
+                          top: BorderSide.none,
+                          right: BorderSide.none,
+                          left: BorderSide.none,
+                          bottom: BorderSide.none,
+                        )),
+                        groupsSpace: 10,
+                        barGroups: createBarGroups())),
+              ),
+            ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
     Widget text;
     switch (value.toInt()) {
       case 0:
-        text = Text(keyValuePairs[0].key, style: AppTextStyles.graphData);
+        text = Text(keyValuePairs[0].key.toLowerCase(), style: AppTextStyles.graphData.copyWith(fontSize: 13, fontStyle: FontStyle.italic, fontWeight: FontWeight.w400));
         break;
       case 1:
-        text = Text(keyValuePairs[1].key, style: AppTextStyles.graphData);
+        text = Text(keyValuePairs[1].key.toLowerCase(), style: AppTextStyles.graphData.copyWith(fontSize: 13, fontStyle: FontStyle.italic, fontWeight: FontWeight.w400));
         break;
       case 2:
-        text = Text(keyValuePairs[2].key, style: AppTextStyles.graphData);
+        text = Text(keyValuePairs[2].key.toLowerCase(), style: AppTextStyles.graphData.copyWith(fontSize: 13, fontStyle: FontStyle.italic, fontWeight: FontWeight.w400));
         break;
       case 3:
-        text = Text(keyValuePairs[3].key, style: AppTextStyles.graphData);
+        text = Text(keyValuePairs[3].key.toLowerCase(), style: AppTextStyles.graphData.copyWith(fontSize: 13, fontStyle: FontStyle.italic, fontWeight: FontWeight.w400));
         break;
       case 4:
-        text = Text(keyValuePairs[4].key, style: AppTextStyles.graphData);
+        text = Text(keyValuePairs[4].key.toLowerCase(), style: AppTextStyles.graphData.copyWith(fontSize: 13, fontStyle: FontStyle.italic, fontWeight: FontWeight.w400));
         break;
       case 5:
-        text = Text(keyValuePairs[5].key, style: AppTextStyles.graphData);
+        text = Text(keyValuePairs[5].key.toLowerCase(), style: AppTextStyles.graphData.copyWith(fontSize: 13, fontStyle: FontStyle.italic, fontWeight: FontWeight.w400));
         break;
       case 6:
-        text = Text(keyValuePairs[6].key, style: AppTextStyles.graphData);
+        text = Text(keyValuePairs[6].key.toLowerCase(), style: AppTextStyles.graphData.copyWith(fontSize: 13, fontStyle: FontStyle.italic, fontWeight: FontWeight.w400));
         break;
       case 7:
-        text = Text(keyValuePairs[7].key, style: AppTextStyles.graphData);
+        text = Text(keyValuePairs[7].key.toLowerCase(), style: AppTextStyles.graphData.copyWith(fontSize: 13, fontStyle: FontStyle.italic, fontWeight: FontWeight.w400));
         break;
       case 8:
-        text = Text(keyValuePairs[8].key, style: AppTextStyles.graphData);
+        text = Text(keyValuePairs[8].key.toLowerCase(), style: AppTextStyles.graphData.copyWith(fontSize: 13, fontStyle: FontStyle.italic, fontWeight: FontWeight.w400));
         break;
       case 9:
-        text = Text(keyValuePairs[9].key, style: AppTextStyles.graphData);
+        text = Text(keyValuePairs[9].key.toLowerCase(), style: AppTextStyles.graphData.copyWith(fontSize: 13, fontStyle: FontStyle.italic, fontWeight: FontWeight.w400));
         break;
       case 10:
-        text = Text(keyValuePairs[10].key, style: AppTextStyles.graphData);
+        text = Text(keyValuePairs[10].key.toLowerCase(), style: AppTextStyles.graphData.copyWith(fontSize: 13, fontStyle: FontStyle.italic, fontWeight: FontWeight.w400));
         break;
       case 11:
-        text = Text(keyValuePairs[11].key, style: AppTextStyles.graphData);
+        text = Text(keyValuePairs[11].key.toLowerCase(), style: AppTextStyles.graphData.copyWith(fontSize: 13, fontStyle: FontStyle.italic, fontWeight: FontWeight.w400));
         break;
       case 12:
-        text = Text(keyValuePairs[12].key, style: AppTextStyles.graphData);
+        text = Text(keyValuePairs[12].key.toLowerCase(), style: AppTextStyles.graphData.copyWith(fontSize: 13, fontStyle: FontStyle.italic, fontWeight: FontWeight.w400));
         break;
       default:
         text = const Text('', style: AppTextStyles.graphData);

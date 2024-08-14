@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:tymesavingfrontend/common/styles/button_theme_data.dart';
 import 'package:tymesavingfrontend/components/budget/budget_approve_page.dart';
-import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
 import 'package:tymesavingfrontend/components/common/button/secondary_button.dart';
 import 'package:tymesavingfrontend/components/common/chart/budget_pie_chart.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
@@ -39,11 +37,13 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
   int? daysLeft;
   SummaryUser? _user;
   bool isMember = false;
-  bool approval = true;
+  bool approval = false;
   bool isLoading = true;
   String _displayPercentageTaken = '';
   bool _isDisplayRestDescription = false;
+
   List<Transaction> _transactions = [];
+  List<Transaction> _awaitingApprovalTransaction = [];
 
   Future<void> _renderUser(String? userId) async {
     Future.microtask(() async {
@@ -69,6 +69,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
       if (!mounted) return;
       setState(() {
         _transactions = budgetService.transactions;
+        _awaitingApprovalTransaction = budgetService.awaitingApprovalTransaction;
       });
     });
   }
@@ -99,10 +100,11 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
           isMember = _budget!.hostedBy.toString() !=
               Provider.of<AuthService>(context, listen: false).user?.id;
           isLoading = false;
-
-          // set display string
-          debugPrint(
-              "percentageTaken: $percentageTaken, ${percentageTaken! > 199}, $percentageLeft");
+          if(_budget!.defaultApproveStatus == "Pending") {
+            approval = true;
+          }
+          // debugPrint(
+          //     "percentageTaken: $percentageTaken, ${percentageTaken! > 199}, $percentageLeft");
           if (percentageTaken! < 0) {
             _displayPercentageTaken = '0%';
           } else if (percentageTaken! > 199) {
@@ -143,6 +145,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
 
   @override
   void didPopNext() {
+    isLoading = true;
     _loadData();
     super.didPopNext();
   }
@@ -251,7 +254,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                                     children: [
                                       Text('Your initial budget', style: Theme.of(context).textTheme.bodyMedium,),
                                       const Expanded(child: SizedBox()),
-                                      Text(formatAmountToVnd(_budget!.amount), style: Theme.of(context).textTheme.headlineMedium,),
+                                      Text(formatAmountToVnd(_budget!.amount), style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontSize: 15),),
                                     ],  
                                   ),
                                   Row(
@@ -259,7 +262,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                                     children: [
                                       Text('Current budget left', style: Theme.of(context).textTheme.bodyMedium,),
                                       const Expanded(child: SizedBox()),
-                                      Text(formatAmountToVnd(_budget!.concurrentAmount), style: Theme.of(context).textTheme.headlineMedium,),
+                                      Text(formatAmountToVnd(_budget!.concurrentAmount), style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontSize: 15),),
                                     ],
                                   ),
                                   Row(
@@ -267,31 +270,59 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                                     children: [
                                       Text('Budget remain', style: Theme.of(context).textTheme.bodyMedium,),
                                       const Expanded(child: SizedBox()),
-                                      Text(_displayPercentageTaken, style: Theme.of(context).textTheme.headlineMedium,),
+                                      Text(_displayPercentageTaken, style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontSize: 15),),
                                     ],
                                   ),
                                 ],
                               ),
                               const SizedBox(height: 10),
-                              Row(
-                                mainAxisSize: MainAxisSize.min, // Adjusts the row size to fit its children
-                                children: [
-                                  Text(
-                                    "Color ",
-                                    style: Theme.of(context).textTheme.bodyMedium
-                                  ),
-                                  Container(
-                                    width: 10,  // Width of the color box
-                                    height: 10, // Height of the color box
-                                    color: colorScheme.primary, // Color of the box
-                                    margin: const EdgeInsets.only(right: 4), // Space between the box and the text
-                                  ),
-                                  Text(
-                                    ' indicate percentages of budget left',
-                                    style: Theme.of(context).textTheme.bodyMedium, // Customize your text style
-                                  ),
-                                ],
-                              )
+                              Wrap(
+                                alignment: WrapAlignment.center,
+                                spacing: 2,
+                                runSpacing: 8,
+                                children:[ 
+                                    Text(
+                                      "Color ",
+                                      style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 12)
+                                    ),
+                                    Container(
+                                      width: 10,  // Width of the color box
+                                      height: 10, // Height of the color box
+                                      color: colorScheme.primary, // Color of the box
+                                      margin: const EdgeInsets.only(right: 4), // Space between the box and the text
+                                    ),
+                                    Text(
+                                      ' indicate',
+                                      style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 12),
+                                      overflow: TextOverflow.visible,
+                                      softWrap: true,
+                                    ),
+                                    Text(
+                                      ' percentages',
+                                      style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 12),
+                                      overflow: TextOverflow.visible,
+                                      softWrap: true,
+                                    ),
+                                    Text(
+                                      ' of',
+                                      style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 12),
+                                      overflow: TextOverflow.visible,
+                                      softWrap: true,
+                                    ),
+                                    Text(
+                                      ' budget',
+                                      style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 12),
+                                      overflow: TextOverflow.visible,
+                                      softWrap: true,
+                                    ),
+                                    Text(
+                                      ' left',
+                                      style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 12),
+                                      overflow: TextOverflow.visible,
+                                      softWrap: true,
+                                    ),
+
+                            ])
                             ],
                           ),
                         ),
@@ -344,7 +375,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                         children: [
                           const TextSpan(text: 'Currently there are '),
                           TextSpan(
-                            text: '0',
+                            text: _awaitingApprovalTransaction.length.toString(),
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               color: colorScheme.primary, // Customize the color here
                               fontWeight: FontWeight.w500, // Optional: make the number bold
@@ -362,7 +393,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                           height: 50,
                           child: SecondaryButton(onPressed: () {
                             Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                return BudgetApprovePage();
+                                return BudgetApprovePage(budgetId: widget.budgetId,);
                               }));
                           } 
                           , title: "Approving transaction",
@@ -371,10 +402,14 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                     const SizedBox(height: 20,),
                     SizedBox(
                       height: 500,
-                      child: TransactionList(transactions: _transactions),
+                      child: RefreshIndicator(onRefresh: _pullRefresh, child: TransactionList(transactions: _transactions)),
                     ),
                   ],
                 ),
             ));
+  }
+
+  Future<void> _pullRefresh() async {
+    _loadTransactions();
   }
 }

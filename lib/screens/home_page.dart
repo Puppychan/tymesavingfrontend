@@ -6,6 +6,7 @@ import 'package:tymesavingfrontend/components/common/text_align.dart';
 import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/transaction_report_model.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
+import 'package:tymesavingfrontend/screens/tracking_report/spend_tracking.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/transaction_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
@@ -95,9 +96,15 @@ class _HomePageState extends State<HomePage> with RouteAware {
             // Display a loading indicator or placeholder widget
             const CircularProgressIndicator()
           else
-            CustomBarChart(
-              totalsExpense: chartReport!.totals,
-              totalsIncome: chartReportSecondary!.totals,
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                context, MaterialPageRoute(builder: (context) => const SpendTracking()));
+              },
+              child: CustomBarChart(
+                totalsExpense: chartReport!.totals,
+                totalsIncome: chartReportSecondary!.totals,
+              ),
             ),
         ]));
   }

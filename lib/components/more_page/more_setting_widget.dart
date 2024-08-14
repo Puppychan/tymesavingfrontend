@@ -143,7 +143,7 @@ class _RowSettingTemplateState extends State<RowSettingTemplate> {
                         ),
                         Text(
                           widget.motto,
-                          style: Theme.of(context).textTheme.bodyMedium!,
+                          style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontSize: 11.5),
                         ),
                       ],
                     ),
