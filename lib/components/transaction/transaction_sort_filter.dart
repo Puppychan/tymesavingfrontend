@@ -41,8 +41,8 @@ class _TransactionSortFilterState extends State<TransactionSortFilter> {
             selectedOrder: transactionService.sortOptions[optionKey] ?? "",
             onSelected: (sortField, order) {
               // update sort options
-              transactionService.setOptions("sort",
-                  sortField, order.toLowerCase());
+              transactionService.setOptions(
+                  "sort", sortField, order.toLowerCase());
               widget.updateTransactionList();
             });
       }),
