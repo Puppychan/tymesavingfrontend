@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
+import 'package:tymesavingfrontend/common/enum/transaction_group_type_enum.dart';
 import 'package:tymesavingfrontend/components/common/chart/group_saving_half_chart.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/common_group/group_heading_actions.dart';
 import 'package:tymesavingfrontend/components/transaction/transaction_list.dart';
+import 'package:tymesavingfrontend/form/transaction_add_form.dart';
 import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/group_saving_model.dart';
 import 'package:tymesavingfrontend/models/summary_user_model.dart';
@@ -161,6 +164,16 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
         appBar: Heading(title: 'Group Saving', showBackButton: true, actions: [
+          IconButton(onPressed: () {
+            if (!mounted) return;
+            // TODO: TEMP - check if group saving is income
+            final formStateProvider =
+                Provider.of<FormStateProvider>(context, listen: false);
+            formStateProvider.resetForm(FormStateType.income);
+            formStateProvider.updateFormField("groupType", TransactionGroupType.savings, FormStateType.income);
+            formStateProvider.updateFormField("groupId", _groupSaving!.id, FormStateType.income);
+            showTransactionFormA(context, true);
+          }, icon: const Icon(FontAwesomeIcons.moneyCheckDollar)),
           IconButton(
             icon: const Icon(FontAwesomeIcons.ellipsis),
             onPressed: () {

@@ -6,26 +6,29 @@ import 'package:tymesavingfrontend/common/enum/page_location_enum.dart';
 import 'package:tymesavingfrontend/common/enum/user_role_enum.dart';
 import 'package:tymesavingfrontend/components/common/sheet/bottom_sheet.dart';
 import 'package:tymesavingfrontend/components/user/user_sort_filter.dart';
+import 'package:tymesavingfrontend/form/budget_add_form.dart';
+import 'package:tymesavingfrontend/form/group_saving_add_form.dart';
 import 'package:tymesavingfrontend/screens/notifications_page.dart';
 import 'package:tymesavingfrontend/services/user_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
-
 
 List<Widget> renderHeadingActionsBasedUserRoleAndLocation(
     BuildContext context, UserRole userRole, PageLocation pageLocation) {
   // Define icons for each role and PageLocation
   Map<UserRole, Map<PageLocation, List<IconButton>>> rolePageLocationIcons = {
-      UserRole.admin: {
-        PageLocation.homePage: [
-          // buildThemeButton(context),
-          buildUserFilterButton(context)
-        ],
-        // PageLocation.settingsPage: [Icons.home, Icons.logout],
-      },
-      UserRole.customer: {
-        PageLocation.homePage: [buildNotificationButton(context)],
-        // PageLocation.settingsPage: [Icons.home],
-      },
+    UserRole.admin: {
+      PageLocation.homePage: [
+        // buildThemeButton(context),
+        buildUserFilterButton(context)
+      ],
+      // PageLocation.settingsPage: [Icons.home, Icons.logout],
+    },
+    UserRole.customer: {
+      PageLocation.homePage: [buildNotificationButton(context)],
+      PageLocation.budgetPage: [buildAddGroupButton(context, true)],
+      PageLocation.savingPage: [buildAddGroupButton(context, false)],
+      // PageLocation.settingsPage: [Icons.home],
+    },
   };
 
   // Get the icons for the current role and PageLocation
@@ -35,15 +38,13 @@ List<Widget> renderHeadingActionsBasedUserRoleAndLocation(
   return icons?.toList() ?? [];
 }
 
-// 
+//
 IconButton buildEditButton(BuildContext context, String type) {
   return IconButton(
     icon: const Icon(Icons.edit),
     onPressed: () {
       // Navigate to the edit page
-      if (type == "transaction") {
-        
-      }
+      if (type == "transaction") {}
     },
   );
 }
@@ -60,12 +61,28 @@ IconButton buildEditButton(BuildContext context, String type) {
 //   );
 // }
 
+IconButton buildAddGroupButton(BuildContext context, bool isBudgetPage) {
+  return IconButton(
+    icon: const Icon(Icons.add),
+    onPressed: () {
+      // Navigate to the add group page
+      if (isBudgetPage) {
+        showBudgetFormA(context);
+      } else {
+        showGroupSavingFormA(context);
+      }
+      // Navigator.push(context, MaterialPageRoute(builder: (context) => const AddGroupPage()));
+    },
+  );
+}
+
 IconButton buildChallengeButton(BuildContext context) {
   return IconButton(
     icon: const Icon(Icons.notifications),
     onPressed: () {
       // Navigate to the notification page
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const NotificationsPage()));
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const NotificationsPage()));
     },
   );
 }
@@ -75,7 +92,8 @@ IconButton buildNotificationButton(BuildContext context) {
     icon: const Icon(Icons.notifications),
     onPressed: () {
       // Navigate to the notification page
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const NotificationsPage()));
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const NotificationsPage()));
     },
   );
 }

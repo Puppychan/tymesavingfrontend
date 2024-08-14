@@ -128,6 +128,7 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
         }
 
         context.loaderOverlay.show();
+        print("The trawnsaction form $formField");
         if (widget.type == FormStateType.updateExpense ||
             widget.type == FormStateType.updateIncome) {
           return await Provider.of<TransactionService>(context, listen: false)
