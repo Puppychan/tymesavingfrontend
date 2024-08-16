@@ -25,7 +25,9 @@ import 'package:tymesavingfrontend/utils/validator.dart';
 
 class TransactionFormMain extends StatefulWidget {
   final FormStateType type;
-  const TransactionFormMain({super.key, required this.type});
+  final bool isFromGroupDetail;
+  const TransactionFormMain(
+      {super.key, required this.type, this.isFromGroupDetail = false});
   @override
   State<TransactionFormMain> createState() => _TransactionFormMainState();
 }
@@ -277,17 +279,43 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: renderCategories(context),
                       ))),
-              ...buildComponentGroup(
-                context: context,
-                label: "ASSIGN TO",
-                contentWidget: AssignGroupMultiForm(
-                    updateOnChange: updateOnChange,
-                    userId: _user?.id ?? "",
-                    // formFields: formFields,
-                    chosenResult: chosenResult,
-                    chosenGroupType: chosenGroupType,
-                    transactionType: widget.type),
-              ),
+              if (widget.isFromGroupDetail == true) ...[
+                const Divider(),
+                Card(
+                  shadowColor: colorScheme.onPrimary,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      children: [
+                        Icon(chosenResult == TransactionGroupType.budget
+                            ? Icons.savings
+                            : Icons.assessment),
+                        const SizedBox(height: 3),
+                        Text(chosenResult?.name ?? "",
+                            style: Theme.of(context).textTheme.titleSmall),
+                        const SizedBox(height: 3),
+                        Text(
+                          chosenResult?.description ?? "",
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          maxLines: 2,
+                          textAlign: TextAlign.center,
+                        )
+                      ],
+                    ),
+                  ),
+                )
+              ] else
+                ...buildComponentGroup(
+                  context: context,
+                  label: "ASSIGN TO",
+                  contentWidget: AssignGroupMultiForm(
+                      updateOnChange: updateOnChange,
+                      userId: _user?.id ?? "",
+                      // formFields: formFields,
+                      chosenResult: chosenResult,
+                      chosenGroupType: chosenGroupType,
+                      transactionType: widget.type),
+                ),
               AmountMultiForm(
                   formattedAmount: formattedAmount,
                   updateOnChange: updateOnChange,

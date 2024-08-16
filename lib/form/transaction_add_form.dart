@@ -6,7 +6,7 @@ import 'package:tymesavingfrontend/form/common_form/transaction_form.dart';
 import 'package:tymesavingfrontend/components/category_list/category_selection.dart';
 import 'package:tymesavingfrontend/utils/navigate_between_sheet.dart';
 
-void showTransactionFormA(BuildContext context, bool isIncome) {
+void showTransactionFormA(BuildContext context, bool isIncome, { bool isFromGroupDetail = false }) {
   // because this sheet open from another sheet -> we need to pop the current sheet
   showStyledBottomSheet(
       context: context,
@@ -15,20 +15,21 @@ void showTransactionFormA(BuildContext context, bool isIncome) {
       contentWidget: CategorySelectionPage(
         type: isIncome ? FormStateType.income : FormStateType.expense,
         onNavigateToNext: () => navigateSheetToSheet(context,
-          () => showTransactionFormB(context, isIncome),
+          () => showTransactionFormB(context, isIncome, isFromGroupDetail: isFromGroupDetail),
         ),
       )
       // onNavigateToNextSheet: () => showSecondBottomSheet(context),
       );
 }
 
-void showTransactionFormB(BuildContext context, bool isIncome) {
+void showTransactionFormB(BuildContext context, bool isIncome, { bool isFromGroupDetail = false }) {
   showStyledBottomSheet(
       context: context,
       title: 'Add new ${isIncome ? 'income' : 'expense'}',
       // contentWidget: Text("PageB "),
       contentWidget: TransactionFormMain(
         type: isIncome ? FormStateType.income : FormStateType.expense,
+        isFromGroupDetail: true
       ),
       onNavigateToPreviousSheet: () => navigateSheetToSheet(context,
             () => showTransactionFormA(context, isIncome),
