@@ -13,7 +13,7 @@ class ReportCategory {
     return ReportCategory(
       totalAmount: json['totalAmount'],
       category: json['category'],
-      percentage: json['percentage'],
+      percentage: (json['percentage'] as num?)?.toDouble() ?? 0.0,
     );
   }
 }
@@ -33,7 +33,40 @@ class ReportUser {
     return ReportUser(
       totalAmount: json['totalAmount'],
       user: json['user'],
-      percentage: json['percentage'],
+      percentage: (json['percentage'] as num?)?.toDouble() ?? 0.0,
+    );
+  }
+}
+
+class ReportInfo{
+  final String name;
+  final DateTime createdDate;
+  final DateTime endDate;
+  final String description;
+  final double concurrentAmount;
+  final double amount;
+
+  ReportInfo({
+    required this.name,
+    required this.createdDate,
+    required this.endDate,
+    required this.description,
+    required this.concurrentAmount,
+    required this.amount,
+  }); 
+
+   factory ReportInfo.fromJson(Map<String, dynamic> json) {
+    return ReportInfo(
+      name: json['name'] ?? '',
+      description: json['description'] ?? '',
+      createdDate: json['createdDate'] != null 
+        ? DateTime.parse(json['createdDate']) 
+        : DateTime.now(),
+      endDate: json['endDate'] != null 
+        ? DateTime.parse(json['endDate']) 
+        : DateTime.now(),
+      concurrentAmount: (json['concurrentAmount'] as num?)?.toDouble() ?? 0.0,
+      amount: (json['amount'] as num?)?.toDouble() ?? 0.0,
     );
   }
 }
