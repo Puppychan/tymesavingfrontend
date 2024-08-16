@@ -22,7 +22,7 @@ class TransactionDialog extends StatelessWidget {
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(10.0)),
           ),
-          title: Text(transaction.category),
+          title: Text(transaction.category, style: Theme.of(context).textTheme.headlineMedium),
           content: SizedBox(
             width: constraints.maxWidth * 0.8, // 80% of screen width
             child: Column(
@@ -56,6 +56,10 @@ class TransactionDialog extends StatelessWidget {
                   label: 'Amount:',
                   value: formatAmountToVnd(transaction.amount),
                 ),
+                const SizedBox(height: 8,),
+                Text ("Description", style: Theme.of(context).textTheme.headlineMedium, overflow: TextOverflow.visible,),
+                const SizedBox(height: 5,),
+                Text (transaction.description!, style: Theme.of(context).textTheme.bodyMedium, overflow: TextOverflow.visible,),
               ],
             ),
           ),

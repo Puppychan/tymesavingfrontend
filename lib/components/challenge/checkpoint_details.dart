@@ -80,7 +80,7 @@ class _CheckPointDetailsState extends State<CheckPointDetails> {
   }
 
   String formatDate(DateTime date){
-    String formattedDate = DateFormat('MMMM d, y').format(date);
+    String formattedDate = DateFormat('d-M, y').format(date);
     return formattedDate;
   }
   
@@ -112,15 +112,8 @@ class _CheckPointDetailsState extends State<CheckPointDetails> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text('Reward', style: Theme.of(context).textTheme.headlineMedium),
-                        // Text(_rewardModel!.name, style: Theme.of(context).textTheme.titleSmall, overflow: TextOverflow.visible, textAlign: TextAlign.center,),
-                    const SizedBox(height: 10,),
                     Text('${prize['value']} points', style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontStyle: FontStyle.italic, fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.primary)),
                     const SizedBox(height: 10,),
-                    // This is vault since design is over suffocated with UI
-                    // Container(
-                    //       margin: const EdgeInsets.symmetric(horizontal: 20),
-                    //       child: Text(_rewardModel!.description, style: Theme.of(context).textTheme.bodyMedium, overflow: TextOverflow.visible, textAlign: TextAlign.justify,)
-                    //     ),
                     const SizedBox(height: 5,),    
                     const Divider(),
                     const SizedBox(height: 10,),
@@ -144,18 +137,19 @@ class _CheckPointDetailsState extends State<CheckPointDetails> {
                               Text('Milestone amount', style: Theme.of(context).textTheme.bodyMedium),
                             ],
                           ),
-                          const Expanded(child: SizedBox()),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(_challengeOwner!.fullname, style: Theme.of(context).textTheme.bodyMedium),
-                              const SizedBox(height: 10,),
-                              Text(endDateFormatted ?? '', style: Theme.of(context).textTheme.bodyMedium),
-                              const SizedBox(height: 10,),
-                              Text(formatAmountToVnd(_checkPointModel!.checkPointValue), 
-                                style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontStyle: FontStyle.italic, fontWeight: FontWeight.bold,
-                                color: Theme.of(context).colorScheme.primary)),
-                            ],
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(_challengeOwner!.fullname, style: Theme.of(context).textTheme.bodyMedium),
+                                const SizedBox(height: 10,),
+                                Text(endDateFormatted ?? '', style: Theme.of(context).textTheme.bodyMedium),
+                                const SizedBox(height: 10,),
+                                Text(formatAmountToVnd(_checkPointModel!.checkPointValue), 
+                                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontStyle: FontStyle.italic, fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).colorScheme.primary)),
+                              ],
+                            ),
                           )
                         ],
                       ),
@@ -192,7 +186,6 @@ class _CheckPointDetailsState extends State<CheckPointDetails> {
                           ),
                         ),
                         const SizedBox(height: 20,),
-                        
                   ],
                 ),
               ),

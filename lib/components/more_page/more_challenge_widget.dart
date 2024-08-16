@@ -69,7 +69,7 @@ class _MoreMenuChallengeState extends State<MoreMenuChallenge> {
                     children: [
                       Text(
                         'Challenge your saving skills now',
-                        style: Theme.of(context).textTheme.titleSmall!,
+                        style: Theme.of(context).textTheme.titleSmall!.copyWith(fontSize: 13),
                       ),
                       Text('Let\'s go!',
                           style: AppTextStyles.titleLargeBlue(context)),

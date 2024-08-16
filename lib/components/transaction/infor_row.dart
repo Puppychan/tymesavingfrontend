@@ -16,6 +16,7 @@ class InfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return Row(
       children: [
         Icon(icon, color: iconColor),
@@ -23,12 +24,12 @@ class InfoRow extends StatelessWidget {
         Expanded(
           child: Text(
             label,
-            style: const TextStyle(fontWeight: FontWeight.w600),
+            style: textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w500),
           ),
         ),
         Align(
           alignment: Alignment.centerRight,
-          child: Text(value, textAlign: TextAlign.right),
+          child: Text(value, textAlign: TextAlign.right, style: textTheme.bodyMedium,),
         ),
       ],
     );
