@@ -138,4 +138,12 @@ class Validator {
     }
     return null; // null means the input is valid
   }
+
+  static String? validateTransactionDescription(String? value) {
+
+    if (value!.length > 500) {
+      return 'Description max length is 500 characters long';
+    }
+    return null;
+  }
 }

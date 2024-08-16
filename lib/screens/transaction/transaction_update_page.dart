@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
+import 'package:tymesavingfrontend/common/enum/transaction_type_enum.dart';
 import 'package:tymesavingfrontend/common/styles/app_padding.dart';
 import 'package:tymesavingfrontend/components/common/sheet/bottom_sheet.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
@@ -92,17 +93,23 @@ class _TransactionUpdatePageState extends State<TransactionUpdatePage> {
                 TextButton(
                     style: ButtonStyle(
                       side: MaterialStateProperty.all(
-                        BorderSide(color: Theme.of(context).colorScheme.onBackground, width: 1.5),
+                        BorderSide(
+                            color: Theme.of(context).colorScheme.onBackground,
+                            width: 1.5),
                       ),
                       padding: MaterialStateProperty.all(
-                          const EdgeInsets.symmetric(vertical: 10, horizontal: 20)),
+                          const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 20)),
                     ),
                     onPressed: () {
                       showStyledBottomSheet(
                           context: context,
                           title: "Category Selection",
                           contentWidget: CategorySelectionPage(
-                              type: FormStateType.updateTransaction,
+                              type: _transaction!.type ==
+                                      TransactionType.expense.toString()
+                                  ? FormStateType.updateExpense
+                                  : FormStateType.updateIncome,
                               onNavigateToNext: () => Navigator.pop(context)));
                     },
                     child: Text(
@@ -110,8 +117,11 @@ class _TransactionUpdatePageState extends State<TransactionUpdatePage> {
                       style: textTheme.titleSmall,
                     )),
                 const Divider(),
-                const TransactionFormMain(
-                    type: FormStateType.updateTransaction),
+                TransactionFormMain(
+                    type:
+                        _transaction!.type == TransactionType.expense.toString()
+                            ? FormStateType.updateExpense
+                            : FormStateType.updateIncome),
               ],
             )));
   }

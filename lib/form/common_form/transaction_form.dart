@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
-import 'package:tymesavingfrontend/common/enum/invitation_type_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_group_type_enum.dart';
 import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
@@ -81,6 +80,13 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
         ErrorDisplay.showErrorToast(validateTotalAmount, context);
         return;
       }
+
+      final String? validateDescription =
+          Validator.validateTransactionDescription(_descriptionController.text);
+      if (validateDescription != null) {
+        ErrorDisplay.showErrorToast(validateDescription, context);
+        return;
+      }
     }
 
     // validate saving or budget group
@@ -113,12 +119,18 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
         print("Form field $formField");
         // return null;
 
-        final transactionType = widget.type == FormStateType.updateTransaction
-            ? formField['type']
-            : widget.type;
+        FormStateType transactionType = widget.type;
+        if (widget.type == FormStateType.income ||
+            widget.type == FormStateType.updateIncome) {
+          transactionType = FormStateType.income;
+        } else if (widget.type == FormStateType.expense) {
+          transactionType = FormStateType.expense;
+        }
 
         context.loaderOverlay.show();
-        if (widget.type == FormStateType.updateTransaction) {
+        print("The trawnsaction form $formField");
+        if (widget.type == FormStateType.updateExpense ||
+            widget.type == FormStateType.updateIncome) {
           return await Provider.of<TransactionService>(context, listen: false)
               .updateTransaction(
                   // user?.id ?? "",
@@ -222,10 +234,11 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
 
       List<Widget> renderCategories(BuildContext context) {
         List<TransactionCategory> categories = [];
-        // TODO: handle update transaction
-        if (widget.type == FormStateType.income) {
+        if (widget.type == FormStateType.income ||
+            widget.type == FormStateType.updateIncome) {
           categories = TransactionCategory.incomeCategories;
-        } else if (widget.type == FormStateType.expense) {
+        } else if (widget.type == FormStateType.expense ||
+            widget.type == FormStateType.updateExpense) {
           categories = TransactionCategory.expenseCategories;
         }
         return categories.expand((category) {
@@ -330,7 +343,9 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
                 controller: _descriptionController,
                 icon: Icons.description,
                 placeholder: formDescription,
-                keyboardType: TextInputType.text,
+                keyboardType: TextInputType.multiline,
+                minLines: 1,
+                maxLines: 5,
                 onChange: (value) => updateOnChange("description"),
               ),
               UnderlineTextField(
