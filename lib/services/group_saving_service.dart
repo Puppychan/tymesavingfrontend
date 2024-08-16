@@ -11,6 +11,7 @@ class GroupSavingService extends ChangeNotifier {
   GroupSaving? _currentGroupSaving;
   List<GroupSaving> _groupSavings = [];
   SummaryGroup? _summaryGroup;
+  ReportInfo? _reportInfo;
 
   GroupSaving? get currentGroupSaving => _currentGroupSaving;
   List<GroupSaving> get groupSavings => _groupSavings;
@@ -22,6 +23,7 @@ class GroupSavingService extends ChangeNotifier {
   List<ReportCategory> _reportCategoryList = [];
   List<ReportUser> _reportUserList = [];
 
+  ReportInfo? get reportInfo => _reportInfo;
   List<ReportCategory> get reportCategoryList => _reportCategoryList;
   List<ReportUser> get reportUserList => _reportUserList;
   List<Transaction> get transactions => _transactions;
@@ -195,7 +197,9 @@ class GroupSavingService extends ChangeNotifier {
       final List<Transaction> transactionList = (response['response']['transactions'] as List)
       .map((item) => Transaction.fromJson(item))
       .toList();
-      
+      final ReportInfo reportInfo = ReportInfo.fromJson(response['response']['information']);
+
+      _reportInfo = reportInfo;
       _reportCategoryList = categories;
       _reportUserList = users;
       _transactions = transactionList;
