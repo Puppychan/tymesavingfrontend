@@ -1,26 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
 import 'package:tymesavingfrontend/components/budget/budget_details.dart';
+import 'package:tymesavingfrontend/components/budget/budget_report.dart';
 import 'package:tymesavingfrontend/components/common/text_align.dart';
 import 'package:tymesavingfrontend/models/budget_model.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'dart:math' as math;
 
-// final tempBudget = Budget(
-//   id: "1",
-//   hostedBy: "72e4b93000be75dd6e367723",
-//   name: 'Budget Name',
-//   description: 'Description',
-//   amount: 50000000,
-//   concurrentAmount: 10000000,
-//   createdDate: DateTime.now().toString(),
-//   endDate: DateTime.now().add(const Duration(days: 30)).toString(),
-//   participants: [],
-// );
-
 class BudgetCard extends StatefulWidget {
-  // final String budgetId;
   final Budget budget;
   const BudgetCard({super.key, required this.budget});
   @override
@@ -30,12 +18,8 @@ class BudgetCard extends StatefulWidget {
 class _BudgetCardState extends State<BudgetCard> {
   @override
   Widget build(BuildContext context) {
-    // final budget = Provider.of<AuthService>(context).budget;
-    // final budget = tempBudget;
     final currentProgress =
         widget.budget.concurrentAmount / widget.budget.amount;
-
-    // double progress = budget.contribution / maxContribution; // Calculate the progress as a fraction
     String formattedDate =
         timeago.format(DateTime.parse(widget.budget.createdDate.toString()));
     final colorScheme = Theme.of(context).colorScheme;
@@ -47,7 +31,12 @@ class _BudgetCardState extends State<BudgetCard> {
       child: InkWell(
         splashColor: colorScheme.quaternary,
         onTap: () {
-          // debugPrint('Challenge tapped.');
+          // debugPrint("Status of ISCLOSEDOREXPIRED is : ${widget.budget.isClosedOrExpired}");
+          widget.budget.isClosedOrExpired ?
+           Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return BudgetReport(budgetId: widget.budget.id);
+          }))
+          :
           Navigator.push(context, MaterialPageRoute(builder: (context) {
             return BudgetDetails(budgetId: widget.budget.id);
           }));
@@ -60,8 +49,6 @@ class _BudgetCardState extends State<BudgetCard> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // CustomCircleAvatar(imagePath: budget.avatarPath),
-                  // const SizedBox(width: 10),
                   Expanded(
                     child: Text(
                       widget.budget.name,
@@ -96,6 +83,12 @@ class _BudgetCardState extends State<BudgetCard> {
                         overflow: TextOverflow.ellipsis,
                         TextSpan(
                           children: <TextSpan>[
+                            widget.budget.isClosedOrExpired ?
+                            TextSpan(
+                              text: 'Group closed',
+                              style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.redAccent),
+                            )
+                            :
                             TextSpan(
                               text: 'Progress ',
                               style: Theme.of(context).textTheme.bodyMedium!,
