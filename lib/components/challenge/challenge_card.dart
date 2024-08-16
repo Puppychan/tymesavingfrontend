@@ -48,15 +48,24 @@ class _ChallengeCardState extends State<ChallengeCard> {
                         softWrap: true,
                       ),
                   const SizedBox(height: 5,),
-                  Text(
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.calendar_today, // You can choose any icon that suits your design
+                        size: 15, // Adjust the size according to your need
+                        color: Theme.of(context).colorScheme.primary, // Adjust color if needed
+                      ),
+                      const SizedBox(width: 8.0), // Add some space between the icon and the text
+                      Text(
                         DateFormat('EEEE, dd/MM/yyyy').format(widget.challengeModel!.endDate),
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium,
+                        style: Theme.of(context).textTheme.bodyMedium,
                         textAlign: TextAlign.left,
                         maxLines: 3,
                         softWrap: true,
                       ),
+                    ],
+                  ),
+
                   const SizedBox(height: 10),
                   Text(
                     widget.challengeModel!.description,

@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/styles/app_padding.dart';
 import 'package:tymesavingfrontend/components/common/chart/custom_bar_chart.dart';
 import 'package:tymesavingfrontend/components/common/text_align.dart';
-import 'package:tymesavingfrontend/components/transaction/transaction_section.dart';
+import 'package:tymesavingfrontend/components/transaction/transaction_monthly.dart';
 import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/transaction_report_model.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
@@ -56,13 +56,13 @@ class _HomePageState extends State<HomePage> with RouteAware {
         });
 
         if (!mounted) return;
-        await handleMainPageApi(context, () async {
-          return await transactionService.fetchTransactions(widget.user!.id);
-        }, () async {
-          setState(() {
-            transactions = transactionService.transactions;
-          });
-        });
+        // await handleMainPageApi(context, () async {
+        //   return await transactionService.fetchTransactions(widget.user!.id);
+        // }, () async {
+        //   setState(() {
+        //     transactions = transactionService.transactions;
+        //   });
+        // });
       }
 
       setState(() {
@@ -90,8 +90,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            ViewAllTransactionsPage(),
+        builder: (context) => const ViewAllTransactionsPage(),
       ),
     );
   }
@@ -130,9 +129,9 @@ class _HomePageState extends State<HomePage> with RouteAware {
           else
             Container(
               decoration: BoxDecoration(
-              color: colorScheme.tertiary,
-              borderRadius: const BorderRadius.all(Radius.circular(10)),
-              boxShadow: [
+                color: colorScheme.tertiary,
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                boxShadow: [
                   BoxShadow(
                     color: colorScheme.secondary,
                     spreadRadius: 0.1,
@@ -220,20 +219,22 @@ class _HomePageState extends State<HomePage> with RouteAware {
                   }
                   _navigateToAllTransactions(context);
                 },
-                child: Text(
-                  'View All',
-                  style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                        color: Theme.of(context).colorScheme.primary,
-                        decoration: TextDecoration.underline,
-                      ),
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Theme.of(context).colorScheme.tertiary),
+                  child: Text('View detail',
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          fontSize: 12, fontWeight: FontWeight.bold)),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 4), // Add some spacing between sections
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.4,
-            child: TransactionSection(transactions: transactions ?? {}),
+            // child: TransactionSection(transactions: transactions ?? {}),
+            child: TransactionMonthlyTabBar(userId: widget.user!.id),
           ),
         ],
       ),

@@ -19,6 +19,9 @@ class UnderlineTextField extends StatefulWidget {
   final bool? readOnly;
   final void Function(String)? onChange;
   final List<TextInputFormatter>? inputFormatters;
+  // for multiline text field
+  final int? minLines;
+  final int? maxLines;
 
   const UnderlineTextField({
     super.key,
@@ -35,7 +38,7 @@ class UnderlineTextField extends StatefulWidget {
     this.icon,
     this.onTap,
     this.readOnly,
-    this.onChange, this.defaultValue, this.inputFormatters,
+    this.onChange, this.defaultValue, this.inputFormatters, this.minLines, this.maxLines,
   });
 
   @override
@@ -59,6 +62,8 @@ class _UnderlineTextFieldState extends State<UnderlineTextField> {
       Text(widget.label, style: textTheme.titleSmall),
       const SizedBox(height: 10),
       TextFormField(
+        minLines: widget.minLines,
+        maxLines: widget.maxLines,
         controller: widget.controller,
         onChanged: widget.onChange,
         validator: widget.validator,

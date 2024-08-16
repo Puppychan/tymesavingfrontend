@@ -2,12 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
+import 'package:tymesavingfrontend/common/enum/transaction_group_type_enum.dart';
+import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
 import 'package:tymesavingfrontend/components/common/button/secondary_button.dart';
 import 'package:tymesavingfrontend/components/common/chart/group_saving_half_chart.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/common_group/group_heading_actions.dart';
+import 'package:tymesavingfrontend/components/group_saving/group_saving_report.dart';
 import 'package:tymesavingfrontend/components/group_saving/saving_approve_page.dart';
 import 'package:tymesavingfrontend/components/transaction/transaction_list.dart';
+import 'package:tymesavingfrontend/form/transaction_add_form.dart';
 import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/group_saving_model.dart';
 import 'package:tymesavingfrontend/models/summary_user_model.dart';
@@ -70,6 +75,7 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
       setState(() {
         _transactions = groupSavingService.transactions;
         _awaitingApprovalTransaction = groupSavingService.awaitingApprovalTransaction;
+        isLoading = false;
       });
     });
   }
@@ -99,7 +105,6 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
           // check if user is member or host
           isMember = _groupSaving!.hostedBy.toString() !=
               Provider.of<AuthService>(context, listen: false).user?.id;
-          isLoading = false;
           // check group status
           if(_groupSaving!.defaultApproveStatus == "Pending") {
             approval = true;
@@ -138,6 +143,8 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
 
   @override
   void didChangeDependencies() {
+    isLoading = true;
+    _loadData();
     super.didChangeDependencies();
     final route = ModalRoute.of(context);
     if (route is PageRoute) {
@@ -169,6 +176,19 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
         appBar: Heading(title: 'Group Saving', showBackButton: true, actions: [
+          IconButton(onPressed: () {
+            if (!mounted) return;
+            // TODO: TEMP - check if group saving is income
+            final formStateProvider =
+                Provider.of<FormStateProvider>(context, listen: false);
+            formStateProvider.resetForm(FormStateType.income);
+            formStateProvider.updateFormField("groupType", TransactionGroupType.savings, FormStateType.income);
+            formStateProvider.updateFormField("savingGroupId", _groupSaving!.id, FormStateType.income);
+                        // render group
+            if (!mounted) return;
+            formStateProvider.updateFormField("tempChosenGroup", _groupSaving, FormStateType.income);
+            showTransactionFormA(context, true, isFromGroupDetail: true);
+          }, icon: const Icon(FontAwesomeIcons.moneyCheckDollar)),
           IconButton(
             icon: const Icon(FontAwesomeIcons.ellipsis),
             onPressed: () {
@@ -246,6 +266,9 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
                                 ],
                               ),
                               Text.rich(
+                                softWrap: true,
+                                overflow: TextOverflow.visible,
+                                textAlign: TextAlign.center,
                                 TextSpan(
                                   text: '$daysLeft day${daysLeft != 1 ? 's' : ''}',
                                   style: Theme.of(context).textTheme.bodyMedium,
@@ -253,12 +276,9 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
                                     if(daysLeft! > 0)
                                     TextSpan(
                                       text:
-                                          ' left until $endDay', // Display the daysLeft variable here
+                                          ' left until $endDay', 
                                       style:
                                           Theme.of(context).textTheme.bodyLarge,
-                                    ),
-                                    const TextSpan(
-                                      text: ' missed by initial deadline of', // Pluralize based on the value of daysLeft
                                     ),
                                   ],
                                 ),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
-import 'package:tymesavingfrontend/common/enum/invitation_type_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_group_type_enum.dart';
 import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
@@ -26,7 +25,9 @@ import 'package:tymesavingfrontend/utils/validator.dart';
 
 class TransactionFormMain extends StatefulWidget {
   final FormStateType type;
-  const TransactionFormMain({super.key, required this.type});
+  final bool isFromGroupDetail;
+  const TransactionFormMain(
+      {super.key, required this.type, this.isFromGroupDetail = false});
   @override
   State<TransactionFormMain> createState() => _TransactionFormMainState();
 }
@@ -81,6 +82,13 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
         ErrorDisplay.showErrorToast(validateTotalAmount, context);
         return;
       }
+
+      final String? validateDescription =
+          Validator.validateTransactionDescription(_descriptionController.text);
+      if (validateDescription != null) {
+        ErrorDisplay.showErrorToast(validateDescription, context);
+        return;
+      }
     }
 
     // validate saving or budget group
@@ -113,12 +121,18 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
         print("Form field $formField");
         // return null;
 
-        final transactionType = widget.type == FormStateType.updateTransaction
-            ? formField['type']
-            : widget.type;
+        FormStateType transactionType = widget.type;
+        if (widget.type == FormStateType.income ||
+            widget.type == FormStateType.updateIncome) {
+          transactionType = FormStateType.income;
+        } else if (widget.type == FormStateType.expense) {
+          transactionType = FormStateType.expense;
+        }
 
         context.loaderOverlay.show();
-        if (widget.type == FormStateType.updateTransaction) {
+        print("The trawnsaction form $formField");
+        if (widget.type == FormStateType.updateExpense ||
+            widget.type == FormStateType.updateIncome) {
           return await Provider.of<TransactionService>(context, listen: false)
               .updateTransaction(
                   // user?.id ?? "",
@@ -222,10 +236,11 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
 
       List<Widget> renderCategories(BuildContext context) {
         List<TransactionCategory> categories = [];
-        // TODO: handle update transaction
-        if (widget.type == FormStateType.income) {
+        if (widget.type == FormStateType.income ||
+            widget.type == FormStateType.updateIncome) {
           categories = TransactionCategory.incomeCategories;
-        } else if (widget.type == FormStateType.expense) {
+        } else if (widget.type == FormStateType.expense ||
+            widget.type == FormStateType.updateExpense) {
           categories = TransactionCategory.expenseCategories;
         }
         return categories.expand((category) {
@@ -264,17 +279,43 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: renderCategories(context),
                       ))),
-              ...buildComponentGroup(
-                context: context,
-                label: "ASSIGN TO",
-                contentWidget: AssignGroupMultiForm(
-                    updateOnChange: updateOnChange,
-                    userId: _user?.id ?? "",
-                    // formFields: formFields,
-                    chosenResult: chosenResult,
-                    chosenGroupType: chosenGroupType,
-                    transactionType: widget.type),
-              ),
+              if (widget.isFromGroupDetail == true) ...[
+                const Divider(),
+                Card(
+                  shadowColor: colorScheme.onPrimary,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      children: [
+                        Icon(chosenResult == TransactionGroupType.budget
+                            ? Icons.savings
+                            : Icons.assessment),
+                        const SizedBox(height: 3),
+                        Text(chosenResult?.name ?? "",
+                            style: Theme.of(context).textTheme.titleSmall),
+                        const SizedBox(height: 3),
+                        Text(
+                          chosenResult?.description ?? "",
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          maxLines: 2,
+                          textAlign: TextAlign.center,
+                        )
+                      ],
+                    ),
+                  ),
+                )
+              ] else
+                ...buildComponentGroup(
+                  context: context,
+                  label: "ASSIGN TO",
+                  contentWidget: AssignGroupMultiForm(
+                      updateOnChange: updateOnChange,
+                      userId: _user?.id ?? "",
+                      // formFields: formFields,
+                      chosenResult: chosenResult,
+                      chosenGroupType: chosenGroupType,
+                      transactionType: widget.type),
+                ),
               AmountMultiForm(
                   formattedAmount: formattedAmount,
                   updateOnChange: updateOnChange,
@@ -330,7 +371,9 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
                 controller: _descriptionController,
                 icon: Icons.description,
                 placeholder: formDescription,
-                keyboardType: TextInputType.text,
+                keyboardType: TextInputType.multiline,
+                minLines: 1,
+                maxLines: 5,
                 onChange: (value) => updateOnChange("description"),
               ),
               UnderlineTextField(

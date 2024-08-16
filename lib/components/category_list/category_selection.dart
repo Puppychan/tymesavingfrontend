@@ -43,8 +43,7 @@ class _CategorySelectionPageState extends State<CategorySelectionPage> {
     List<Widget> renderCategories(BuildContext context) {
       List<TransactionCategory> categories = [];
       // render the categories based on the type of form
-      // TODO: handle updating the category based on the form typeÇ
-      if (widget.type == FormStateType.income) {
+      if (widget.type == FormStateType.income || widget.type == FormStateType.updateIncome) {
         categories = TransactionCategory.incomeCategories;
       } else {
         categories = TransactionCategory.expenseCategories;
