@@ -29,7 +29,7 @@ Widget detailedSummaryGroup(BuildContext context, SummaryGroup? group) {
         Text(group.name, style: textTheme.bodyLarge!
                       .copyWith(fontWeight: FontWeight.bold), maxLines: null,),
         const SizedBox(height: 4.0),
-        Text(group.description, style: textTheme.bodyMedium, maxLines: null,),
+        Text(group.description, style: textTheme.bodyMedium, maxLines: null,overflow: TextOverflow.visible,),
         const SizedBox(height: 4.0),
         const Divider(),
         const SizedBox(height: 4.0),
