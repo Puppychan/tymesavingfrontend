@@ -64,31 +64,36 @@ class TransactionDialog extends StatelessWidget {
             ),
           ),
           actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => TransactionUpdatePage(
-                              transactionId: transaction.id,
-                            )));
-                // Add your edit functionality here
-              },
-              child: const Text('Edit'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                // Add your delete functionality here
-              },
-              child: const Text('Delete'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Close'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TransactionUpdatePage(
+                                  transactionId: transaction.id,
+                                )));
+                    // Add your edit functionality here
+                  },
+                  child: const Text('Edit'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    // Add your delete functionality here
+                  },
+                  child: const Text('Delete'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Close'),
+                ),
+              ],
             ),
           ],
         );
