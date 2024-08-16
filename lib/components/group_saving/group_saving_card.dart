@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
 import 'package:tymesavingfrontend/components/common/text_align.dart';
 import 'package:tymesavingfrontend/components/group_saving/group_saving_details.dart';
+import 'package:tymesavingfrontend/components/group_saving/group_saving_report.dart';
 import 'package:tymesavingfrontend/models/group_saving_model.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -69,6 +70,11 @@ class _GroupSavingCardState extends State<GroupSavingCard> with SingleTickerProv
       child: InkWell(
         splashColor: colorScheme.quaternary,
         onTap: () {
+          widget.groupSaving.isClosedOrExpired ?
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return GroupSavingReport(groupSavingId: widget.groupSaving.id);
+          }))
+          :
           // debugPrint('Challenge tapped.');
           Navigator.push(context, MaterialPageRoute(builder: (context) {
             return GroupSavingDetails(groupSavingId: widget.groupSaving.id);
@@ -113,6 +119,12 @@ class _GroupSavingCardState extends State<GroupSavingCard> with SingleTickerProv
                         overflow: TextOverflow.ellipsis,
                         TextSpan(
                           children: <TextSpan>[
+                            widget.groupSaving.isClosedOrExpired ?
+                            TextSpan(
+                              text: 'Group closed',
+                              style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.redAccent),
+                            )
+                            :
                             TextSpan(
                               text: currentProgress < 1.0
                                 ? 'Progress'
