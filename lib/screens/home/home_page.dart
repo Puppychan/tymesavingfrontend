@@ -56,13 +56,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
         });
 
         if (!mounted) return;
-        // await handleMainPageApi(context, () async {
-        //   return await transactionService.fetchTransactions(widget.user!.id);
-        // }, () async {
-        //   setState(() {
-        //     transactions = transactionService.transactions;
-        //   });
-        // });
+
       }
 
       setState(() {
@@ -143,7 +137,9 @@ class _HomePageState extends State<HomePage> with RouteAware {
               child: InkWell(
                 onTap: () {
                   Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => const SpendTracking()));
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SpendTracking()));
                 },
                 child: CustomBarChart(
                   totalsExpense: chartReport!.totals,
@@ -152,56 +148,59 @@ class _HomePageState extends State<HomePage> with RouteAware {
               ),
             ),
           const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const SizedBox(width: 20),
-                Text(
-                  "Graph tips:",
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontStyle: FontStyle.italic, fontWeight: FontWeight.w500)
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const SizedBox(width: 25),
-                Text(
-                  "Color ",
-                  style: Theme.of(context).textTheme.bodyMedium
-                ),
-                Container(
-                  width: 10,  // Width of the color box
-                  height: 10, // Height of the color box
-                  color: Theme.of(context).colorScheme.inversePrimary, // Color of the box
-                  margin: const EdgeInsets.only(right: 4), // Space between the box and the text
-                ),
-                Text(
-                  ' indicate total expense/month',
-                  style: Theme.of(context).textTheme.bodyMedium, // Customize your text style
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const SizedBox(width: 25),
-                Text(
-                  "Color ",
-                  style: Theme.of(context).textTheme.bodyMedium
-                ),
-                Container(
-                  width: 10,  // Width of the color box
-                  height: 10, // Height of the color box
-                  color: Theme.of(context).colorScheme.primary, // Color of the box
-                  margin: const EdgeInsets.only(right: 4), // Space between the box and the text
-                ),
-                Text(
-                  ' indicate total income/month',
-                  style: Theme.of(context).textTheme.bodyMedium, // Customize your text style
-                ),
-              ],
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const SizedBox(width: 20),
+              Text("Graph tips:",
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      fontStyle: FontStyle.italic,
+                      fontWeight: FontWeight.w500)),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const SizedBox(width: 25),
+              Text("Color ", style: Theme.of(context).textTheme.bodyMedium),
+              Container(
+                width: 10, // Width of the color box
+                height: 10, // Height of the color box
+                color: Theme.of(context)
+                    .colorScheme
+                    .inversePrimary, // Color of the box
+                margin: const EdgeInsets.only(
+                    right: 4), // Space between the box and the text
+              ),
+              Text(
+                ' indicate total expense/month',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium, // Customize your text style
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const SizedBox(width: 25),
+              Text("Color ", style: Theme.of(context).textTheme.bodyMedium),
+              Container(
+                width: 10, // Width of the color box
+                height: 10, // Height of the color box
+                color:
+                    Theme.of(context).colorScheme.primary, // Color of the box
+                margin: const EdgeInsets.only(
+                    right: 4), // Space between the box and the text
+              ),
+              Text(
+                ' indicate total income/month',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium, // Customize your text style
+              ),
+            ],
+          ),
           const SizedBox(height: 12), // Add some spacing between sections
           const Divider(),
           Row(
@@ -213,14 +212,10 @@ class _HomePageState extends State<HomePage> with RouteAware {
               ),
               TextButton(
                 onPressed: () {
-                  if (transactions == null) {
-                    WarningDisplay.showWarningToast(
-                        "No transactions available", context);
-                  }
                   _navigateToAllTransactions(context);
                 },
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                       color: Theme.of(context).colorScheme.tertiary),

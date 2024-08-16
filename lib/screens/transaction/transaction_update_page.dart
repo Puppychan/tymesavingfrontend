@@ -26,6 +26,7 @@ class TransactionUpdatePage extends StatefulWidget {
 class _TransactionUpdatePageState extends State<TransactionUpdatePage> {
   Transaction? _transaction;
   User? _user;
+  bool _isLoading = true;
 
   Future<void> _renderUser(userId) async {
     Future.microtask(() async {
@@ -56,11 +57,15 @@ class _TransactionUpdatePageState extends State<TransactionUpdatePage> {
         // set transaction to update form
         final formStateService =
             Provider.of<FormStateProvider>(context, listen: false);
-        formStateService.setUpdateTransactionFormFields(tempTransaction);
+        formStateService.setUpdateTransactionFormFields(tempTransaction, tempTransaction!.type == TransactionType.expense.toString()
+            ? FormStateType.updateExpense
+            : FormStateType.updateIncome);
 
         // update state
         setState(() {
           _transaction = tempTransaction;
+          print("Transaction in update page: $_transaction");
+          _isLoading = false;
         });
         await _renderUser(tempTransaction!.userId);
       });
@@ -78,52 +83,62 @@ class _TransactionUpdatePageState extends State<TransactionUpdatePage> {
         ),
         body: SingleChildScrollView(
             padding: AppPaddingStyles.pagePadding,
-            child: Column(
-              children: [
-                buildRow(textTheme, "Created By",
-                    _user?.fullname ?? "Loading Full Name..."),
-                const Divider(),
-                buildRow(textTheme, "Username",
-                    _user?.username ?? "Loading Username..."),
-                const SizedBox(height: 20),
-                buildRow(
-                    textTheme, "Type", _transaction?.type ?? "Loading Type..."),
-                const Divider(),
-                const SizedBox(height: 10),
-                TextButton(
-                    style: ButtonStyle(
-                      side: MaterialStateProperty.all(
-                        BorderSide(
-                            color: Theme.of(context).colorScheme.onBackground,
-                            width: 1.5),
-                      ),
-                      padding: MaterialStateProperty.all(
-                          const EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 20)),
-                    ),
-                    onPressed: () {
-                      showStyledBottomSheet(
-                          context: context,
-                          title: "Category Selection",
-                          contentWidget: CategorySelectionPage(
+            child: _isLoading == true
+                ? const Center(child: CircularProgressIndicator())
+                : _transaction != null
+                    ? Column(
+                        children: [
+                          buildRow(textTheme, "Created By",
+                              _user?.fullname ?? "Loading Full Name..."),
+                          const Divider(),
+                          buildRow(textTheme, "Username",
+                              _user?.username ?? "Loading Username..."),
+                          const SizedBox(height: 20),
+                          buildRow(textTheme, "Type",
+                              _transaction?.type ?? "Loading Type..."),
+                          const Divider(),
+                          const SizedBox(height: 10),
+                          TextButton(
+                              style: ButtonStyle(
+                                side: MaterialStateProperty.all(
+                                  BorderSide(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onBackground,
+                                      width: 1.5),
+                                ),
+                                padding: MaterialStateProperty.all(
+                                    const EdgeInsets.symmetric(
+                                        vertical: 10, horizontal: 20)),
+                              ),
+                              onPressed: () {
+                                showStyledBottomSheet(
+                                    context: context,
+                                    title: "Category Selection",
+                                    contentWidget: CategorySelectionPage(
+                                        type: _transaction!.type ==
+                                                TransactionType.expense
+                                                    .toString()
+                                            ? FormStateType.updateExpense
+                                            : FormStateType.updateIncome,
+                                        onNavigateToNext: () =>
+                                            Navigator.pop(context)));
+                              },
+                              child: Text(
+                                "Category Details",
+                                style: textTheme.titleSmall,
+                              )),
+                          const Divider(),
+                          TransactionFormMain(
                               type: _transaction!.type ==
                                       TransactionType.expense.toString()
                                   ? FormStateType.updateExpense
-                                  : FormStateType.updateIncome,
-                              onNavigateToNext: () => Navigator.pop(context)));
-                    },
-                    child: Text(
-                      "Category Details",
-                      style: textTheme.titleSmall,
-                    )),
-                const Divider(),
-                TransactionFormMain(
-                    type:
-                        _transaction!.type == TransactionType.expense.toString()
-                            ? FormStateType.updateExpense
-                            : FormStateType.updateIncome),
-              ],
-            )));
+                                  : FormStateType.updateIncome),
+                        ],
+                      )
+                    : const Center(
+                        child: Text("No transaction found."),
+                      )));
   }
 
   Widget buildRow(TextTheme textTheme, String label, String value) {

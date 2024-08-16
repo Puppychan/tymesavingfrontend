@@ -107,10 +107,16 @@ flutter run
 # # # iOS Device:
 
 - Connect your iOS device to your machine via USB.
-- Open the project in Xcode.
+- Open the project - folder ios in Xcode.
 - Ensure your device is selected as the target.
 - Run the application on the device via Xcode or the command line:
 
 ```bash
 flutter run
 ```
+- If you encounter issues:
+  - Messsage of the issues to be "... is not available because it is unpaired." -> Unplug the device and plug it back in until there is modal pop up on the device asking for trust the computer. Trust the computer and run the command again.
+  - Rerun the command again.
+  - Message is about "...enable Developer Mode in Settings → Privacy & Security.":
+    - In the device: Go to Settings -> General -> Device Management -> Developer App -> Trust the app.
+    - The app is restarted -> Confirm "On" for developer mode -> rerun the command again.

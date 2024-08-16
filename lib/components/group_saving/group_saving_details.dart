@@ -141,6 +141,7 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
 
   @override
   void didChangeDependencies() {
+    _loadData();
     super.didChangeDependencies();
     final route = ModalRoute.of(context);
     if (route is PageRoute) {

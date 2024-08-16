@@ -110,9 +110,9 @@ class _AssignGroupMultiFormState extends State<AssignGroupMultiForm> {
     return Column(children: [
       RadioField(
           label: "This transaction is for: ",
-          options: widget.transactionType == FormStateType.expense ?
-          TransactionGroupType.formattedExpenseList: 
-          TransactionGroupType.formattedIncomeList,
+          options: widget.transactionType == FormStateType.expense
+              ? TransactionGroupType.formattedExpenseList
+              : TransactionGroupType.formattedIncomeList,
           onSelected: (String formattedChosenGroupType) {
             TransactionGroupType convertGroupType =
                 TransactionGroupType.fromFormattedString(
@@ -161,29 +161,31 @@ class _AssignGroupMultiFormState extends State<AssignGroupMultiForm> {
           : Container(),
       if (_currentChosenResult != null) ...[
         const Divider(),
-        Card(
-          shadowColor: colorScheme.onPrimary,
-          child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              children: [
-                Icon(_currentChosenGroupType == TransactionGroupType.budget
-                    ? Icons.savings
-                    : Icons.assessment),
-                const SizedBox(height: 3),
-                Text(_currentChosenResult?.name ?? "",
-                    style: textTheme.titleSmall),
-                const SizedBox(height: 3),
-                Text(
-                  _currentChosenResult?.description ?? "",
-                  style: textTheme.bodyMedium,
-                  maxLines: 2,
-                  textAlign: TextAlign.center,
-                )
-              ],
-            ),
-          ),
-        )
+        SizedBox(
+            width: double.infinity,
+            child: Card(
+              shadowColor: colorScheme.onPrimary,
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    Icon(_currentChosenGroupType == TransactionGroupType.budget
+                        ? Icons.savings
+                        : Icons.assessment),
+                    const SizedBox(height: 3),
+                    Text(_currentChosenResult?.name ?? "",
+                        style: textTheme.titleSmall),
+                    const SizedBox(height: 3),
+                    Text(
+                      _currentChosenResult?.description ?? "",
+                      style: textTheme.bodyMedium,
+                      maxLines: 2,
+                      textAlign: TextAlign.center,
+                    )
+                  ],
+                ),
+              ),
+            ))
       ] else
         Container(),
     ]);
