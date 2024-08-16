@@ -64,15 +64,22 @@ class _BudgetListPageState extends State<BudgetListPage> with RouteAware {
           : Padding(
               padding: AppPaddingStyles.pagePadding,
               child: budgets.isNotEmpty
-                  ? ListView.separated(
-                      itemCount: budgets.length,
-                      separatorBuilder: (context, index) =>
-                          const SizedBox(height: 15),
-                      itemBuilder: (context, index) {
-                        return BudgetCard(budget: budgets[index]);
-                      },
-                    )
+                  ? RefreshIndicator(
+                    onRefresh: () =>
+                      _pullRefresh(),
+                    child: ListView.separated(
+                        itemCount: budgets.length,
+                        separatorBuilder: (context, index) =>
+                            const SizedBox(height: 15),
+                        itemBuilder: (context, index) {
+                          return BudgetCard(budget: budgets[index]);
+                        },
+                      ),
+                  )
                   : const NotFoundMessage(message: "No budgets found"));
     });
+  }
+  Future<void> _pullRefresh() async {
+    _fetchBudgets();
   }
 }

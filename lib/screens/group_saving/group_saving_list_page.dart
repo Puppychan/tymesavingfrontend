@@ -64,17 +64,24 @@ class _GroupSavingListPageState extends State<GroupSavingListPage>
           : Padding(
               padding: AppPaddingStyles.pagePadding,
               child: groupSavings.isNotEmpty
-                  ? ListView.separated(
-                      itemCount: groupSavings.length,
-                      separatorBuilder: (context, index) =>
-                          const SizedBox(height: 15),
-                      itemBuilder: (context, index) {
-                        return GroupSavingCard(
-                            groupSaving: groupSavings[index]);
-                      },
-                    )
+                  ? RefreshIndicator(
+                    onRefresh: () => _pullRefresh(),
+                    child: ListView.separated(
+                        itemCount: groupSavings.length,
+                        separatorBuilder: (context, index) =>
+                            const SizedBox(height: 15),
+                        itemBuilder: (context, index) {
+                          return GroupSavingCard(
+                              groupSaving: groupSavings[index]);
+                        },
+                      ),
+                  )
                   : const NotFoundMessage(message: "No group savings found"),
             );
     });
+  }
+  
+  Future<void> _pullRefresh() async {
+    _fetchGroupSavings();
   }
 }
