@@ -13,7 +13,7 @@ class ChallengePage extends StatefulWidget {
   final String? budgetGroupId;
   final String? savingGroupId;
   const ChallengePage(
-      {super.key, this.userId, this.budgetGroupId, this.savingGroupId});
+      {super.key, required this.userId, this.budgetGroupId, this.savingGroupId});
   @override
   State<ChallengePage> createState() => _ChallengePageState();
 }
@@ -28,14 +28,7 @@ class _ChallengePageState extends State<ChallengePage> {
       final challengeService =
           Provider.of<ChallengeService>(context, listen: false);
       await handleMainPageApi(context, () async {
-        // TODO: remove later
-        final tempUserId = "72e4b93000be75dd6e367723";
-        if (userId != null) {
-          return await challengeService.fetchChallengeList(userId);
-        } else {
-          // TODO: implement rendering of challenges based on group id
-          return await challengeService.fetchChallengeList(tempUserId);
-        }
+        return await challengeService.fetchChallengeList(widget.userId!);
       }, () async {
         if (!mounted) return;
         setState(() {
@@ -80,15 +73,18 @@ class _ChallengePageState extends State<ChallengePage> {
                 : Expanded(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: ListView.builder(
-                        itemCount: _challengeModelList!.length,
-                        itemBuilder: (context, index) {
-                          final challenge = _challengeModelList![index];
-                          return Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: ChallengeCard(challengeModel: challenge),
-                          );
-                        },
+                      child: RefreshIndicator(
+                        onRefresh: () => _pullRefresh(),
+                        child: ListView.builder(
+                          itemCount: _challengeModelList!.length,
+                          itemBuilder: (context, index) {
+                            final challenge = _challengeModelList![index];
+                            return Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: ChallengeCard(challengeModel: challenge),
+                            );
+                          },
+                        ),
                       ),
                     ),
                   )
@@ -96,5 +92,12 @@ class _ChallengePageState extends State<ChallengePage> {
         ),
       ),
     );
+  }
+
+  Future<void> _pullRefresh() async {
+    setState(() {
+      isLoading = true;
+    });
+    _loadChallengeList(widget.userId);
   }
 }
