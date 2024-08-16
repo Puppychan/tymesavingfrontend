@@ -259,6 +259,9 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
                                 ],
                               ),
                               Text.rich(
+                                softWrap: true,
+                                overflow: TextOverflow.visible,
+                                textAlign: TextAlign.center,
                                 TextSpan(
                                   text: '$daysLeft day${daysLeft != 1 ? 's' : ''}',
                                   style: Theme.of(context).textTheme.bodyMedium,
