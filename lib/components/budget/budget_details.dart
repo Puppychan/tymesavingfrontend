@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_group_type_enum.dart';
-import 'package:tymesavingfrontend/common/styles/button_theme_data.dart';
 import 'package:tymesavingfrontend/components/budget/budget_approve_page.dart';
 import 'package:tymesavingfrontend/components/common/button/secondary_button.dart';
 import 'package:tymesavingfrontend/components/common/chart/budget_pie_chart.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/common_group/group_heading_actions.dart';
 import 'package:tymesavingfrontend/components/transaction/transaction_list.dart';
-import 'package:tymesavingfrontend/form/budget_add_form.dart';
 import 'package:tymesavingfrontend/form/transaction_add_form.dart';
 import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/budget_model.dart';
@@ -166,15 +163,18 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
         appBar: Heading(title: 'Budget Group', showBackButton: true, actions: [
-          IconButton(onPressed: () {
+          IconButton(onPressed: () async {
             if (!mounted) return;
             final formStateProvider =
                 Provider.of<FormStateProvider>(context, listen: false);
             formStateProvider.resetForm(FormStateType.expense);
             formStateProvider.updateFormField("groupType", TransactionGroupType.budget, FormStateType.expense);
-            formStateProvider.updateFormField("groupId", _budget!.id, FormStateType.expense);
+            formStateProvider.updateFormField("budgetGroupId", widget.budgetId, FormStateType.expense);
+            // render group
+            if (!mounted) return;
+            formStateProvider.updateFormField("tempChosenGroup", _budget, FormStateType.expense);
+            showTransactionFormA(context, false, isFromGroupDetail: true);
             
-            showTransactionFormA(context, false);
           }, icon: const Icon(FontAwesomeIcons.moneyCheckDollar)),
           IconButton(
             icon: const Icon(FontAwesomeIcons.ellipsis),

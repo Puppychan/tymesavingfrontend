@@ -179,8 +179,11 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
                 Provider.of<FormStateProvider>(context, listen: false);
             formStateProvider.resetForm(FormStateType.income);
             formStateProvider.updateFormField("groupType", TransactionGroupType.savings, FormStateType.income);
-            formStateProvider.updateFormField("groupId", _groupSaving!.id, FormStateType.income);
-            showTransactionFormA(context, true);
+            formStateProvider.updateFormField("savingGroupId", _groupSaving!.id, FormStateType.income);
+                        // render group
+            if (!mounted) return;
+            formStateProvider.updateFormField("tempChosenGroup", _groupSaving, FormStateType.income);
+            showTransactionFormA(context, true, isFromGroupDetail: true);
           }, icon: const Icon(FontAwesomeIcons.moneyCheckDollar)),
           IconButton(
             icon: const Icon(FontAwesomeIcons.ellipsis),
