@@ -297,7 +297,7 @@ class TransactionService extends ChangeNotifier {
         "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReportByUser}/$userId";
 
     // Add the filter for the specified month and year
-    endpoint += "?getDateCreated=$yearStr-$monthStr";
+    endpoint += "?createdDate=$yearStr-$monthStr";
 
     // Convert any sort and filter options to query parameters
     endpoint += _convertOptionsToParams();
@@ -331,15 +331,14 @@ class TransactionService extends ChangeNotifier {
 
   Future<Map<String, dynamic>> approveTransaction(String transactionId) async {
     final response = await NetworkService.instance.post(
-    "${BackendEndpoints.transaction}/$transactionId/${BackendEndpoints.approveTransaction}"
-    );
+        "${BackendEndpoints.transaction}/$transactionId/${BackendEndpoints.approveTransaction}");
     return response;
   }
 
-  Future<Map<String, dynamic>> cancelledTransaction(String transactionId) async {
+  Future<Map<String, dynamic>> cancelledTransaction(
+      String transactionId) async {
     final response = await NetworkService.instance.post(
-    "${BackendEndpoints.transaction}/$transactionId/${BackendEndpoints.cancelledTransaction}"
-    );
+        "${BackendEndpoints.transaction}/$transactionId/${BackendEndpoints.cancelledTransaction}");
     return response;
   }
 }
