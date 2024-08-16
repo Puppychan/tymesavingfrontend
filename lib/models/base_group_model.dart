@@ -8,18 +8,20 @@ class BaseGroup {
   final String createdDate;
   final String endDate;
   final String defaultApproveStatus;
+  final bool isClosedOrExpired;
 
 
   BaseGroup.fromMap(Map<String, dynamic> map):
-      id = map['_id'],
-      hostedBy = map['hostedBy'],
-      name = map['name'],
-      description = map['description'],
-      amount = map['amount'].toDouble(),
-      concurrentAmount = map['concurrentAmount'].toDouble(),
-      createdDate = map['createdDate'],
-      endDate = map['endDate'],
-      defaultApproveStatus = map['defaultApproveStatus'];
+      id = map['_id'] ?? '',
+      hostedBy = map['hostedBy'] ?? '',
+      name = map['name'] ?? '',
+      description = map['description'] ?? '',
+      amount = (map['amount'] as num?)?.toDouble() ?? 0.0,
+      concurrentAmount = (map['concurrentAmount'] as num?)?.toDouble() ?? 0.0,
+      createdDate = map['createdDate'] ?? '',
+      endDate = map['endDate'] ?? '',
+      defaultApproveStatus = map['defaultApproveStatus'] ?? false,
+      isClosedOrExpired = map['isClosedOrExpired'] ?? false;
 
   Map<String, dynamic> toMapForForm() {
     return {
@@ -32,6 +34,7 @@ class BaseGroup {
       'createdDate': createdDate,
       'endDate': endDate,
       'defaultApproveStatus': defaultApproveStatus,
+      'isClosedOrExpired': isClosedOrExpired,
       // 'participants': participants,
       // Assuming participants is a List<String>. If participants should be converted from List<IUser>, you might need to map each IUser to its map representation.
     };
