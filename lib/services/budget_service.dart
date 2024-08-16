@@ -55,6 +55,7 @@ class BudgetService extends ChangeNotifier {
 
   Future<Map<String, dynamic>> addBudgetGroup(
     String hostedBy,
+    String defaultApproveStatus,
     String name,
     String description,
     double amount,
@@ -67,6 +68,7 @@ class BudgetService extends ChangeNotifier {
       body: {
         'hostedBy': hostedBy,
         'name': name,
+        'defaultApproveStatus': defaultApproveStatus,
         'description': description,
         'amount': amount,
         'concurrentAmount': concurrentAmount,

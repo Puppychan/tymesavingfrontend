@@ -286,7 +286,7 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
                         padding: const EdgeInsets.all(10),
                         child: Column(
                           children: [
-                            Icon(chosenResult == TransactionGroupType.budget
+                            Icon(TransactionGroupType.budget == chosenResult
                                 ? Icons.savings
                                 : Icons.assessment),
                             const SizedBox(height: 3),
