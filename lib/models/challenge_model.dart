@@ -24,19 +24,20 @@ class ChallengeModel {
   });
 
   factory ChallengeModel.fromMap(Map<String, dynamic> map) {
-    return ChallengeModel(
-      id: map['_id'] as String,
-      name: map['name'] as String,
-      description: map['description'] as String? ?? '',
-      category: map['category'] as String,
-      scope: map['scope'] as String,
-      budgetGroupId: map['budgetGroupId'] as String,
-      startDate: DateTime.parse(map['startDate'] as String),
-      endDate: DateTime.parse(map['endDate'] as String),
-      createdBy: map['createdBy'] as String,
-      isPublished: map['isPublished'] as bool,
-    );
-  }
+  return ChallengeModel(
+    // Handle null by providing a default value
+    id: map['_id'] as String? ?? '',  
+    name: map['name'] as String? ?? '', 
+    description: map['description'] as String? ?? '',
+    category: map['category'] as String? ?? '',
+    scope: map['scope'] as String? ?? '', 
+    budgetGroupId: map['budgetGroupId'] as String? ?? '',
+    startDate: DateTime.tryParse(map['startDate'] as String? ?? '') ?? DateTime.now(), 
+    endDate: DateTime.tryParse(map['endDate'] as String? ?? '') ?? DateTime.now(), 
+    createdBy: map['createdBy'] as String? ?? '', 
+    isPublished: map['isPublished'] as bool? ?? false, 
+  );
+}
 
 
   Map<String, dynamic> toMapForForm() {
