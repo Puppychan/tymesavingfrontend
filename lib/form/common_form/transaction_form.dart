@@ -139,7 +139,7 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
                   // transactionType,
                   formField['amount'],
                   formField['payBy'],
-                  TransactionCategory.fromString(formField['category']),);
+                  formField['category'],);
         } else {
           return await Provider.of<TransactionService>(context, listen: false)
               .createTransaction(

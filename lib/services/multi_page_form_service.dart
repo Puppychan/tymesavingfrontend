@@ -36,7 +36,7 @@ class FormStateProvider with ChangeNotifier {
           TransactionCategory.defaultIncomeCategory());
     } else if (type == FormStateType.updateIncome) {
       // return categoryExpense;
-      return _validateFieldNull('category', _incomeFormFields,
+      return _validateFieldNull('category', _updateIncomeFormFields,
           TransactionCategory.defaultIncomeCategory());
     } else if (type == FormStateType.expense) {
       // return categoryExpense;
@@ -111,11 +111,21 @@ class FormStateProvider with ChangeNotifier {
     Map<String, dynamic> tempTransaction = transaction.toMapForForm();
     if (type == FormStateType.updateExpense) {
       for (var key in tempTransaction.keys) {
-        _updateExpenseFormFields[key] = tempTransaction[key];
+        if (key == "category") {
+          _updateExpenseFormFields[key] = TransactionCategory.fromString(
+              tempTransaction[key] as String);
+        } else {
+          _updateExpenseFormFields[key] = tempTransaction[key];
+        }
       }
     } else {
       for (var key in tempTransaction.keys) {
-        _updateIncomeFormFields[key] = tempTransaction[key];
+        if (key == "category") {
+          _updateIncomeFormFields[key] = TransactionCategory.fromString(
+              tempTransaction[key] as String);
+        } else {
+          _updateIncomeFormFields[key] = tempTransaction[key];
+        }
       }
     }
     notifyListeners();
