@@ -83,7 +83,7 @@ class InvitationAddForm extends StatelessWidget {
                                   FormStateType.memberInvitation);
                               Navigator.pop(context);
                               SuccessDisplay.showSuccessToast(
-                                  "Add user to invition list", context);
+                                  "Add user to invitation form", context);
                             })),
                   ));
             },

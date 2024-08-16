@@ -199,199 +199,209 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
         ]),
         body: isLoading
             ? const Center(child: CircularProgressIndicator())
-            : SingleChildScrollView(
-              child: Column(
-                  children: [
-                    Center(
-                      child: Card.filled(
-                        color: colorScheme.onPrimary,
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 10),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 20),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                _groupSaving!.name,
-                                style: Theme.of(context).textTheme.titleLarge,
-                                textAlign: TextAlign.center,
-                                maxLines: 2,
-                              ),
-                              const SizedBox(
-                                height: 6,
-                              ),
-                              Text.rich(
-                                TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: 'Hosted by ',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleSmall!
-                                          .copyWith(
-                                              color: colorScheme.secondary,
-                                              fontStyle: FontStyle.italic),
-                                    ),
-                                    TextSpan(
-                                      text: _user?.fullname ?? 'Loading..',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleSmall!
-                                          .copyWith(
-                                              color: colorScheme.secondary,
-                                              fontStyle: FontStyle.italic),
-                                    ),
-                                  ],
+            : RefreshIndicator(
+              onRefresh: () => _pullRefreshAll(),
+              child: SingleChildScrollView(
+                child: Column(
+                    children: [
+                      Center(
+                        child: Card.filled(
+                          color: colorScheme.onPrimary,
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 20),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  _groupSaving!.name,
+                                  style: Theme.of(context).textTheme.titleLarge,
+                                  textAlign: TextAlign.center,
+                                  maxLines: 2,
                                 ),
-                                textAlign: TextAlign.center,
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              GroupSavingHalfProgressBar(
-                              amount:
-                                  percentageTaken!.isInfinite ? 0 : percentageTaken!,
-                              concurrent: percentageLeft!),                           
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              if (percentageTaken! > 100) 
-                              Column(
-                                children: [
-                                  Text (' You have reached your goal and beyond!', style:Theme.of(context).textTheme.bodyMedium?.copyWith(fontStyle: FontStyle.italic,fontWeight: FontWeight.bold),),
-                                  const SizedBox(height: 5,),
-                                ],
-                              ),
-                              Text.rich(
-                                softWrap: true,
-                                overflow: TextOverflow.visible,
-                                textAlign: TextAlign.center,
-                                TextSpan(
-                                  text: '$daysLeft day${daysLeft != 1 ? 's' : ''}',
-                                  style: Theme.of(context).textTheme.bodyMedium,
-                                  children: [
-                                    if(daysLeft! > 0)
-                                    TextSpan(
-                                      text:
-                                          ' left until $endDay', 
-                                      style:
-                                          Theme.of(context).textTheme.bodyLarge,
-                                    ),
-                                  ],
+                                const SizedBox(
+                                  height: 6,
                                 ),
-                              ),
-                              if(daysLeft! < 0)
-                              Text('$endDay'),
-                              const SizedBox(
-                                height: 30,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                Text.rich(
+                                  TextSpan(
                                     children: [
-                                      Text('You have saved', style: Theme.of(context).textTheme.bodyMedium,),
-                                      const Expanded(child: SizedBox()),
-                                      Text(formatAmountToVnd(_groupSaving!.concurrentAmount), style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontSize: 15),),
-                                    ],  
-                                  ),
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Text('Goal target', style: Theme.of(context).textTheme.bodyMedium,),
-                                      const Expanded(child: SizedBox()),
-                                      Text(formatAmountToVnd(_groupSaving!.amount), style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontSize: 15),),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 30),
-                              Container(
-                                margin: const EdgeInsets.symmetric(horizontal: 15),
-                                child: InkWell(
-                                  onTap: () {
-                                    // Action to view the rest of the description. This could open a dialog, a new page, or expand the text in place.
-                                    setState(() {
-                                        _isDisplayRestDescription =
-                                            !_isDisplayRestDescription;
-                                      });
-                                  },
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        _groupSaving!.description,
-                                        style: Theme.of(context).textTheme.bodyMedium,
-                                        textAlign: TextAlign.justify,
-                                        maxLines: _isDisplayRestDescription ? null : 2,
-                                        overflow: _isDisplayRestDescription
-                                            ? TextOverflow.visible
-                                            : TextOverflow.fade,
-                                        
+                                      TextSpan(
+                                        text: 'Hosted by ',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleSmall!
+                                            .copyWith(
+                                                color: colorScheme.secondary,
+                                                fontStyle: FontStyle.italic),
                                       ),
-                                      if (!_isDisplayRestDescription)
-                                      Text(
-                                        "Tap for more",
-                                        style: Theme.of(context).textTheme.labelMedium,
-                                      )
+                                      TextSpan(
+                                        text: _user?.fullname ?? 'Loading..',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleSmall!
+                                            .copyWith(
+                                                color: colorScheme.secondary,
+                                                fontStyle: FontStyle.italic),
+                                      ),
                                     ],
-                                  )
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                GroupSavingHalfProgressBar(
+                                amount:
+                                    percentageTaken!.isInfinite ? 0 : percentageTaken!,
+                                concurrent: percentageLeft!),                           
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                if (percentageTaken! > 100) 
+                                Column(
+                                  children: [
+                                    Text (' You have reached your goal and beyond!', style:Theme.of(context).textTheme.bodyMedium?.copyWith(fontStyle: FontStyle.italic,fontWeight: FontWeight.bold),),
+                                    const SizedBox(height: 5,),
+                                  ],
+                                ),
+                                Text.rich(
+                                  softWrap: true,
+                                  overflow: TextOverflow.visible,
+                                  textAlign: TextAlign.center,
+                                  TextSpan(
+                                    text: '$daysLeft day${daysLeft != 1 ? 's' : ''}',
+                                    style: Theme.of(context).textTheme.bodyMedium,
+                                    children: [
+                                      if(daysLeft! > 0)
+                                      TextSpan(
+                                        text:
+                                            ' left until $endDay', 
+                                        style:
+                                            Theme.of(context).textTheme.bodyLarge,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                if(daysLeft! < 0)
+                                Text('$endDay'),
+                                const SizedBox(
+                                  height: 30,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Text('You have saved', style: Theme.of(context).textTheme.bodyMedium,),
+                                        const Expanded(child: SizedBox()),
+                                        Text(formatAmountToVnd(_groupSaving!.concurrentAmount), style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontSize: 15),),
+                                      ],  
+                                    ),
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Text('Goal target', style: Theme.of(context).textTheme.bodyMedium,),
+                                        const Expanded(child: SizedBox()),
+                                        Text(formatAmountToVnd(_groupSaving!.amount), style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontSize: 15),),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 30),
+                                Container(
+                                  margin: const EdgeInsets.symmetric(horizontal: 15),
+                                  child: InkWell(
+                                    onTap: () {
+                                      // Action to view the rest of the description. This could open a dialog, a new page, or expand the text in place.
+                                      setState(() {
+                                          _isDisplayRestDescription =
+                                              !_isDisplayRestDescription;
+                                        });
+                                    },
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          _groupSaving!.description,
+                                          style: Theme.of(context).textTheme.bodyMedium,
+                                          textAlign: TextAlign.justify,
+                                          maxLines: _isDisplayRestDescription ? null : 2,
+                                          overflow: _isDisplayRestDescription
+                                              ? TextOverflow.visible
+                                              : TextOverflow.fade,
+                                          
+                                        ),
+                                        if (!_isDisplayRestDescription)
+                                        Text(
+                                          "Tap for more",
+                                          style: Theme.of(context).textTheme.labelMedium,
+                                        )
+                                      ],
+                                    )
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text('Transaction history', style: Theme.of(context).textTheme.headlineMedium,),
+                      if (approval)
+                        Text.rich(
+                          TextSpan(
+                            style: Theme.of(context).textTheme.bodyMedium,
+                            children: [
+                              const TextSpan(text: 'Currently there are '),
+                              TextSpan(
+                                text: _awaitingApprovalTransaction.length.toString(),
+                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                  color: colorScheme.primary, // Customize the color here
+                                  fontWeight: FontWeight.w500, // Optional: make the number bold
                                 ),
                               ),
+                              const TextSpan(text: ' request'),
                             ],
                           ),
                         ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Text('Transaction history', style: Theme.of(context).textTheme.headlineMedium,),
-                    if (approval)
-                      Text.rich(
-                        TextSpan(
-                          style: Theme.of(context).textTheme.bodyMedium,
-                          children: [
-                            const TextSpan(text: 'Currently there are '),
-                            TextSpan(
-                              text: _awaitingApprovalTransaction.length.toString(),
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: colorScheme.primary, // Customize the color here
-                                fontWeight: FontWeight.w500, // Optional: make the number bold
-                              ),
+                        if (approval && !isMember)
+                        const SizedBox(height: 20,),
+                        if (approval && !isMember)
+                        SizedBox(
+                              width: 225,
+                              height: 50,
+                              child: SecondaryButton(onPressed: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                    return SavingApprovePage(savingId: widget.groupSavingId,);
+                                  }));
+                              } 
+                              , title: "Approving transaction",
                             ),
-                            const TextSpan(text: ' request'),
-                          ],
-                        ),
-                      ),
-                      if (approval && !isMember)
-                      const SizedBox(height: 20,),
-                      if (approval && !isMember)
-                      SizedBox(
-                            width: 225,
-                            height: 50,
-                            child: SecondaryButton(onPressed: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                  return SavingApprovePage(savingId: widget.groupSavingId,);
-                                }));
-                            } 
-                            , title: "Approving transaction",
                           ),
-                        ),
-                    SizedBox(
-                      height: 500,
-                      child: RefreshIndicator(onRefresh: _pullRefresh, child: TransactionList(transactions: _transactions)),
-                    ),
-                  ],
-                ),
+                      SizedBox(
+                        height: 500,
+                        child: RefreshIndicator(onRefresh: _pullRefresh, child: TransactionList(transactions: _transactions)),
+                      ),
+                    ],
+                  ),
+              ),
             ));
   }
 
   Future<void> _pullRefresh() async {
     _loadTransactions();
+  }
+
+  Future<void> _pullRefreshAll() async {
+    setState(() {
+      isLoading = true;
+    });
+    _loadData();
   }
 }
