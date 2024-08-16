@@ -78,6 +78,7 @@ class TransactionDialog extends StatelessWidget {
           ),
           actions: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextButton(
                   onPressed: () {

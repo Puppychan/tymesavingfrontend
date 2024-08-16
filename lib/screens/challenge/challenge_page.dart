@@ -80,15 +80,18 @@ class _ChallengePageState extends State<ChallengePage> {
                 : Expanded(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: ListView.builder(
-                        itemCount: _challengeModelList!.length,
-                        itemBuilder: (context, index) {
-                          final challenge = _challengeModelList![index];
-                          return Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: ChallengeCard(challengeModel: challenge),
-                          );
-                        },
+                      child: RefreshIndicator(
+                        onRefresh: () => _pullRefresh(),
+                        child: ListView.builder(
+                          itemCount: _challengeModelList!.length,
+                          itemBuilder: (context, index) {
+                            final challenge = _challengeModelList![index];
+                            return Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: ChallengeCard(challengeModel: challenge),
+                            );
+                          },
+                        ),
                       ),
                     ),
                   )
@@ -96,5 +99,12 @@ class _ChallengePageState extends State<ChallengePage> {
         ),
       ),
     );
+  }
+
+  Future<void> _pullRefresh() async {
+    setState(() {
+      isLoading = true;
+    });
+    _loadChallengeList(widget.userId);
   }
 }

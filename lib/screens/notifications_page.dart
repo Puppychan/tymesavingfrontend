@@ -36,7 +36,6 @@ class _NotificationsPageState extends State<NotificationsPage>
           },
         );
       }
-
       // Fetch invitations from the backend
       await handleMainPageApi(context, () async {
         final invitationService =
@@ -50,11 +49,18 @@ class _NotificationsPageState extends State<NotificationsPage>
               "getStatus", InvitationStatus.cancelled.toString());
         }
         return await invitationService.fetchInvitations(_user?.id ?? "");
-      }, () async {});
+      }, () async {
+        setState(() {
+          _isDataFetched = true;
+        });
+      });
     });
   }
 
   void _handleTabSelection() {
+    setState(() {
+      _isDataFetched = false;
+    });
     if (_tabController.indexIsChanging) return;
     _fetchInvitations(); // Fetch invitations when tab changes
   }
@@ -65,9 +71,6 @@ class _NotificationsPageState extends State<NotificationsPage>
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(_handleTabSelection);
     _fetchInvitations();
-    setState(() {
-      _isDataFetched = true;
-    });
   }
 
   @override
@@ -80,6 +83,13 @@ class _NotificationsPageState extends State<NotificationsPage>
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  Future<void> _pullRefresh() async {
+    setState(() {
+      _isDataFetched = false;
+    });
+    _fetchInvitations();
   }
 
   @override
@@ -99,7 +109,7 @@ class _NotificationsPageState extends State<NotificationsPage>
                       showStyledBottomSheet(
                         context: context,
                         contentWidget: InvitationSortFilter(
-                            updateInvitationList: _fetchInvitations),
+                            updateInvitationList: _pullRefresh),
                       );
                     },
                   )

@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/models/group_saving_model.dart';
+import 'package:tymesavingfrontend/models/report_model.dart';
 import 'package:tymesavingfrontend/models/summary_group_model.dart';
 import 'package:tymesavingfrontend/services/utils/get_backend_endpoint.dart';
 import 'package:tymesavingfrontend/services/utils/network_service.dart';
@@ -18,7 +19,11 @@ class GroupSavingService extends ChangeNotifier {
   List<Transaction> _transactions = [];
   List<Transaction> _awaitingApprovalTransaction = [];
   List<Transaction> _cancelledTransaction = [];
+  List<ReportCategory> _reportCategoryList = [];
+  List<ReportUser> _reportUserList = [];
 
+  List<ReportCategory> get reportCategoryList => _reportCategoryList;
+  List<ReportUser> get reportUserList => _reportUserList;
   List<Transaction> get transactions => _transactions;
   List<Transaction> get awaitingApprovalTransaction => _awaitingApprovalTransaction;
   List<Transaction> get cancelledTransaction => _cancelledTransaction;
@@ -169,6 +174,32 @@ class GroupSavingService extends ChangeNotifier {
       }
       _awaitingApprovalTransaction = transactionPendingList;
       _cancelledTransaction = transactionCancelledList;
+      notifyListeners();
+    }
+    return response;
+  }
+
+  Future<Map<String, dynamic>> fetchSavingReport(
+      String savingGroupId, String filter) async {        
+    final response = await NetworkService.instance.get(
+        "${BackendEndpoints.groupSaving}/$savingGroupId/report?filter=$filter");
+    debugPrint(response.toString());
+
+    if (response['response'] != null && response['statusCode'] == 200) {
+      final List<ReportCategory> categories = (response['response']['categories'] as List)
+      .map((item) => ReportCategory.fromJson(item))
+      .toList();
+      final List<ReportUser> users = (response['response']['users'] as List)
+      .map((item) => ReportUser.fromJson(item))
+      .toList();
+      final List<Transaction> transactionList = (response['response']['transactions'] as List)
+      .map((item) => Transaction.fromJson(item))
+      .toList();
+      
+      _reportCategoryList = categories;
+      _reportUserList = users;
+      _transactions = transactionList;
+
       notifyListeners();
     }
     return response;

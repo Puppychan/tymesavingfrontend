@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_group_type_enum.dart';
 import 'package:tymesavingfrontend/components/budget/budget_approve_page.dart';
+import 'package:tymesavingfrontend/components/budget/budget_report.dart';
+import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
 import 'package:tymesavingfrontend/components/common/button/secondary_button.dart';
 import 'package:tymesavingfrontend/components/common/chart/budget_pie_chart.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
@@ -72,6 +74,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
       setState(() {
         _transactions = budgetService.transactions;
         _awaitingApprovalTransaction = budgetService.awaitingApprovalTransaction;
+        isLoading = false;
       });
     });
   }
@@ -101,7 +104,6 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
           // check if user is member or host
           isMember = _budget!.hostedBy.toString() !=
               Provider.of<AuthService>(context, listen: false).user?.id;
-          isLoading = false;
           if(_budget!.defaultApproveStatus == "Pending") {
             approval = true;
           }
@@ -138,6 +140,8 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
 
   @override
   void didChangeDependencies() {
+    isLoading = true;
+    _loadData();
     super.didChangeDependencies();
     final route = ModalRoute.of(context);
     if (route is PageRoute) {
