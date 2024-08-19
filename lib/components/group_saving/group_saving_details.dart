@@ -110,8 +110,8 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
             approval = true;
           }
           // set display string
-          print(
-              "percentageTaken: $percentageTaken, ${percentageTaken! > 199}, $percentageLeft");
+          // print(
+          //     "percentageTaken: $percentageTaken, ${percentageTaken! > 199}, $percentageLeft");
           if (percentageTaken!.isInfinite) {
             _displayPercentageTaken = '0%';
           } else if (percentageTaken! > 199) {
@@ -177,8 +177,7 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
     return Scaffold(
         appBar: Heading(title: 'Group Saving', showBackButton: true, actions: [
           IconButton(onPressed: () {
-            if (!mounted) return;
-            // TODO: TEMP - check if group saving is income
+            if (!mounted) return; 
             final formStateProvider =
                 Provider.of<FormStateProvider>(context, listen: false);
             formStateProvider.resetForm(FormStateType.income);

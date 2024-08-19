@@ -44,9 +44,9 @@ class GroupSavingService extends ChangeNotifier {
       List<GroupSaving> groupSavingList = [];
       if (responseData != [] && responseData != null) {
         for (var groupSaving in responseData) {
-          print("Before group saving");
+          // print("Before group saving");
           final tempGroupSaving = GroupSaving.fromMap(groupSaving);
-          print("After group saving");
+          // print("After group saving");
           groupSavingList.add(tempGroupSaving);
         }
       }
