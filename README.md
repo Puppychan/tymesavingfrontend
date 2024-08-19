@@ -54,9 +54,23 @@ flutter run
 
 # For Dev
 
-# # Testing on Android and iOS Simulators
+## Adding App Icon
+- Use link to generate app icon: [https://easyappicon.com/](https://easyappicon.com/)
+- After generating the app icon, download the zip file and extract it.
+  - Copy the content of `ios` folder to `ios/Runner/Assets.xcassets/AppIcon.appiconset/`
+  - Copy the content of `android` folder to `android/app/src/main/res/`
+  - Add files inside `values` folder to `android/app/src/main/res/values/`
+- Run command to update the app icon
+```bash
+  flutter pub cache clean
+  flutter pub clean
+  flutter pub get
+```
+- Run the app on the emulator or real device to see the updated app icon.
 
-# # # Android Simulator:
+## Testing on Android and iOS Simulators
+
+### Android Simulator:
 
 - Ensure you have an Android Virtual Device (AVD) set up in Android Studio.
 - Start the AVD from Android Studio or via the command line:
@@ -71,7 +85,7 @@ emulator -avd <your_avd_name>
 flutter run
 ```
 
-# # # iOS Simulator:
+### iOS Simulator:
 
 - Ensure you have Xcode installed and configured on your machine.
 - Open the iOS simulator from Xcode or via the command line:
@@ -86,9 +100,9 @@ open -a Simulator
 flutter run
 ```
 
-# # Testing on Real Devices
+## Testing on Real Devices
 
-# # # Android Device:
+### Android Device:
 
 - Enable Developer Options and USB Debugging on your Android device.
 - Connect your Android device to your machine via USB.
@@ -104,7 +118,7 @@ flutter devices
 flutter run
 ```
 
-# # # iOS Device:
+### iOS Device:
 
 - Connect your iOS device to your machine via USB.
 - Open the project - folder ios in Xcode.
