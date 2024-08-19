@@ -91,7 +91,7 @@ class _ChallengePageState extends State<ChallengePage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 50),
+              padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
               child: SecondaryButton(title: 'Sorting', onPressed: () => _showSortDialog(context)),
             ),
             (isLoading)
@@ -174,7 +174,7 @@ class _ChallengePageState extends State<ChallengePage> {
                 });
               },
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Text(
