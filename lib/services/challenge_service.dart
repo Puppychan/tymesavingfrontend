@@ -95,7 +95,8 @@ class ChallengeService extends ChangeNotifier {
     }
   }
 
-  Future<dynamic> fetchChallengeList(String userId, {String? name, CancelToken? cancelToken}) async {
+  Future<dynamic> fetchChallengeList(String userId, 
+  {String? name, String? sortName, String? sortCreateDate, String? pageNo, CancelToken? cancelToken}) async {
     String endpoint = "${BackendEndpoints.challenge}/${BackendEndpoints.challengeByUser}/$userId";
     debugPrint("End point is $endpoint");
 
@@ -104,14 +105,17 @@ class ChallengeService extends ChangeNotifier {
     // }
 
     try {
-      final response = await NetworkService.instance.get(endpoint, cancelToken: cancelToken);
+      final response = await NetworkService.instance.get(endpoint, queryParameters: {
+        'name': name,
+        'sortCreatedDate': sortCreateDate,
+        'sortName': sortName,
+      });
       // debugPrint("API Response: ${response.toString()}");
 
       if (response != null && response is Map<String, dynamic>) {
         final responseData = response['response'];
         _challengeModelList = (responseData as List<dynamic>)
         .map((challengeMap) => ChallengeModel.fromMap(challengeMap as Map<String, dynamic>))
-        .where((challenge) => challenge.isPublished == true)
         .toList();
 
       } else {
