@@ -7,7 +7,6 @@ import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/transaction/transaction_list.dart';
 import 'package:tymesavingfrontend/models/report_model.dart';
 import 'package:tymesavingfrontend/models/transaction_model.dart';
-import 'package:tymesavingfrontend/services/budget_service.dart';
 import 'package:tymesavingfrontend/services/group_saving_service.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
@@ -28,6 +27,7 @@ class _GroupSavingReportState extends State<GroupSavingReport> {
     ReportInfo? _reportInfo;
     String filter = "latest";
     bool isLoading = true;
+    bool displayGraph = true;
 
     Future<void> _fetchReportData(String? userId) async {
       Future.microtask(() async {
@@ -43,6 +43,10 @@ class _GroupSavingReportState extends State<GroupSavingReport> {
             _transactionList = savingService.transactions;
             _reportInfo = savingService.reportInfo;
             isLoading = false;
+            // Check if no transaction
+            if (_reportInfo!.concurrentAmount == 0){
+              displayGraph = false;
+            }
           });
         });
       });
@@ -80,10 +84,20 @@ class _GroupSavingReportState extends State<GroupSavingReport> {
               overflow: TextOverflow.visible,
               ),
             Text(_reportInfo!.name,style: textTheme.headlineSmall),
+            _reportInfo!.description != "" ?
             Padding(
               padding: const EdgeInsets.all(30.0),
               child: Text(_reportInfo!.description, 
                         style: textTheme.bodyMedium, 
+                        overflow: TextOverflow.visible,
+                        softWrap: true,
+                        textAlign: TextAlign.justify,
+                        ),
+            )
+            : Padding(
+              padding: const EdgeInsets.all(30.0),
+              child: Text('This group currently have no description!', 
+                        style: textTheme.bodyMedium!.copyWith(fontStyle: FontStyle.italic), 
                         overflow: TextOverflow.visible,
                         softWrap: true,
                         textAlign: TextAlign.justify,
@@ -129,53 +143,61 @@ class _GroupSavingReportState extends State<GroupSavingReport> {
                 ],
               ),
             ),
-            Text("Top categories in group", style: textTheme.headlineMedium,),
-            const SizedBox(height: 10,),
-            ReportPieChartCategories(reportCategory: _categoryList),
-            const SizedBox(height: 10,),
-            Text("Top user on income contribution", style: textTheme.headlineMedium,),
-            const SizedBox(height: 10,),
-            ReportPieChartUser(reportUserList: _userList),
-            const SizedBox(height: 10,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            displayGraph ? 
+            Column(
               children: [
-                Text("Top transaction by", style: textTheme.headlineMedium!.copyWith(fontSize: 18),),
-                const SizedBox(width: 5,),
-                DropdownButton<String>(
-                  value: filter,
-                  items: [
-                    DropdownMenuItem(
-                      value: 'latest',
-                      child: Text('Most recent', style: textTheme.bodySmall,),
-                    ),
-                    DropdownMenuItem(
-                      value: 'earliest',
-                      child: Text('Oldest', style: textTheme.bodySmall,),
-                    ),
-                    DropdownMenuItem(
-                      value: 'highest',
-                      child: Text('Highest value', style: textTheme.bodySmall,),
-                    ),
-                    DropdownMenuItem(
-                      value: 'lowest',
-                      child: Text('Lowest value', style: textTheme.bodySmall,),
+                Text("Top categories in group", style: textTheme.headlineMedium,),
+                const SizedBox(height: 10,),
+                ReportPieChartCategories(reportCategory: _categoryList),
+                const SizedBox(height: 10,),
+                Text("Top user on income contribution", style: textTheme.headlineMedium,),
+                const SizedBox(height: 10,),
+                ReportPieChartUser(reportUserList: _userList),
+                const SizedBox(height: 10,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Top transaction by", style: textTheme.headlineMedium!.copyWith(fontSize: 18),),
+                    const SizedBox(width: 5,),
+                    DropdownButton<String>(
+                      value: filter,
+                      items: [
+                        DropdownMenuItem(
+                          value: 'latest',
+                          child: Text('Most recent', style: textTheme.bodySmall,),
+                        ),
+                        DropdownMenuItem(
+                          value: 'earliest',
+                          child: Text('Oldest', style: textTheme.bodySmall,),
+                        ),
+                        DropdownMenuItem(
+                          value: 'highest',
+                          child: Text('Highest value', style: textTheme.bodySmall,),
+                        ),
+                        DropdownMenuItem(
+                          value: 'lowest',
+                          child: Text('Lowest value', style: textTheme.bodySmall,),
+                        ),
+                      ],
+                      onChanged: (value) {
+                        setState(() {
+                          filter = value!;
+                          _fetchReportData(widget.groupSavingId);
+                        });
+                      },
                     ),
                   ],
-                  onChanged: (value) {
-                    setState(() {
-                      filter = value!;
-                      _fetchReportData(widget.groupSavingId);
-                    });
-                  },
                 ),
+                SizedBox(
+                  height: 500,
+                  child: TransactionList(transactions: _transactionList,)
+                )
               ],
-            ),
-            SizedBox(
-              height: 500,
-              child: TransactionList(transactions: _transactionList,)
             )
-            
+            : Padding(
+              padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
+              child: Text('No transaction for data to be displayed', style: textTheme.bodyMedium!.copyWith(fontStyle: FontStyle.italic),),
+            )
           ],
         ),
       ),

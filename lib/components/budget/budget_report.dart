@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:timeago/timeago.dart';
 import 'package:tymesavingfrontend/components/common/chart/report_pie_chart_categories.dart';
 import 'package:tymesavingfrontend/components/common/chart/report_pie_chart_user.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
@@ -27,6 +26,7 @@ class _BudgetReportState extends State<BudgetReport> {
   List<Transaction> _transactionList = [];
   String filter = "latest";
   bool isLoading = true;
+  bool displayGraph = true;
   ReportInfo? _reportInfo;
 
     Future<void> _fetchReportData(String? userId) async {
@@ -43,6 +43,11 @@ class _BudgetReportState extends State<BudgetReport> {
             _transactionList = budgetService.transactions;
             _reportInfo = budgetService.reportInfo;
             isLoading = false;
+
+            // This mean there is no transaction, so graph won't be display
+            if (_reportInfo!.amount == _reportInfo!.concurrentAmount) {
+              displayGraph = false;
+            }
           });
         });
       });
@@ -80,10 +85,20 @@ class _BudgetReportState extends State<BudgetReport> {
               overflow: TextOverflow.visible,
               ),
             Text(_reportInfo!.name,style: textTheme.headlineSmall),
+            _reportInfo!.description != "" ?
             Padding(
               padding: const EdgeInsets.all(30.0),
               child: Text(_reportInfo!.description, 
                         style: textTheme.bodyMedium, 
+                        overflow: TextOverflow.visible,
+                        softWrap: true,
+                        textAlign: TextAlign.justify,
+                        ),
+            )
+            : Padding(
+              padding: const EdgeInsets.all(30.0),
+              child: Text('This group currently have no description!', 
+                        style: textTheme.bodyMedium!.copyWith(fontStyle: FontStyle.italic), 
                         overflow: TextOverflow.visible,
                         softWrap: true,
                         textAlign: TextAlign.justify,
@@ -129,54 +144,62 @@ class _BudgetReportState extends State<BudgetReport> {
                 ],
               ),
             ),
-            const SizedBox(height: 10,),
-            Text("Top categories in group", style: textTheme.headlineMedium,),
-            const SizedBox(height: 10,),
-            ReportPieChartCategories(reportCategory: _categoryList),
-            const SizedBox(height: 10,),
-            Text("Top user on expense", style: textTheme.headlineMedium,),
-            const SizedBox(height: 10,),
-            ReportPieChartUser(reportUserList: _userList),
-            const SizedBox(height: 10,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            displayGraph ?
+            Column(
               children: [
-                Text("Top transaction by", style: textTheme.headlineMedium!.copyWith(fontSize: 18),),
-                const SizedBox(width: 5,),
-                DropdownButton<String>(
-                  value: filter,
-                  items: [
-                    DropdownMenuItem(
-                      value: 'latest',
-                      child: Text('Most recent', style: textTheme.bodySmall,),
-                    ),
-                    DropdownMenuItem(
-                      value: 'earliest',
-                      child: Text('Oldest', style: textTheme.bodySmall,),
-                    ),
-                    DropdownMenuItem(
-                      value: 'highest',
-                      child: Text('Highest value', style: textTheme.bodySmall,),
-                    ),
-                    DropdownMenuItem(
-                      value: 'lowest',
-                      child: Text('Lowest value', style: textTheme.bodySmall,),
+                const SizedBox(height: 10,),
+                Text("Top categories in group", style: textTheme.headlineMedium,),
+                const SizedBox(height: 10,),
+                ReportPieChartCategories(reportCategory: _categoryList),
+                const SizedBox(height: 10,),
+                Text("Top user on expense", style: textTheme.headlineMedium,),
+                const SizedBox(height: 10,),
+                ReportPieChartUser(reportUserList: _userList),
+                const SizedBox(height: 10,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Top transaction by", style: textTheme.headlineMedium!.copyWith(fontSize: 18),),
+                    const SizedBox(width: 5,),
+                    DropdownButton<String>(
+                      value: filter,
+                      items: [
+                        DropdownMenuItem(
+                          value: 'latest',
+                          child: Text('Most recent', style: textTheme.bodySmall,),
+                        ),
+                        DropdownMenuItem(
+                          value: 'earliest',
+                          child: Text('Oldest', style: textTheme.bodySmall,),
+                        ),
+                        DropdownMenuItem(
+                          value: 'highest',
+                          child: Text('Highest value', style: textTheme.bodySmall,),
+                        ),
+                        DropdownMenuItem(
+                          value: 'lowest',
+                          child: Text('Lowest value', style: textTheme.bodySmall,),
+                        ),
+                      ],
+                      onChanged: (value) {
+                        setState(() {
+                          filter = value!;
+                          _fetchReportData(widget.budgetId);
+                        });
+                      },
                     ),
                   ],
-                  onChanged: (value) {
-                    setState(() {
-                      filter = value!;
-                      _fetchReportData(widget.budgetId);
-                    });
-                  },
                 ),
+                SizedBox(
+                  height: 500,
+                  child: TransactionList(transactions: _transactionList,)
+                )
               ],
-            ),
-            SizedBox(
-              height: 500,
-              child: TransactionList(transactions: _transactionList,)
+            ) 
+            : Padding(
+              padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
+              child: Text('No transaction for data to be displayed', style: textTheme.bodyMedium!.copyWith(fontStyle: FontStyle.italic),),
             )
-            
           ],
         ),
       ),

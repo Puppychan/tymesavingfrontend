@@ -64,7 +64,7 @@ class _ChallengePageState extends State<ChallengePage> {
           
           children: [
             Text(
-              "Embrace the challenge, for within it lies the opportunity to discover your true potential and ignite the fire within",
+              "Spending money is hard, these challenges set by other user will help to reinforce your ability to spend money wisely!",
               maxLines: 3,
               style: Theme.of(context).textTheme.bodySmall,
             ),
