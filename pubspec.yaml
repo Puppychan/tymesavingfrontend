@@ -46,7 +46,6 @@ dependencies:
   shared_preferences: ^2.2.3
   loader_overlay: ^4.0.0
   path_provider: ^2.1.3
-  flutter_native_splash: ^2.4.0
   skeletonizer: ^1.1.2+1
   fl_chart: ^0.68.0
   retry: ^3.1.2
@@ -91,6 +90,7 @@ flutter:
     - assets/img/splash_dark.png
     - assets/img/splash_light.png
     - assets/img/checkpoint_background.png
+    - assets/icon/icon.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
@@ -174,18 +174,3 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
-flutter_native_splash:
-  color: "#FFFDF5"
-  # background_image: assets/img/splash_light.png
-  image: assets/img/app_logo_light.png
-  # branding: assets/img/app_logo_light.png
-  fullscreen: true
-
-  android_12:
-    color: "#FFFDF5"
-    image: assets/img/app_logo_light.png
-    # branding: assets/img/app_logo_light.png
-    # fullscreen: true
-  android_gravity: center
-  ios_content_mode: center
-  web: false
