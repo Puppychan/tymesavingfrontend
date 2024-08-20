@@ -93,7 +93,7 @@ class UserCard extends StatelessWidget {
               const SizedBox(height: 10),
               Row(
                 children: [
-                  CustomCircleAvatar(
+                  CustomCircleImage(
                       radius: 25.0,
                       imagePath: user.avatar ?? TEMP_AVATAR_IMAGE),
                   const SizedBox(width: 10),

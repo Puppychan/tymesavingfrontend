@@ -14,14 +14,26 @@ class FullScreenImage extends StatelessWidget {
           Navigator.pop(context);
         },
         child: Center(
-          child: InteractiveViewer(
-            panEnabled: true,
-            minScale: 0.5,
-            maxScale: 5,
-            child: Image.network(
-              imageUrl,
-              fit: BoxFit.contain,
-            ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('Tap image to close',
+                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                          color: Colors.white,
+                        )),
+              ),
+              InteractiveViewer(
+                panEnabled: true,
+                minScale: 0.5,
+                maxScale: 5,
+                child: Image.network(
+                  imageUrl,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ],
           ),
         ),
       ),
