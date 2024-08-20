@@ -14,10 +14,8 @@ import 'package:tymesavingfrontend/components/common/multi_form_components/assig
 import 'package:tymesavingfrontend/components/common/multi_form_components/comonent_multi_form.dart';
 import 'package:tymesavingfrontend/components/common/multi_form_components/images_uploading_multi_form.dart';
 import 'package:tymesavingfrontend/components/common/multi_form_components/short_group_info_multi_form.dart';
-import 'package:tymesavingfrontend/components/common/rounded_icon.dart';
 import 'package:tymesavingfrontend/models/base_group_model.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
-import 'package:tymesavingfrontend/screens/image_upload_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
 import 'package:tymesavingfrontend/services/transaction_service.dart';
@@ -119,7 +117,6 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
     updateOnChange("groupType", value: currentChosenType);
     Future.microtask(() async {
       await handleMainPageApi(context, () async {
-        print("Form field $formField");
         // return null;
 
         FormStateType transactionType = widget.type;
@@ -131,9 +128,9 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
         }
 
         context.loaderOverlay.show();
-        print("The trawnsaction form $formField");
         if (widget.type == FormStateType.updateExpense ||
             widget.type == FormStateType.updateIncome) {
+          // TODO: implement update transaction images¸
           return await Provider.of<TransactionService>(context, listen: false)
               .updateTransaction(
             // user?.id ?? "",
@@ -235,7 +232,6 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
         builder: (context, formStateService, child) {
       Map<String, dynamic> formFields =
           formStateService.getFormField(widget.type);
-      print("Update form fields $formFields");
       TransactionCategory selectedCategory =
           formStateService.getCategory(widget.type);
       TransactionGroupType chosenGroupType = getGroupType(formFields);
@@ -403,8 +399,6 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
                 keyboardType: TextInputType.text,
                 onChange: (value) => updateOnChange("payBy"),
               ),
-              Text("TRANSACTION IMAGES",
-                  style: Theme.of(context).textTheme.titleSmall),
               ImagesUploadingMultiForm(
                 images: transactionImages,
                 formType: widget.type,

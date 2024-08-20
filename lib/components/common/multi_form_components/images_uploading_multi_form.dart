@@ -25,73 +25,87 @@ class _ImagesUploadingMultiFormState extends State<ImagesUploadingMultiForm> {
     final colorScheme = Theme.of(context).colorScheme;
     return Column(
       children: [
+        Text("TRANSACTION IMAGES",
+            style: Theme.of(context).textTheme.titleSmall),
         SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.all(20),
-            child: Row(
-              children: [
-                InkWell(
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return ImageUploadPage(
-                          title: "Transaction Image",
-                          confirmFunction:
-                              (BuildContext context, String imageUrl) {
-                            Provider.of<FormStateProvider>(context,
-                                    listen: false)
-                                .addElementToListField("transactionImages",
-                                    imageUrl, widget.formType);
-                            Navigator.pop(context);
-                          });
-                    }));
-                  },
-                  child: RoundedIcon(
-                    iconData: Icons.camera_alt,
-                    iconColor: colorScheme.primary,
-                    backgroundColor: colorScheme.onPrimary,
-                    size: 50,
-                  ),
-                ),
-                ...widget.images.expand(
-                  (singleImage) => [
-                    const SizedBox(width: 20),
-                    Column(
-                      children: [
-                        InkWell(
-                          splashColor: colorScheme.tertiary,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    FullScreenImage(imageUrl: singleImage),
-                              ),
-                            );
-                          },
-                          child: CustomCircleImage(
-                              imagePath: singleImage,
-                              radius: MediaQuery.of(context).size.width * 0.12),
+            child: widget.images.isNotEmpty
+                ? Row(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return ImageUploadPage(
+                                title: "Transaction Image",
+                                confirmFunction:
+                                    (BuildContext context, String imageUrl) {
+                                  Provider.of<FormStateProvider>(context,
+                                          listen: false)
+                                      .addElementToListField(
+                                          "transactionImages",
+                                          imageUrl,
+                                          widget.formType);
+                                  Navigator.pop(context);
+                                });
+                          }));
+                        },
+                        child: RoundedIcon(
+                          iconData: Icons.camera_alt,
+                          iconColor: colorScheme.primary,
+                          backgroundColor: colorScheme.onPrimary,
+                          size: 50,
                         ),
-                        const SizedBox(height: 10),
-                        InkWell(
-                            onTap: () {
-                              Provider.of<FormStateProvider>(context,
-                                    listen: false)
-                                .removeElementFromListField("transactionImages",
-                                    singleImage, widget.formType);
-                            },
-                            child: RoundedIcon(
-                                iconData: Icons.delete,
-                                iconColor: colorScheme.primary,
-                                backgroundColor: colorScheme.onPrimary,
-                                size: 35))
-                      ],
-                    )
-                  ],
-                ),
-              ],
-            ))
+                      ),
+                      ...widget.images.expand(
+                        (singleImage) => [
+                          const SizedBox(width: 20),
+                          Column(
+                            children: [
+                              InkWell(
+                                splashColor: colorScheme.tertiary,
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => FullScreenImage(
+                                          imageUrl: singleImage),
+                                    ),
+                                  );
+                                },
+                                child: CustomCircleImage(
+                                    imagePath: singleImage,
+                                    radius: MediaQuery.of(context).size.width *
+                                        0.12),
+                              ),
+                              const SizedBox(height: 10),
+                              InkWell(
+                                  onTap: () {
+                                    Provider.of<FormStateProvider>(context,
+                                            listen: false)
+                                        .removeElementFromListField(
+                                            "transactionImages",
+                                            singleImage,
+                                            widget.formType);
+                                  },
+                                  child: RoundedIcon(
+                                      iconData: Icons.delete,
+                                      iconColor: colorScheme.primary,
+                                      backgroundColor: colorScheme.onPrimary,
+                                      size: 35))
+                            ],
+                          )
+                        ],
+                      ),
+                    ],
+                  )
+                : Text(
+                    [FormStateType.expense, FormStateType.income]
+                            .contains(widget.formType)
+                        ? "Add images of your transaction here"
+                        : "No transaction image uploaded",
+                    style: Theme.of(context).textTheme.bodyLarge)),
       ],
     );
   }
