@@ -147,59 +147,56 @@ class _HomePageState extends State<HomePage> with RouteAware {
               ),
             ),
           const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const SizedBox(width: 20),
-              Text("Graph tips:",
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      fontStyle: FontStyle.italic,
-                      fontWeight: FontWeight.w500)),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const SizedBox(width: 25),
-              Text("Color ", style: Theme.of(context).textTheme.bodyMedium),
-              Container(
-                width: 10, // Width of the color box
-                height: 10, // Height of the color box
-                color: Theme.of(context)
-                    .colorScheme
-                    .inversePrimary, // Color of the box
-                margin: const EdgeInsets.only(
-                    right: 4), // Space between the box and the text
-              ),
-              Text(
-                ' indicate total expense/month',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium, // Customize your text style
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const SizedBox(width: 25),
-              Text("Color ", style: Theme.of(context).textTheme.bodyMedium),
-              Container(
-                width: 10, // Width of the color box
-                height: 10, // Height of the color box
-                color:
-                    Theme.of(context).colorScheme.primary, // Color of the box
-                margin: const EdgeInsets.only(
-                    right: 4), // Space between the box and the text
-              ),
-              Text(
-                ' indicate total income/month',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium, // Customize your text style
-              ),
-            ],
-          ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const SizedBox(width: 20),
+                Text(
+                  "Annotation:",
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontStyle: FontStyle.italic, fontWeight: FontWeight.w500)
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const SizedBox(width: 25),
+                Text(
+                  "Color ",
+                  style: Theme.of(context).textTheme.bodyMedium
+                ),
+                Container(
+                  width: 10,  // Width of the color box
+                  height: 10, // Height of the color box
+                  color: Theme.of(context).colorScheme.inversePrimary, // Color of the box
+                  margin: const EdgeInsets.only(right: 4), // Space between the box and the text
+                ),
+                Text(
+                  ' indicate total expense/month',
+                  style: Theme.of(context).textTheme.bodyMedium, // Customize your text style
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const SizedBox(width: 25),
+                Text(
+                  "Color ",
+                  style: Theme.of(context).textTheme.bodyMedium
+                ),
+                Container(
+                  width: 10,  // Width of the color box
+                  height: 10, // Height of the color box
+                  color: Theme.of(context).colorScheme.primary, // Color of the box
+                  margin: const EdgeInsets.only(right: 4), // Space between the box and the text
+                ),
+                Text(
+                  ' indicate total income/month',
+                  style: Theme.of(context).textTheme.bodyMedium, // Customize your text style
+                ),
+              ],
+            ),
           const SizedBox(height: 12), // Add some spacing between sections
           const Divider(),
           Row(
