@@ -12,6 +12,7 @@ class BudgetService extends ChangeNotifier {
   Budget? _currentBudget;
   List<Budget> _budgets = [];
   SummaryGroup? _summaryGroup;
+  ReportInfo? _reportInfo;
 
   Budget? get currentBudget => _currentBudget;
   List<Budget> get budgets => _budgets;
@@ -23,6 +24,7 @@ class BudgetService extends ChangeNotifier {
   List<ReportCategory> _reportCategoryList = [];
   List<ReportUser> _reportUserList = [];
 
+  ReportInfo? get reportInfo => _reportInfo;
   List<ReportCategory> get reportCategoryList => _reportCategoryList;
   List<ReportUser> get reportUserList => _reportUserList;
   List<Transaction> get awaitingApprovalTransaction => _awaitingApprovalTransaction;
@@ -231,7 +233,10 @@ class BudgetService extends ChangeNotifier {
       final List<Transaction> transactionList = (response['response']['transactions'] as List)
       .map((item) => Transaction.fromJson(item))
       .toList();
+
+      final ReportInfo reportInfo = ReportInfo.fromJson(response['response']['information']);
       
+      _reportInfo = reportInfo;
       _reportCategoryList = categories;
       _reportUserList = users;
       _transactions = transactionList;

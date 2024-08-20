@@ -36,14 +36,17 @@ List<Widget> renderGroupHeadingActions(
             type: isBudget ? InvitationType.budget : InvitationType.savings);
       }));
     }),
-    ...actionRow(context, FontAwesomeIcons.trophy, "Group Challenge", () {
-      Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return ChallengePage(
-            budgetGroupId: isBudget ? groupId : null,
-            savingGroupId: isBudget ? null : groupId
-        );
-      }));
-    })
+
+    // TODO: Fixed this challenge route
+    // ...actionRow(context, FontAwesomeIcons.trophy, "Group Challenge", () {
+    //   Navigator.push(context, MaterialPageRoute(builder: (context) {
+    //     return ChallengePage(
+    //         userId: ,
+    //         budgetGroupId: isBudget ? groupId : null,
+    //         savingGroupId: isBudget ? null : groupId
+    //     );
+    //   }));
+    // })
   ];
   // if host
   if (!isMember) {

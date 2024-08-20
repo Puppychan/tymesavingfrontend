@@ -189,245 +189,255 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
         ]),
         body: isLoading
             ? const Center(child: CircularProgressIndicator())
-            : SingleChildScrollView(
-              child: Column(
-                  children: [
-                    Center(
-                      child: Card.filled(
-                        color: colorScheme.onPrimary,
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 10),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 20),
+            : RefreshIndicator(
+              onRefresh: () => _pullRefreshAll(),
+              child: SingleChildScrollView(
+                child: Column(
+                    children: [
+                      Center(
+                        child: Card.filled(
+                          color: colorScheme.onPrimary,
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 20),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  _budget!.name,
+                                  style: Theme.of(context).textTheme.titleLarge,
+                                  textAlign: TextAlign.center,
+                                  maxLines: 2,
+                                ),
+                                const SizedBox(
+                                  height: 6,
+                                ),
+                                Text.rich(
+                                  TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: 'Hosted by ',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleSmall!
+                                            .copyWith(
+                                                color: colorScheme.secondary,
+                                                fontStyle: FontStyle.italic),
+                                      ),
+                                      TextSpan(
+                                        text: _user?.fullname ?? 'Loading..',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleSmall!
+                                            .copyWith(
+                                                color: colorScheme.secondary,
+                                                fontStyle: FontStyle.italic),
+                                      ),
+                                    ],
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                
+                                Text.rich(
+                                  TextSpan(
+                                    text: daysLeft! > 0 ? "You have " : "Budget expire by ",
+                                    style: Theme.of(context).textTheme.bodyMedium,
+                                    children: [
+                                      TextSpan(
+                                        text:
+                                            '$daysLeft', // Display the daysLeft variable here
+                                        style:
+                                            Theme.of(context).textTheme.bodyLarge,
+                                      ),
+                                      TextSpan(
+                                        text:
+                                            ' day${daysLeft != 1 ? 's' : ''}', // Pluralize based on the value of daysLeft
+                                      ),
+                                      TextSpan(
+                                        text:
+                                            daysLeft! > 0 ? " left" : "", // Pluralize based on the value of daysLeft
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Text('Your initial budget', style: Theme.of(context).textTheme.bodyMedium,),
+                                        const Expanded(child: SizedBox()),
+                                        Text(formatAmountToVnd(_budget!.amount), style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontSize: 15),),
+                                      ],  
+                                    ),
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Text('Current budget left', style: Theme.of(context).textTheme.bodyMedium,),
+                                        const Expanded(child: SizedBox()),
+                                        Text(formatAmountToVnd(_budget!.concurrentAmount), style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontSize: 15),),
+                                      ],
+                                    ),
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Text('Budget remain', style: Theme.of(context).textTheme.bodyMedium,),
+                                        const Expanded(child: SizedBox()),
+                                        Text(_displayPercentageTaken, style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontSize: 15),),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
+                                Wrap(
+                                  alignment: WrapAlignment.center,
+                                  spacing: 2,
+                                  runSpacing: 8,
+                                  children:[ 
+                                      Text(
+                                        "Color ",
+                                        style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 12)
+                                      ),
+                                      Container(
+                                        width: 10,  // Width of the color box
+                                        height: 10, // Height of the color box
+                                        color: colorScheme.primary, // Color of the box
+                                        margin: const EdgeInsets.only(right: 4), // Space between the box and the text
+                                      ),
+                                      Text(
+                                        ' indicate',
+                                        style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 12),
+                                        overflow: TextOverflow.visible,
+                                        softWrap: true,
+                                      ),
+                                      Text(
+                                        ' percentages',
+                                        style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 12),
+                                        overflow: TextOverflow.visible,
+                                        softWrap: true,
+                                      ),
+                                      Text(
+                                        ' of',
+                                        style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 12),
+                                        overflow: TextOverflow.visible,
+                                        softWrap: true,
+                                      ),
+                                      Text(
+                                        ' budget',
+                                        style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 12),
+                                        overflow: TextOverflow.visible,
+                                        softWrap: true,
+                                      ),
+                                      Text(
+                                        ' left',
+                                        style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 12),
+                                        overflow: TextOverflow.visible,
+                                        softWrap: true,
+                                      ),
+              
+                              ])
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      BudgetPieChart(
+                          amount:
+                              percentageTaken! < 0 ? 0 : percentageTaken!,
+                          concurrent: percentageLeft!),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 30),
+                        child: InkWell(
+                          onTap: () {
+                            // Action to view the rest of the description. This could open a dialog, a new page, or expand the text in place.
+                            setState(() {
+                                _isDisplayRestDescription =
+                                    !_isDisplayRestDescription;
+                              });
+                          },
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                _budget!.name,
-                                style: Theme.of(context).textTheme.titleLarge,
-                                textAlign: TextAlign.center,
-                                maxLines: 2,
+                                _budget!.description,
+                                style: Theme.of(context).textTheme.bodyMedium,
+                                textAlign: TextAlign.justify,
+                                maxLines: _isDisplayRestDescription ? null : 2,
+                                overflow: _isDisplayRestDescription
+                                    ? TextOverflow.visible
+                                    : TextOverflow.fade,
                               ),
-                              const SizedBox(
-                                height: 6,
-                              ),
-                              Text.rich(
-                                TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: 'Hosted by ',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleSmall!
-                                          .copyWith(
-                                              color: colorScheme.secondary,
-                                              fontStyle: FontStyle.italic),
-                                    ),
-                                    TextSpan(
-                                      text: _user?.fullname ?? 'Loading..',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleSmall!
-                                          .copyWith(
-                                              color: colorScheme.secondary,
-                                              fontStyle: FontStyle.italic),
-                                    ),
-                                  ],
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                              
-                              Text.rich(
-                                TextSpan(
-                                  text: daysLeft! > 0 ? "You have " : "Budget expire by ",
-                                  style: Theme.of(context).textTheme.bodyMedium,
-                                  children: [
-                                    TextSpan(
-                                      text:
-                                          '$daysLeft', // Display the daysLeft variable here
-                                      style:
-                                          Theme.of(context).textTheme.bodyLarge,
-                                    ),
-                                    TextSpan(
-                                      text:
-                                          ' day${daysLeft != 1 ? 's' : ''}', // Pluralize based on the value of daysLeft
-                                    ),
-                                    TextSpan(
-                                      text:
-                                          daysLeft! > 0 ? " left" : "", // Pluralize based on the value of daysLeft
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Text('Your initial budget', style: Theme.of(context).textTheme.bodyMedium,),
-                                      const Expanded(child: SizedBox()),
-                                      Text(formatAmountToVnd(_budget!.amount), style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontSize: 15),),
-                                    ],  
-                                  ),
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Text('Current budget left', style: Theme.of(context).textTheme.bodyMedium,),
-                                      const Expanded(child: SizedBox()),
-                                      Text(formatAmountToVnd(_budget!.concurrentAmount), style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontSize: 15),),
-                                    ],
-                                  ),
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Text('Budget remain', style: Theme.of(context).textTheme.bodyMedium,),
-                                      const Expanded(child: SizedBox()),
-                                      Text(_displayPercentageTaken, style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontSize: 15),),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 10),
-                              Wrap(
-                                alignment: WrapAlignment.center,
-                                spacing: 2,
-                                runSpacing: 8,
-                                children:[ 
-                                    Text(
-                                      "Color ",
-                                      style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 12)
-                                    ),
-                                    Container(
-                                      width: 10,  // Width of the color box
-                                      height: 10, // Height of the color box
-                                      color: colorScheme.primary, // Color of the box
-                                      margin: const EdgeInsets.only(right: 4), // Space between the box and the text
-                                    ),
-                                    Text(
-                                      ' indicate',
-                                      style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 12),
-                                      overflow: TextOverflow.visible,
-                                      softWrap: true,
-                                    ),
-                                    Text(
-                                      ' percentages',
-                                      style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 12),
-                                      overflow: TextOverflow.visible,
-                                      softWrap: true,
-                                    ),
-                                    Text(
-                                      ' of',
-                                      style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 12),
-                                      overflow: TextOverflow.visible,
-                                      softWrap: true,
-                                    ),
-                                    Text(
-                                      ' budget',
-                                      style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 12),
-                                      overflow: TextOverflow.visible,
-                                      softWrap: true,
-                                    ),
-                                    Text(
-                                      ' left',
-                                      style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 12),
-                                      overflow: TextOverflow.visible,
-                                      softWrap: true,
-                                    ),
-
-                            ])
+                              if (!_isDisplayRestDescription)
+                              Text(
+                                "Tap for more",
+                                style: Theme.of(context).textTheme.labelMedium,
+                              )
                             ],
-                          ),
+                          )
                         ),
                       ),
-                    ),
-                    BudgetPieChart(
-                        amount:
-                            percentageTaken! < 0 ? 0 : percentageTaken!,
-                        concurrent: percentageLeft!),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 30),
-                      child: InkWell(
-                        onTap: () {
-                          // Action to view the rest of the description. This could open a dialog, a new page, or expand the text in place.
-                          setState(() {
-                              _isDisplayRestDescription =
-                                  !_isDisplayRestDescription;
-                            });
-                        },
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                      const SizedBox(height: 20,),
+                      Text('Transaction history', style: Theme.of(context).textTheme.headlineMedium,),
+                      if (approval)
+                      Text.rich(
+                        TextSpan(
+                          style: Theme.of(context).textTheme.bodyMedium,
                           children: [
-                            Text(
-                              _budget!.description,
-                              style: Theme.of(context).textTheme.bodyMedium,
-                              textAlign: TextAlign.justify,
-                              maxLines: _isDisplayRestDescription ? null : 2,
-                              overflow: _isDisplayRestDescription
-                                  ? TextOverflow.visible
-                                  : TextOverflow.fade,
+                            const TextSpan(text: 'Currently there are '),
+                            TextSpan(
+                              text: _awaitingApprovalTransaction.length.toString(),
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                color: colorScheme.primary, // Customize the color here
+                                fontWeight: FontWeight.w500, // Optional: make the number bold
+                              ),
                             ),
-                            if (!_isDisplayRestDescription)
-                            Text(
-                              "Tap for more",
-                              style: Theme.of(context).textTheme.labelMedium,
-                            )
+                            const TextSpan(text: ' request'),
                           ],
-                        )
-                      ),
-                    ),
-                    const SizedBox(height: 20,),
-                    Text('Transaction history', style: Theme.of(context).textTheme.headlineMedium,),
-                    if (approval)
-                    Text.rich(
-                      TextSpan(
-                        style: Theme.of(context).textTheme.bodyMedium,
-                        children: [
-                          const TextSpan(text: 'Currently there are '),
-                          TextSpan(
-                            text: _awaitingApprovalTransaction.length.toString(),
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: colorScheme.primary, // Customize the color here
-                              fontWeight: FontWeight.w500, // Optional: make the number bold
-                            ),
-                          ),
-                          const TextSpan(text: ' request'),
-                        ],
-                      ),
-                    ),
-                    if (approval && !isMember)
-                    const SizedBox(height: 20,),
-                    if (approval && !isMember)
-                    SizedBox(
-                          width: 225,
-                          height: 50,
-                          child: SecondaryButton(onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                return BudgetApprovePage(budgetId: widget.budgetId,);
-                              }));
-                          } 
-                          , title: "Approving transaction",
                         ),
                       ),
-                    const SizedBox(height: 20,),
-                    SizedBox(
-                      height: 500,
-                      child: RefreshIndicator(onRefresh: _pullRefresh, child: TransactionList(transactions: _transactions)),
-                    ),
-                  ],
-                ),
+                      if (approval && !isMember)
+                      const SizedBox(height: 20,),
+                      if (approval && !isMember)
+                      SizedBox(
+                            width: 225,
+                            height: 50,
+                            child: SecondaryButton(onPressed: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                  return BudgetApprovePage(budgetId: widget.budgetId,);
+                                }));
+                            } 
+                            , title: "Approving transaction",
+                          ),
+                        ),
+                      const SizedBox(height: 20,),
+                      SizedBox(
+                        height: 500,
+                        child: RefreshIndicator(onRefresh: _pullRefresh, child: TransactionList(transactions: _transactions)),
+                      ),
+                    ],
+                  ),
+              ),
             ));
   }
 
   Future<void> _pullRefresh() async {
     _loadTransactions();
+  }
+
+  Future<void> _pullRefreshAll() async {
+    setState(() {
+      isLoading = true;
+    });
+    _loadData();
   }
 }

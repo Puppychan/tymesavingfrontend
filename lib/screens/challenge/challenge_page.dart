@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/components/challenge/challenge_card.dart';
+import 'package:tymesavingfrontend/components/common/button/secondary_button.dart';
 
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/models/challenge_model.dart';
@@ -12,8 +13,9 @@ class ChallengePage extends StatefulWidget {
   final String? userId;
   final String? budgetGroupId;
   final String? savingGroupId;
+  
   const ChallengePage(
-      {super.key, this.userId, this.budgetGroupId, this.savingGroupId});
+      {super.key, required this.userId, this.budgetGroupId, this.savingGroupId});
   @override
   State<ChallengePage> createState() => _ChallengePageState();
 }
@@ -21,6 +23,9 @@ class ChallengePage extends StatefulWidget {
 class _ChallengePageState extends State<ChallengePage> {
   List<ChallengeModel>? _challengeModelList;
   bool isLoading = true;
+  String searchName = "";
+  String sortCreatedDate = "ascending";
+  String sortName = "ascending";
 
   Future<void> _loadChallengeList(String? userId) async {
     Future.microtask(() async {
@@ -28,14 +33,7 @@ class _ChallengePageState extends State<ChallengePage> {
       final challengeService =
           Provider.of<ChallengeService>(context, listen: false);
       await handleMainPageApi(context, () async {
-        // TODO: remove later
-        const tempUserId = "72e4b93000be75dd6e367723";
-        if (userId != null) {
-          return await challengeService.fetchChallengeList(userId);
-        } else {
-          // TODO: implement rendering of challenges based on group id
-          return await challengeService.fetchChallengeList(tempUserId);
-        }
+        return await challengeService.fetchChallengeList(widget.userId!, name: searchName, sortCreateDate: sortCreatedDate, sortName: sortName);
       }, () async {
         if (!mounted) return;
         setState(() {
@@ -68,33 +66,56 @@ class _ChallengePageState extends State<ChallengePage> {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
         child: Column(
-          
           children: [
             Text(
-              "Embrace the challenge, for within it lies the opportunity to discover your true potential and ignite the fire within",
+              "Spending money is hard, these challenges set by other user will help to reinforce your ability to spend money wisely!",
               maxLines: 3,
               style: Theme.of(context).textTheme.bodySmall,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 15),
+              child: TextField(
+                decoration: const InputDecoration(
+                  icon: Icon(Icons.search),
+                  labelText: 'Search',
+                  helperText: 'Search by name',
+                  border: OutlineInputBorder(),
+                ),
+                onSubmitted: (String value) {
+                  setState(() {
+                    searchName = value.toString().trimRight();
+                    isLoading = true;
+                    _loadChallengeList(widget.userId);
+                  });
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+              child: SecondaryButton(title: 'Sorting', onPressed: () => _showSortDialog(context)),
             ),
             (isLoading)
                 ? const CircularProgressIndicator()
                 : Expanded(
+                  child: SizedBox(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: RefreshIndicator(
-                        onRefresh: () => _pullRefresh(),
-                        child: ListView.builder(
-                          itemCount: _challengeModelList!.length,
-                          itemBuilder: (context, index) {
-                            final challenge = _challengeModelList![index];
-                            return Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: ChallengeCard(challengeModel: challenge),
-                            );
-                          },
-                        ),
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: RefreshIndicator(
+                      onRefresh: () => _pullRefresh(),
+                      child: ListView.builder(
+                        itemCount: _challengeModelList!.length,
+                        itemBuilder: (context, index) {
+                          final challenge = _challengeModelList![index];
+                          return Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: ChallengeCard(challengeModel: challenge),
+                          );
+                        },
                       ),
                     ),
-                  )
+                    ),
+                  ),
+                )
           ],
         ),
       ),
@@ -106,5 +127,101 @@ class _ChallengePageState extends State<ChallengePage> {
       isLoading = true;
     });
     _loadChallengeList(widget.userId);
+  }
+
+   void _showSortDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+       return AlertDialog(
+        title: Text(
+          'Sort Challenges',
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w500),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Text(
+                'Sort by created date',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[700]),
+              ),
+            ),
+            DropdownButtonFormField<String>(
+              value: sortCreatedDate,
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+              ),
+              items: [
+                DropdownMenuItem(
+                  value: 'ascending',
+                  child: Text('Ascending date', style: Theme.of(context).textTheme.bodyMedium),
+                ),
+                DropdownMenuItem(
+                  value: 'descending',
+                  child: Text('Descending date', style: Theme.of(context).textTheme.bodyMedium),
+                ),
+              ],
+              onChanged: (String? value) {
+                setState(() {
+                  sortCreatedDate = value!;
+                  isLoading = true;
+                  Navigator.of(context).pop(); // Close the dialog
+                  _loadChallengeList(widget.userId);
+                });
+              },
+            ),
+            const SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Text(
+                'Sort by name',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[700]),
+              ),
+            ),
+            DropdownButtonFormField<String>(
+              value: sortName,
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+              ),
+              items: [
+                DropdownMenuItem(
+                  value: 'ascending',
+                  child: Text('Ascending name', style: Theme.of(context).textTheme.bodyMedium),
+                ),
+                DropdownMenuItem(
+                  value: 'descending',
+                  child: Text('Descending name', style: Theme.of(context).textTheme.bodyMedium),
+                ),
+              ],
+              onChanged: (String? value) {
+                setState(() {
+                  sortName = value!;
+                  isLoading = true;
+                  Navigator.of(context).pop(); // Close the dialog
+                  _loadChallengeList(widget.userId);
+                });
+              },
+            ),
+          ],
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+            },
+            child: Text(
+              'Cancel',
+              style: Theme.of(context).textTheme.labelLarge?.copyWith(color: Theme.of(context).primaryColor),
+            ),
+          ),
+        ],
+      );
+      },
+    );
   }
 }

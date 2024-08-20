@@ -318,7 +318,7 @@ class TransactionService extends ChangeNotifier {
         "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReportByUser}/$userId";
 
     // Add the filter for the specified month and year
-    endpoint += "?getDateCreated=$yearStr-$monthStr";
+    endpoint += "?createdDate=$yearStr-$monthStr";
 
     // Convert any sort and filter options to query parameters
     endpoint += _convertOptionsToParams();

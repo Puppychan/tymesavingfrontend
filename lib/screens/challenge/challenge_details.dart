@@ -180,7 +180,7 @@ Widget build(BuildContext context) {
                         ),
                         const SizedBox(height: 20),
                         Text(
-                                "Challenge checkpoints",
+                                "Milestones",
                                 style: Theme.of(context).textTheme.headlineMedium,
                               ),
                         const SizedBox(height: 10),
