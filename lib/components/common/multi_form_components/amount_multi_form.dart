@@ -38,7 +38,7 @@ class AmountMultiForm extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children:
-                    [50000.0, 100000.0, 500000.0, 1000000.0, 2000000.0, 5000000.0, 10000000.0, 15000000.0].expand((amount) {
+                    [50000.0, 100000.0, 500000.0, 1000000.0, 2000000.0, 5000000.0, 10000000.0, 15000000.0, 20000000.0, 50000000.0, 100000000.0].expand((amount) {
                   final selectedAmount =
                       convertFormattedAmountToNumber(formattedAmount);
                   return [
