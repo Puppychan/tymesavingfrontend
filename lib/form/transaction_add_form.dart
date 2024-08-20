@@ -29,7 +29,7 @@ void showTransactionFormB(BuildContext context, bool isIncome, { bool isFromGrou
       // contentWidget: Text("PageB "),
       contentWidget: TransactionFormMain(
         type: isIncome ? FormStateType.income : FormStateType.expense,
-        isFromGroupDetail: true
+        isFromGroupDetail: isFromGroupDetail
       ),
       onNavigateToPreviousSheet: () => navigateSheetToSheet(context,
             () => showTransactionFormA(context, isIncome),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tymesavingfrontend/components/common/not_found_message.dart';
 import 'package:tymesavingfrontend/models/transaction_model.dart';
 import 'package:tymesavingfrontend/services/transaction_service.dart';
 import 'package:tymesavingfrontend/components/transaction/transaction_list.dart'; // Add this import
@@ -7,7 +8,7 @@ import 'package:tymesavingfrontend/components/transaction/transaction_list.dart'
 class TransactionMonthlyTabBar extends StatefulWidget {
   final String userId;
 
-  const TransactionMonthlyTabBar({required this.userId});
+  const TransactionMonthlyTabBar({super.key, required this.userId});
 
   @override
   _TransactionMonthlyTabBarState createState() =>
@@ -160,12 +161,7 @@ class _TransactionMonthlyTabBarState extends State<TransactionMonthlyTabBar>
               children: months.map((month) {
                 return transactions != null
                     ? TransactionList(transactions: transactions!)
-                    : const Center(
-                        child: Text(
-                          'No transactions found',
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      );
+                    : const NotFoundMessage(message: 'No transactions found');
               }).toList(),
             ),
     );

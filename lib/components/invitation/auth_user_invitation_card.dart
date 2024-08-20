@@ -7,10 +7,7 @@ import 'package:tymesavingfrontend/components/common/sheet/bottom_sheet.dart';
 import 'package:tymesavingfrontend/components/common/text_align.dart';
 import 'package:tymesavingfrontend/components/invitation/widget_detailed_summary_group.dart';
 import 'package:tymesavingfrontend/models/invitation_model.dart';
-import 'package:tymesavingfrontend/models/summary_group_model.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
-import 'package:tymesavingfrontend/services/budget_service.dart';
-import 'package:tymesavingfrontend/services/group_saving_service.dart';
 import 'package:tymesavingfrontend/services/invitation_service.dart';
 import 'package:tymesavingfrontend/utils/display_success.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
@@ -25,7 +22,7 @@ class AuthUserInvitationCard extends StatefulWidget {
 }
 
 class _AuthUserInvitationCardState extends State<AuthUserInvitationCard> {
-  bool _isDataFetched = false;
+  final bool _isDataFetched = false;
 
 
   Future<void> acceptDeclineInvitation(bool isAccept) async {

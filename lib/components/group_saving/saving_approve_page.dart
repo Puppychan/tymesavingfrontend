@@ -166,7 +166,7 @@ class _SavingApprovePageState extends State<SavingApprovePage> with RouteAware {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ListTile(
-                      onTap: () => _showAcceptDeclinePrompt(context, this, transaction.transactionImage, transaction.id),
+                      onTap: () => _showAcceptDeclinePrompt(context, this, transaction.transactionImages, transaction.id),
                       tileColor: colorScheme.tertiary,
                       title: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -270,7 +270,7 @@ class _SavingApprovePageState extends State<SavingApprovePage> with RouteAware {
     );
   }
 
-  void _showAcceptDeclinePrompt(BuildContext context, _SavingApprovePageState state, String? transactionImage, String transactionId) {
+  void _showAcceptDeclinePrompt(BuildContext context, _SavingApprovePageState state, List<String> transactionImages, String transactionId) {
     final transactionService = Provider.of<TransactionService>(context, listen: false);
     showDialog(
       context: context,
@@ -279,17 +279,17 @@ class _SavingApprovePageState extends State<SavingApprovePage> with RouteAware {
           title: Text("Confirm", style: Theme.of(context).textTheme.headlineSmall),
           content: Text("Do you approve or decline this transaction?", style: Theme.of(context).textTheme.bodyMedium, overflow: TextOverflow.visible),
           actions: <Widget>[
-            if (transactionImage != null)
+            if (transactionImages != null)
               GestureDetector(
                 onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => FullScreenImage(imageUrl: transactionImage),
+                      builder: (context) => FullScreenImage(imageUrl: transactionImages[0]),
                     ),
                   );
                 },
-                child: Image.network(transactionImage),
+                child: Image.network(transactionImages[0]),
               )
             else
               const SizedBox(height: 10),
