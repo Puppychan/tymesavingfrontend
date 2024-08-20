@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/styles/app_padding.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
@@ -65,7 +64,7 @@ class _MemberListPageState extends State<MemberListPage> {
               Padding(
                 padding: AppPaddingStyles.pagePadding,
                 child: members.isNotEmpty
-                    ? Container(
+                    ? SizedBox(
                       height: MediaQuery.of(context).size.height - 200,
                       child: ListView.separated(
                           itemCount: members.length,

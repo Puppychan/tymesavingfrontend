@@ -57,6 +57,7 @@ class BudgetService extends ChangeNotifier {
 
   Future<Map<String, dynamic>> addBudgetGroup(
     String hostedBy,
+    String defaultApproveStatus,
     String name,
     String description,
     double amount,
@@ -69,6 +70,7 @@ class BudgetService extends ChangeNotifier {
       body: {
         'hostedBy': hostedBy,
         'name': name,
+        'defaultApproveStatus': defaultApproveStatus,
         'description': description,
         'amount': amount,
         'concurrentAmount': concurrentAmount,
@@ -145,10 +147,10 @@ class BudgetService extends ChangeNotifier {
       if (responseData.isNotEmpty) {
         for (var transaction in responseData) {
           if(transaction['approveStatus'] == 'Approved') {
-            final tempTransaction = Transaction.fromMap(transaction);
+            final tempTransaction = Transaction.fromJson(transaction);
             transactionList.add(tempTransaction);
           } else if (transaction['approveStatus'] == 'Pending') {
-            final tempTransaction = Transaction.fromMap(transaction);
+            final tempTransaction = Transaction.fromJson(transaction);
             awaitingApprovalTransaction.add(tempTransaction);
           }
         }
@@ -175,10 +177,10 @@ class BudgetService extends ChangeNotifier {
       if (responseData.isNotEmpty) {
         for (var transaction in responseData) {
           if(transaction['approveStatus'] == 'Pending') {
-            final tempTransaction = Transaction.fromMap(transaction);
+            final tempTransaction = Transaction.fromJson(transaction);
             transactionPendingList.add(tempTransaction);
           } else if (transaction['approveStatus'] == 'Declined') {
-            final tempTransaction = Transaction.fromMap(transaction);
+            final tempTransaction = Transaction.fromJson(transaction);
             transactionCancelledList.add(tempTransaction);
           }
         }
@@ -202,7 +204,7 @@ class BudgetService extends ChangeNotifier {
       List<Transaction> transactionList = [];
       if (responseData.isNotEmpty) {
         for (var transaction in responseData) {
-          final tempTransaction = Transaction.fromMap(transaction);
+          final tempTransaction = Transaction.fromJson(transaction);
           transactionList.add(tempTransaction);
         }
       }

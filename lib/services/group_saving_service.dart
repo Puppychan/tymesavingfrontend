@@ -142,7 +142,7 @@ class GroupSavingService extends ChangeNotifier {
       List<Transaction> transactionList = [];
       if (responseData.isNotEmpty) {
         for (var transaction in responseData) {
-          final tempTransaction = Transaction.fromMap(transaction);
+          final tempTransaction = Transaction.fromJson(transaction);
           transactionList.add(tempTransaction);
         }
       }
@@ -166,10 +166,10 @@ class GroupSavingService extends ChangeNotifier {
       if (responseData.isNotEmpty) {
         for (var transaction in responseData) {
           if(transaction['approveStatus'] == 'Pending') {
-            final tempTransaction = Transaction.fromMap(transaction);
+            final tempTransaction = Transaction.fromJson(transaction);
             transactionPendingList.add(tempTransaction);
           } else if (transaction['approveStatus'] == 'Declined') {
-            final tempTransaction = Transaction.fromMap(transaction);
+            final tempTransaction = Transaction.fromJson(transaction);
             transactionCancelledList.add(tempTransaction);
           }
         }

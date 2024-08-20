@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:tymesavingfrontend/components/challenge/checkpoint_details.dart';
 import 'package:tymesavingfrontend/models/checkpoint_model.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';

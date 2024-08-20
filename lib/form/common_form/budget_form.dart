@@ -101,6 +101,7 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
           return await Provider.of<BudgetService>(context, listen: false)
               .addBudgetGroup(
             user?.id ?? "",
+            "Pending",
             formField['name'],
             formField['description'] ?? "",
             formField['amount'],

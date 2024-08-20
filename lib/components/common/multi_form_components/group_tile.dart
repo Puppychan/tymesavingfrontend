@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -71,7 +70,7 @@ class _GroupTileState extends State<GroupTile> {
                 ],
               ),
             ),
-            Container(
+            SizedBox(
               width: double.infinity,
               child: Padding(
                   padding: const EdgeInsets.all(10),
