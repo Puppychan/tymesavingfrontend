@@ -84,6 +84,8 @@ class _AssignGroupMultiFormState extends State<AssignGroupMultiForm> {
     widget.updateOnChange("groupType", value: _currentChosenGroupType);
     widget.updateOnChange(updateFieldKey, value: result.id);
     widget.updateOnChange("tempChosenGroup", value: result);
+    widget.updateOnChange("defaultApproveStatus",
+        value: result.defaultApproveStatus);
     Navigator.pop(context);
   }
 
