@@ -85,7 +85,7 @@ class _TransactionDialogState extends State<TransactionDialog> {
                         });
                       },
                       child: widget.transaction.description!.isEmpty ?
-                      Text('This transaction has no!'
+                      Text('This transaction has no description!'
                       , style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontStyle: FontStyle.italic),)
                       : Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -118,7 +118,8 @@ class _TransactionDialogState extends State<TransactionDialog> {
                         padding: const EdgeInsets.symmetric(vertical: 5),
                         child: Column(
                           children: [
-                            Text('Picture ${index+1}', style: Theme.of(context).textTheme.headlineMedium,),
+                            Text('Receipt image ${index+1}', style: Theme.of(context).textTheme.headlineMedium,),
+                            const SizedBox(height: 5),
                             GestureDetector(
                               onTap: () {
                                 Navigator.push(
@@ -128,7 +129,27 @@ class _TransactionDialogState extends State<TransactionDialog> {
                                   ),
                                 );
                               },
-                              child: Image.network(imageURL),
+                              child: Image.network(
+                              imageURL,
+                              loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                if (loadingProgress == null) {
+                                  return child; // The image has finished loading.
+                                } else {
+                                  return Center(
+                                    child: CircularProgressIndicator(
+                                      value: loadingProgress.expectedTotalBytes != null
+                                          ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                                          : null,
+                                    ),
+                                  );
+                                }
+                              },
+                              errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                                return const Center(
+                                  child: Icon(Icons.error), // You can show an error icon if the image fails to load.
+                                );
+                              },
+                              ),
                             ),
                             const SizedBox(height: 10,),
                           ],
@@ -143,6 +164,7 @@ class _TransactionDialogState extends State<TransactionDialog> {
           actions: [
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 TextButton(
                   onPressed: () {
