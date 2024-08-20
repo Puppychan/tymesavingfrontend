@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tymesavingfrontend/components/full_screen_image.dart';
 import 'package:tymesavingfrontend/models/transaction_model.dart';
 import 'package:tymesavingfrontend/components/transaction/infor_row.dart';
 import 'package:tymesavingfrontend/screens/transaction/transaction_update_page.dart';
@@ -83,7 +84,10 @@ class _TransactionDialogState extends State<TransactionDialog> {
                               !_isDisplayRestDescription;
                         });
                       },
-                      child: Column(
+                      child: widget.transaction.description!.isEmpty ?
+                      Text('This transaction has no!'
+                      , style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontStyle: FontStyle.italic),)
+                      : Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
@@ -103,6 +107,36 @@ class _TransactionDialogState extends State<TransactionDialog> {
                         ],
                       )),
                 ),
+                if (widget.transaction.transactionImages.isNotEmpty)
+                SizedBox(
+                  height: 200,
+                  child: ListView.builder(
+                    itemCount: widget.transaction.transactionImages.length,
+                    itemBuilder: (context, index) {
+                      final imageURL = widget.transaction.transactionImages[index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        child: Column(
+                          children: [
+                            Text('Picture ${index+1}', style: Theme.of(context).textTheme.headlineMedium,),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => FullScreenImage(imageUrl: imageURL),
+                                  ),
+                                );
+                              },
+                              child: Image.network(imageURL),
+                            ),
+                            const SizedBox(height: 10,),
+                          ],
+                        )
+                      );
+                    }
+                  ),
+                )
               ],
             ),
           ),
