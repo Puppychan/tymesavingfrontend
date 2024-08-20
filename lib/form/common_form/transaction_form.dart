@@ -71,9 +71,6 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
 
   Future<void> _trySubmit() async {
     final isValid = _formKey.currentState?.validate();
-    print("Result: ${_amountController.text}");
-    print(
-        "Result: ${_amountController.text} - ${_descriptionController.text} - ${_payByController.text}");
     // If the form is not valid, show an error
     if (isValid == null || !isValid) {
       final String? validateTotalAmount =
@@ -142,7 +139,7 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
                   // transactionType,
                   formField['amount'],
                   formField['payBy'],
-                  formField['category']);
+                  formField['category'],);
         } else {
           return await Provider.of<TransactionService>(context, listen: false)
               .createTransaction(
@@ -281,29 +278,31 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
                       ))),
               if (widget.isFromGroupDetail == true) ...[
                 const Divider(),
-                Card(
-                  shadowColor: colorScheme.onPrimary,
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Column(
-                      children: [
-                        Icon(chosenResult == TransactionGroupType.budget
-                            ? Icons.savings
-                            : Icons.assessment),
-                        const SizedBox(height: 3),
-                        Text(chosenResult?.name ?? "",
-                            style: Theme.of(context).textTheme.titleSmall),
-                        const SizedBox(height: 3),
-                        Text(
-                          chosenResult?.description ?? "",
-                          style: Theme.of(context).textTheme.bodyMedium,
-                          maxLines: 2,
-                          textAlign: TextAlign.center,
-                        )
-                      ],
-                    ),
-                  ),
-                )
+                SizedBox(
+                    width: double.infinity,
+                    child: Card(
+                      shadowColor: colorScheme.onPrimary,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Column(
+                          children: [
+                            Icon(chosenResult == TransactionGroupType.budget
+                                ? Icons.savings
+                                : Icons.assessment),
+                            const SizedBox(height: 3),
+                            Text(chosenResult?.name ?? "",
+                                style: Theme.of(context).textTheme.titleSmall),
+                            const SizedBox(height: 3),
+                            Text(
+                              chosenResult?.description ?? "",
+                              style: Theme.of(context).textTheme.bodyMedium,
+                              maxLines: 2,
+                              textAlign: TextAlign.center,
+                            )
+                          ],
+                        ),
+                      ),
+                    ))
               ] else
                 ...buildComponentGroup(
                   context: context,
