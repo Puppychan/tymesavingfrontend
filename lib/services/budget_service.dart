@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:tymesavingfrontend/common/enum/approve_status_enum.dart';
 import 'package:tymesavingfrontend/models/budget_model.dart';
 import 'package:tymesavingfrontend/models/report_model.dart';
 import 'package:tymesavingfrontend/models/summary_group_model.dart';
@@ -102,6 +103,7 @@ class BudgetService extends ChangeNotifier {
   Future<Map<String, dynamic>> updateBudgetGroup(
     String budgetGroupId,
     String hostedBy,
+    String defaultApproveStatus,
     String name,
     String description,
     double amount,
@@ -114,6 +116,7 @@ class BudgetService extends ChangeNotifier {
           'description': description,
           'amount': amount,
           'endDate': endDate,
+          'defaultApproveStatus': defaultApproveStatus,
         });
     return response;
   }
@@ -147,7 +150,7 @@ class BudgetService extends ChangeNotifier {
           if(transaction['approveStatus'] == 'Approved') {
             final tempTransaction = Transaction.fromJson(transaction);
             transactionList.add(tempTransaction);
-          } else if (transaction['approveStatus'] == 'Pending') {
+          } else if (transaction['approveStatus'] == ApproveStatus.pending.value) {
             final tempTransaction = Transaction.fromJson(transaction);
             awaitingApprovalTransaction.add(tempTransaction);
           }
@@ -174,7 +177,7 @@ class BudgetService extends ChangeNotifier {
       List<Transaction> transactionCancelledList = [];
       if (responseData.isNotEmpty) {
         for (var transaction in responseData) {
-          if(transaction['approveStatus'] == 'Pending') {
+          if(transaction['approveStatus'] == ApproveStatus.pending.value) {
             final tempTransaction = Transaction.fromJson(transaction);
             transactionPendingList.add(tempTransaction);
           } else if (transaction['approveStatus'] == 'Declined') {

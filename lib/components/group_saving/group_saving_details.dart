@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:tymesavingfrontend/common/enum/approve_status_enum.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_group_type_enum.dart';
 import 'package:tymesavingfrontend/components/common/button/secondary_button.dart';
@@ -104,7 +105,7 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
           isMember = _groupSaving!.hostedBy.toString() !=
               Provider.of<AuthService>(context, listen: false).user?.id;
           // check group status
-          if(_groupSaving!.defaultApproveStatus == "Pending") {
+          if(_groupSaving!.defaultApproveStatus == ApproveStatus.pending.value) {
             approval = true;
           }
           // set display string

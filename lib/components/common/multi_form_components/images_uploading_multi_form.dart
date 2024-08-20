@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
-import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
 import 'package:tymesavingfrontend/components/common/images/circle_network_image.dart';
 import 'package:tymesavingfrontend/components/common/rounded_icon.dart';
 import 'package:tymesavingfrontend/components/full_screen_image.dart';

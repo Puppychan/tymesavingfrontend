@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:tymesavingfrontend/common/enum/approve_status_enum.dart';
 import 'package:tymesavingfrontend/models/group_saving_model.dart';
 import 'package:tymesavingfrontend/models/report_model.dart';
 import 'package:tymesavingfrontend/models/summary_group_model.dart';
@@ -42,9 +43,7 @@ class GroupSavingService extends ChangeNotifier {
       List<GroupSaving> groupSavingList = [];
       if (responseData != [] && responseData != null) {
         for (var groupSaving in responseData) {
-          print("Before group saving");
           final tempGroupSaving = GroupSaving.fromMap(groupSaving);
-          print("After group saving");
           groupSavingList.add(tempGroupSaving);
         }
       }
@@ -56,6 +55,7 @@ class GroupSavingService extends ChangeNotifier {
 
   Future<Map<String, dynamic>> addGroupSavingGroup(
     String hostedBy,
+    String defaultApproveStatus,
     String name,
     String description,
     double amount,
@@ -67,6 +67,7 @@ class GroupSavingService extends ChangeNotifier {
       body: {
         'hostedBy': hostedBy,
         'name': name,
+        'defaultApproveStatus': defaultApproveStatus,
         'description': description,
         'amount': amount,
         'concurrentAmount': concurrentAmount,
@@ -99,6 +100,7 @@ class GroupSavingService extends ChangeNotifier {
   Future<Map<String, dynamic>> updateGroupSavingGroup(
     String groupSavingGroupId,
     String hostedBy,
+    String defaultApproveStatus,
     String name,
     String description,
     double amount,
@@ -111,6 +113,7 @@ class GroupSavingService extends ChangeNotifier {
           'description': description,
           'amount': amount,
           'endDate': endDate,
+          'defaultApproveStatus': defaultApproveStatus,
         });
     return response;
   }
@@ -163,7 +166,7 @@ class GroupSavingService extends ChangeNotifier {
       List<Transaction> transactionCancelledList = [];
       if (responseData.isNotEmpty) {
         for (var transaction in responseData) {
-          if(transaction['approveStatus'] == 'Pending') {
+          if(transaction['approveStatus'] == ApproveStatus.pending.value) {
             final tempTransaction = Transaction.fromJson(transaction);
             transactionPendingList.add(tempTransaction);
           } else if (transaction['approveStatus'] == 'Declined') {
