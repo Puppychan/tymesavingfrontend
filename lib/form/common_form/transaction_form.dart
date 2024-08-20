@@ -12,6 +12,7 @@ import 'package:tymesavingfrontend/components/category_list/category_icon.dart';
 import 'package:tymesavingfrontend/components/common/multi_form_components/amount_multi_form.dart';
 import 'package:tymesavingfrontend/components/common/multi_form_components/assign_group_multi_form.dart';
 import 'package:tymesavingfrontend/components/common/multi_form_components/comonent_multi_form.dart';
+import 'package:tymesavingfrontend/components/common/multi_form_components/short_group_info_multi_form.dart';
 import 'package:tymesavingfrontend/models/base_group_model.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
@@ -93,8 +94,8 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
         .getFormField(widget.type);
     TransactionGroupType currentChosenType =
         formField["groupType"] ?? TransactionGroupType.none;
-    String? chosenGroupKey = currentChosenType != TransactionGroupType.none
-        ? currentChosenType == TransactionGroupType.budget
+    String? chosenGroupKey = (currentChosenType != TransactionGroupType.none)
+        ? (currentChosenType == TransactionGroupType.budget)
             ? "budgetGroupId"
             : "savingGroupId"
         : null;
@@ -132,14 +133,15 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
             widget.type == FormStateType.updateIncome) {
           return await Provider.of<TransactionService>(context, listen: false)
               .updateTransaction(
-                  // user?.id ?? "",
-                  formField['id'],
-                  formField['createdDate'],
-                  formField['description'],
-                  // transactionType,
-                  formField['amount'],
-                  formField['payBy'],
-                  formField['category'],);
+            // user?.id ?? "",
+            formField['id'],
+            formField['createdDate'],
+            formField['description'],
+            // transactionType,
+            formField['amount'],
+            formField['payBy'],
+            formField['category'],
+          );
         } else {
           return await Provider.of<TransactionService>(context, listen: false)
               .createTransaction(
@@ -215,11 +217,9 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
         builder: (context, formStateService, child) {
       Map<String, dynamic> formFields =
           formStateService.getFormField(widget.type);
+      print("Update form fields $formFields");
       TransactionCategory selectedCategory =
           formStateService.getCategory(widget.type);
-      String formDescription =
-          formFields['description'] ?? "Please add description";
-      String formpayBy = formFields['payBy'] ?? "Pay by cash?";
       TransactionGroupType chosenGroupType =
           formFields['groupType'] ?? TransactionGroupType.none;
       BaseGroup? chosenResult = formFields["tempChosenGroup"];
@@ -278,31 +278,14 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
                       ))),
               if (widget.isFromGroupDetail == true) ...[
                 const Divider(),
-                SizedBox(
-                    width: double.infinity,
-                    child: Card(
-                      shadowColor: colorScheme.onPrimary,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Column(
-                          children: [
-                            Icon(TransactionGroupType.budget == chosenResult
-                                ? Icons.savings
-                                : Icons.assessment),
-                            const SizedBox(height: 3),
-                            Text(chosenResult?.name ?? "",
-                                style: Theme.of(context).textTheme.titleSmall),
-                            const SizedBox(height: 3),
-                            Text(
-                              chosenResult?.description ?? "",
-                              style: Theme.of(context).textTheme.bodyMedium,
-                              maxLines: 2,
-                              textAlign: TextAlign.center,
-                            )
-                          ],
-                        ),
-                      ),
-                    ))
+                // ShortGroupInfoMultiForm(
+                //     chosenGroupType: chosenGroupType,
+                //     chosenResult: chosenResult),
+              // ] else if (widget.type == FormStateType.updateExpense ||  widget.type == FormStateType.updateIncome) ...[
+              //   const Divider(),
+              //   ShortGroupInfoMultiForm(
+              //       chosenGroupType: chosenGroupType,
+              //       chosenResult: chosenResult),
               ] else
                 ...buildComponentGroup(
                   context: context,
@@ -369,7 +352,7 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
                 label: 'DESCRIPTION',
                 controller: _descriptionController,
                 icon: Icons.description,
-                placeholder: formDescription,
+                placeholder: "Please add description",
                 keyboardType: TextInputType.multiline,
                 minLines: 1,
                 maxLines: 5,
@@ -379,7 +362,7 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
                 controller: _payByController,
                 icon: Icons.payment,
                 label: 'PAID BY',
-                placeholder: formpayBy,
+                placeholder: "Pay by cash?",
                 keyboardType: TextInputType.text,
                 onChange: (value) => updateOnChange("payBy"),
               ),

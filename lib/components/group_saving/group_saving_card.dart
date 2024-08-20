@@ -180,7 +180,7 @@ class _GroupSavingCardState extends State<GroupSavingCard> with SingleTickerProv
                             valueColor: AlwaysStoppedAnimation<Color>(
                               currentProgress < 1.0
                                 ? colorScheme.primary.withOpacity(0.9)
-                                : currentProgress == 1.0 ? Color.fromARGB(255, 131, 230, 134) : colorScheme.inversePrimary,
+                                : currentProgress == 1.0 ? const Color.fromARGB(255, 131, 230, 134) : colorScheme.inversePrimary,
                             ),
                             minHeight: 8,
                           ),

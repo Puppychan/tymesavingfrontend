@@ -38,7 +38,7 @@ class TransactionService extends ChangeNotifier {
   TopCategoriesList? get topCategoriesList => _topCategoriesList;
   NetSpend? get netSpend => _netSpend;
   Map<String, List<Transaction>>? get transactions => _transactions;
-  Transaction? get getDetailedTransaction => _detailedTransaction;
+  Transaction? get detailedTransaction => _detailedTransaction;
   Map<String, String> get filterOptions => _filterOptions;
   Map<String, String> get sortOptions => _sortOptions;
 
@@ -170,6 +170,7 @@ class TransactionService extends ChangeNotifier {
       'payBy': payBy,
       'category': category.name,
     });
+    print("response in updating transaction $response");
     return response;
   }
 
@@ -218,7 +219,8 @@ class TransactionService extends ChangeNotifier {
     // final responseData = response['response'];
     if (response['response'] != null && response['statusCode'] == 200) {
       final responseData = response['response'];
-      _detailedTransaction = Transaction.fromMap(responseData);
+      _detailedTransaction = Transaction.fromJson(responseData);
+      print("Detailed transaction: $_detailedTransaction");
       notifyListeners();
     }
     return response;

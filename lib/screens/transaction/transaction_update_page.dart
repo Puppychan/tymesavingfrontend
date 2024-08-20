@@ -53,21 +53,22 @@ class _TransactionUpdatePageState extends State<TransactionUpdatePage> {
         return await transactionService.getTransaction(widget.transactionId);
       }, () async {
         if (!mounted) return;
-        final tempTransaction = transactionService.getDetailedTransaction;
+        final tempTransaction = transactionService.detailedTransaction;
         // set transaction to update form
+        FormStateType formType = tempTransaction!.type == TransactionType.expense.toString()
+            ? FormStateType.updateExpense
+            : FormStateType.updateIncome;
         final formStateService =
             Provider.of<FormStateProvider>(context, listen: false);
-        formStateService.setUpdateTransactionFormFields(tempTransaction, tempTransaction!.type == TransactionType.expense.toString()
-            ? FormStateType.updateExpense
-            : FormStateType.updateIncome);
+        formStateService.resetForm(formType);
+        formStateService.setUpdateTransactionFormFields(tempTransaction, formType);
 
         // update state
         setState(() {
           _transaction = tempTransaction;
-          print("Transaction in update page: $_transaction");
           _isLoading = false;
         });
-        await _renderUser(tempTransaction!.userId);
+        await _renderUser(tempTransaction.userId);
       });
     });
     super.initState();

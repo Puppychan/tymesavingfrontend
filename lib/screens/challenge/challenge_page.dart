@@ -29,7 +29,7 @@ class _ChallengePageState extends State<ChallengePage> {
           Provider.of<ChallengeService>(context, listen: false);
       await handleMainPageApi(context, () async {
         // TODO: remove later
-        final tempUserId = "72e4b93000be75dd6e367723";
+        const tempUserId = "72e4b93000be75dd6e367723";
         if (userId != null) {
           return await challengeService.fetchChallengeList(userId);
         } else {

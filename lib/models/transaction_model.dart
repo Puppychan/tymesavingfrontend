@@ -2,82 +2,77 @@ import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
 
 class Transaction {
   final String id;
-  final String type;
-  final String category;
-  final double amount;
+  final String? userId;
   final String date;
   final String? description;
+  final String type;
+  final double amount;
+  final List<String> transactionImages; // default to empty list
   final String? payBy;
-  final String? userId;
+  final String? savingGroupId;
+  final String? budgetGroupId;
+  final String category;
+  final String approveStatus;
   final TransactionUser? user;
-  final String? transactionImage;
 
   Transaction({
     required this.id,
-    required this.type,
-    required this.category,
-    required this.amount,
+    this.userId,
     required this.date,
     this.description,
+    required this.type,
+    required this.amount,
+    this.transactionImages = const [],
     this.payBy,
-    this.userId,
+    this.savingGroupId,
+    this.budgetGroupId,
+    required this.category,
+    required this.approveStatus,
     this.user,
-    this.transactionImage,
   });
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
     return Transaction(
       id: json['_id'] ?? '',
-      type: json['type'] ?? '',
-      category: json['category'] ?? '',
-      amount: (json['amount'] ?? 0).toDouble(),
+      userId: json['userId'] ?? '',
       date: json['createdDate'] ?? '',
       description: json['description'] ?? '',
+      type: json['type'] ?? '',
+      amount: (json['amount'] ?? 0).toDouble(),
+      transactionImages: json['transactionImages'] != null
+          ? List<String>.from(json['transactionImages'])
+          : [],
       payBy: json['payBy'] ?? '',
-      userId: json['userId'] ?? '',
+      savingGroupId: json['savingGroupId'],
+      budgetGroupId: json['budgetGroupId'],
+      category: json['category'] ?? '',
+      approveStatus: json['approveStatus'] ?? '',
       user:
           json['user'] != null ? TransactionUser.fromJson(json['user']) : null,
-      transactionImage: json['transactionImages'] != null && json['transactionImages'].isNotEmpty 
-      ? json['transactionImages'][0] 
-      : null,
     );
   }
-
-  Transaction.fromMap(Map<String, dynamic> transaction)
-      : id = transaction['_id'],
-        userId = transaction['userId'],
-        description = transaction['description'],
-        payBy = transaction['payBy'],
-        type = transaction['type'],
-        category = transaction['category'],
-        amount = transaction['amount'].toDouble(),
-        date = transaction['createdDate'],
-        user = transaction['user'] != null
-            ? TransactionUser.fromJson(transaction['user'])
-            : null,
-        transactionImage = (transaction['transactionImages'] != null &&
-              transaction['transactionImages'].isNotEmpty)
-          ? transaction['transactionImages'][0]
-          : null;
 
   Map<String, dynamic> toMapForForm() {
     return {
       'id': id,
       'userId': userId,
-      'description': description,
-      'payBy': payBy,
-      'amount': amount,
-      'category': TransactionCategory.fromString(category).toString(),
       'createdDate': date,
+      'description': description,
       'type': type,
-      'user': user != null ? user!.toJson() : null,
-      'transactionImage': transactionImage,
+      'amount': amount,
+      'transactionImages': transactionImages,
+      'payBy': payBy,
+      'savingGroupId': savingGroupId,
+      'budgetGroupId': budgetGroupId,
+      'category': TransactionCategory.fromString(category).toString(),
+      'approveStatus': approveStatus,
+      'user': user?.toJson(),
     };
   }
 
   @override
   String toString() {
-    return 'Transaction{id: $id, type: $type, category: $category, amount: $amount, date: $date, user: $user}';
+    return 'Transaction(id: $id, userId: $userId, date: $date, description: $description, type: $type, amount: $amount, transactionImages: $transactionImages, payBy: $payBy, savingGroupId: $savingGroupId, budgetGroupId: $budgetGroupId, category: $category, approveStatus: $approveStatus, user: $user)';
   }
 }
 
