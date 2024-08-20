@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_group_type_enum.dart';
+import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/base_group_model.dart';
 import 'package:tymesavingfrontend/services/budget_service.dart';
 import 'package:tymesavingfrontend/services/group_saving_service.dart';
@@ -24,7 +25,7 @@ class ShortGroupInfoMultiForm extends StatefulWidget {
 
 class _ShortGroupInfoMultiFormState extends State<ShortGroupInfoMultiForm>
     with RouteAware {
-  late BaseGroup? _displayGroup;
+  BaseGroup? _displayGroup;
   @override
   void initState() {
     super.initState();
@@ -35,14 +36,12 @@ class _ShortGroupInfoMultiFormState extends State<ShortGroupInfoMultiForm>
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Subscribe to RouteObserver
-    final routeObserver = Provider.of<RouteObserver<PageRoute>>(context);
-    routeObserver.subscribe(this, ModalRoute.of(context)! as PageRoute);
+    routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute<dynamic>);
   }
 
   @override
   void dispose() {
     // Unsubscribe from RouteObserver
-    final routeObserver = Provider.of<RouteObserver<PageRoute>>(context);
     routeObserver.unsubscribe(this);
     super.dispose();
   }

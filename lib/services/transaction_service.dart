@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
@@ -134,21 +135,35 @@ class TransactionService extends ChangeNotifier {
       double amount,
       String payBy,
       TransactionCategory category,
+      List<String> transactionImages,
       {String? savingGroupId,
       String? budgetGroupId}) async {
-    // print type of all
-    final response =
-        await NetworkService.instance.post(BackendEndpoints.transaction, body: {
-      'userId': userId,
-      'createdDate': createdDate,
-      'description': description,
-      'type': type.value, //
-      'amount': amount,
-      'payBy': payBy,
-      'category': category.name,
-      if (savingGroupId != null) 'savingGroupId': savingGroupId,
-      if (budgetGroupId != null) 'budgetGroupId': budgetGroupId,
+        // Prepare the list of MultipartFiles or just image URLs
+    List<dynamic> imageFiles = await Future.wait(transactionImages.map((imagePath) async {
+      if (imagePath.startsWith('http')) {
+        // If it's a URL, send it as is
+        return imagePath;
+      } else {
+        // If it's a file path, convert it to a MultipartFile
+        return await MultipartFile.fromFile(imagePath, filename: imagePath.split('/').last);
+      }
+    }).toList());
+
+    final FormData formData = FormData.fromMap({
+      "userId": userId,
+      "description": description,
+      "type": type.value,
+      "amount": amount,
+      "payBy": payBy,
+      "category": category.name,
+      if (savingGroupId != null) "savingGroupId": savingGroupId,
+      if (budgetGroupId != null) "budgetGroupId": budgetGroupId,
+      // "approveStatus": 
+      "createdDate": createdDate,
+      "image": imageFiles, // This is the key your backend expects for images
     });
+    final response = await NetworkService.instance
+        .postFormData(BackendEndpoints.transaction, data: formData);
     return response;
   }
 

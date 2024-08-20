@@ -112,8 +112,8 @@ class FormStateProvider with ChangeNotifier {
     if (type == FormStateType.updateExpense) {
       for (var key in tempTransaction.keys) {
         if (key == "category") {
-          _updateExpenseFormFields[key] = TransactionCategory.fromString(
-              tempTransaction[key] as String);
+          _updateExpenseFormFields[key] =
+              TransactionCategory.fromString(tempTransaction[key] as String);
         } else {
           _updateExpenseFormFields[key] = tempTransaction[key];
         }
@@ -121,8 +121,8 @@ class FormStateProvider with ChangeNotifier {
     } else {
       for (var key in tempTransaction.keys) {
         if (key == "category") {
-          _updateIncomeFormFields[key] = TransactionCategory.fromString(
-              tempTransaction[key] as String);
+          _updateIncomeFormFields[key] =
+              TransactionCategory.fromString(tempTransaction[key] as String);
         } else {
           _updateIncomeFormFields[key] = tempTransaction[key];
         }
@@ -160,22 +160,78 @@ class FormStateProvider with ChangeNotifier {
   }
 
   void addElementToListField(String field, dynamic value, FormStateType type) {
-    if (FormStateType.memberInvitation == FormStateType.memberInvitation) {
-      if (_memberInvitationFormFields[field] == null) {
-        _memberInvitationFormFields[field] = [];
-      }
-      _memberInvitationFormFields[field].add(value);
+    switch (type) {
+      case FormStateType.memberInvitation:
+        if (_memberInvitationFormFields[field] == null) {
+          _memberInvitationFormFields[field] = [];
+        }
+        _memberInvitationFormFields[field].add(value);
+        break;
+      case FormStateType.income:
+        if (_incomeFormFields[field] == null) {
+          _incomeFormFields[field] = [];
+        }
+        _incomeFormFields[field].add(value);
+        break;
+      case FormStateType.expense:
+        if (_expenseFormFields[field] == null) {
+          _expenseFormFields[field] = [];
+        }
+        _expenseFormFields[field].add(value);
+        break;
+      case FormStateType.updateIncome:
+        if (_updateIncomeFormFields[field] == null) {
+          _updateIncomeFormFields[field] = [];
+        }
+        _updateIncomeFormFields[field].add(value);
+        break;
+      case FormStateType.updateExpense:
+        if (_updateExpenseFormFields[field] == null) {
+          _updateExpenseFormFields[field] = [];
+        }
+        _updateExpenseFormFields[field].add(value);
+        break;
+      default:
+        debugPrint("Type not found");
     }
     notifyListeners();
   }
 
   void removeElementFromListField(
       String field, dynamic value, FormStateType type) {
-    if (FormStateType.memberInvitation == FormStateType.memberInvitation) {
-      if (_memberInvitationFormFields[field] == null) {
-        return;
-      }
-      _memberInvitationFormFields[field].remove(value);
+    switch (type) {
+      case FormStateType.memberInvitation:
+        if (_memberInvitationFormFields[field] == null) {
+          _memberInvitationFormFields[field] = [];
+        }
+        _memberInvitationFormFields[field].remove(value);
+        break;
+      case FormStateType.income:
+        if (_incomeFormFields[field] == null) {
+          _incomeFormFields[field] = [];
+        }
+        _incomeFormFields[field].remove(value);
+        break;
+      case FormStateType.expense:
+        if (_expenseFormFields[field] == null) {
+          _expenseFormFields[field] = [];
+        }
+        _expenseFormFields[field].remove(value);
+        break;
+      case FormStateType.updateIncome:
+        if (_updateIncomeFormFields[field] == null) {
+          _updateIncomeFormFields[field] = [];
+        }
+        _updateIncomeFormFields[field].remove(value);
+        break;
+      case FormStateType.updateExpense:
+        if (_updateExpenseFormFields[field] == null) {
+          _updateExpenseFormFields[field] = [];
+        }
+        _updateExpenseFormFields[field].remove(value);
+        break;
+      default:
+        debugPrint("Type not found");
     }
     notifyListeners();
   }

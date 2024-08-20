@@ -55,19 +55,31 @@ class UpdateUserState extends State<UpdateUserForm> {
             InkWell(
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return ImageUploadPage(title: "Upload Avatar", uploadDetails: {
-                      'confirmFunction': (String imagePath) async {
-                        return await Provider.of<UserService>(context, listen: false).uploadUserAvatar(widget.user?.username, imagePath);
+                    return ImageUploadPage(
+                      title: "Upload Avatar",
+                      confirmFunction:
+                          (BuildContext context, String imagePath) {
+                        Future.microtask(() async {
+                          await handleMainPageApi(context, () async {
+                            return await Provider.of<UserService>(context,
+                                    listen: false)
+                                .uploadUserAvatar(
+                                    widget.user?.username, imagePath);
+                          }, () async {
+                            SuccessDisplay.showSuccessToast(
+                                "Upload Image Successfully", context);
+                            Navigator.pop(context);
+                          });
+                        });
                       },
-                      'successMessage': 'Avatar uploaded successfully',
-                    });
+                    );
                   }));
                 },
                 child: Stack(
                   alignment: Alignment.center,
                   clipBehavior: Clip.none,
                   children: <Widget>[
-                    CustomRoundedAvatar(
+                    CustomRoundedImage(
                         imagePath: widget.user?.avatar ?? TEMP_AVATAR_IMAGE,
                         size: MediaQuery.of(context).size.width * 0.3),
                     Positioned(

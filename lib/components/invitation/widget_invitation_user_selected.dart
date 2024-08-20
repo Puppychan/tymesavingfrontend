@@ -64,7 +64,7 @@ class InvitationUserSelectedWidget extends StatelessWidget {
             width: 100,
             child: Column(
               children: [
-                CustomRoundedAvatar(
+                CustomRoundedImage(
                     imagePath: user?.avatar ?? TEMP_AVATAR_IMAGE, size: 60),
                 const SizedBox(height: 8),
                 Text(user?.username ?? "Loading...",

@@ -76,7 +76,7 @@ class MemberCard extends StatelessWidget {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        // CustomCircleAvatar(imagePath: member.avatarPath),
+                        // CustomCircleImage(imagePath: member.avatarPath),
                         Icon(
                             isHost
                                 ? FontAwesomeIcons.crown

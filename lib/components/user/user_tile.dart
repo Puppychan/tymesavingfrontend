@@ -51,7 +51,7 @@ class UserTile extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      CustomCircleAvatar(
+                      CustomCircleImage(
                           imagePath: user.avatar ?? TEMP_AVATAR_IMAGE,
                           radius: 35),
                       const SizedBox(height: 20),
