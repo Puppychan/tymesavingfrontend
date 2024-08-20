@@ -212,7 +212,6 @@ class _BudgetApprovePageState extends State<BudgetApprovePage> with RouteAware {
                   );
                 },
               )
-
               : ListView.builder(
                 itemCount: _cancelledTransaction.length,
                 itemBuilder: (context, index) {
@@ -280,18 +279,32 @@ class _BudgetApprovePageState extends State<BudgetApprovePage> with RouteAware {
           title: Text("Confirm", style: Theme.of(context).textTheme.headlineSmall),
           content: Text("Do you approve or decline this transaction?", style: Theme.of(context).textTheme.bodyMedium, overflow: TextOverflow.visible),
           actions: <Widget>[
-            if (transactionImages != null)
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => FullScreenImage(imageUrl: transactionImages[0]),
-                    ),
-                  );
-                },
-                child: Image.network(transactionImages[0]),
-              )
+            if (transactionImages.isEmpty)
+            ListView.builder(
+              itemCount: transactionImages.length,
+              itemBuilder: (context, index){
+                final imageUrl = transactionImages[index];
+                return Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Column(
+                    children: [
+                      Text('Picture ${index+1}', style: Theme.of(context).textTheme.headlineMedium,),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FullScreenImage(imageUrl: imageUrl),
+                            ),
+                          );
+                        },
+                        child: Image.network(imageUrl),
+                      )
+                    ],
+                  ),
+                );
+              }
+            )
             else
               const SizedBox(height: 10),
             Row(
