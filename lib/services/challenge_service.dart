@@ -25,7 +25,6 @@ class ChallengeService extends ChangeNotifier {
 
   Future<dynamic> fetchChallengeDetails(String challengeId, {String? name, CancelToken? cancelToken}) async {
     String endpoint = "${BackendEndpoints.challenge}/$challengeId";
-
     // debugPrint(endpoint);
 
     if (name != null) {
@@ -69,7 +68,7 @@ class ChallengeService extends ChangeNotifier {
 
   Future<dynamic> fetchCheckpointDetails(String challengeId, String checkpointId, {String? name, CancelToken? cancelToken}) async {
     String endpoint = "${BackendEndpoints.challenge}/$challengeId/${BackendEndpoints.checkpoint}/$checkpointId";
-    debugPrint("End point is $endpoint");
+    // debugPrint("End point is $endpoint");
 
     if (name != null) {
       endpoint += "?name=$name";
@@ -98,12 +97,7 @@ class ChallengeService extends ChangeNotifier {
   Future<dynamic> fetchChallengeList(String userId, 
   {String? name, String? sortName, String? sortCreateDate, String? pageNo, CancelToken? cancelToken}) async {
     String endpoint = "${BackendEndpoints.challenge}/${BackendEndpoints.challengeByUser}/$userId";
-    debugPrint("End point is $endpoint");
-
-    // if (name != null) {
-    //   endpoint += "?name=$name";
-    // }
-
+    // debugPrint("End point is $endpoint");
     try {
       final response = await NetworkService.instance.get(endpoint, queryParameters: {
         'name': name,
@@ -111,13 +105,34 @@ class ChallengeService extends ChangeNotifier {
         'sortName': sortName,
       });
       // debugPrint("API Response: ${response.toString()}");
-
       if (response != null && response is Map<String, dynamic>) {
         final responseData = response['response'];
         _challengeModelList = (responseData as List<dynamic>)
         .map((challengeMap) => ChallengeModel.fromMap(challengeMap as Map<String, dynamic>))
         .toList();
 
+      } else {
+        debugPrint("Unexpected response format: $response");
+      }
+      notifyListeners();
+      return response;
+    } catch (e) {
+      debugPrint("Error fetching challenge details: $e");
+      rethrow; // Rethrow the error after logging it
+    }
+  }
+
+  Future<dynamic> fetchChallengeProgress(String challengeId, String userId 
+  ) async {
+    String endpoint = "${BackendEndpoints.challenge}/$challengeId/${BackendEndpoints.challengeProgress}/$userId";
+    debugPrint("End point is $endpoint");
+
+    try {
+      final response = await NetworkService.instance.get(endpoint, queryParameters: {
+      });
+      // debugPrint("API Response: ${response.toString()}");
+      if (response != null && response is Map<String, dynamic>) {
+        final responseData = response['response'];
       } else {
         debugPrint("Unexpected response format: $response");
       }
