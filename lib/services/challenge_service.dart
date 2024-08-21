@@ -11,6 +11,7 @@ class ChallengeService extends ChangeNotifier {
   CheckPointModel? _checkPointModel;
   RewardModel? _rewardModel;
   ChallengeDetailMemberModel? _challengeDetailMemberModel;
+  ChallengeProgress? _challengeProgress;
   List<ChallengeDetailMemberModel>? _challengeDetailMemberModelList;
   List<CheckPointModel>? _checkPointModelList;
   List<ChallengeModel>? _challengeModelList;
@@ -18,6 +19,7 @@ class ChallengeService extends ChangeNotifier {
   ChallengeModel? get challengeModel => _challengeModel;
   CheckPointModel? get checkPointModel => _checkPointModel;
   RewardModel? get rewardModel => _rewardModel;
+  ChallengeProgress? get challengeProgress => _challengeProgress;
   ChallengeDetailMemberModel? get challengeDetailMemberModel => _challengeDetailMemberModel;
   List<ChallengeDetailMemberModel>? get challengeDetailMemberModelList => _challengeDetailMemberModelList;
   List<CheckPointModel>? get checkPointModelList => _checkPointModelList;
@@ -25,7 +27,7 @@ class ChallengeService extends ChangeNotifier {
 
   Future<dynamic> fetchChallengeDetails(String challengeId, {String? name, CancelToken? cancelToken}) async {
     String endpoint = "${BackendEndpoints.challenge}/$challengeId";
-    // debugPrint(endpoint);
+    debugPrint(endpoint);
 
     if (name != null) {
       endpoint += "?name=$name";
@@ -55,11 +57,9 @@ class ChallengeService extends ChangeNotifier {
       } else {
         debugPrint("Error: Response does not contain the expected structure.");
       }
-
       // Debug print response using jsonEncode to ensure it's printed as a string
       // debugPrint("DEBUG PRINT FOR SERVICE: ${jsonEncode(response)}");
       return response;
-
     } catch (e) {
       debugPrint("Error fetching challenge details: $e");
       rethrow; // Rethrow the error after logging it
@@ -133,6 +133,7 @@ class ChallengeService extends ChangeNotifier {
       // debugPrint("API Response: ${response.toString()}");
       if (response != null && response is Map<String, dynamic>) {
         final responseData = response['response'];
+        _challengeProgress = ChallengeProgress.fromMap(responseData['memberProgress'][0]);
       } else {
         debugPrint("Unexpected response format: $response");
       }

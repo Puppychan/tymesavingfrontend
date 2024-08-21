@@ -1,6 +1,7 @@
 class ChallengeModel {
   final String id;
   final String name;
+  final String groupName;
   final String description;
   final String category;
   final String scope;
@@ -13,6 +14,7 @@ class ChallengeModel {
   ChallengeModel({
     required this.id,
     required this.name,
+    required this.groupName,
     required this.description,
     required this.category,
     required this.scope,
@@ -29,6 +31,7 @@ class ChallengeModel {
     id: map['_id'] as String? ?? '',  
     name: map['name'] as String? ?? '', 
     description: map['description'] as String? ?? '',
+    groupName: map['groupName'] as String? ?? '',
     category: map['category'] as String? ?? '',
     scope: map['scope'] as String? ?? '', 
     budgetGroupId: map['budgetGroupId'] as String? ?? '',
@@ -52,7 +55,16 @@ class ChallengeModel {
       'endDate': endDate.toIso8601String(),
       'createdBy': createdBy,
       'isPublish': isPublished,
+      'groupName': groupName,
     };
+  }
+
+   @override
+  String toString() {
+    return 'ChallengeModel(id: $id, name: $name, groupName: $groupName, description: $description, '
+           'category: $category, scope: $scope, budgetGroupId: $budgetGroupId, '
+           'startDate: $startDate, endDate: $endDate, createdBy: $createdBy, '
+           'isPublished: $isPublished)';
   }
 }
 
@@ -97,5 +109,42 @@ class ChallengeDetailMemberModel {
       'avatar': avatar,
       'tymeReward': tymeReward,
     };
+  }
+}
+
+class ChallengeProgress {
+  final String id;
+  final String challengeId;
+  final int currentProgress;
+  final int reachedMilestone;
+
+  ChallengeProgress({
+    required this.id,
+    required this.challengeId,
+    required this.currentProgress,
+    required this.reachedMilestone,
+  });
+
+  factory ChallengeProgress.fromMap(Map<String, dynamic> map) {
+    return ChallengeProgress(
+      id: map['_id'] as String? ?? '',
+      challengeId: map['challengeId'] as String? ?? '',
+      currentProgress: map['currentProgress'] as int? ?? 0,
+      reachedMilestone: map['reachedMilestone'] as int? ?? 0,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      '_id': id,
+      'challengeId': challengeId,
+      'currentProgress': currentProgress,
+      'reachedMilestone': reachedMilestone,
+    };
+  }
+
+  @override
+  String toString() {
+    return 'ChallengeProgress(id: $id, challengeId: $challengeId, currentProgress: $currentProgress, reachedMilestone: $reachedMilestone)';
   }
 }
