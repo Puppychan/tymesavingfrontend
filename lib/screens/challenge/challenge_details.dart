@@ -3,11 +3,12 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/components/challenge/challenge_details_member.dart';
 import 'package:tymesavingfrontend/components/challenge/checkpoint_details.dart';
-import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
 import 'package:tymesavingfrontend/components/common/button/secondary_button.dart';
 import 'package:tymesavingfrontend/models/challenge_model.dart';
 import 'package:tymesavingfrontend/models/checkpoint_model.dart';
 import 'package:tymesavingfrontend/models/summary_user_model.dart';
+import 'package:tymesavingfrontend/models/user_model.dart';
+import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/challenge_service.dart';
 import 'package:tymesavingfrontend/services/user_service.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
@@ -23,11 +24,13 @@ class ChallengeDetails extends StatefulWidget {
 class _ChallengeDetailsState extends State<ChallengeDetails> {
   ChallengeModel? _challengeModel;
   SummaryUser? _challengeOwner;
+  ChallengeProgress? _challengeProgress;
   List<ChallengeDetailMemberModel>? _challengeDetailMemberModelList;
   List<CheckPointModel>? _checkPointModelList;
 
   bool _isDisplayRestDescription = false;
   bool isLoading = true;
+  late User? _currentUser;
 
   String? createdDate;
   //TODO: Change the value to route later!
@@ -52,6 +55,7 @@ class _ChallengeDetailsState extends State<ChallengeDetails> {
           _checkPointModelList = challengeService.checkPointModelList;
           createdDate = formatDate(_challengeModel!.startDate);
       });
+      debugPrint(_challengeModel!.toString());
       await _loadChallengeUser(_challengeModel?.createdBy);
     });
   }
@@ -65,7 +69,9 @@ class _ChallengeDetailsState extends State<ChallengeDetails> {
       }, () async {
         if (!mounted) return;
         setState(() {
-          
+          _challengeProgress = challengeService.challengeProgress;
+          // debugPrint(_challengeProgress!.currentProgress.toString());
+          _currentProgress = _challengeProgress!.reachedMilestone;
           isLoading = false;
         });
       });
@@ -77,6 +83,7 @@ class _ChallengeDetailsState extends State<ChallengeDetails> {
       if(!mounted) return;
       final userService = Provider.of<UserService>(context, listen: false);
       await handleMainPageApi(context, () async {
+        debugPrint("USER ID FOR CHALLENGE IS: $userId");
         return await userService.getOtherUserInfo(userId);
       }, () async {
         if (!mounted) return;
@@ -84,7 +91,7 @@ class _ChallengeDetailsState extends State<ChallengeDetails> {
           _challengeOwner = userService.summaryUser;
         });
       });
-      await _loadChallengeProgress(widget.challengeId, _challengeOwner!.id);
+      await _loadChallengeProgress(widget.challengeId, _currentUser!.id);
     });
   }
 
@@ -92,9 +99,24 @@ class _ChallengeDetailsState extends State<ChallengeDetails> {
     await _loadChallenge(widget.challengeId);
   }
 
+  Future<void> loadUser() async {
+    Future.microtask(() async {
+      if (!mounted) return;
+      final authService = Provider.of<AuthService>(context, listen: false);
+      await handleMainPageApi(context, () async {
+        return await authService.getCurrentUserData();
+      }, () async {
+        setState(() {
+          _currentUser = authService.user;
+        });
+      });
+      await loadData();
+    });
+  }
+
   @override
   void initState() {
-    loadData();
+    loadUser();
     super.initState();
   }
 
