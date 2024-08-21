@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:tymesavingfrontend/form/common_form/transaction_form.dart';
 import 'package:tymesavingfrontend/models/momo/momo_payment_info_model.dart';
 import 'package:tymesavingfrontend/services/momo_payment_service.dart';
 
 class MomoOpenButton extends StatelessWidget {
   final MomoPaymentService momo = MomoPaymentService();
+
+  MomoOpenButton({super.key});
   void _initiateMomoPayment(BuildContext context) {
     // TODO: Replace with your own payment info - env
     final paymentInfo = MomoPaymentInfo(
-      partner: 'your_partner_name',
+      partner: 'tyme_saving_app',
       appScheme: 'yourappscheme',
       merchantName: 'Your Merchant Name',
       merchantCode: 'YourMerchantCode',

@@ -57,6 +57,7 @@ dependencies:
   dotted_border: ^2.1.0
   shimmer: ^3.0.0
   eventify: ^1.0.1
+  webview_flutter: ^4.8.0
 
 dev_dependencies:
   flutter_test:

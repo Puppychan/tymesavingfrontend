@@ -13,15 +13,6 @@
 		</array>
 	</dict>
 	</array>
-	<key>LSApplicationQueriesSchemes</key>
-	<array>
-	<string>momo</string>
-	</array>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-	<key>NSAllowsArbitraryLoads</key>
-	<true/>
-	</dict>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
