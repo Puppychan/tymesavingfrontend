@@ -75,7 +75,7 @@ class ChallengeDetailMemberModel {
   final String fullname;
   final String phone;
   final String? avatar;
-  final String tymeReward;
+  final String? tymeReward;
 
   ChallengeDetailMemberModel({
     required this.id,
@@ -84,7 +84,7 @@ class ChallengeDetailMemberModel {
     required this.fullname,
     required this.phone,
     this.avatar,
-    required this.tymeReward,
+    this.tymeReward,
   });
 
   factory ChallengeDetailMemberModel.fromMap(Map<String, dynamic> map) {
@@ -95,7 +95,7 @@ class ChallengeDetailMemberModel {
       fullname: map['fullname'] as String,
       phone: map['phone'] as String,
       avatar: map['avatar'] as String?,
-      tymeReward: map['tymeReward'] as String,
+      tymeReward: map['tymeReward'] as String?,
     );
   }
 

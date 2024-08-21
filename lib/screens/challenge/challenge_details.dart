@@ -163,6 +163,18 @@ class _ChallengeDetailsState extends State<ChallengeDetails> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
+                                  "Belong to",
+                                  style: Theme.of(context).textTheme.headlineMedium,
+                                  textAlign: TextAlign.center,
+                                  overflow: TextOverflow.visible,
+                                ),
+                            Text(
+                                  _challengeModel!.groupName,
+                                  style: Theme.of(context).textTheme.headlineMedium,
+                                  textAlign: TextAlign.center,
+                                  overflow: TextOverflow.visible,
+                                ),
+                            Text(
                                   _challengeModel!.name,
                                   style: Theme.of(context).textTheme.headlineMedium,
                                   textAlign: TextAlign.center,
@@ -302,7 +314,7 @@ class _ChallengeDetailsState extends State<ChallengeDetails> {
                                         username: member.username,
                                         fullname: member.fullname,
                                         avatar: member.avatar,
-                                        rank: member.tymeReward,
+                                        rank: member.tymeReward ?? '',
                                       );
                                     },
                                   ),
