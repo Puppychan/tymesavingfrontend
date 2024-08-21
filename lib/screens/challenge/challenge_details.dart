@@ -170,10 +170,11 @@ class _ChallengeDetailsState extends State<ChallengeDetails> {
                                 ),
                             Text(
                                   _challengeModel!.groupName,
-                                  style: Theme.of(context).textTheme.headlineMedium,
+                                  style: Theme.of(context).textTheme.labelLarge,
                                   textAlign: TextAlign.center,
                                   overflow: TextOverflow.visible,
                                 ),
+                            const SizedBox(height: 10,),
                             Text(
                                   _challengeModel!.name,
                                   style: Theme.of(context).textTheme.headlineMedium,
