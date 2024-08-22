@@ -5,6 +5,7 @@ import 'package:tymesavingfrontend/models/checkpoint_model.dart';
 import 'package:tymesavingfrontend/models/reward_model.dart';
 import 'package:tymesavingfrontend/services/utils/get_backend_endpoint.dart';
 import 'package:tymesavingfrontend/services/utils/network_service.dart';
+import 'package:tymesavingfrontend/utils/format_amount.dart';
 
 class ChallengeService extends ChangeNotifier {
   ChallengeModel? _challengeModel;
@@ -37,7 +38,7 @@ class ChallengeService extends ChangeNotifier {
       final response = await NetworkService.instance.get(endpoint, cancelToken: cancelToken);
       if (response is Map<String, dynamic> && response['response'] != null && response['statusCode'] == 200) {
         final responseData = response['response'] as Map<String, dynamic>;
-        debugPrint(responseData.toString());
+        // debugPrint(responseData.toString());
         // Create the ChallengeModel
         _challengeModel = ChallengeModel.fromMap(responseData);
         
@@ -84,7 +85,7 @@ class ChallengeService extends ChangeNotifier {
 
       if (response != null && response is Map<String, dynamic>) {
         final responseData = response['response'];
-        debugPrint(responseData.toString());
+        // debugPrint(responseData.toString());
         _checkPointModel = CheckPointModel.fromMap(responseData);
         _rewardModel = RewardModel.fromMap(responseData['rewardDetails'] as Map<String, dynamic>);
       } else {
@@ -174,5 +175,64 @@ class ChallengeService extends ChangeNotifier {
       debugPrint("Error creating challenge: $e");
     }
 
+  }
+
+  Future<dynamic> createMileStone(
+    String challengeId,
+    String name, 
+    String value, 
+    String startDate, 
+    String endDate,
+    int checkpointValue,
+  )async {
+    String endpoint = '${BackendEndpoints.challenge}/$challengeId/${BackendEndpoints.checkpoint}';
+    debugPrint("End point is $endpoint");
+
+    try {
+      final response = await NetworkService.instance.post(endpoint, body: [{
+          'name' : name,
+          'checkpointValue': convertFormattedAmountToNumber(value),
+          'startDate': startDate,
+          'endDate': endDate,
+          'reward': {
+            'name': 'Reward for $name',
+            'prize': [
+              {
+                'category': 'Point',
+                'value': checkpointValue
+              }
+            ]
+          }
+        }]
+      );
+      notifyListeners();
+      return response;
+    } catch (e) {
+      debugPrint("Error creating challenge: $e");
+    }
+  }
+
+  Future<dynamic> deleteChallenge(String challengeId,)async {
+    String endpoint = '${BackendEndpoints.challenge}/$challengeId';
+    debugPrint("End point is $endpoint");
+    try {
+      final response = await NetworkService.instance.delete(endpoint);
+      notifyListeners();
+      return response;
+    } catch (e) {
+      debugPrint("Error creating challenge: $e");
+    }
+  }
+
+  Future<dynamic> deleteCheckPoint(String challengeId, String checkpointId)async {
+    String endpoint = '${BackendEndpoints.challenge}/$challengeId/${BackendEndpoints.checkpoint}/$checkpointId';
+    debugPrint("End point is $endpoint");
+    try {
+      final response = await NetworkService.instance.delete(endpoint);
+      notifyListeners();
+      return response;
+    } catch (e) {
+      debugPrint("Error creating challenge: $e");
+    }
   }
 }
