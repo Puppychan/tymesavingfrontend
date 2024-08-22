@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/components/challenge/challenge_details_member.dart';
+import 'package:tymesavingfrontend/components/challenge/checkpoint_card.dart';
 import 'package:tymesavingfrontend/components/challenge/checkpoint_details.dart';
+import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
 import 'package:tymesavingfrontend/components/common/button/secondary_button.dart';
 import 'package:tymesavingfrontend/models/challenge_model.dart';
 import 'package:tymesavingfrontend/models/checkpoint_model.dart';
@@ -15,8 +17,9 @@ import 'package:tymesavingfrontend/utils/format_amount.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
 class ChallengeDetails extends StatefulWidget {
-  const ChallengeDetails({super.key, required this.challengeId});
+  const ChallengeDetails({super.key, required this.challengeId, required this.isForListing});
   final String challengeId;
+  final bool isForListing;
   @override
   State<ChallengeDetails> createState() => _ChallengeDetailsState();
 }
@@ -36,6 +39,7 @@ class _ChallengeDetailsState extends State<ChallengeDetails> {
   //TODO: Change the value to route later!
   late int _currentStep = 0;
   int _currentProgress = 1;
+  int _currentAmountProgress = 0;
 
   String formatDate(DateTime date){
     String formattedDate = DateFormat('MMMM d, y').format(date);
@@ -55,7 +59,7 @@ class _ChallengeDetailsState extends State<ChallengeDetails> {
           _checkPointModelList = challengeService.checkPointModelList;
           createdDate = formatDate(_challengeModel!.startDate);
       });
-      debugPrint(_challengeModel!.toString());
+      // debugPrint(_challengeModel!.toString());
       await _loadChallengeUser(_challengeModel?.createdBy);
     });
   }
@@ -72,6 +76,12 @@ class _ChallengeDetailsState extends State<ChallengeDetails> {
           _challengeProgress = challengeService.challengeProgress;
           // debugPrint(_challengeProgress!.currentProgress.toString());
           _currentProgress = _challengeProgress!.reachedMilestone;
+
+        if (_currentStep >= _checkPointModelList!.length) {
+          _currentStep = _checkPointModelList!.length - 1;
+        } else {
+          _currentStep = 0;
+        }
           isLoading = false;
         });
       });
@@ -83,7 +93,7 @@ class _ChallengeDetailsState extends State<ChallengeDetails> {
       if(!mounted) return;
       final userService = Provider.of<UserService>(context, listen: false);
       await handleMainPageApi(context, () async {
-        debugPrint("USER ID FOR CHALLENGE IS: $userId");
+        // debugPrint("USER ID FOR CHALLENGE IS: $userId");
         return await userService.getOtherUserInfo(userId);
       }, () async {
         if (!mounted) return;
@@ -242,12 +252,20 @@ class _ChallengeDetailsState extends State<ChallengeDetails> {
                                     "Milestones",
                                     style: Theme.of(context).textTheme.headlineMedium,
                                   ),
-                            const SizedBox(height: 10),
-          
+                            !widget.isForListing ?
+                            Padding(padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                            child: PrimaryButton(title: 'Create milestones', onPressed: (){
+
+                            }),)
+                            : const SizedBox(height: 10),
+                            Text(
+                                    "Progress: ${formatAmountToVnd(_challengeProgress!.currentProgress.toDouble())}",
+                                    style: Theme.of(context).textTheme.bodyMedium,
+                              ),
                             // Stepper for challenge
-                            if (_checkPointModelList != null)
+                            widget.isForListing ?
                             Stepper(
-                              currentStep: _currentStep,
+                              currentStep: _currentStep >= _checkPointModelList!.length ? _checkPointModelList!.length - 1 : _currentStep,
                               onStepTapped: (step) => setState(() => _currentStep = step),
                               onStepContinue: _currentProgress > _currentStep ?
                               (){} : null,
@@ -279,15 +297,14 @@ class _ChallengeDetailsState extends State<ChallengeDetails> {
                                   ),
                                 );
                               },
-                            ),
-          
+                            )
+                          :
                           // Vault for stepper to be replace
-                            // if (_checkPointModelList != null)
-                            //   Column(
-                            //     children: _checkPointModelList!.map((checkpoint) {
-                            //       return CheckPointCard(checkpoint: checkpoint, challengeId: _challengeModel!.id,);
-                            //     }).toList(),
-                            //   ),
+                              Column(
+                                children: _checkPointModelList!.map((checkpoint) {
+                                  return CheckPointCard(checkpoint: checkpoint, challengeId: _challengeModel!.id,);
+                                }).toList(),
+                              ),
                             const SizedBox(height: 10),
                           ],
                         ),
@@ -332,6 +349,10 @@ class _ChallengeDetailsState extends State<ChallengeDetails> {
   }
   
   List<Step> _buildStep(){
+    if (_checkPointModelList == null || _checkPointModelList!.isEmpty){
+      return [];
+    }
+
     return _checkPointModelList!.asMap().entries.map((e) {
       int index = e.key;
       final entry = e.value;
