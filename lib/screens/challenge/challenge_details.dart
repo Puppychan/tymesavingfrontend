@@ -286,7 +286,7 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
                                     style: Theme.of(context).textTheme.headlineMedium,
                                   ),
                             !widget.isForListing && _checkPointModelList!.length < 5 ?
-                            Padding(padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                            Padding(padding: const EdgeInsets.symmetric(horizontal: 50,vertical: 10),
                             child: PrimaryButton(title: 'Create milestones', onPressed: (){
                               Navigator.push(context, MaterialPageRoute(builder: (context) => MileStoneCreatePage(challengeId: _challengeModel!.id,)));
                             }),)
