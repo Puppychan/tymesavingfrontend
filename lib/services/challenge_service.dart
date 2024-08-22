@@ -151,18 +151,36 @@ class ChallengeService extends ChangeNotifier {
   }
 
   Future<dynamic> createChallenge(
-    String name, String description, String category, String scope, String budgetGroupId, String startDate, String endDate,
+    String name, String description, String category, String scope, String groupId, String startDate, String endDate,
   )async {
     String endpoint = BackendEndpoints.challenge;
     debugPrint("End point is $endpoint");
 
     try {
+      String groupType;
+      if (scope == 'BudgetGroup'){
+        groupType = 'budgetGroupId';
+      } else {
+        groupType = 'savingGroupId';
+      }
+
+      debugPrint('''
+        {
+          'name': $name,
+          'description': $description,
+          'category': $category,
+          'scope': $scope,
+          '$groupType': $groupId,
+          'startDate': $startDate,
+          'endDate': $endDate,
+        }
+        ''');
       final response = await NetworkService.instance.post(endpoint, body: {
       'name' : name,
       'description': description,
       'category': category,
       'scope': scope,
-      'budgetGroupId': budgetGroupId,
+      groupType: groupId,
       'startDate': startDate,
       'endDate': endDate,
       });

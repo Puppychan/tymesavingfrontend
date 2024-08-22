@@ -41,7 +41,6 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
   String? createdDate;
   late int _currentStep = 0;
   int _currentProgress = 1;
-  int _currentAmountProgress = 0;
 
   String formatDate(DateTime date){
     String formattedDate = DateFormat('MMMM d, y').format(date);
