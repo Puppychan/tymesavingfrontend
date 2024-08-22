@@ -6,10 +6,13 @@ import 'package:tymesavingfrontend/components/challenge/checkpoint_card.dart';
 import 'package:tymesavingfrontend/components/challenge/checkpoint_details.dart';
 import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
 import 'package:tymesavingfrontend/components/common/button/secondary_button.dart';
+import 'package:tymesavingfrontend/form/milestone_create.dart';
+import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/challenge_model.dart';
 import 'package:tymesavingfrontend/models/checkpoint_model.dart';
 import 'package:tymesavingfrontend/models/summary_user_model.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
+import 'package:tymesavingfrontend/screens/challenge/challenge_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/challenge_service.dart';
 import 'package:tymesavingfrontend/services/user_service.dart';
@@ -24,7 +27,7 @@ class ChallengeDetails extends StatefulWidget {
   State<ChallengeDetails> createState() => _ChallengeDetailsState();
 }
 
-class _ChallengeDetailsState extends State<ChallengeDetails> {
+class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
   ChallengeModel? _challengeModel;
   SummaryUser? _challengeOwner;
   ChallengeProgress? _challengeProgress;
@@ -36,7 +39,6 @@ class _ChallengeDetailsState extends State<ChallengeDetails> {
   late User? _currentUser;
 
   String? createdDate;
-  //TODO: Change the value to route later!
   late int _currentStep = 0;
   int _currentProgress = 1;
   int _currentAmountProgress = 0;
@@ -61,6 +63,18 @@ class _ChallengeDetailsState extends State<ChallengeDetails> {
       });
       // debugPrint(_challengeModel!.toString());
       await _loadChallengeUser(_challengeModel?.createdBy);
+    });
+  }
+
+  Future<void> _deleteChallenge(String? challengeId) async {
+    Future.microtask(() async {
+      if(!mounted) return;
+      final challengeService = Provider.of<ChallengeService>(context, listen: false);
+      await handleMainPageApi(context, () async {
+        return await challengeService.deleteChallenge(challengeId!);
+      }, () async {
+        if (!mounted) return;
+      });
     });
   }
 
@@ -123,6 +137,18 @@ class _ChallengeDetailsState extends State<ChallengeDetails> {
       await loadData();
     });
   }
+  @override
+    void didPopNext() {
+      super.didPopNext();
+      isLoading = true;
+      loadUser();
+      
+  }
+  @override
+    void didChangeDependencies() {
+      super.didChangeDependencies();
+      routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute<dynamic>);
+    }
 
   @override
   void initState() {
@@ -162,6 +188,14 @@ class _ChallengeDetailsState extends State<ChallengeDetails> {
                       ),
                     ),
                   ),
+                  actions: 
+                  _currentUser!.id == _challengeModel!.createdBy ?[
+                     IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: () => _showDeletePrompt(context),
+                    )
+                  ]
+                  : null
                 ),
                 SliverList(
                   delegate: SliverChildListDelegate([
@@ -252,10 +286,10 @@ class _ChallengeDetailsState extends State<ChallengeDetails> {
                                     "Milestones",
                                     style: Theme.of(context).textTheme.headlineMedium,
                                   ),
-                            !widget.isForListing ?
+                            !widget.isForListing && _checkPointModelList!.length < 5 ?
                             Padding(padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
                             child: PrimaryButton(title: 'Create milestones', onPressed: (){
-
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => MileStoneCreatePage(challengeId: _challengeModel!.id,)));
                             }),)
                             : const SizedBox(height: 10),
                             Text(
@@ -369,5 +403,34 @@ class _ChallengeDetailsState extends State<ChallengeDetails> {
         StepState.complete : StepState.indexed
       );
     }).toList();
+  }
+
+  void _showDeletePrompt(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete Challenge Confirmation', style: Theme.of(context).textTheme.headlineSmall,),
+          content: Text('Are you sure you want to delete this challenge?'
+          ,style: Theme.of(context).textTheme.bodyLarge, overflow: TextOverflow.visible,),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancel',style: Theme.of(context).textTheme.labelLarge,),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Delete', style: Theme.of(context).textTheme.labelLarge,),
+              onPressed: () {
+                _deleteChallenge(_challengeModel!.id);
+                Navigator.pushAndRemoveUntil(context,
+                MaterialPageRoute(builder: (context) => ChallengePage(userId: _currentUser!.id,)),(_) => false);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
