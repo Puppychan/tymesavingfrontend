@@ -59,7 +59,7 @@ class _ChallengeAddFormState extends State<ChallengeAddForm> {
     }, () async {
       _createdChallengeId = challengeService.challengeModel!.id;
       context.loaderOverlay.hide();
-      Navigator.push(
+      Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => ChallengeDetails(challengeId: _createdChallengeId, isForListing: false,)));
     });
   }
