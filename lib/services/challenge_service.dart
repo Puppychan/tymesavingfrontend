@@ -27,7 +27,7 @@ class ChallengeService extends ChangeNotifier {
 
   Future<dynamic> fetchChallengeDetails(String challengeId, {String? name, CancelToken? cancelToken}) async {
     String endpoint = "${BackendEndpoints.challenge}/$challengeId";
-    debugPrint(endpoint);
+    // debugPrint(endpoint);
 
     if (name != null) {
       endpoint += "?name=$name";
@@ -37,20 +37,24 @@ class ChallengeService extends ChangeNotifier {
       final response = await NetworkService.instance.get(endpoint, cancelToken: cancelToken);
       if (response is Map<String, dynamic> && response['response'] != null && response['statusCode'] == 200) {
         final responseData = response['response'] as Map<String, dynamic>;
-
+        debugPrint(responseData.toString());
         // Create the ChallengeModel
         _challengeModel = ChallengeModel.fromMap(responseData);
         
-        if (responseData['members'] != null) {
+        if (responseData['members'] != null && responseData['members'] is List && (responseData['members'] as List).isNotEmpty) {
             _challengeDetailMemberModelList = (responseData['members'] as List<dynamic>)
               .map((memberMap) => ChallengeDetailMemberModel.fromMap(memberMap as Map<String, dynamic>))
               .toList();
+          } else {
+            _challengeDetailMemberModelList = [];
           }
 
-        if (responseData['checkpoints'] != null) {
+        if (responseData['checkpoints'] != null && responseData['checkpoints'] is List && (responseData['checkpoints'] as List).isNotEmpty) {
           _checkPointModelList = (responseData['checkpoints'] as List<dynamic>)
           .map((checkpointMap) => CheckPointModel.fromMap(checkpointMap as Map<String, dynamic>))
           .toList();
+        } else {
+          _checkPointModelList = [];
         }
 
         notifyListeners();
@@ -125,7 +129,7 @@ class ChallengeService extends ChangeNotifier {
   Future<dynamic> fetchChallengeProgress(String challengeId, String userId 
   ) async {
     String endpoint = "${BackendEndpoints.challenge}/$challengeId/${BackendEndpoints.challengeProgress}/$userId";
-    debugPrint("End point is $endpoint");
+    // debugPrint("End point is $endpoint");
 
     try {
       final response = await NetworkService.instance.get(endpoint, queryParameters: {
@@ -143,5 +147,32 @@ class ChallengeService extends ChangeNotifier {
       debugPrint("Error fetching challenge details: $e");
       rethrow; // Rethrow the error after logging it
     }
+  }
+
+  Future<dynamic> createChallenge(
+    String name, String description, String category, String scope, String budgetGroupId, String startDate, String endDate,
+  )async {
+    String endpoint = BackendEndpoints.challenge;
+    debugPrint("End point is $endpoint");
+
+    try {
+      final response = await NetworkService.instance.post(endpoint, body: {
+      'name' : name,
+      'description': description,
+      'category': category,
+      'scope': scope,
+      'budgetGroupId': budgetGroupId,
+      'startDate': startDate,
+      'endDate': endDate,
+      });
+      final responseData = response['response'] as Map<String, dynamic>;
+      _challengeModel = ChallengeModel.fromMap(responseData);
+
+      notifyListeners();
+      return response;
+    } catch (e) {
+      debugPrint("Error creating challenge: $e");
+    }
+
   }
 }
