@@ -16,7 +16,9 @@ import 'package:tymesavingfrontend/components/common/multi_form_components/image
 import 'package:tymesavingfrontend/components/common/multi_form_components/short_group_info_multi_form.dart';
 import 'package:tymesavingfrontend/models/base_group_model.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
+import 'package:tymesavingfrontend/screens/momo_payment_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
+import 'package:tymesavingfrontend/services/momo_payment_service.dart';
 import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
 import 'package:tymesavingfrontend/services/transaction_service.dart';
 import 'package:tymesavingfrontend/utils/display_error.dart';
@@ -155,16 +157,31 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
             (formField['transactionImages'] ?? []).whereType<String>().toList(),
             savingGroupId: formField['savingGroupId'],
             budgetGroupId: formField['budgetGroupId'],
+            approveStatus: formField['defaultApproveStatus'],
           );
         }
       }, () async {
         context.loaderOverlay.hide();
+
         if (!mounted) return;
         Provider.of<FormStateProvider>(context, listen: false)
             .resetForm(widget.type);
         Navigator.of(context).pop();
         SuccessDisplay.showSuccessToast(
             "Create new ${widget.type} successfully", context);
+        
+                // TODO: temp
+                final momoResponse = await MomoPaymentService.initiateMoMoPayment(
+              Provider.of<TransactionService>(context, listen: false)
+                      .detailedTransaction
+                      ?.id ??
+                  "");
+                  debugPrint("Momo response: $momoResponse");
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => MoMoPaymentPage(
+                        paymentUrl: momoResponse['response']['payUrl'],
+                      ))
+              );
       });
     });
   }

@@ -162,12 +162,17 @@ class TransactionService extends ChangeNotifier {
       "category": category.name,
       if (savingGroupId != null) "savingGroupId": savingGroupId,
       if (budgetGroupId != null) "budgetGroupId": budgetGroupId,
-      "approveStatus": approveStatus?.value,
+      "approveStatus": approveStatus?.value ?? ApproveStatus.approved.value,
       "createdDate": createdDate,
       "image": imageFiles, // This is the key your backend expects for images
     });
     final response = await NetworkService.instance
         .postFormData(BackendEndpoints.transaction, data: formData);
+    if (response['response'] != null && response['statusCode'] == 200) {
+      final responseData = response['response'];
+      _detailedTransaction = Transaction.fromJson(responseData);
+      notifyListeners();
+    }
     return response;
   }
 

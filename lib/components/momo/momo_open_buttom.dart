@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/models/momo/momo_payment_info_model.dart';
 import 'package:tymesavingfrontend/services/momo_payment_service.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class MomoOpenButton extends StatelessWidget {
   final MomoPaymentService momo = MomoPaymentService();
@@ -13,7 +14,7 @@ class MomoOpenButton extends StatelessWidget {
       appScheme: 'yourappscheme',
       merchantName: 'Your Merchant Name',
       merchantCode: 'YourMerchantCode',
-      partnerCode: 'YourPartnerCode',
+      partnerCode: dotenv.env['MOMO_PARTNER_CODE'] ?? "",
       amount: 100000, // Amount in VND
       orderId: 'Order_123456',
       orderLabel: 'Order Label',
