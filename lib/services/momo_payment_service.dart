@@ -9,7 +9,7 @@ import 'package:tymesavingfrontend/models/momo/momo_payment_response_model.dart'
 import 'package:tymesavingfrontend/services/utils/get_backend_endpoint.dart';
 import 'package:tymesavingfrontend/services/utils/network_service.dart';
 
-class MomoPaymentService {
+class MomoPaymentService extends ChangeNotifier {
   // Event names
   static const EVENT_PAYMENT_SUCCESS = 'payment.success';
   static const EVENT_PAYMENT_ERROR = 'payment.error';

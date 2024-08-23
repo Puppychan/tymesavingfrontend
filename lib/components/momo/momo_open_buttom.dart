@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tymesavingfrontend/components/momo/momo_transaction_sheet.dart';
 import 'package:tymesavingfrontend/models/momo/momo_payment_info_model.dart';
 import 'package:tymesavingfrontend/services/momo_payment_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -53,7 +54,8 @@ class MomoOpenButton extends StatelessWidget {
       shape: const CircleBorder(), // Shape of the button
       child: InkWell(
         onTap: () {
-          _initiateMomoPayment(context);
+          // _initiateMomoPayment(context);
+          showMomoTransaction(context);
         },
         customBorder: const CircleBorder(), // Ensure the ripple effect is circular
         child: Container(

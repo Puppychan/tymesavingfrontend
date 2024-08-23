@@ -1,5 +1,30 @@
 # TymeX Project Front-end
 
+Momo sample response
+https://webhook.site/04561cd2-489b-4982-9e68-5111a84a097a?partnerCode=MOMOBKUN20180529
+orderId=OD1724389775564
+requestId=RE1724389775564
+amount=10000
+orderInfo=Thanh+toan+hoa+don+OD1724389775564
+orderType=momo_wallet
+transId=1724389788015
+resultCode=1006
+message=Transaction+denied+by+user.
+payType=
+responseTime=1724389788018
+extraData=
+signature=2b419c014d9f8b7d80228c6ee4b26991d09e6538ca8a5077464d94dec723fc08
+
+## Install For Deep Link
+flutter clean
+flutter build apk
+flutter install
+
+## Test Deep Link:
+
+Android: adb shell am start -W -a android.intent.action.VIEW -d "tyme_saving://payment/momo"
+IOS: xcrun simctl openurl booted tyme_saving://payment/momo
+
 ## Introduction
 
 Welcome to the TymeX Front-End repository! This repository contains the source code for the mobile finance application "TymeX," developed as part of a capstone project. TymeX aims to provide users with a seamless and intuitive financial management experience on their mobile devices.
