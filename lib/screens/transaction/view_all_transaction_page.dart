@@ -160,28 +160,64 @@ class ListItems extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           ListTile(
-            title: const Text('Newest'),
+            tileColor: Theme.of(context).colorScheme.tertiary,
+            title: const Row(
+              children: [
+                Icon(Icons.calendar_today),
+                SizedBox(
+                  width: 10,
+                ),
+                Text("Newest")
+              ],
+            ),
             onTap: () {
               onItemSelected('newest');
               Navigator.of(context).pop();
             },
           ),
           ListTile(
-            title: const Text('Oldest'),
+            tileColor: Theme.of(context).colorScheme.tertiary,
+            title: const Row(
+              children: [
+                Icon(Icons.calendar_today),
+                SizedBox(
+                  width: 10,
+                ),
+                Text('Oldest'),
+              ],
+            ),
             onTap: () {
               onItemSelected('oldest');
               Navigator.of(context).pop();
             },
           ),
           ListTile(
-            title: const Text('Ascending'),
+            tileColor: Theme.of(context).colorScheme.tertiary,
+            title: const Row(
+              children: [
+                Icon(Icons.attach_money),
+                SizedBox(
+                  width: 10,
+                ),
+                Text('Ascending'),
+              ],
+            ),
             onTap: () {
               onItemSelected('ascending');
               Navigator.of(context).pop();
             },
           ),
           ListTile(
-            title: const Text('Descending'),
+            tileColor: Theme.of(context).colorScheme.tertiary,
+            title: const Row(
+              children: [
+                Icon(Icons.attach_money),
+                SizedBox(
+                  width: 10,
+                ),
+                Text('Descending'),
+              ],
+            ),
             onTap: () {
               onItemSelected('descending');
               Navigator.of(context).pop();
