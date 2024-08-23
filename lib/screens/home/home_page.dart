@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/styles/app_padding.dart';
 import 'package:tymesavingfrontend/components/common/chart/custom_bar_chart.dart';
 import 'package:tymesavingfrontend/components/common/text_align.dart';
+import 'package:tymesavingfrontend/components/momo/momo_open_buttom.dart';
 import 'package:tymesavingfrontend/components/transaction/transaction_monthly.dart';
 import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/transaction_report_model.dart';
@@ -55,7 +56,6 @@ class _HomePageState extends State<HomePage> with RouteAware {
         });
 
         if (!mounted) return;
-
       }
 
       setState(() {
@@ -103,9 +103,15 @@ class _HomePageState extends State<HomePage> with RouteAware {
         children: [
           // Image.asset("assets/img/app_logo_light.svg",
           //     width: media.width * 0.5, fit: BoxFit.contain),
-          CustomAlignText(
-            text: 'Have a nice day!',
-            style: Theme.of(context).textTheme.headlineMedium!,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CustomAlignText(
+                text: 'Have a nice day!',
+                style: Theme.of(context).textTheme.headlineMedium!,
+              ),
+              MomoOpenButton(),
+            ],
           ),
           const SizedBox(
             height: 10,
@@ -211,7 +217,8 @@ class _HomePageState extends State<HomePage> with RouteAware {
                   _navigateToAllTransactions(context);
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                       color: Theme.of(context).colorScheme.tertiary),

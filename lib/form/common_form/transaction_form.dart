@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_group_type_enum.dart';
+import 'package:tymesavingfrontend/components/category_list/category_short_selection.dart';
 import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
 import 'package:tymesavingfrontend/components/common/dialog/date_picker_dialog.dart';
 import 'package:tymesavingfrontend/components/common/dialog/time_picker_dialog.dart';
@@ -16,7 +17,9 @@ import 'package:tymesavingfrontend/components/common/multi_form_components/image
 import 'package:tymesavingfrontend/components/common/multi_form_components/short_group_info_multi_form.dart';
 import 'package:tymesavingfrontend/models/base_group_model.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
+import 'package:tymesavingfrontend/screens/momo_payment_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
+import 'package:tymesavingfrontend/services/momo_payment_service.dart';
 import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
 import 'package:tymesavingfrontend/services/transaction_service.dart';
 import 'package:tymesavingfrontend/utils/display_error.dart';
@@ -155,10 +158,12 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
             (formField['transactionImages'] ?? []).whereType<String>().toList(),
             savingGroupId: formField['savingGroupId'],
             budgetGroupId: formField['budgetGroupId'],
+            approveStatus: formField['defaultApproveStatus'],
           );
         }
       }, () async {
         context.loaderOverlay.hide();
+
         if (!mounted) return;
         Provider.of<FormStateProvider>(context, listen: false)
             .resetForm(widget.type);
@@ -201,14 +206,7 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
     }
   }
 
-  void onTransactionCategorySelected(TransactionCategory category) {
-    Future.microtask(() async {
-      if (!mounted) return;
-      final formStateService =
-          Provider.of<FormStateProvider>(context, listen: false);
-      formStateService.updateFormCategory(category, widget.type);
-    });
-  }
+
 
   TransactionGroupType getGroupType(Map<String, dynamic> formFields) {
     TransactionGroupType? type = formFields['groupType'];
@@ -226,7 +224,6 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
 
     return Consumer<FormStateProvider>(
         builder: (context, formStateService, child) {
@@ -249,37 +246,6 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
       _descriptionController.text = formFields['description'] ?? "";
       _payByController.text = formFields['payBy'] ?? "";
 
-      List<Widget> renderCategories(BuildContext context) {
-        List<TransactionCategory> categories = [];
-        if (widget.type == FormStateType.income ||
-            widget.type == FormStateType.updateIncome) {
-          categories = TransactionCategory.incomeCategories;
-        } else if (widget.type == FormStateType.expense ||
-            widget.type == FormStateType.updateExpense) {
-          categories = TransactionCategory.expenseCategories;
-        }
-        return categories.expand((category) {
-          final isSelected = selectedCategory.name == category.name;
-          Map<String, dynamic> categoryInfo =
-              transactionCategoryData[category]!;
-
-          return [
-            Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(10),
-                  splashColor: colorScheme.tertiary,
-                  onTap: () async => {onTransactionCategorySelected(category)},
-                  child: getCategoryIcon(
-                      currentCategoryInfo: categoryInfo,
-                      isSelected: isSelected,
-                      colorScheme: colorScheme),
-                )),
-            const SizedBox(width: 10)
-          ];
-        }).toList();
-      }
-
       return Form(
           key: _formKey,
           child: Column(
@@ -288,12 +254,9 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
               ...buildComponentGroup(
                   context: context,
                   label: "CHOOSE CATEGORY",
-                  contentWidget: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: renderCategories(context),
-                      ))),
+                  contentWidget: CategoryShortSelection(
+                      type: widget.type,
+                      selectedCategory: selectedCategory,)),
               if (widget.isFromGroupDetail == true) ...[
                 ShortGroupInfoMultiForm(
                     chosenGroupType: chosenGroupType,

@@ -35,7 +35,7 @@ class GroupSavingService extends ChangeNotifier {
     // if (userId == null) return {'response': 'User ID is required.', 'statusCode': 400};
     String endpoint =
         "${BackendEndpoints.groupSaving}/${BackendEndpoints.groupSavingsGetByUserId}/$userId";
-    if (name != null) {
+    if (name != null || name != "") {
       endpoint += "?name=$name";
     }
 
@@ -58,7 +58,7 @@ class GroupSavingService extends ChangeNotifier {
 
   Future<Map<String, dynamic>> addGroupSavingGroup(
     String hostedBy,
-    String defaultApproveStatus,
+    ApproveStatus defaultApproveStatus,
     String name,
     String description,
     double amount,
@@ -70,7 +70,7 @@ class GroupSavingService extends ChangeNotifier {
       body: {
         'hostedBy': hostedBy,
         'name': name,
-        'defaultApproveStatus': defaultApproveStatus,
+        'defaultApproveStatus': defaultApproveStatus.toString(),
         'description': description,
         'amount': amount,
         'concurrentAmount': concurrentAmount,
@@ -103,7 +103,7 @@ class GroupSavingService extends ChangeNotifier {
   Future<Map<String, dynamic>> updateGroupSavingGroup(
     String groupSavingGroupId,
     String hostedBy,
-    String defaultApproveStatus,
+    ApproveStatus defaultApproveStatus,
     String name,
     String description,
     double amount,
@@ -116,7 +116,7 @@ class GroupSavingService extends ChangeNotifier {
           'description': description,
           'amount': amount,
           'endDate': endDate,
-          'defaultApproveStatus': defaultApproveStatus,
+          'defaultApproveStatus': defaultApproveStatus.toString(),
         });
     return response;
   }

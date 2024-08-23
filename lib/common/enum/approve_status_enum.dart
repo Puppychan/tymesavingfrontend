@@ -25,7 +25,22 @@ enum ApproveStatus {
   static List<String> get list {
     return ApproveStatus.values.map((e) => e.toString()).toList();
   }
+
+  // special for input form of group
   static List<String> get inputFormList {
-    return [ApproveStatus.pending.toString(), ApproveStatus.approved.toString()];
+    // For answerring question "Require Approval for Transactions"
+    return ["Yes", "No"]; // Yes = pending, No = approved
+  }
+  static ApproveStatus fromInputFormString(String value) {
+    // get the approve status from the value
+    if (value == "Yes") {
+      return ApproveStatus.pending;
+    }
+    // default to pending
+    return ApproveStatus.approved;
+  }
+  
+  static String toInputFormString(ApproveStatus status) {
+    return status == ApproveStatus.pending ? "Yes" : "No";
   }
 }
