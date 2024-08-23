@@ -36,7 +36,7 @@ class BudgetService extends ChangeNotifier {
     String endpoint =
         "${BackendEndpoints.budget}/${BackendEndpoints.budgetsGetByUserId}/$userId";
 
-    if (name != null || name != "") {
+    if (name != null) {
       endpoint += "?name=$name";
     }
 
@@ -58,7 +58,7 @@ class BudgetService extends ChangeNotifier {
 
   Future<Map<String, dynamic>> addBudgetGroup(
     String hostedBy,
-    ApproveStatus defaultApproveStatus,
+    String defaultApproveStatus,
     String name,
     String description,
     double amount,
@@ -71,7 +71,11 @@ class BudgetService extends ChangeNotifier {
       body: {
         'hostedBy': hostedBy,
         'name': name,
+<<<<<<< HEAD
         'defaultApproveStatus': defaultApproveStatus.value,
+=======
+        'defaultApproveStatus': defaultApproveStatus,
+>>>>>>> parent of f7ee8ec (Merge remote-tracking branch 'origin/32-challenge-structure' into 26-view-goal-analysis)
         'description': description,
         'amount': amount,
         'concurrentAmount': concurrentAmount,
@@ -105,7 +109,7 @@ class BudgetService extends ChangeNotifier {
   Future<Map<String, dynamic>> updateBudgetGroup(
     String budgetGroupId,
     String hostedBy,
-    ApproveStatus defaultApproveStatus,
+    String defaultApproveStatus,
     String name,
     String description,
     double amount,
@@ -118,7 +122,7 @@ class BudgetService extends ChangeNotifier {
           'description': description,
           'amount': amount,
           'endDate': endDate,
-          'defaultApproveStatus': defaultApproveStatus.toString(),
+          'defaultApproveStatus': defaultApproveStatus,
         });
     return response;
   }

@@ -35,7 +35,7 @@ class GroupSavingService extends ChangeNotifier {
     // if (userId == null) return {'response': 'User ID is required.', 'statusCode': 400};
     String endpoint =
         "${BackendEndpoints.groupSaving}/${BackendEndpoints.groupSavingsGetByUserId}/$userId";
-    if (name != null || name != "") {
+    if (name != null) {
       endpoint += "?name=$name";
     }
 
@@ -58,7 +58,7 @@ class GroupSavingService extends ChangeNotifier {
 
   Future<Map<String, dynamic>> addGroupSavingGroup(
     String hostedBy,
-    ApproveStatus defaultApproveStatus,
+    String defaultApproveStatus,
     String name,
     String description,
     double amount,
@@ -70,7 +70,11 @@ class GroupSavingService extends ChangeNotifier {
       body: {
         'hostedBy': hostedBy,
         'name': name,
+<<<<<<< HEAD
         'defaultApproveStatus': defaultApproveStatus.value,
+=======
+        'defaultApproveStatus': defaultApproveStatus,
+>>>>>>> parent of f7ee8ec (Merge remote-tracking branch 'origin/32-challenge-structure' into 26-view-goal-analysis)
         'description': description,
         'amount': amount,
         'concurrentAmount': concurrentAmount,
@@ -103,7 +107,7 @@ class GroupSavingService extends ChangeNotifier {
   Future<Map<String, dynamic>> updateGroupSavingGroup(
     String groupSavingGroupId,
     String hostedBy,
-    ApproveStatus defaultApproveStatus,
+    String defaultApproveStatus,
     String name,
     String description,
     double amount,
@@ -116,7 +120,7 @@ class GroupSavingService extends ChangeNotifier {
           'description': description,
           'amount': amount,
           'endDate': endDate,
-          'defaultApproveStatus': defaultApproveStatus.toString(),
+          'defaultApproveStatus': defaultApproveStatus,
         });
     return response;
   }

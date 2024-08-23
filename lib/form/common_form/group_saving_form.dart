@@ -161,6 +161,15 @@ class _GroupSavingFormMainState extends State<GroupSavingFormMain> {
     }
   }
 
+  // void onTransactionCategorySelected(TransactionCategory category) {
+  //   Future.microtask(() async {
+  //     if (!mounted) return;
+  //     final formStateService =
+  //         Provider.of<FormStateProvider>(context, listen: false);
+  //     formStateService.updateFormCategory(category, widget.type);
+  //   });
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<FormStateProvider>(
@@ -180,6 +189,30 @@ class _GroupSavingFormMainState extends State<GroupSavingFormMain> {
       _amountController.text = formStateService.getFormattedAmount(widget.type);
       _descriptionController.text = formFields['description'] ?? "";
       _nameController.text = formFields['name'] ?? "";
+
+      // List<Widget> renderCategories(BuildContext context) {
+      //   return TransactionCategory.values
+      //       .where((category) => category != TransactionCategory.all)
+      //       .expand((category) {
+      //     final isSelected = selectedCategory.name == category.name;
+      //     Map<String, dynamic> categoryInfo =
+      //         transactionCategoryData[category]!;
+      //     return [
+      //       Material(
+      //           color: Colors.transparent,
+      //           child: InkWell(
+      //             borderRadius: BorderRadius.circular(10),
+      //             splashColor: colorScheme.tertiary,
+      //             onTap: () async => {onTransactionCategorySelected(category)},
+      //             child: getCategoryIcon(
+      //                 currentCategoryInfo: categoryInfo,
+      //                 isSelected: isSelected,
+      //                 colorScheme: colorScheme),
+      //           )),
+      //       const SizedBox(width: 10)
+      //     ];
+      //   }).toList();
+      // }
 
       return Form(
           key: _formKey,
@@ -252,16 +285,20 @@ class _GroupSavingFormMainState extends State<GroupSavingFormMain> {
                 onChange: (value) => updateOnChange("description"),
               ),
               RadioField(
-                  label: "Require Approval for Transactions:",
+                  label: "Budget Transaction Approval Status: ",
                   options: ApproveStatus.inputFormList,
-                  onSelected: (String chosenResponse) {
+                  onSelected: (String chosenApproveStatus) {
                     ApproveStatus convertApproveStatus =
-                        ApproveStatus.fromInputFormString(chosenResponse);
+                        ApproveStatus.fromString(chosenApproveStatus);
                     updateOnChange("defaultApproveStatus",
                         value: convertApproveStatus);
                   },
+<<<<<<< HEAD
                   defaultOption:
                       ApproveStatus.toInputFormString(currentApproveStatus)),
+=======
+                  defaultOption: currentApproveStatus.value),
+>>>>>>> parent of f7ee8ec (Merge remote-tracking branch 'origin/32-challenge-structure' into 26-view-goal-analysis)
               const SizedBox(height: 20),
               PrimaryButton(title: "Confirm", onPressed: _trySubmit)
             ],
