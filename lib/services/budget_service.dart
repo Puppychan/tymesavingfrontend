@@ -36,7 +36,7 @@ class BudgetService extends ChangeNotifier {
     String endpoint =
         "${BackendEndpoints.budget}/${BackendEndpoints.budgetsGetByUserId}/$userId";
 
-    if (name != null) {
+    if (name != null || name != "") {
       endpoint += "?name=$name";
     }
 

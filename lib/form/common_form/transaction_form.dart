@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_group_type_enum.dart';
+import 'package:tymesavingfrontend/components/category_list/category_short_selection.dart';
 import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
 import 'package:tymesavingfrontend/components/common/dialog/date_picker_dialog.dart';
 import 'package:tymesavingfrontend/components/common/dialog/time_picker_dialog.dart';
@@ -169,19 +170,6 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
         Navigator.of(context).pop();
         SuccessDisplay.showSuccessToast(
             "Create new ${widget.type} successfully", context);
-        
-                // TODO: temp
-                final momoResponse = await MomoPaymentService.initiateMoMoPayment(
-              Provider.of<TransactionService>(context, listen: false)
-                      .detailedTransaction
-                      ?.id ??
-                  "");
-                  debugPrint("Momo response: $momoResponse");
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => MoMoPaymentPage(
-                        paymentUrl: momoResponse['response']['payUrl'],
-                      ))
-              );
       });
     });
   }
@@ -218,14 +206,7 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
     }
   }
 
-  void onTransactionCategorySelected(TransactionCategory category) {
-    Future.microtask(() async {
-      if (!mounted) return;
-      final formStateService =
-          Provider.of<FormStateProvider>(context, listen: false);
-      formStateService.updateFormCategory(category, widget.type);
-    });
-  }
+
 
   TransactionGroupType getGroupType(Map<String, dynamic> formFields) {
     TransactionGroupType? type = formFields['groupType'];
@@ -243,7 +224,6 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
 
     return Consumer<FormStateProvider>(
         builder: (context, formStateService, child) {
@@ -266,37 +246,6 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
       _descriptionController.text = formFields['description'] ?? "";
       _payByController.text = formFields['payBy'] ?? "";
 
-      List<Widget> renderCategories(BuildContext context) {
-        List<TransactionCategory> categories = [];
-        if (widget.type == FormStateType.income ||
-            widget.type == FormStateType.updateIncome) {
-          categories = TransactionCategory.incomeCategories;
-        } else if (widget.type == FormStateType.expense ||
-            widget.type == FormStateType.updateExpense) {
-          categories = TransactionCategory.expenseCategories;
-        }
-        return categories.expand((category) {
-          final isSelected = selectedCategory.name == category.name;
-          Map<String, dynamic> categoryInfo =
-              transactionCategoryData[category]!;
-
-          return [
-            Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(10),
-                  splashColor: colorScheme.tertiary,
-                  onTap: () async => {onTransactionCategorySelected(category)},
-                  child: getCategoryIcon(
-                      currentCategoryInfo: categoryInfo,
-                      isSelected: isSelected,
-                      colorScheme: colorScheme),
-                )),
-            const SizedBox(width: 10)
-          ];
-        }).toList();
-      }
-
       return Form(
           key: _formKey,
           child: Column(
@@ -305,12 +254,9 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
               ...buildComponentGroup(
                   context: context,
                   label: "CHOOSE CATEGORY",
-                  contentWidget: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: renderCategories(context),
-                      ))),
+                  contentWidget: CategoryShortSelection(
+                      type: widget.type,
+                      selectedCategory: selectedCategory,)),
               if (widget.isFromGroupDetail == true) ...[
                 ShortGroupInfoMultiForm(
                     chosenGroupType: chosenGroupType,
