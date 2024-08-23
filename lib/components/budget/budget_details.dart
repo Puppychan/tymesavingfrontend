@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:tymesavingfrontend/common/enum/approve_status_enum.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_group_type_enum.dart';
 import 'package:tymesavingfrontend/components/budget/budget_approve_page.dart';
-import 'package:tymesavingfrontend/components/budget/budget_report.dart';
-import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
 import 'package:tymesavingfrontend/components/common/button/secondary_button.dart';
 import 'package:tymesavingfrontend/components/common/chart/budget_pie_chart.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
@@ -104,7 +103,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
           // check if user is member or host
           isMember = _budget!.hostedBy.toString() !=
               Provider.of<AuthService>(context, listen: false).user?.id;
-          if(_budget!.defaultApproveStatus == "Pending") {
+          if(_budget!.defaultApproveStatus == ApproveStatus.pending.value) {
             approval = true;
           }
           // debugPrint(

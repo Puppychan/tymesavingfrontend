@@ -9,8 +9,9 @@ import 'package:tymesavingfrontend/utils/format_amount.dart';
 
 class FormStateProvider with ChangeNotifier {
   final Map<String, dynamic> _incomeFormFields = {};
+  final Map<String, dynamic> _updateIncomeFormFields = {};
   final Map<String, dynamic> _expenseFormFields = {};
-  final Map<String, dynamic> _updateTransactionFormFields = {};
+  final Map<String, dynamic> _updateExpenseFormFields = {};
 
   final Map<String, dynamic> _budgetFormFields = {};
   final Map<String, dynamic> _updateBudgetFormFields = {};
@@ -19,7 +20,6 @@ class FormStateProvider with ChangeNotifier {
   final Map<String, dynamic> _updateSavingFormFields = {};
   // invitation form
   final Map<String, dynamic> _memberInvitationFormFields = {};
-
 
   dynamic _validateFieldNull(
       String key, Map<String, dynamic> typeFormFields, dynamic defaultValue) {
@@ -32,15 +32,19 @@ class FormStateProvider with ChangeNotifier {
   // special getters
   TransactionCategory getCategory(FormStateType type) {
     if (type == FormStateType.income) {
-      return _validateFieldNull(
-          'category', _incomeFormFields, TransactionCategory.defaultIncomeCategory());
+      return _validateFieldNull('category', _incomeFormFields,
+          TransactionCategory.defaultIncomeCategory());
+    } else if (type == FormStateType.updateIncome) {
+      // return categoryExpense;
+      return _validateFieldNull('category', _updateIncomeFormFields,
+          TransactionCategory.defaultIncomeCategory());
     } else if (type == FormStateType.expense) {
       // return categoryExpense;
       return _validateFieldNull('category', _expenseFormFields,
           TransactionCategory.defaultExpenseCategory());
-    } else if (type == FormStateType.updateTransaction) {
-      return _validateFieldNull('category', _updateTransactionFormFields,
-      // TODO: add update for income and expense separately
+    } else if (type == FormStateType.updateExpense) {
+      // return categoryExpense;
+      return _validateFieldNull('category', _updateExpenseFormFields,
           TransactionCategory.defaultExpenseCategory());
     } else {
       return TransactionCategory.defaultExpenseCategory();
@@ -55,26 +59,25 @@ class FormStateProvider with ChangeNotifier {
       amount = _validateFieldNull('amount', _incomeFormFields, 0.0) as double;
     } else if (type == FormStateType.expense) {
       amount = _validateFieldNull('amount', _expenseFormFields, 0.0) as double;
-    } else if (type == FormStateType.updateTransaction) {
-      amount = _validateFieldNull(
-          'amount', _updateTransactionFormFields, 0.0) as double;
+    } else if (type == FormStateType.updateIncome) {
+      amount =
+          _validateFieldNull('amount', _updateIncomeFormFields, 0.0) as double;
+    } else if (type == FormStateType.updateExpense) {
+      amount =
+          _validateFieldNull('amount', _updateExpenseFormFields, 0.0) as double;
     } else if (type == FormStateType.updateBudget) {
-      amount = _validateFieldNull(
-          'amount', _updateBudgetFormFields, 0.0) as double;
+      amount =
+          _validateFieldNull('amount', _updateBudgetFormFields, 0.0) as double;
     } else if (type == FormStateType.updateGroupSaving) {
-      amount = _validateFieldNull(
-          'amount', _updateSavingFormFields, 0.0) as double;
+      amount =
+          _validateFieldNull('amount', _updateSavingFormFields, 0.0) as double;
     } else if (type == FormStateType.groupSaving) {
-      amount = _validateFieldNull(
-          'amount', _savingFormFields, 0.0) as double;
+      amount = _validateFieldNull('amount', _savingFormFields, 0.0) as double;
     } else {
-      amount = _validateFieldNull(
-          'amount', _budgetFormFields, 0.0) as double;
+      amount = _validateFieldNull('amount', _budgetFormFields, 0.0) as double;
     }
     return formatter.format(amount);
   }
-
-
 
   Map<String, dynamic> getFormField(FormStateType type) {
     if (type == FormStateType.income) {
@@ -82,8 +85,10 @@ class FormStateProvider with ChangeNotifier {
       return _incomeFormFields;
     } else if (type == FormStateType.expense) {
       return _expenseFormFields;
-    } else if (type == FormStateType.updateTransaction) {
-      return _updateTransactionFormFields;
+    } else if (type == FormStateType.updateIncome) {
+      return _updateIncomeFormFields;
+    } else if (type == FormStateType.updateExpense) {
+      return _updateExpenseFormFields;
     } else if (type == FormStateType.updateBudget) {
       return _updateBudgetFormFields;
     } else if (type == FormStateType.updateGroupSaving) {
@@ -97,18 +102,35 @@ class FormStateProvider with ChangeNotifier {
     }
   }
 
-  void setUpdateTransactionFormFields(Transaction? transaction) {
+  void setUpdateTransactionFormFields(
+      Transaction? transaction, FormStateType type) {
     if (transaction == null) {
       return;
     }
 
     Map<String, dynamic> tempTransaction = transaction.toMapForForm();
-
-    for (var key in tempTransaction.keys) {
-      _updateTransactionFormFields[key] = tempTransaction[key];
+    if (type == FormStateType.updateExpense) {
+      for (var key in tempTransaction.keys) {
+        if (key == "category") {
+          _updateExpenseFormFields[key] =
+              TransactionCategory.fromString(tempTransaction[key] as String);
+        } else {
+          _updateExpenseFormFields[key] = tempTransaction[key];
+        }
+      }
+    } else {
+      for (var key in tempTransaction.keys) {
+        if (key == "category") {
+          _updateIncomeFormFields[key] =
+              TransactionCategory.fromString(tempTransaction[key] as String);
+        } else {
+          _updateIncomeFormFields[key] = tempTransaction[key];
+        }
+      }
     }
     notifyListeners();
   }
+
   void updateFormField(String key, dynamic value, FormStateType type) {
     if (key == "amount") {
       value = convertFormattedAmountToNumber(value);
@@ -119,8 +141,10 @@ class FormStateProvider with ChangeNotifier {
       debugPrint('Income form fields: $_incomeFormFields');
     } else if (type == FormStateType.expense) {
       _expenseFormFields[key] = value;
-    } else if (type == FormStateType.updateTransaction) {
-      _updateTransactionFormFields[key] = value;
+    } else if (type == FormStateType.updateIncome) {
+      _updateIncomeFormFields[key] = value;
+    } else if (type == FormStateType.updateExpense) {
+      _updateExpenseFormFields[key] = value;
     } else if (type == FormStateType.updateBudget) {
       _updateBudgetFormFields[key] = value;
     } else if (type == FormStateType.updateGroupSaving) {
@@ -136,21 +160,78 @@ class FormStateProvider with ChangeNotifier {
   }
 
   void addElementToListField(String field, dynamic value, FormStateType type) {
-    if (FormStateType.memberInvitation == FormStateType.memberInvitation) {
-      if (_memberInvitationFormFields[field] == null) {
-        _memberInvitationFormFields[field] = [];
-      }
-      _memberInvitationFormFields[field].add(value);
+    switch (type) {
+      case FormStateType.memberInvitation:
+        if (_memberInvitationFormFields[field] == null) {
+          _memberInvitationFormFields[field] = [];
+        }
+        _memberInvitationFormFields[field].add(value);
+        break;
+      case FormStateType.income:
+        if (_incomeFormFields[field] == null) {
+          _incomeFormFields[field] = [];
+        }
+        _incomeFormFields[field].add(value);
+        break;
+      case FormStateType.expense:
+        if (_expenseFormFields[field] == null) {
+          _expenseFormFields[field] = [];
+        }
+        _expenseFormFields[field].add(value);
+        break;
+      case FormStateType.updateIncome:
+        if (_updateIncomeFormFields[field] == null) {
+          _updateIncomeFormFields[field] = [];
+        }
+        _updateIncomeFormFields[field].add(value);
+        break;
+      case FormStateType.updateExpense:
+        if (_updateExpenseFormFields[field] == null) {
+          _updateExpenseFormFields[field] = [];
+        }
+        _updateExpenseFormFields[field].add(value);
+        break;
+      default:
+        debugPrint("Type not found");
     }
     notifyListeners();
   }
 
-  void removeElementFromListField(String field, dynamic value, FormStateType type) {
-    if (FormStateType.memberInvitation == FormStateType.memberInvitation) {
-      if (_memberInvitationFormFields[field] == null) {
-        return;
-      }
-      _memberInvitationFormFields[field].remove(value);
+  void removeElementFromListField(
+      String field, dynamic value, FormStateType type) {
+    switch (type) {
+      case FormStateType.memberInvitation:
+        if (_memberInvitationFormFields[field] == null) {
+          _memberInvitationFormFields[field] = [];
+        }
+        _memberInvitationFormFields[field].remove(value);
+        break;
+      case FormStateType.income:
+        if (_incomeFormFields[field] == null) {
+          _incomeFormFields[field] = [];
+        }
+        _incomeFormFields[field].remove(value);
+        break;
+      case FormStateType.expense:
+        if (_expenseFormFields[field] == null) {
+          _expenseFormFields[field] = [];
+        }
+        _expenseFormFields[field].remove(value);
+        break;
+      case FormStateType.updateIncome:
+        if (_updateIncomeFormFields[field] == null) {
+          _updateIncomeFormFields[field] = [];
+        }
+        _updateIncomeFormFields[field].remove(value);
+        break;
+      case FormStateType.updateExpense:
+        if (_updateExpenseFormFields[field] == null) {
+          _updateExpenseFormFields[field] = [];
+        }
+        _updateExpenseFormFields[field].remove(value);
+        break;
+      default:
+        debugPrint("Type not found");
     }
     notifyListeners();
   }
@@ -165,6 +246,7 @@ class FormStateProvider with ChangeNotifier {
     }
     notifyListeners();
   }
+
   void setUpdateGroupSavingFormFields(GroupSaving? goal) {
     if (goal == null) {
       return;
@@ -181,8 +263,10 @@ class FormStateProvider with ChangeNotifier {
       _incomeFormFields['category'] = category;
     } else if (type == FormStateType.expense) {
       _expenseFormFields['category'] = category;
-    } else if (type == FormStateType.updateTransaction) {
-      _updateTransactionFormFields['category'] = category;
+    } else if (type == FormStateType.updateIncome) {
+      _updateIncomeFormFields['category'] = category;
+    } else if (type == FormStateType.updateExpense) {
+      _updateExpenseFormFields['category'] = category;
     } else {
       _budgetFormFields['category'] = category;
     }
@@ -195,8 +279,10 @@ class FormStateProvider with ChangeNotifier {
       _incomeFormFields.clear();
     } else if (type == FormStateType.expense) {
       _expenseFormFields.clear();
-    } else if (type == FormStateType.updateTransaction) {
-      _updateTransactionFormFields.clear();
+    } else if (type == FormStateType.updateIncome) {
+      _updateIncomeFormFields.clear();
+    } else if (type == FormStateType.updateExpense) {
+      _updateExpenseFormFields.clear();
     } else if (type == FormStateType.updateBudget) {
       _updateBudgetFormFields.clear();
     } else if (type == FormStateType.updateGroupSaving) {

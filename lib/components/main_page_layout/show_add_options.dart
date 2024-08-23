@@ -39,17 +39,6 @@ void showAddOptions(BuildContext context) {
       mainAxisSize: MainAxisSize.min,
       children: [
         makeListTile(
-          leadingIcon: Icons.account_balance_wallet,
-          title: 'Add new budget plan',
-          onTap: () {
-            // Handle add new budget plan
-            showBudgetFormA(context);
-          },
-          textTheme: textTheme,
-          colorScheme: colorScheme,
-        ),
-        defaultGap,
-        makeListTile(
           leadingIcon: Icons.attach_money,
           title: 'Add new income',
           onTap: () {
@@ -70,6 +59,17 @@ void showAddOptions(BuildContext context) {
             // Handle add new budget plan
             Navigator.of(context).pop();
             showTransactionFormA(context, false);
+          },
+          textTheme: textTheme,
+          colorScheme: colorScheme,
+        ),
+        defaultGap,
+        makeListTile(
+          leadingIcon: Icons.account_balance_wallet,
+          title: 'Add new budget plan',
+          onTap: () {
+            // Handle add new budget plan
+            showBudgetFormA(context);
           },
           textTheme: textTheme,
           colorScheme: colorScheme,

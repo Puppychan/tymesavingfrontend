@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/constant/temp_constant.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
@@ -65,7 +64,7 @@ class InvitationUserSelectedWidget extends StatelessWidget {
             width: 100,
             child: Column(
               children: [
-                CustomRoundedAvatar(
+                CustomRoundedImage(
                     imagePath: user?.avatar ?? TEMP_AVATAR_IMAGE, size: 60),
                 const SizedBox(height: 8),
                 Text(user?.username ?? "Loading...",

@@ -89,7 +89,7 @@ class _UserBoxState extends State<UserBox> with RouteAware {
                 children: [
                   ListTile(
                     leading:
-                        CustomCircleAvatar(imagePath: user?.avatar ?? TEMP_AVATAR_IMAGE),
+                        CustomCircleImage(imagePath: user?.avatar ?? TEMP_AVATAR_IMAGE),
                     title: Text(user?.fullname ?? 'Loading...',
                         style: Theme.of(context).textTheme.titleMedium!),
                     subtitle: Text(user?.email ?? 'Loading mail...',

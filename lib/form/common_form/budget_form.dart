@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:provider/provider.dart';
+import 'package:tymesavingfrontend/common/enum/approve_status_enum.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
 import 'package:tymesavingfrontend/common/enum/page_location_enum.dart';
 import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
 import 'package:tymesavingfrontend/components/common/dialog/date_picker_dialog.dart';
 import 'package:tymesavingfrontend/components/common/dialog/time_picker_dialog.dart';
+import 'package:tymesavingfrontend/components/common/input/radio_field.dart';
 import 'package:tymesavingfrontend/components/common/input/underline_text_field.dart';
 import 'package:tymesavingfrontend/components/common/multi_form_components/amount_multi_form.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
@@ -82,7 +84,6 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
         final authService = Provider.of<AuthService>(context, listen: false);
         final formField = Provider.of<FormStateProvider>(context, listen: false)
             .getFormField(widget.type);
-        print("form field $formField");
         // return null;
         User? user = authService.user;
 
@@ -92,6 +93,7 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
               .updateBudgetGroup(
             formField['id'],
             user?.id ?? "",
+            formField["defaultApproveStatus"] ?? ApproveStatus.approved,
             formField['name'],
             formField['description'] ?? "",
             formField['amount'],
@@ -101,6 +103,7 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
           return await Provider.of<BudgetService>(context, listen: false)
               .addBudgetGroup(
             user?.id ?? "",
+            formField["defaultApproveStatus"] ?? ApproveStatus.approved,
             formField['name'],
             formField['description'] ?? "",
             formField['amount'],
@@ -129,11 +132,15 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
     });
   }
 
-  void updateOnChange(String type) {
+  void updateOnChange(String type, {dynamic value}) {
     if (!mounted) return;
     final formStateService =
         Provider.of<FormStateProvider>(context, listen: false);
     switch (type) {
+      case "defaultApproveStatus":
+        formStateService.updateFormField(
+            "defaultApproveStatus", value, widget.type);
+        break;
       case "amount":
         formStateService.updateFormField(
             "amount", _amountController.text, widget.type);
@@ -176,6 +183,8 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
       String formattedAmount = formStateService.getFormattedAmount(widget.type);
       String formDescription =
           formFields['description'] ?? "Please add description";
+      ApproveStatus currentApproveStatus =
+          formFields['defaultApproveStatus'] ?? ApproveStatus.approved;
 
       // update text to controller
       _amountController.text = formStateService.getFormattedAmount(widget.type);
@@ -291,6 +300,17 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
                 keyboardType: TextInputType.text,
                 onChange: (value) => updateOnChange("description"),
               ),
+              RadioField(
+                  label: "Budget Transaction Approval Status: ",
+                  options: ApproveStatus.inputFormList,
+                  onSelected: (String chosenApproveStatus) {
+                    ApproveStatus convertApproveStatus =
+                        ApproveStatus.fromString(chosenApproveStatus);
+                    updateOnChange("defaultApproveStatus",
+                        value: convertApproveStatus);
+                  },
+                  defaultOption: currentApproveStatus.value),
+              const SizedBox(height: 20),
               PrimaryButton(title: "Confirm", onPressed: _trySubmit)
             ],
           ));

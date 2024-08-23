@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class CustomRoundedAvatar extends StatelessWidget {
+class CustomRoundedImage extends StatelessWidget {
   final double size;
   final String imagePath;
 
-  const CustomRoundedAvatar({
+  const CustomRoundedImage({
     super.key,
     this.size = 30.0,
     required this.imagePath,

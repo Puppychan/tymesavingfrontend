@@ -8,19 +8,15 @@ import 'package:tymesavingfrontend/components/common/button/primary_button.dart'
 import 'package:tymesavingfrontend/components/common/button/secondary_button.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/utils/display_error.dart';
-import 'package:tymesavingfrontend/utils/display_success.dart';
-import 'package:tymesavingfrontend/utils/handling_error.dart';
 
 class ImageUploadPage extends StatefulWidget {
   final String title;
-  // { confirmFunction: function, successMessage: message }
-  final Map<String, dynamic>
-      uploadDetails; // function when success, message when success
+  final void Function(BuildContext, String) confirmFunction;
 
   const ImageUploadPage(
       {super.key,
       this.title = 'Image Upload Page',
-      required this.uploadDetails});
+      required this.confirmFunction});
 
   @override
   State<ImageUploadPage> createState() => _ImageUploadPageState();
@@ -72,18 +68,9 @@ class _ImageUploadPageState extends State<ImageUploadPage> {
             const SizedBox(height: 30),
             if (_image != null)
               PrimaryButton(
-                onPressed: () async {
+                onPressed: () {
                   // upload image to server
-                  await handleMainPageApi(context, () async {
-                    return await widget
-                        .uploadDetails['confirmFunction'](_image!.path);
-                  }, () async {
-                    if (widget.uploadDetails['successMessage'] != null) {
-                      SuccessDisplay.showSuccessToast(
-                          widget.uploadDetails['successMessage'], context);
-                    }
-                    Navigator.pop(context);
-                  });
+                  widget.confirmFunction(context, _image!.path);
                 },
                 title: 'Confirm Image Upload',
               ),

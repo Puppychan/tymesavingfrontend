@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:tymesavingfrontend/common/enum/approve_status_enum.dart';
 import 'package:tymesavingfrontend/models/group_saving_model.dart';
 import 'package:tymesavingfrontend/models/report_model.dart';
 import 'package:tymesavingfrontend/models/summary_group_model.dart';
@@ -44,9 +45,8 @@ class GroupSavingService extends ChangeNotifier {
       List<GroupSaving> groupSavingList = [];
       if (responseData != [] && responseData != null) {
         for (var groupSaving in responseData) {
-          // print("Before group saving");
           final tempGroupSaving = GroupSaving.fromMap(groupSaving);
-          // print("After group saving");
+          print("After group saving");
           groupSavingList.add(tempGroupSaving);
         }
       }
@@ -58,6 +58,7 @@ class GroupSavingService extends ChangeNotifier {
 
   Future<Map<String, dynamic>> addGroupSavingGroup(
     String hostedBy,
+    String defaultApproveStatus,
     String name,
     String description,
     double amount,
@@ -69,6 +70,7 @@ class GroupSavingService extends ChangeNotifier {
       body: {
         'hostedBy': hostedBy,
         'name': name,
+        'defaultApproveStatus': defaultApproveStatus,
         'description': description,
         'amount': amount,
         'concurrentAmount': concurrentAmount,
@@ -101,6 +103,7 @@ class GroupSavingService extends ChangeNotifier {
   Future<Map<String, dynamic>> updateGroupSavingGroup(
     String groupSavingGroupId,
     String hostedBy,
+    String defaultApproveStatus,
     String name,
     String description,
     double amount,
@@ -113,6 +116,7 @@ class GroupSavingService extends ChangeNotifier {
           'description': description,
           'amount': amount,
           'endDate': endDate,
+          'defaultApproveStatus': defaultApproveStatus,
         });
     return response;
   }
@@ -135,14 +139,11 @@ class GroupSavingService extends ChangeNotifier {
         "${BackendEndpoints.groupSaving}/$groupSavingGroupId/transactions");
 
     if (response['response'] != null && response['statusCode'] == 200) {
-      debugPrint("#====== Transactions of GroupSaving ======#");
-      debugPrint(response.toString());
-      debugPrint("#====== Transactions of GroupSaving ======#");
       final responseData = response['response'];
       List<Transaction> transactionList = [];
       if (responseData.isNotEmpty) {
         for (var transaction in responseData) {
-          final tempTransaction = Transaction.fromMap(transaction);
+          final tempTransaction = Transaction.fromJson(transaction);
           transactionList.add(tempTransaction);
         }
       }
@@ -157,19 +158,16 @@ class GroupSavingService extends ChangeNotifier {
     final response = await NetworkService.instance
         .get("${BackendEndpoints.groupSaving}/$savingGroupId/transactions");
     if (response['response'] != null && response['statusCode'] == 200) {
-      // debugPrint("#====== Transactions of Budget ======#");
-      // debugPrint(response.toString());
-      // debugPrint("#====== Transactions of Budget ======#");
       final responseData = response['response'];
       List<Transaction> transactionPendingList = [];
       List<Transaction> transactionCancelledList = [];
       if (responseData.isNotEmpty) {
         for (var transaction in responseData) {
-          if(transaction['approveStatus'] == 'Pending') {
-            final tempTransaction = Transaction.fromMap(transaction);
+          if(transaction['approveStatus'] == ApproveStatus.pending.value) {
+            final tempTransaction = Transaction.fromJson(transaction);
             transactionPendingList.add(tempTransaction);
           } else if (transaction['approveStatus'] == 'Declined') {
-            final tempTransaction = Transaction.fromMap(transaction);
+            final tempTransaction = Transaction.fromJson(transaction);
             transactionCancelledList.add(tempTransaction);
           }
         }
@@ -185,7 +183,6 @@ class GroupSavingService extends ChangeNotifier {
       String savingGroupId, String filter) async {        
     final response = await NetworkService.instance.get(
         "${BackendEndpoints.groupSaving}/$savingGroupId/report?filter=$filter");
-    debugPrint(response.toString());
 
     if (response['response'] != null && response['statusCode'] == 200) {
       final List<ReportCategory> categories = (response['response']['categories'] as List)

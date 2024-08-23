@@ -6,6 +6,7 @@ import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_group_type_enum.dart';
 import 'package:tymesavingfrontend/components/common/input/radio_field.dart';
 import 'package:tymesavingfrontend/components/common/multi_form_components/group_tile.dart';
+import 'package:tymesavingfrontend/components/common/multi_form_components/short_group_info_multi_form.dart';
 import 'package:tymesavingfrontend/models/base_group_model.dart';
 import 'package:tymesavingfrontend/screens/search_page.dart';
 import 'package:tymesavingfrontend/services/budget_service.dart';
@@ -110,9 +111,9 @@ class _AssignGroupMultiFormState extends State<AssignGroupMultiForm> {
     return Column(children: [
       RadioField(
           label: "This transaction is for: ",
-          options: widget.transactionType == FormStateType.expense ?
-          TransactionGroupType.formattedExpenseList: 
-          TransactionGroupType.formattedIncomeList,
+          options: widget.transactionType == FormStateType.expense
+              ? TransactionGroupType.formattedExpenseList
+              : TransactionGroupType.formattedIncomeList,
           onSelected: (String formattedChosenGroupType) {
             TransactionGroupType convertGroupType =
                 TransactionGroupType.fromFormattedString(
@@ -161,29 +162,9 @@ class _AssignGroupMultiFormState extends State<AssignGroupMultiForm> {
           : Container(),
       if (_currentChosenResult != null) ...[
         const Divider(),
-        Card(
-          shadowColor: colorScheme.onPrimary,
-          child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              children: [
-                Icon(_currentChosenGroupType == TransactionGroupType.budget
-                    ? Icons.savings
-                    : Icons.assessment),
-                const SizedBox(height: 3),
-                Text(_currentChosenResult?.name ?? "",
-                    style: textTheme.titleSmall),
-                const SizedBox(height: 3),
-                Text(
-                  _currentChosenResult?.description ?? "",
-                  style: textTheme.bodyMedium,
-                  maxLines: 2,
-                  textAlign: TextAlign.center,
-                )
-              ],
-            ),
-          ),
-        )
+        ShortGroupInfoMultiForm(
+            chosenGroupType: _currentChosenGroupType,
+            chosenResult: _currentChosenResult),
       ] else
         Container(),
     ]);

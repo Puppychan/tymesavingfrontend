@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
@@ -38,7 +39,7 @@ class TransactionService extends ChangeNotifier {
   TopCategoriesList? get topCategoriesList => _topCategoriesList;
   NetSpend? get netSpend => _netSpend;
   Map<String, List<Transaction>>? get transactions => _transactions;
-  Transaction? get getDetailedTransaction => _detailedTransaction;
+  Transaction? get detailedTransaction => _detailedTransaction;
   Map<String, String> get filterOptions => _filterOptions;
   Map<String, String> get sortOptions => _sortOptions;
 
@@ -134,21 +135,35 @@ class TransactionService extends ChangeNotifier {
       double amount,
       String payBy,
       TransactionCategory category,
+      List<String> transactionImages,
       {String? savingGroupId,
       String? budgetGroupId}) async {
-    // print type of all
-    final response =
-        await NetworkService.instance.post(BackendEndpoints.transaction, body: {
-      'userId': userId,
-      'createdDate': createdDate,
-      'description': description,
-      'type': type.value, //
-      'amount': amount,
-      'payBy': payBy,
-      'category': category.name,
-      if (savingGroupId != null) 'savingGroupId': savingGroupId,
-      if (budgetGroupId != null) 'budgetGroupId': budgetGroupId,
+        // Prepare the list of MultipartFiles or just image URLs
+    List<dynamic> imageFiles = await Future.wait(transactionImages.map((imagePath) async {
+      if (imagePath.startsWith('http')) {
+        // If it's a URL, send it as is
+        return imagePath;
+      } else {
+        // If it's a file path, convert it to a MultipartFile
+        return await MultipartFile.fromFile(imagePath, filename: imagePath.split('/').last);
+      }
+    }).toList());
+
+    final FormData formData = FormData.fromMap({
+      "userId": userId,
+      "description": description,
+      "type": type.value,
+      "amount": amount,
+      "payBy": payBy,
+      "category": category.name,
+      if (savingGroupId != null) "savingGroupId": savingGroupId,
+      if (budgetGroupId != null) "budgetGroupId": budgetGroupId,
+      // "approveStatus": 
+      "createdDate": createdDate,
+      "image": imageFiles, // This is the key your backend expects for images
     });
+    final response = await NetworkService.instance
+        .postFormData(BackendEndpoints.transaction, data: formData);
     return response;
   }
 
@@ -170,6 +185,7 @@ class TransactionService extends ChangeNotifier {
       'payBy': payBy,
       'category': category.name,
     });
+    print("response in updating transaction $response");
     return response;
   }
 
@@ -218,7 +234,8 @@ class TransactionService extends ChangeNotifier {
     // final responseData = response['response'];
     if (response['response'] != null && response['statusCode'] == 200) {
       final responseData = response['response'];
-      _detailedTransaction = Transaction.fromMap(responseData);
+      _detailedTransaction = Transaction.fromJson(responseData);
+      print("Detailed transaction: $_detailedTransaction");
       notifyListeners();
     }
     return response;
@@ -283,6 +300,68 @@ class TransactionService extends ChangeNotifier {
       // throw Exception('Failed to load transactions');
     }
     return response;
+  }
+
+  Future<List<Transaction>> fetchTransactionsSortHandler({
+    required String tab,
+    required String sortOption,
+    required String sortOrder,
+    required String userId,
+  }) async {
+    // Build the base endpoint URL
+    String endpoint =
+        "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReportByUser}/$userId";
+
+    // Initialize query parameters
+    Map<String, String> queryParams = {
+      sortOption: sortOrder,
+    };
+
+    // Apply filtering based on the selected tab
+    if (tab == 'Income') {
+      queryParams['type'] = 'Income';
+    } else if (tab == 'Expense') {
+      queryParams['type'] = 'Expense';
+    }
+
+    // Convert query parameters to a query string
+    String queryString =
+        queryParams.entries.map((e) => '${e.key}=${e.value}').join('&');
+
+    // Construct the full URL with query parameters
+    String url = '$endpoint?$queryString';
+
+    print(url);
+
+    // Execute the API call
+    final response = await NetworkService.instance.get(url);
+
+    print(response);
+
+    // return [];
+
+    // Handle response
+    if (response['statusCode'] == 200 && response['response'] != null) {
+      final responseData = response['response'] as Map<String, dynamic>;
+
+      // Flatten the transactions list
+      List<dynamic> allTransactions = [];
+      responseData.forEach((key, value) {
+        if (value['transactions'] != null) {
+          allTransactions.addAll(value['transactions']);
+        }
+      });
+
+      // Convert to List<Transaction>
+      List<Transaction> transactions =
+          allTransactions.map((data) => Transaction.fromJson(data)).toList();
+
+      return transactions;
+    } else {
+      // Handle errors appropriately
+      throw Exception(
+          'Failed to load transactions. Status code: ${response['statusCode']}');
+    }
   }
 
   // Get transaction list of month and year

@@ -44,7 +44,7 @@ class UserDetailWidget extends StatelessWidget {
                       color: colorScheme.secondary,
                     )),
           const SizedBox(height: 10),
-          CustomRoundedAvatar(
+          CustomRoundedImage(
             imagePath: fetchedUser?.avatar ?? TEMP_AVATAR_IMAGE,
             size: 100.0,
           ),

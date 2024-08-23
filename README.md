@@ -54,9 +54,23 @@ flutter run
 
 # For Dev
 
-# # Testing on Android and iOS Simulators
+## Adding App Icon
+- Use link to generate app icon: [https://easyappicon.com/](https://easyappicon.com/)
+- After generating the app icon, download the zip file and extract it.
+  - Copy the content of `ios` folder to `ios/Runner/Assets.xcassets/AppIcon.appiconset/`
+  - Copy the content of `android` folder to `android/app/src/main/res/`
+  - Add files inside `values` folder to `android/app/src/main/res/values/`
+- Run command to update the app icon
+```bash
+  flutter pub cache clean
+  flutter pub clean
+  flutter pub get
+```
+- Run the app on the emulator or real device to see the updated app icon.
 
-# # # Android Simulator:
+## Testing on Android and iOS Simulators
+
+### Android Simulator:
 
 - Ensure you have an Android Virtual Device (AVD) set up in Android Studio.
 - Start the AVD from Android Studio or via the command line:
@@ -71,7 +85,7 @@ emulator -avd <your_avd_name>
 flutter run
 ```
 
-# # # iOS Simulator:
+### iOS Simulator:
 
 - Ensure you have Xcode installed and configured on your machine.
 - Open the iOS simulator from Xcode or via the command line:
@@ -86,9 +100,9 @@ open -a Simulator
 flutter run
 ```
 
-# # Testing on Real Devices
+## Testing on Real Devices
 
-# # # Android Device:
+### Android Device:
 
 - Enable Developer Options and USB Debugging on your Android device.
 - Connect your Android device to your machine via USB.
@@ -104,13 +118,19 @@ flutter devices
 flutter run
 ```
 
-# # # iOS Device:
+### iOS Device:
 
 - Connect your iOS device to your machine via USB.
-- Open the project in Xcode.
+- Open the project - folder ios in Xcode.
 - Ensure your device is selected as the target.
 - Run the application on the device via Xcode or the command line:
 
 ```bash
 flutter run
 ```
+- If you encounter issues:
+  - Messsage of the issues to be "... is not available because it is unpaired." -> Unplug the device and plug it back in until there is modal pop up on the device asking for trust the computer. Trust the computer and run the command again.
+  - Rerun the command again.
+  - Message is about "...enable Developer Mode in Settings → Privacy & Security.":
+    - In the device: Go to Settings -> General -> Device Management -> Developer App -> Trust the app.
+    - The app is restarted -> Confirm "On" for developer mode -> rerun the command again.

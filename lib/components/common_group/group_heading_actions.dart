@@ -6,8 +6,8 @@ import 'package:tymesavingfrontend/common/enum/page_location_enum.dart';
 import 'package:tymesavingfrontend/components/common/dialog/delete_confirm_dialog.dart';
 import 'package:tymesavingfrontend/components/common/sheet/bottom_sheet.dart';
 import 'package:tymesavingfrontend/components/common/sheet/icon_text_row.dart';
+import 'package:tymesavingfrontend/form/challenge_add_form.dart';
 import 'package:tymesavingfrontend/screens/budget/budget_update_page.dart';
-import 'package:tymesavingfrontend/screens/challenge/challenge_page.dart';
 import 'package:tymesavingfrontend/screens/group_saving/group_saving_update_page.dart';
 import 'package:tymesavingfrontend/screens/invitation/group_pending_invitation_page.dart';
 import 'package:tymesavingfrontend/screens/main_page_layout.dart';
@@ -51,6 +51,15 @@ List<Widget> renderGroupHeadingActions(
   // if host
   if (!isMember) {
     actions.addAll([
+      ...actionRow(context, FontAwesomeIcons.trophy, "Create challenge", () {
+        Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ChallengeAddForm(groupId: groupId,
+                  category: isBudget? 'Spending' : 'Saving',
+                  scope: isBudget? 'BudgetGroup' : 'SavingGroup',),
+                ));
+      }), 
       ...actionRow(context, Icons.edit, "Edit group", () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           if (isBudget) {

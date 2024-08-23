@@ -181,7 +181,7 @@ class AuthService extends ChangeNotifier {
   Future<dynamic> getCurrentUserData() async {
     final response = await NetworkService.instance
         .get("${BackendEndpoints.user}/${_user!.username}");
-    print("Called getCurrentUserData - ${response['response']}");
+    // debugPrint("Called getCurrentUserData - ${response['response']}");
     if (response['response'] != null && response['statusCode'] == 200) {
       _user = User.fromMap(response['response']);
       await LocalStorageService.setString(

@@ -206,6 +206,23 @@ class NetworkService {
     }
   }
 
+  Future<dynamic> postFormData(String url, {required FormData data}) async {
+  try {
+    final response = await retryCall.retry(
+      () => _dio
+          .post(url, data: data)
+          .timeout(TIMEOUT_DURATION),
+      retryIf: (e) => _isNetworkError(e),
+    );
+    return {
+      'response': response.data?['response'],
+      'statusCode': response.statusCode
+    };
+  } catch (error) {
+    return handleError(error);
+  }
+}
+
   Future<dynamic> putFormData(String url, {required FormData data}) async {
     try {
       final response = await retryCall.retry(

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tymesavingfrontend/models/challenge_model.dart';
@@ -29,7 +28,9 @@ class _ChallengeCardState extends State<ChallengeCard> {
         ),
         child: InkWell(
           onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ChallengeDetails(challengeId:  widget.challengeModel!.id)));
+            widget.challengeModel!.isPublished ?
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ChallengeDetails(challengeId:  widget.challengeModel!.id, isForListing: true,)))
+          : Navigator.push(context, MaterialPageRoute(builder: (context) => ChallengeDetails(challengeId:  widget.challengeModel!.id, isForListing: false,)));
           },
           child: Column(
             children: [

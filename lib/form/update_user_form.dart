@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/constant/temp_constant.dart';
-import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
 import 'package:tymesavingfrontend/common/styles/app_padding.dart';
-import 'package:tymesavingfrontend/components/common/images/circle_network_image.dart';
 import 'package:tymesavingfrontend/components/common/images/rounded_network_image.dart';
 import 'package:tymesavingfrontend/components/common/input/round_text_field.dart';
 import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
@@ -57,19 +55,31 @@ class UpdateUserState extends State<UpdateUserForm> {
             InkWell(
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return ImageUploadPage(title: "Upload Avatar", uploadDetails: {
-                      'confirmFunction': (String imagePath) async {
-                        return await Provider.of<UserService>(context, listen: false).uploadUserAvatar(widget.user?.username, imagePath);
+                    return ImageUploadPage(
+                      title: "Upload Avatar",
+                      confirmFunction:
+                          (BuildContext context, String imagePath) {
+                        Future.microtask(() async {
+                          await handleMainPageApi(context, () async {
+                            return await Provider.of<UserService>(context,
+                                    listen: false)
+                                .uploadUserAvatar(
+                                    widget.user?.username, imagePath);
+                          }, () async {
+                            SuccessDisplay.showSuccessToast(
+                                "Upload Image Successfully", context);
+                            Navigator.pop(context);
+                          });
+                        });
                       },
-                      'successMessage': 'Avatar uploaded successfully',
-                    });
+                    );
                   }));
                 },
                 child: Stack(
                   alignment: Alignment.center,
                   clipBehavior: Clip.none,
                   children: <Widget>[
-                    CustomRoundedAvatar(
+                    CustomRoundedImage(
                         imagePath: widget.user?.avatar ?? TEMP_AVATAR_IMAGE,
                         size: MediaQuery.of(context).size.width * 0.3),
                     Positioned(

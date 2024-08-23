@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:tymesavingfrontend/common/enum/approve_status_enum.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_group_type_enum.dart';
-import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
 import 'package:tymesavingfrontend/components/common/button/secondary_button.dart';
 import 'package:tymesavingfrontend/components/common/chart/group_saving_half_chart.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/common_group/group_heading_actions.dart';
-import 'package:tymesavingfrontend/components/group_saving/group_saving_report.dart';
 import 'package:tymesavingfrontend/components/group_saving/saving_approve_page.dart';
 import 'package:tymesavingfrontend/components/transaction/transaction_list.dart';
 import 'package:tymesavingfrontend/form/transaction_add_form.dart';
@@ -106,7 +105,7 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
           isMember = _groupSaving!.hostedBy.toString() !=
               Provider.of<AuthService>(context, listen: false).user?.id;
           // check group status
-          if(_groupSaving!.defaultApproveStatus == "Pending") {
+          if(_groupSaving!.defaultApproveStatus == ApproveStatus.pending.value) {
             approval = true;
           }
           // set display string
@@ -192,7 +191,7 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
             icon: const Icon(FontAwesomeIcons.ellipsis),
             onPressed: () {
               showGroupActionBottomSheet(
-                  context, isMember, true, widget.groupSavingId);
+                  context, isMember, false, widget.groupSavingId);
             },
           )
         ]),
@@ -332,7 +331,6 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
                                           overflow: _isDisplayRestDescription
                                               ? TextOverflow.visible
                                               : TextOverflow.fade,
-                                          
                                         ),
                                         if (!_isDisplayRestDescription)
                                         Text(

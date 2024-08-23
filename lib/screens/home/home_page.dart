@@ -9,7 +9,6 @@ import 'package:tymesavingfrontend/models/transaction_report_model.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/screens/tracking_report/spend_tracking.dart';
 import 'package:tymesavingfrontend/services/transaction_service.dart';
-import 'package:tymesavingfrontend/utils/display_warning.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 import 'package:tymesavingfrontend/models/transaction_model.dart';
 import 'package:tymesavingfrontend/screens/transaction/view_all_transaction_page.dart';
@@ -56,13 +55,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
         });
 
         if (!mounted) return;
-        // await handleMainPageApi(context, () async {
-        //   return await transactionService.fetchTransactions(widget.user!.id);
-        // }, () async {
-        //   setState(() {
-        //     transactions = transactionService.transactions;
-        //   });
-        // });
+
       }
 
       setState(() {
@@ -143,7 +136,9 @@ class _HomePageState extends State<HomePage> with RouteAware {
               child: InkWell(
                 onTap: () {
                   Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => const SpendTracking()));
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SpendTracking()));
                 },
                 child: CustomBarChart(
                   totalsExpense: chartReport!.totals,
@@ -157,7 +152,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
               children: [
                 const SizedBox(width: 20),
                 Text(
-                  "Graph tips:",
+                  "Annotation:",
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontStyle: FontStyle.italic, fontWeight: FontWeight.w500)
                 ),
               ],
@@ -213,14 +208,10 @@ class _HomePageState extends State<HomePage> with RouteAware {
               ),
               TextButton(
                 onPressed: () {
-                  if (transactions == null) {
-                    WarningDisplay.showWarningToast(
-                        "No transactions available", context);
-                  }
                   _navigateToAllTransactions(context);
                 },
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                       color: Theme.of(context).colorScheme.tertiary),

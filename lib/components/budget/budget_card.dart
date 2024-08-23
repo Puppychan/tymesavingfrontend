@@ -49,6 +49,8 @@ class _BudgetCardState extends State<BudgetCard> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  // CustomCircleImage(imagePath: budget.avatarPath),
+                  // const SizedBox(width: 10),
                   Expanded(
                     child: Text(
                       widget.budget.name,

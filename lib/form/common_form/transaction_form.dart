@@ -12,6 +12,8 @@ import 'package:tymesavingfrontend/components/category_list/category_icon.dart';
 import 'package:tymesavingfrontend/components/common/multi_form_components/amount_multi_form.dart';
 import 'package:tymesavingfrontend/components/common/multi_form_components/assign_group_multi_form.dart';
 import 'package:tymesavingfrontend/components/common/multi_form_components/comonent_multi_form.dart';
+import 'package:tymesavingfrontend/components/common/multi_form_components/images_uploading_multi_form.dart';
+import 'package:tymesavingfrontend/components/common/multi_form_components/short_group_info_multi_form.dart';
 import 'package:tymesavingfrontend/models/base_group_model.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
@@ -71,9 +73,6 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
 
   Future<void> _trySubmit() async {
     final isValid = _formKey.currentState?.validate();
-    print("Result: ${_amountController.text}");
-    print(
-        "Result: ${_amountController.text} - ${_descriptionController.text} - ${_payByController.text}");
     // If the form is not valid, show an error
     if (isValid == null || !isValid) {
       final String? validateTotalAmount =
@@ -96,8 +95,8 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
         .getFormField(widget.type);
     TransactionGroupType currentChosenType =
         formField["groupType"] ?? TransactionGroupType.none;
-    String? chosenGroupKey = currentChosenType != TransactionGroupType.none
-        ? currentChosenType == TransactionGroupType.budget
+    String? chosenGroupKey = (currentChosenType != TransactionGroupType.none)
+        ? (currentChosenType == TransactionGroupType.budget)
             ? "budgetGroupId"
             : "savingGroupId"
         : null;
@@ -118,7 +117,6 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
     updateOnChange("groupType", value: currentChosenType);
     Future.microtask(() async {
       await handleMainPageApi(context, () async {
-        print("Form field $formField");
         // return null;
 
         FormStateType transactionType = widget.type;
@@ -130,19 +128,20 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
         }
 
         context.loaderOverlay.show();
-        print("The trawnsaction form $formField");
         if (widget.type == FormStateType.updateExpense ||
             widget.type == FormStateType.updateIncome) {
+          // TODO: implement update transaction images¸
           return await Provider.of<TransactionService>(context, listen: false)
               .updateTransaction(
-                  // user?.id ?? "",
-                  formField['id'],
-                  formField['createdDate'],
-                  formField['description'],
-                  // transactionType,
-                  formField['amount'],
-                  formField['payBy'],
-                  formField['category']);
+            // user?.id ?? "",
+            formField['id'],
+            formField['createdDate'],
+            formField['description'],
+            // transactionType,
+            formField['amount'],
+            formField['payBy'],
+            formField['category'],
+          );
         } else {
           return await Provider.of<TransactionService>(context, listen: false)
               .createTransaction(
@@ -153,6 +152,7 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
             formField['amount'],
             formField['payBy'] ?? "",
             formField['category'],
+            (formField['transactionImages'] ?? []).whereType<String>().toList(),
             savingGroupId: formField['savingGroupId'],
             budgetGroupId: formField['budgetGroupId'],
           );
@@ -210,6 +210,20 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
     });
   }
 
+  TransactionGroupType getGroupType(Map<String, dynamic> formFields) {
+    TransactionGroupType? type = formFields['groupType'];
+    if (type == null) {
+      if (formFields['budgetGroupId'] != null) {
+        type = TransactionGroupType.budget;
+      } else if (formFields['savingGroupId'] != null) {
+        type = TransactionGroupType.savings;
+      } else {
+        type = TransactionGroupType.none;
+      }
+    }
+    return type;
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -220,13 +234,14 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
           formStateService.getFormField(widget.type);
       TransactionCategory selectedCategory =
           formStateService.getCategory(widget.type);
-      String formDescription =
-          formFields['description'] ?? "Please add description";
-      String formpayBy = formFields['payBy'] ?? "Pay by cash?";
-      TransactionGroupType chosenGroupType =
-          formFields['groupType'] ?? TransactionGroupType.none;
+      TransactionGroupType chosenGroupType = getGroupType(formFields);
       BaseGroup? chosenResult = formFields["tempChosenGroup"];
       String formattedAmount = formStateService.getFormattedAmount(widget.type);
+      bool isBelongToGroup = chosenGroupType != TransactionGroupType.none &&
+          (widget.type == FormStateType.updateExpense ||
+              widget.type == FormStateType.updateIncome);
+      List<String> transactionImages =
+          (formFields['transactionImages'] ?? []).whereType<String>().toList();
 
       // update text to controller
       _amountController.text = formStateService.getFormattedAmount(widget.type);
@@ -280,30 +295,18 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
                         children: renderCategories(context),
                       ))),
               if (widget.isFromGroupDetail == true) ...[
+                ShortGroupInfoMultiForm(
+                    chosenGroupType: chosenGroupType,
+                    chosenResult: chosenResult),
                 const Divider(),
-                Card(
-                  shadowColor: colorScheme.onPrimary,
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Column(
-                      children: [
-                        Icon(chosenResult == TransactionGroupType.budget
-                            ? Icons.savings
-                            : Icons.assessment),
-                        const SizedBox(height: 3),
-                        Text(chosenResult?.name ?? "",
-                            style: Theme.of(context).textTheme.titleSmall),
-                        const SizedBox(height: 3),
-                        Text(
-                          chosenResult?.description ?? "",
-                          style: Theme.of(context).textTheme.bodyMedium,
-                          maxLines: 2,
-                          textAlign: TextAlign.center,
-                        )
-                      ],
-                    ),
-                  ),
-                )
+              ] else if (isBelongToGroup == true) ...[
+                ShortGroupInfoMultiForm(
+                  chosenGroupType: chosenGroupType,
+                  defaultGroupId: chosenGroupType == TransactionGroupType.budget
+                      ? formFields['budgetGroupId']
+                      : formFields['savingGroupId'],
+                ),
+                const Divider(),
               ] else
                 ...buildComponentGroup(
                   context: context,
@@ -316,10 +319,22 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
                       chosenGroupType: chosenGroupType,
                       transactionType: widget.type),
                 ),
-              AmountMultiForm(
-                  formattedAmount: formattedAmount,
-                  updateOnChange: updateOnChange,
-                  amountController: _amountController),
+              if (isBelongToGroup == true) ...[
+                const SizedBox(height: 10),
+                Text("TOTAL AMOUNT",
+                    style: Theme.of(context).textTheme.titleSmall),
+                const SizedBox(height: 10),
+                Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Text(formattedAmount,
+                        style: Theme.of(context).textTheme.bodyLarge)),
+                const SizedBox(height: 10),
+                const Divider()
+              ] else
+                AmountMultiForm(
+                    formattedAmount: formattedAmount,
+                    updateOnChange: updateOnChange,
+                    amountController: _amountController),
               UnderlineTextField(
                 icon: Icons.calendar_today,
                 label: 'DATE',
@@ -370,7 +385,7 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
                 label: 'DESCRIPTION',
                 controller: _descriptionController,
                 icon: Icons.description,
-                placeholder: formDescription,
+                placeholder: "Please add description",
                 keyboardType: TextInputType.multiline,
                 minLines: 1,
                 maxLines: 5,
@@ -380,10 +395,15 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
                 controller: _payByController,
                 icon: Icons.payment,
                 label: 'PAID BY',
-                placeholder: formpayBy,
+                placeholder: "Pay by cash?",
                 keyboardType: TextInputType.text,
                 onChange: (value) => updateOnChange("payBy"),
               ),
+              ImagesUploadingMultiForm(
+                images: transactionImages,
+                formType: widget.type,
+              ),
+              const SizedBox(height: 30),
               PrimaryButton(title: "Add", onPressed: _trySubmit)
             ],
           ));
