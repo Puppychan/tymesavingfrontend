@@ -18,6 +18,9 @@ void showMomoTransaction(BuildContext context) {
   formStateService.updateWholeForm({
     "description": "Topup Wallet",
     "payBy": "Momo",
+    "groupType": null,
+    "budgetGroupId": null,
+    "savingGroupId": null,
   }, defaultMomoFormType);
 
   showStyledBottomSheet(
