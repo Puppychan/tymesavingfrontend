@@ -159,35 +159,6 @@ class FormStateProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void updateWholeForm(Map<String, dynamic> formData, FormStateType type) {
-  formData.forEach((key, value) {
-    if (key == "amount") {
-      value = convertFormattedAmountToNumber(value);
-    }
-
-    if (type == FormStateType.income) {
-      _incomeFormFields[key] = value;
-    } else if (type == FormStateType.expense) {
-      _expenseFormFields[key] = value;
-    } else if (type == FormStateType.updateIncome) {
-      _updateIncomeFormFields[key] = value;
-    } else if (type == FormStateType.updateExpense) {
-      _updateExpenseFormFields[key] = value;
-    } else if (type == FormStateType.updateBudget) {
-      _updateBudgetFormFields[key] = value;
-    } else if (type == FormStateType.updateGroupSaving) {
-      _updateSavingFormFields[key] = value;
-    } else if (type == FormStateType.groupSaving) {
-      _savingFormFields[key] = value;
-    } else if (type == FormStateType.memberInvitation) {
-      _memberInvitationFormFields[key] = value;
-    } else {
-      _budgetFormFields[key] = value;
-    }
-  });
-  notifyListeners();
-}
-
   void addElementToListField(String field, dynamic value, FormStateType type) {
     switch (type) {
       case FormStateType.memberInvitation:

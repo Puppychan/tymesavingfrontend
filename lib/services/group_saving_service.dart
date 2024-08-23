@@ -58,7 +58,7 @@ class GroupSavingService extends ChangeNotifier {
 
   Future<Map<String, dynamic>> addGroupSavingGroup(
     String hostedBy,
-    ApproveStatus defaultApproveStatus,
+    String defaultApproveStatus,
     String name,
     String description,
     double amount,
@@ -70,7 +70,7 @@ class GroupSavingService extends ChangeNotifier {
       body: {
         'hostedBy': hostedBy,
         'name': name,
-        'defaultApproveStatus': defaultApproveStatus.value,
+        'defaultApproveStatus': defaultApproveStatus,
         'description': description,
         'amount': amount,
         'concurrentAmount': concurrentAmount,
@@ -103,7 +103,7 @@ class GroupSavingService extends ChangeNotifier {
   Future<Map<String, dynamic>> updateGroupSavingGroup(
     String groupSavingGroupId,
     String hostedBy,
-    ApproveStatus defaultApproveStatus,
+    String defaultApproveStatus,
     String name,
     String description,
     double amount,
@@ -116,7 +116,7 @@ class GroupSavingService extends ChangeNotifier {
           'description': description,
           'amount': amount,
           'endDate': endDate,
-          'defaultApproveStatus': defaultApproveStatus.toString(),
+          'defaultApproveStatus': defaultApproveStatus,
         });
     return response;
   }

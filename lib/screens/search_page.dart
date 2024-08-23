@@ -27,8 +27,7 @@ class SearchPage extends StatefulWidget {
       required this.searchPlaceholder,
       required this.resultWidgetFunction,
       required this.searchCallback,
-      this.sideDisplay,
-      this.customResultSize});
+      this.sideDisplay, this.customResultSize});
 
   @override
   State<SearchPage> createState() => _SearchPageState();
@@ -41,23 +40,6 @@ class _SearchPageState extends State<SearchPage> {
   Timer? _debounce;
   // Declare a CancelToken variable for canceling the search request
   CancelToken? _cancelToken;
-
-  void _noSearchResults() {
-    Future.microtask(() async {
-      await widget.searchCallback('', (results) {
-        if (!mounted) return;
-        setState(() {
-          _results = results;
-        });
-      }, _cancelToken);
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _noSearchResults();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -128,10 +110,9 @@ class _SearchPageState extends State<SearchPage> {
         // for a better user experience. instead of showing 'No results for ''",
         // if this is null, it will just show nothing
         if (!mounted) return;
-        // setState(() {
-        //   _results = null;
-        // });
-        _noSearchResults();
+        setState(() {
+          _results = null;
+        });
         return;
       }
 

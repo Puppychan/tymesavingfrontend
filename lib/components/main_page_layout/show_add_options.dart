@@ -31,7 +31,6 @@ void showAddOptions(BuildContext context) {
   final colorScheme = Theme.of(context).colorScheme;
   final textTheme = Theme.of(context).textTheme;
   const defaultGap = SizedBox(height: 20);
-  
   showStyledBottomSheet(
     initialChildSize: 0.6,
     isTransparentBackground: true,

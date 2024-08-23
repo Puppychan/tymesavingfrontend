@@ -26,7 +26,6 @@ class BackendEndpoints {
   static String get groupSaving => "$baseUrl/groupSaving";
   static String get invitation => "$baseUrl/invitation";
   static String get challenge => "$baseUrl/financialChallenge";
-  static String get momo => "$baseUrl/payment/momo";
 
   // transaction
   static String get approveTransaction => "approve";
