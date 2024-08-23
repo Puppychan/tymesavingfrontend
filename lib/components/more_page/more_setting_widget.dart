@@ -40,8 +40,8 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
     //Debug here
     if (!mounted) return;
     debugPrint('Tracking page tapped!');
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const SpendTracking()));
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => const SpendTracking()));
   }
 
   Future<void> myReport() async {
@@ -85,13 +85,16 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
             /*
                 Containing place holder function for development! Do change it in merge !
               */
-            RowSettingTemplate('Spending tracking', 'Analytic of your expense & income',
-                const Icon(Icons.wallet), myWalletRoute),
+            RowSettingTemplate(
+                'Spending tracking',
+                'Analytic of your expense & income',
+                const Icon(Icons.wallet),
+                myWalletRoute),
             RowSettingTemplate('My Report', 'Understand your cashflow',
                 const Icon(Icons.help), myReport),
             RowSettingTemplate('Setting', 'Change setting and preference',
                 const Icon(Icons.settings), settingFunction),
-            RowSettingTemplate('Contact us', 'Send a email or direct hotline',
+            RowSettingTemplate('Contact us', 'Call the hotline',
                 const Icon(Icons.phone), sandBox),
             RowSettingTemplate('About', 'Some information about the project',
                 const Icon(Icons.info), about),
@@ -143,7 +146,10 @@ class _RowSettingTemplateState extends State<RowSettingTemplate> {
                         ),
                         Text(
                           widget.motto,
-                          style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontSize: 11.5),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .copyWith(fontSize: 11.5),
                         ),
                       ],
                     ),

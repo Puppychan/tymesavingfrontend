@@ -285,6 +285,68 @@ class TransactionService extends ChangeNotifier {
     return response;
   }
 
+  Future<List<Transaction>> fetchTransactionsSortHandler({
+    required String tab,
+    required String sortOption,
+    required String sortOrder,
+    required String userId,
+  }) async {
+    // Build the base endpoint URL
+    String endpoint =
+        "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReportByUser}/$userId";
+
+    // Initialize query parameters
+    Map<String, String> queryParams = {
+      sortOption: sortOrder,
+    };
+
+    // Apply filtering based on the selected tab
+    if (tab == 'Income') {
+      queryParams['type'] = 'Income';
+    } else if (tab == 'Expense') {
+      queryParams['type'] = 'Expense';
+    }
+
+    // Convert query parameters to a query string
+    String queryString =
+        queryParams.entries.map((e) => '${e.key}=${e.value}').join('&');
+
+    // Construct the full URL with query parameters
+    String url = '$endpoint?$queryString';
+
+    print(url);
+
+    // Execute the API call
+    final response = await NetworkService.instance.get(url);
+
+    print(response);
+
+    // return [];
+
+    // Handle response
+    if (response['statusCode'] == 200 && response['response'] != null) {
+      final responseData = response['response'] as Map<String, dynamic>;
+
+      // Flatten the transactions list
+      List<dynamic> allTransactions = [];
+      responseData.forEach((key, value) {
+        if (value['transactions'] != null) {
+          allTransactions.addAll(value['transactions']);
+        }
+      });
+
+      // Convert to List<Transaction>
+      List<Transaction> transactions =
+          allTransactions.map((data) => Transaction.fromJson(data)).toList();
+
+      return transactions;
+    } else {
+      // Handle errors appropriately
+      throw Exception(
+          'Failed to load transactions. Status code: ${response['statusCode']}');
+    }
+  }
+
   // Get transaction list of month and year
   Future<List<Transaction>> fetchTransactionsByMonthAndYear(
       String userId, int year, int month) async {
