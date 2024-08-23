@@ -191,7 +191,7 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
             icon: const Icon(FontAwesomeIcons.ellipsis),
             onPressed: () {
               showGroupActionBottomSheet(
-                  context, isMember, true, widget.groupSavingId);
+                  context, isMember, false, widget.groupSavingId);
             },
           )
         ]),

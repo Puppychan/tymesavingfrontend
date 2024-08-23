@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/components/challenge/challenge_card.dart';
+import 'package:tymesavingfrontend/components/challenge/challenge_non_listing.dart';
 import 'package:tymesavingfrontend/components/common/button/secondary_button.dart';
 
 import 'package:tymesavingfrontend/components/common/heading.dart';
@@ -37,7 +37,8 @@ class _ChallengePageState extends State<ChallengePage> {
       }, () async {
         if (!mounted) return;
         setState(() {
-          _challengeModelList = challengeService.challengeModelList;
+          _challengeModelList = challengeService.challengeModelList!
+          .where((element) => element.isPublished).toList();
           isLoading = false;
         });
       });
@@ -56,10 +57,10 @@ class _ChallengePageState extends State<ChallengePage> {
       appBar: Heading(
         title: "Challenges",
         actions: [
-          if (widget.savingGroupId != null || widget.budgetGroupId != null)
-            IconButton(
-                onPressed: () {}, icon: const Icon(FontAwesomeIcons.plus)),
-          IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert))
+         IconButton(onPressed: () {
+          Navigator.push(
+        context, MaterialPageRoute(builder: (context) => ChallengeNonListing(userId: widget.userId!)));
+         }, icon: const Icon(Icons.pending_actions_rounded))
         ],
         showBackButton: true,
       ),

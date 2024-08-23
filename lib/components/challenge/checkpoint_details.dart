@@ -29,7 +29,6 @@ class _CheckPointDetailsState extends State<CheckPointDetails> {
   String? endDateFormatted;
   late Map<String,dynamic> prize;
 
-  bool _isDisplayRestDescription = false;
   bool isLoading = true;
 
   Future<void> _loadCheckPoint () async {
@@ -154,37 +153,6 @@ class _CheckPointDetailsState extends State<CheckPointDetails> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Text("Description", style: Theme.of(context).textTheme.titleSmall),
-                    InkWell(
-                          onTap: () {
-                            setState(() {
-                              _isDisplayRestDescription = !_isDisplayRestDescription;
-                            });
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 20),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  _checkPointModel!.description,
-                                  style: Theme.of(context).textTheme.bodyMedium,
-                                  textAlign: TextAlign.center,
-                                  maxLines: _isDisplayRestDescription ? null : 2,
-                                  overflow: _isDisplayRestDescription
-                                      ? TextOverflow.visible
-                                      : TextOverflow.fade,
-                                ),
-                                if (!_isDisplayRestDescription)
-                                  Text(
-                                    "Tap for more",
-                                    style: Theme.of(context).textTheme.labelMedium,
-                                  ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 20,),
                   ],
                 ),
               ),

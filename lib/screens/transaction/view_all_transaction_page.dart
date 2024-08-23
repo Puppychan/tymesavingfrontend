@@ -10,6 +10,7 @@ import 'package:tymesavingfrontend/components/transaction/transaction_list.dart'
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/transaction_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
+import 'package:popover/popover.dart';
 
 class ViewAllTransactionsPage extends StatefulWidget {
   const ViewAllTransactionsPage({super.key});
@@ -23,35 +24,25 @@ class _ViewAllTransactionsPageState extends State<ViewAllTransactionsPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   List<Transaction>? _transactions = [];
+  String _sortOption = 'sortDateCreated'; // Default sort option
+  String _sortOrder = 'ascending'; // Default sort order
 
-  void _fetchTransactions() {
-    Future.microtask(() async {
-      if (!mounted) return;
-      final transactionService =
-          Provider.of<TransactionService>(context, listen: false);
-      final user = Provider.of<AuthService>(context, listen: false).user;
-      await handleMainPageApi(context, () async {
-        // handle tab selection
-        if (_tabController.index == 0) {
-          transactionService.setOptions(
-              "filter", "getTransactionType", TransactionType.all.toString());
-        } else if (_tabController.index == 1) {
-          transactionService.setOptions("filter", "getTransactionType",
-              TransactionType.income.toString());
-        } else if (_tabController.index == 2) {
-          transactionService.setOptions("filter", "getTransactionType",
-              TransactionType.expense.toString());
-        }
-        // Fetch transactions from the backend
-        return await transactionService.fetchTransactions(user!.id);
-      }, () async {
-        final filteredTransactions = transactionService.transactions?.values
-            .expand((element) => element)
-            .toList();
-        setState(() {
-          _transactions = filteredTransactions;
-        });
-      });
+  void _fetchTransactions() async {
+    final transactionService =
+        Provider.of<TransactionService>(context, listen: false);
+    final user = Provider.of<AuthService>(context, listen: false).user;
+
+    String tab = TransactionType.list[_tabController.index];
+    List<Transaction> transactions =
+        await transactionService.fetchTransactionsSortHandler(
+      tab: tab,
+      sortOption: _sortOption,
+      sortOrder: _sortOrder,
+      userId: user!.id,
+    );
+
+    setState(() {
+      _transactions = transactions;
     });
   }
 
@@ -72,7 +63,29 @@ class _ViewAllTransactionsPageState extends State<ViewAllTransactionsPage>
 
   void _handleTabSelection() {
     if (_tabController.indexIsChanging) return;
-    _fetchTransactions(); // Fetch invitations when tab changes
+    _fetchTransactions(); // Fetch transactions when tab changes
+  }
+
+  void _handleSortOptionSelection(String result) {
+    switch (result) {
+      case 'newest':
+        _sortOption = 'sortDateCreated';
+        _sortOrder = 'descending';
+        break;
+      case 'oldest':
+        _sortOption = 'sortDateCreated';
+        _sortOrder = 'ascending';
+        break;
+      case 'ascending':
+        _sortOption = 'sortAmount';
+        _sortOrder = 'ascending';
+        break;
+      case 'descending':
+        _sortOption = 'sortAmount';
+        _sortOrder = 'descending';
+        break;
+    }
+    _fetchTransactions(); // Refresh transactions after selection
   }
 
   Widget _buildNoTransactionsMessage() {
@@ -94,24 +107,35 @@ class _ViewAllTransactionsPageState extends State<ViewAllTransactionsPage>
           tabs: TransactionType.list.map((val) => Tab(text: val)).toList(),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(FontAwesomeIcons.ellipsisVertical),
-            onPressed: () {
-              showStyledBottomSheet(
-                context: context,
-                title: "Sort & Filter",
-                subTitle: "Sort and filter transactions",
-                contentWidget: TransactionSortFilter(
-                    updateTransactionList: _fetchTransactions),
-              );
-            },
+          Builder(
+            builder: (context) => IconButton(
+              icon: const Icon(Icons.more_vert), // Using the more vertical icon
+              onPressed: () {
+                showPopover(
+                  context: context,
+                  bodyBuilder: (context) => ListItems(
+                    onItemSelected: (String result) {
+                      _handleSortOptionSelection(result);
+                    },
+                  ),
+                  onPop: () => print('Popover was popped!'),
+                  direction: PopoverDirection.bottom,
+                  width: 200,
+                  height: 220,
+                  arrowHeight: 10,
+                  arrowWidth: 15,
+                );
+              },
+            ),
           ),
         ],
       ),
       body: TabBarView(
         controller: _tabController,
         children: TransactionType.list
-            .map((_) => TransactionList(transactions: _transactions!))
+            .map((_) => _transactions == null || _transactions!.isEmpty
+                ? _buildNoTransactionsMessage()
+                : TransactionList(transactions: _transactions!))
             .toList(),
       ),
     );
@@ -121,5 +145,86 @@ class _ViewAllTransactionsPageState extends State<ViewAllTransactionsPage>
 extension StringExtension on String {
   String capitalize() {
     return "${this[0].toUpperCase()}${substring(1)}";
+  }
+}
+
+class ListItems extends StatelessWidget {
+  final Function(String) onItemSelected;
+
+  const ListItems({Key? key, required this.onItemSelected}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            tileColor: Theme.of(context).colorScheme.tertiary,
+            title: const Row(
+              children: [
+                Icon(Icons.calendar_today),
+                SizedBox(
+                  width: 10,
+                ),
+                Text("Newest")
+              ],
+            ),
+            onTap: () {
+              onItemSelected('newest');
+              Navigator.of(context).pop();
+            },
+          ),
+          ListTile(
+            tileColor: Theme.of(context).colorScheme.tertiary,
+            title: const Row(
+              children: [
+                Icon(Icons.calendar_today),
+                SizedBox(
+                  width: 10,
+                ),
+                Text('Oldest'),
+              ],
+            ),
+            onTap: () {
+              onItemSelected('oldest');
+              Navigator.of(context).pop();
+            },
+          ),
+          ListTile(
+            tileColor: Theme.of(context).colorScheme.tertiary,
+            title: const Row(
+              children: [
+                Icon(Icons.attach_money),
+                SizedBox(
+                  width: 10,
+                ),
+                Text('Ascending'),
+              ],
+            ),
+            onTap: () {
+              onItemSelected('ascending');
+              Navigator.of(context).pop();
+            },
+          ),
+          ListTile(
+            tileColor: Theme.of(context).colorScheme.tertiary,
+            title: const Row(
+              children: [
+                Icon(Icons.attach_money),
+                SizedBox(
+                  width: 10,
+                ),
+                Text('Descending'),
+              ],
+            ),
+            onTap: () {
+              onItemSelected('descending');
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      ),
+    );
   }
 }

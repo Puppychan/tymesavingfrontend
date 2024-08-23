@@ -139,9 +139,6 @@ class GroupSavingService extends ChangeNotifier {
         "${BackendEndpoints.groupSaving}/$groupSavingGroupId/transactions");
 
     if (response['response'] != null && response['statusCode'] == 200) {
-      debugPrint("#====== Transactions of GroupSaving ======#");
-      debugPrint(response.toString());
-      debugPrint("#====== Transactions of GroupSaving ======#");
       final responseData = response['response'];
       List<Transaction> transactionList = [];
       if (responseData.isNotEmpty) {
@@ -161,9 +158,6 @@ class GroupSavingService extends ChangeNotifier {
     final response = await NetworkService.instance
         .get("${BackendEndpoints.groupSaving}/$savingGroupId/transactions");
     if (response['response'] != null && response['statusCode'] == 200) {
-      // debugPrint("#====== Transactions of Budget ======#");
-      // debugPrint(response.toString());
-      // debugPrint("#====== Transactions of Budget ======#");
       final responseData = response['response'];
       List<Transaction> transactionPendingList = [];
       List<Transaction> transactionCancelledList = [];
@@ -189,7 +183,6 @@ class GroupSavingService extends ChangeNotifier {
       String savingGroupId, String filter) async {        
     final response = await NetworkService.instance.get(
         "${BackendEndpoints.groupSaving}/$savingGroupId/report?filter=$filter");
-    debugPrint(response.toString());
 
     if (response['response'] != null && response['statusCode'] == 200) {
       final List<ReportCategory> categories = (response['response']['categories'] as List)
