@@ -3,8 +3,9 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 class MoMoPaymentPage extends StatefulWidget {
   final String paymentUrl;
+  final String deepLink;
 
-  MoMoPaymentPage({required this.paymentUrl});
+  MoMoPaymentPage({required this.paymentUrl, required this.deepLink});
 
   @override
   _MoMoPaymentPageState createState() => _MoMoPaymentPageState();

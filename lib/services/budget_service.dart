@@ -36,11 +36,12 @@ class BudgetService extends ChangeNotifier {
     String endpoint =
         "${BackendEndpoints.budget}/${BackendEndpoints.budgetsGetByUserId}/$userId";
 
-    if (name != null || name != "") {
+    if (name != null && name != "") {
       endpoint += "?name=$name";
     }
 
     final response = await NetworkService.instance.get(endpoint, cancelToken: cancelToken);
+    print("Endpoint $endpoint - Repsonse budget list $response");
     if (response['response'] != null && response['statusCode'] == 200) {
       final responseData = response['response'];
       List<Budget> budgetList = [];
