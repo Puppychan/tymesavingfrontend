@@ -8,11 +8,13 @@ import 'package:tymesavingfrontend/utils/format_amount.dart';
 class TransactionDialog extends StatefulWidget {
   final Transaction transaction;
   final String formattedDate;
+  final bool disableButton;
 
   const TransactionDialog({
     super.key,
     required this.transaction,
     required this.formattedDate,
+    required this.disableButton
   });
   @override
   State<TransactionDialog> createState() => _TransactionDialogState();
@@ -166,6 +168,7 @@ class _TransactionDialogState extends State<TransactionDialog> {
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                if(!widget.disableButton)
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
@@ -179,6 +182,7 @@ class _TransactionDialogState extends State<TransactionDialog> {
                   },
                   child: const Text('Edit'),
                 ),
+                if(!widget.disableButton)
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
