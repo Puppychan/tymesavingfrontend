@@ -293,12 +293,7 @@ class _GroupSavingFormMainState extends State<GroupSavingFormMain> {
                     updateOnChange("defaultApproveStatus",
                         value: convertApproveStatus);
                   },
-<<<<<<< HEAD
-                  defaultOption:
-                      ApproveStatus.toInputFormString(currentApproveStatus)),
-=======
                   defaultOption: currentApproveStatus.value),
->>>>>>> parent of f7ee8ec (Merge remote-tracking branch 'origin/32-challenge-structure' into 26-view-goal-analysis)
               const SizedBox(height: 20),
               PrimaryButton(title: "Confirm", onPressed: _trySubmit)
             ],

@@ -70,11 +70,7 @@ class GroupSavingService extends ChangeNotifier {
       body: {
         'hostedBy': hostedBy,
         'name': name,
-<<<<<<< HEAD
-        'defaultApproveStatus': defaultApproveStatus.value,
-=======
         'defaultApproveStatus': defaultApproveStatus,
->>>>>>> parent of f7ee8ec (Merge remote-tracking branch 'origin/32-challenge-structure' into 26-view-goal-analysis)
         'description': description,
         'amount': amount,
         'concurrentAmount': concurrentAmount,
