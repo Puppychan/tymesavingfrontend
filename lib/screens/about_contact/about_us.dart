@@ -13,7 +13,7 @@ class _AboutUsState extends State<AboutUs> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const Heading(
-        title: "About us",
+        title: "About us Updated",
         showBackButton: true,
       ),
       body: Padding(
@@ -40,15 +40,29 @@ class _AboutUsState extends State<AboutUs> {
               margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
               child: Column(
                 children: [
-                  Text('Tran Mai Nhung', style: Theme.of(context).textTheme.bodyLarge,),
-                  Text('Tran Nguyen Ha Khanh', style: Theme.of(context).textTheme.bodyLarge,),
-                  Text('Vo Thanh Thong', style: Theme.of(context).textTheme.bodyLarge,),
-                  Text('Giang Trong Duong', style: Theme.of(context).textTheme.bodyLarge,),
-                  Text('Ngo Viet Anh', style: Theme.of(context).textTheme.bodyLarge,),
+                  Text(
+                    'Tran Mai Nhung',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                  Text(
+                    'Tran Nguyen Ha Khanh',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                  Text(
+                    'Vo Thanh Thong',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                  Text(
+                    'Giang Trong Duong',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                  Text(
+                    'Ngo Viet Anh',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
                 ],
               ),
             ),
-            
             const SizedBox(height: 20),
             Text(
               'Academic supervisor: ',
@@ -56,32 +70,26 @@ class _AboutUsState extends State<AboutUs> {
             ),
             Card.filled(
               margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-              child: Column(
-                children: 
-                [
-                  Text(
-                    'Ms. Anna Felipe',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                ]
-              ),
+              child: Column(children: [
+                Text(
+                  'Ms. Anna Felipe',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+              ]),
             ),
             const SizedBox(height: 15),
             Text(
-                    'Company:',
-                    style: Theme.of(context).textTheme.headlineMedium,
-                  ),
+              'Company:',
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
             Card.filled(
               margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-              child: Column(
-                children: 
-                [
-                  Text(
-                    'Tyme',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                ]
-              ),
+              child: Column(children: [
+                Text(
+                  'Tyme',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+              ]),
             ),
             const SizedBox(height: 15),
             Text(
@@ -90,15 +98,12 @@ class _AboutUsState extends State<AboutUs> {
             ),
             Card.filled(
               margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-              child: Column(
-                children: 
-                [
-                  Text(
-                    'Mr. Vuong Tran',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                ]
-              ),
+              child: Column(children: [
+                Text(
+                  'Mr. Vuong Tran',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+              ]),
             ),
             const SizedBox(height: 10),
             Text(
@@ -107,14 +112,20 @@ class _AboutUsState extends State<AboutUs> {
             ),
             Card.filled(
               margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-              child: Column(
-                children: 
-                [
-                  Text('Mr. Tung Nguyen', style: Theme.of(context).textTheme.bodyLarge,),
-                  Text('Mr. Lanh Tran', style: Theme.of(context).textTheme.bodyLarge,),
-                  Text('Mr. Long Nguyen', style: Theme.of(context).textTheme.bodyLarge,),
-                ]
-              ),
+              child: Column(children: [
+                Text(
+                  'Mr. Tung Nguyen',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                Text(
+                  'Mr. Lanh Tran',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                Text(
+                  'Mr. Long Nguyen',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+              ]),
             ),
             const SizedBox(height: 20),
           ],
