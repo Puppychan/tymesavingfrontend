@@ -260,7 +260,8 @@ class _GroupSavingFormMainState extends State<GroupSavingFormMain> {
                     updateOnChange("defaultApproveStatus",
                         value: convertApproveStatus);
                   },
-                  defaultOption: ApproveStatus.toInputFormString(currentApproveStatus)),
+                  defaultOption:
+                      ApproveStatus.toInputFormString(currentApproveStatus)),
               const SizedBox(height: 20),
               PrimaryButton(title: "Confirm", onPressed: _trySubmit)
             ],

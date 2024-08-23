@@ -1,5 +1,7 @@
 # TymeX Project Front-end
 
+sudo gem install cocoapods
+
 ## Introduction
 
 Welcome to the TymeX Front-End repository! This repository contains the source code for the mobile finance application "TymeX," developed as part of a capstone project. TymeX aims to provide users with a seamless and intuitive financial management experience on their mobile devices.

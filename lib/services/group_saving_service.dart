@@ -70,7 +70,7 @@ class GroupSavingService extends ChangeNotifier {
       body: {
         'hostedBy': hostedBy,
         'name': name,
-        'defaultApproveStatus': defaultApproveStatus.toString(),
+        'defaultApproveStatus': defaultApproveStatus.value,
         'description': description,
         'amount': amount,
         'concurrentAmount': concurrentAmount,
