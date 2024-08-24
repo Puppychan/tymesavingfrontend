@@ -30,44 +30,40 @@ class _ShortGroupInfoMultiFormState extends State<ShortGroupInfoMultiForm> {
     _fetchData();
   }
 
-
   @override
   void dispose() {
     // Unsubscribe from RouteObserver
     super.dispose();
   }
 
-  
   void _fetchData() {
     if (widget.defaultGroupId != null) {
-      if (widget.defaultGroupId != null) {
-        Future.microtask(() async {
-          await handleMainPageApi(context, () async {
-            if (widget.chosenGroupType == TransactionGroupType.savings) {
-              return await Provider.of<GroupSavingService>(context,
-                      listen: false)
-                  .fetchGroupSavingDetails(widget.defaultGroupId!);
-            } else {
-              return await Provider.of<BudgetService>(context, listen: false)
-                  .fetchBudgetDetails(widget.defaultGroupId!);
-            }
-          }, () async {
-            setState(() {
-              _displayGroup =
-                  widget.chosenGroupType == TransactionGroupType.savings
-                      ? Provider.of<GroupSavingService>(context, listen: false)
-                          .currentGroupSaving
-                      : Provider.of<BudgetService>(context, listen: false)
-                          .currentBudget;
-            });
+      Future.microtask(() async {
+        await handleMainPageApi(context, () async {
+          if (widget.chosenGroupType == TransactionGroupType.savings) {
+            return await Provider.of<GroupSavingService>(context, listen: false)
+                .fetchGroupSavingDetails(widget.defaultGroupId!);
+          } else {
+            return await Provider.of<BudgetService>(context, listen: false)
+                .fetchBudgetDetails(widget.defaultGroupId!);
+          }
+        }, () async {
+          setState(() {
+            _displayGroup =
+                widget.chosenGroupType == TransactionGroupType.savings
+                    ? Provider.of<GroupSavingService>(context, listen: false)
+                        .currentGroupSaving
+                    : Provider.of<BudgetService>(context, listen: false)
+                        .currentBudget;
           });
         });
-      } else {
-        setState(() {
-          _displayGroup = widget.chosenResult!;
-        });
-      }
+      });
+    } else {
+      setState(() {
+        _displayGroup = widget.chosenResult!;
+      });
     }
+
   }
 
   @override

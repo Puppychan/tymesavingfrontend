@@ -52,6 +52,7 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
     // get the form fields
     final formFields = Provider.of<FormStateProvider>(context, listen: false)
         .getFormField(widget.type);
+        print("Form Fields: $formFields");
     final authService = Provider.of<AuthService>(context, listen: false);
     // get current logged in user
     setState(() {
@@ -208,6 +209,7 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
   TransactionGroupType getGroupType(Map<String, dynamic> formFields) {
     TransactionGroupType? type = formFields['groupType'];
     if (type == null) {
+      // check if the transaction belongs to a group by checking the group id
       if (formFields['budgetGroupId'] != null) {
         type = TransactionGroupType.budget;
       } else if (formFields['savingGroupId'] != null) {

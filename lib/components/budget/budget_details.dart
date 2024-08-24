@@ -78,6 +78,16 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
     });
   }
 
+  void _loadTransactionForm() {
+if (!mounted) return;
+            final formStateProvider =
+                Provider.of<FormStateProvider>(context, listen: false);
+            formStateProvider.resetForm(FormStateType.expense);
+            formStateProvider.updateFormField("groupType", TransactionGroupType.budget, FormStateType.expense);
+            formStateProvider.updateFormField("budgetGroupId", widget.budgetId, FormStateType.expense);
+            formStateProvider.updateFormField("tempChosenGroup", _budget, FormStateType.expense);
+  }
+
   Future<void> _loadData() async {
     Future.microtask(() async {
       if (!mounted) return;
@@ -125,16 +135,16 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
 
   @override
   void initState() {
-    super.initState();
     _formStateProvider = Provider.of<FormStateProvider>(context, listen: false);
     _loadData();
+    super.initState();
   }
 
   @override
   void dispose() {
     // _formStateProvider?.resetForm(FormStateType.memberInvitation);
-    routeObserver.unsubscribe(this);
     super.dispose();
+    routeObserver.unsubscribe(this);
   }
 
   @override
@@ -151,7 +161,6 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
   @override
   void didPopNext() {
     super.didPopNext();
-    isLoading = true;
     _loadData();
   }
 
@@ -166,14 +175,11 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
         appBar: Heading(title: 'Budget Group', showBackButton: true, actions: [
-          IconButton(onPressed: () async {
-            if (!mounted) return;
-            final formStateProvider =
-                Provider.of<FormStateProvider>(context, listen: false);
-            formStateProvider.resetForm(FormStateType.expense);
-            formStateProvider.updateFormField("groupType", TransactionGroupType.budget, FormStateType.expense);
-            formStateProvider.updateFormField("budgetGroupId", widget.budgetId, FormStateType.expense);
-            formStateProvider.updateFormField("tempChosenGroup", _budget, FormStateType.expense);
+          IconButton(
+            color: colorScheme.primary,
+            disabledColor: colorScheme.onPrimary.withOpacity(0.5),
+            onPressed: isLoading ? null : () async {
+            _loadTransactionForm();
             // render group
             if (!mounted) return;
             showTransactionFormA(context, false, isFromGroupDetail: true);
