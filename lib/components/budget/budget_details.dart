@@ -125,24 +125,24 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
 
   @override
   void initState() {
+    super.initState();
     _formStateProvider = Provider.of<FormStateProvider>(context, listen: false);
     _loadData();
-    super.initState();
   }
 
   @override
   void dispose() {
     // _formStateProvider?.resetForm(FormStateType.memberInvitation);
-    super.dispose();
     routeObserver.unsubscribe(this);
+    super.dispose();
   }
 
   @override
   void didChangeDependencies() {
+    super.didChangeDependencies();
     isLoading = true;
     _loadData();
-    super.didChangeDependencies();
-    final route = ModalRoute.of(context);
+    final ModalRoute? route = ModalRoute.of(context);
     if (route is PageRoute) {
       routeObserver.subscribe(this, route);
     }
@@ -150,9 +150,9 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
 
   @override
   void didPopNext() {
+    super.didPopNext();
     isLoading = true;
     _loadData();
-    super.didPopNext();
   }
 
   int calculateDaysLeft(DateTime endDate) {

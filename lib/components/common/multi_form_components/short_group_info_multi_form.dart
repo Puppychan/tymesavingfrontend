@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_group_type_enum.dart';
-import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/base_group_model.dart';
 import 'package:tymesavingfrontend/services/budget_service.dart';
 import 'package:tymesavingfrontend/services/group_saving_service.dart';
@@ -23,8 +22,7 @@ class ShortGroupInfoMultiForm extends StatefulWidget {
       _ShortGroupInfoMultiFormState();
 }
 
-class _ShortGroupInfoMultiFormState extends State<ShortGroupInfoMultiForm>
-    with RouteAware {
+class _ShortGroupInfoMultiFormState extends State<ShortGroupInfoMultiForm> {
   BaseGroup? _displayGroup;
   @override
   void initState() {
@@ -32,25 +30,13 @@ class _ShortGroupInfoMultiFormState extends State<ShortGroupInfoMultiForm>
     _fetchData();
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // Subscribe to RouteObserver
-    routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute<dynamic>);
-  }
 
   @override
   void dispose() {
     // Unsubscribe from RouteObserver
-    routeObserver.unsubscribe(this);
     super.dispose();
   }
 
-  @override
-  void didPopNext() {
-    // Called when this page becomes visible again after popping another page
-    _fetchData();
-  }
   
   void _fetchData() {
     if (widget.defaultGroupId != null) {
