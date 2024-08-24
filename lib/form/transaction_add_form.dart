@@ -14,7 +14,7 @@ void showTransactionFormA(BuildContext context, bool isIncome,
   final formType = isIncome ? FormStateType.income : FormStateType.expense;
   final formFields = formService.getFormField(formType);
   // only create template form if the form is empty
-  if (formFields.isEmpty) {
+  if (formFields.isEmpty || isFromGroupDetail) {
     formService.updateWholeForm({
       "description": "Note My ${isIncome ? 'Income' : 'Expense'}",
       "payBy": "No record",
