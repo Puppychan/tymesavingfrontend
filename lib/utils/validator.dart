@@ -146,4 +146,14 @@ class Validator {
     }
     return null;
   }
+
+  static String? validateChallengeDescription(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter a description to explain your challenge';
+    }
+    // if (value.length < 10) {
+    //   return 'Description must be at least 10 characters long';
+    // }
+    return null;
+  }
 }

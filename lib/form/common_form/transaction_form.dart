@@ -8,6 +8,7 @@ import 'package:tymesavingfrontend/components/category_list/category_short_selec
 import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
 import 'package:tymesavingfrontend/components/common/dialog/date_picker_dialog.dart';
 import 'package:tymesavingfrontend/components/common/dialog/time_picker_dialog.dart';
+import 'package:tymesavingfrontend/components/common/input/multiline_text_field.dart';
 import 'package:tymesavingfrontend/components/common/input/underline_text_field.dart';
 import 'package:tymesavingfrontend/components/common/multi_form_components/amount_multi_form.dart';
 import 'package:tymesavingfrontend/components/common/multi_form_components/assign_group_multi_form.dart';
@@ -343,14 +344,13 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
                   }
                 },
               ),
-              UnderlineTextField(
+              MultilineTextField(
                 label: 'DESCRIPTION',
                 controller: _descriptionController,
-                icon: Icons.description,
                 placeholder: "Please add description",
                 keyboardType: TextInputType.multiline,
-                minLines: 1,
-                maxLines: 5,
+                minLines: 3,
+                maxLines: null,
                 onChange: (value) => updateOnChange("description"),
               ),
               UnderlineTextField(

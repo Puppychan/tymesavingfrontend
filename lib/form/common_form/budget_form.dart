@@ -7,6 +7,7 @@ import 'package:tymesavingfrontend/common/enum/page_location_enum.dart';
 import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
 import 'package:tymesavingfrontend/components/common/dialog/date_picker_dialog.dart';
 import 'package:tymesavingfrontend/components/common/dialog/time_picker_dialog.dart';
+import 'package:tymesavingfrontend/components/common/input/multiline_text_field.dart';
 import 'package:tymesavingfrontend/components/common/input/radio_field.dart';
 import 'package:tymesavingfrontend/components/common/input/underline_text_field.dart';
 import 'package:tymesavingfrontend/components/common/multi_form_components/amount_multi_form.dart';
@@ -169,10 +170,7 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
           formStateService.getFormField(widget.type);
       // TransactionCategory selectedCategory =
       //     formStateService.getCategory(widget.type);
-      String formName = formFields['name'] ?? "Naming group...";
       String formattedAmount = formStateService.getFormattedAmount(widget.type);
-      String formDescription =
-          formFields['description'] ?? "Please add description";
       ApproveStatus currentApproveStatus =
           formFields['defaultApproveStatus'] ?? ApproveStatus.approved;
 
@@ -191,21 +189,11 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
                 controller: _nameController,
                 icon: Icons.card_membership,
                 label: 'GROUP NAME',
-                placeholder: formName,
+                placeholder:  "Naming group...",
                 keyboardType: TextInputType.text,
                 onChange: (value) => updateOnChange("name"),
                 validator: Validator.validateGroupName,
               ),
-              // Duplicated
-              // UnderlineTextField(
-              //     label: "TOTAL AMOUNT",
-              //     controller: _amountController,
-              //     icon: Icons.attach_money,
-              //     placeholder: formattedAmount,
-              //     keyboardType: TextInputType.number,
-              //     inputFormatters: [CurrencyInputFormatter()],
-              //     onChange: (value) => updateOnChange("amount"),
-              //     validator: Validator.validateAmount),
               AmountMultiForm(
                   formattedAmount: formattedAmount,
                   updateOnChange: updateOnChange,
@@ -254,12 +242,13 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
                   }
                 },
               ),
-              UnderlineTextField(
+              MultilineTextField(
                 label: 'DESCRIPTION',
                 controller: _descriptionController,
-                icon: Icons.description,
-                placeholder: formDescription,
-                keyboardType: TextInputType.text,
+                placeholder: "Please add description",
+                keyboardType: TextInputType.multiline,
+                minLines: 3,
+                maxLines: null,
                 onChange: (value) => updateOnChange("description"),
               ),
               RadioField(
