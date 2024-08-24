@@ -7,9 +7,7 @@ import 'package:tymesavingfrontend/components/common/button/primary_button.dart'
 import 'package:tymesavingfrontend/components/common/dialog/date_picker_dialog.dart';
 import 'package:tymesavingfrontend/components/common/dialog/time_picker_dialog.dart';
 import 'package:tymesavingfrontend/components/common/input/multiline_text_field.dart';
-import 'package:tymesavingfrontend/components/common/input/round_text_field.dart';
 import 'package:tymesavingfrontend/components/common/input/underline_text_field.dart';
-import 'package:tymesavingfrontend/models/challenge_model.dart';
 import 'package:tymesavingfrontend/screens/challenge/challenge_details.dart';
 import 'package:tymesavingfrontend/services/challenge_service.dart';
 import 'package:tymesavingfrontend/utils/display_error.dart';
@@ -36,8 +34,8 @@ class _ChallengeAddFormState extends State<ChallengeAddForm> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
-  final _startDateController = TextEditingController();
-  final _endDateController = TextEditingController();
+  // final _startDateController = TextEditingController();
+  // final _endDateController = TextEditingController();
   String _createdChallengeId = '';
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _selectedTime = TimeOfDay.now();
