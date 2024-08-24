@@ -235,15 +235,16 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
                 onChange: (value) => updateOnChange("name"),
                 validator: Validator.validateGroupName,
               ),
-              UnderlineTextField(
-                  label: "TOTAL AMOUNT",
-                  controller: _amountController,
-                  icon: Icons.attach_money,
-                  placeholder: formattedAmount,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [CurrencyInputFormatter()],
-                  onChange: (value) => updateOnChange("amount"),
-                  validator: Validator.validateAmount),
+              // Duplicated
+              // UnderlineTextField(
+              //     label: "TOTAL AMOUNT",
+              //     controller: _amountController,
+              //     icon: Icons.attach_money,
+              //     placeholder: formattedAmount,
+              //     keyboardType: TextInputType.number,
+              //     inputFormatters: [CurrencyInputFormatter()],
+              //     onChange: (value) => updateOnChange("amount"),
+              //     validator: Validator.validateAmount),
               AmountMultiForm(
                   formattedAmount: formattedAmount,
                   updateOnChange: updateOnChange,
