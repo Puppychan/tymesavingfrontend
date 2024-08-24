@@ -19,7 +19,6 @@ import 'package:tymesavingfrontend/utils/display_error.dart';
 import 'package:tymesavingfrontend/utils/display_success.dart';
 import 'package:tymesavingfrontend/utils/format_date.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
-import 'package:tymesavingfrontend/utils/input_format_currency.dart';
 import 'package:tymesavingfrontend/utils/validator.dart';
 
 class BudgetFormMain extends StatefulWidget {
@@ -162,15 +161,6 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
     }
   }
 
-  // void onTransactionCategorySelected(TransactionCategory category) {
-  //   Future.microtask(() async {
-  //     if (!mounted) return;
-  //     final formStateService =
-  //         Provider.of<FormStateProvider>(context, listen: false);
-  //     formStateService.updateFormCategory(category, widget.type);
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Consumer<FormStateProvider>(
@@ -191,41 +181,12 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
       _descriptionController.text = formFields['description'] ?? "";
       _nameController.text = formFields['name'] ?? "";
 
-      // List<Widget> renderCategories(BuildContext context) {
-      //   return TransactionCategory.values.where((category) => category != TransactionCategory.all).expand((category) {
-      //     final isSelected = selectedCategory.name == category.name;
-      //     Map<String, dynamic> categoryInfo =
-      //         transactionCategoryData[category]!;
-      //     return [
-      //       Material(
-      //           color: Colors.transparent,
-      //           child: InkWell(
-      //             borderRadius: BorderRadius.circular(10),
-      //             splashColor: colorScheme.tertiary,
-      //             onTap: () async => {onTransactionCategorySelected(category)},
-      //             child: getCategoryIcon(
-      //                 currentCategoryInfo: categoryInfo,
-      //                 isSelected: isSelected,
-      //                 colorScheme: colorScheme),
-      //           )),
-      //       const SizedBox(width: 10)
-      //     ];
-      //   }).toList();
-      // }
-
       return Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ..._buildComponentGroup(
-              //     label: "CHOOSE CATEGORY",
-              //     contentWidget: SingleChildScrollView(
-              //         scrollDirection: Axis.horizontal,
-              //         child: Row(
-              //           mainAxisAlignment: MainAxisAlignment.spaceAround,
-              //           children: renderCategories(context),
-              //         ))),
+
               UnderlineTextField(
                 controller: _nameController,
                 icon: Icons.card_membership,

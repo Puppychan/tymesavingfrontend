@@ -173,9 +173,9 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
             formStateProvider.resetForm(FormStateType.expense);
             formStateProvider.updateFormField("groupType", TransactionGroupType.budget, FormStateType.expense);
             formStateProvider.updateFormField("budgetGroupId", widget.budgetId, FormStateType.expense);
+            formStateProvider.updateFormField("tempChosenGroup", _budget, FormStateType.expense);
             // render group
             if (!mounted) return;
-            formStateProvider.updateFormField("tempChosenGroup", _budget, FormStateType.expense);
             showTransactionFormA(context, false, isFromGroupDetail: true);
             
           }, icon: const Icon(FontAwesomeIcons.moneyCheckDollar)),
