@@ -31,7 +31,6 @@ class _BudgetCardState extends State<BudgetCard> {
       child: InkWell(
         splashColor: colorScheme.quaternary,
         onTap: () {
-          // debugPrint("Status of ISCLOSEDOREXPIRED is : ${widget.budget.isClosedOrExpired}");
           widget.budget.isClosedOrExpired ?
            Navigator.push(context, MaterialPageRoute(builder: (context) {
             return BudgetReport(budgetId: widget.budget.id);
@@ -123,23 +122,19 @@ class _BudgetCardState extends State<BudgetCard> {
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(4),
-                child: Transform(
-                  alignment: Alignment.center,
-                  transform: Matrix4.rotationY(math.pi),
-                  child: LinearProgressIndicator(
-                    value: currentProgress.clamp(
-                        0.0, 1.0), // Ensuring the value is between 0 and 1
-                    // value: 0.4, // Ensuring the value is between 0 and 1
-                    backgroundColor: colorScheme.quaternary,
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      currentProgress == 1 ? 
-                    const Color(0xFF4CAF50) :
-                    currentProgress < 0.30 ?
-                    const Color(0xFFF44336) : 
-                    colorScheme.primary
-                    ),
-                    minHeight: 8,
+                child: LinearProgressIndicator(
+                  value: currentProgress.clamp(
+                      0.0, 1.0), // Ensuring the value is between 0 and 1
+                  // value: 0.4, // Ensuring the value is between 0 and 1
+                  backgroundColor: colorScheme.quaternary,
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    currentProgress == 1 ? 
+                  const Color(0xFF4CAF50) :
+                  currentProgress < 0.30 ?
+                  const Color(0xFFF44336) : 
+                  colorScheme.primary
                   ),
+                  minHeight: 8,
                 ),
               ),
             ),

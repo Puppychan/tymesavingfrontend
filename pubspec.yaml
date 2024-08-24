@@ -57,6 +57,8 @@ dependencies:
   dotted_border: ^2.1.0
   shimmer: ^3.0.0
   popover: ^0.3.0+1
+  webview_flutter: ^4.8.0
+  photo_view: ^0.15.0
 
 dev_dependencies:
   flutter_test:

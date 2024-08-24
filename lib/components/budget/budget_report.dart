@@ -192,7 +192,7 @@ class _BudgetReportState extends State<BudgetReport> {
                 ),
                 SizedBox(
                   height: 500,
-                  child: TransactionList(transactions: _transactionList,)
+                  child: TransactionList(transactions: _transactionList,disableButton: true,)
                 )
               ],
             ) 

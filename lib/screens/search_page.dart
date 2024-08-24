@@ -51,6 +51,7 @@ class _SearchPageState extends State<SearchPage> {
             padding: const EdgeInsets.all(10),
             child: Column(children: [
               UnderlineTextField(
+                  maxLines: 1,
                   label: widget.searchLabel,
                   icon: FontAwesomeIcons.magnifyingGlass,
                   placeholder: widget.searchPlaceholder,

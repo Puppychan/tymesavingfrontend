@@ -271,76 +271,127 @@ class _SavingApprovePageState extends State<SavingApprovePage> with RouteAware {
   }
 
   void _showAcceptDeclinePrompt(BuildContext context, _SavingApprovePageState state, List<String> transactionImages, String transactionId) {
-    final transactionService = Provider.of<TransactionService>(context, listen: false);
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Confirm", style: Theme.of(context).textTheme.headlineSmall),
-          content: Text("Do you approve or decline this transaction?", style: Theme.of(context).textTheme.bodyMedium, overflow: TextOverflow.visible),
-          actions: <Widget>[
-            if (transactionImages.isEmpty)
-            ListView.builder(
-              itemCount: transactionImages.length,
-              itemBuilder: (context, index){
-                final imageUrl = transactionImages[index];
-                return Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Column(
-                    children: [
-                      Text('Picture ${index+1}', style: Theme.of(context).textTheme.headlineMedium,),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => FullScreenImage(imageUrl: imageUrl),
+  final transactionService = Provider.of<TransactionService>(context, listen: false);
+  
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return Dialog(
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.8,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  "Confirm",
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Text(
+                  "Do you approve or decline this transaction?",
+                  style: Theme.of(context).textTheme.bodyMedium,
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.clip,
+                ),
+              ),
+              const SizedBox(height: 16),
+              if (transactionImages.isNotEmpty)
+                SizedBox(
+                  height: 180, // Set the height for the container holding the images
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal, // Horizontal scrolling
+                    itemCount: transactionImages.length,
+                    itemBuilder: (context, index) {
+                      final imageUrl = transactionImages[index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Column(
+                          children: [
+                            Text(
+                              'Picture ${index + 1}',
+                              style: Theme.of(context).textTheme.bodyMedium,
                             ),
-                          );
-                        },
-                        child: Image.network(imageUrl),
-                      )
-                    ],
+                            const SizedBox(height: 8),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => FullScreenImage(imageUrl: imageUrl),
+                                  ),
+                                );
+                              },
+                              child: Image.network(
+                                imageUrl,
+                                height: 120, // Adjust the height as needed
+                                width: 120, // Adjust the width as needed
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
                   ),
-                );
-              }
-            )
-            else
-              const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextButton(
-                  child: Text(
-                    "Accept",
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w500),
-                  ),
-                  onPressed: () async {
-                    Navigator.of(context).pop();
-                    _changeLoading();
-                    await transactionService.approveTransaction(transactionId);
-                    await _loadTransactions();
-                    _showSuccess('Successfully approve transaction');
-                  },
+                )
+              else
+                const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    TextButton(
+                      child: Text(
+                        "Accept",
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      onPressed: () async {
+                        Navigator.of(context).pop();
+                        _changeLoading();
+                        await transactionService.approveTransaction(transactionId);
+                        await _loadTransactions();
+                        _showSuccess('Successfully approved transaction');
+                      },
+                    ),
+                    TextButton(
+                      child: Text(
+                        "Decline",
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      onPressed: () async {
+                        Navigator.of(context).pop();
+                        _changeLoading();
+                        await transactionService.cancelledTransaction(transactionId);
+                        await _loadTransactions();
+                        _showSuccess('Successfully declined transaction');
+                      },
+                    ),
+                  ],
                 ),
-                TextButton(
-                  child: Text(
-                    "Decline",
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w500),
-                  ),
-                  onPressed: () async {
-                    Navigator.of(context).pop();
-                    _changeLoading();
-                    await transactionService.cancelledTransaction(transactionId);
-                    await _loadTransactions();
-                    _showSuccess('Successfully decline transaction');
-                  },
-                ),
-              ],
-            ),
-          ],
-        );
-      },
-    );
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
+  Future<void> _pullRefresh() async {
+    setState(() {
+      isLoading = true;
+    });
+    _loadTransactions();
   }
 }
