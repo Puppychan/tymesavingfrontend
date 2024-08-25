@@ -89,6 +89,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'My App',
+      debugShowCheckedModeBanner: false,
       scaffoldMessengerKey: scaffoldMessengerKey,
       theme: AppThemes.lightTheme,
       darkTheme: AppThemes.darkTheme,
