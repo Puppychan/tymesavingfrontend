@@ -85,7 +85,7 @@ class _ChallengeAddFormState extends State<ChallengeAddForm> {
     final challengeService =
         Provider.of<ChallengeService>(context, listen: false);
     context.loaderOverlay.show();
-    await handleAuthApi(context, () async {
+    await handleMainPageApi(context, () async {
       final result = await challengeService.createChallenge(
         _nameController.text,
         _descriptionController.text,
