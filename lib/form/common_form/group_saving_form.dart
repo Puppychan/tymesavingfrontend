@@ -93,7 +93,7 @@ class _GroupSavingFormMainState extends State<GroupSavingFormMain> {
               .updateGroupSavingGroup(
             formField['id'],
             user?.id ?? "",
-            formField["defaultApproveStatus"] ?? ApproveStatus.approved,
+            formField["defaultApproveStatus"].value ?? ApproveStatus.approved.value,
             formField['name'],
             formField['description'] ?? "",
             formField['amount'],
@@ -103,7 +103,7 @@ class _GroupSavingFormMainState extends State<GroupSavingFormMain> {
           return await Provider.of<GroupSavingService>(context, listen: false)
               .addGroupSavingGroup(
             user?.id ?? "",
-            formField["defaultApproveStatus"] ?? ApproveStatus.approved,
+            formField["defaultApproveStatus"].value ?? ApproveStatus.approved.value,
             formField['name'],
             formField['description'] ?? "",
             formField['amount'],
@@ -251,15 +251,15 @@ class _GroupSavingFormMainState extends State<GroupSavingFormMain> {
                 onChange: (value) => updateOnChange("description"),
               ),
               RadioField(
-                  label: "Budget Transaction Approval Status: ",
+                  label: "Require Approval for Transactions:",
                   options: ApproveStatus.inputFormList,
-                  onSelected: (String chosenApproveStatus) {
+                  onSelected: (String chosenResponse) {
                     ApproveStatus convertApproveStatus =
-                        ApproveStatus.fromString(chosenApproveStatus);
+                        ApproveStatus.fromInputFormString(chosenResponse);
                     updateOnChange("defaultApproveStatus",
                         value: convertApproveStatus);
                   },
-                  defaultOption: currentApproveStatus.value),
+                  defaultOption: ApproveStatus.toInputFormString(currentApproveStatus)),
               const SizedBox(height: 20),
               PrimaryButton(title: "Confirm", onPressed: _trySubmit)
             ],

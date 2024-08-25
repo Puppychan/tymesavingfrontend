@@ -93,7 +93,7 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
               .updateBudgetGroup(
             formField['id'],
             user?.id ?? "",
-            formField["defaultApproveStatus"] ?? ApproveStatus.approved,
+            formField["defaultApproveStatus"].value ?? ApproveStatus.approved.value,
             formField['name'],
             formField['description'] ?? "",
             formField['amount'],
@@ -103,7 +103,7 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
           return await Provider.of<BudgetService>(context, listen: false)
               .addBudgetGroup(
             user?.id ?? "",
-            formField["defaultApproveStatus"] ?? ApproveStatus.approved,
+            formField["defaultApproveStatus"].value ?? ApproveStatus.approved.value,
             formField['name'],
             formField['description'] ?? "",
             formField['amount'],
@@ -252,15 +252,16 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
                 onChange: (value) => updateOnChange("description"),
               ),
               RadioField(
-                  label: "Budget Transaction Approval Status: ",
+                  label: "Require Approval for Transactions:",
                   options: ApproveStatus.inputFormList,
-                  onSelected: (String chosenApproveStatus) {
+                  onSelected: (String chosenResponse) {
                     ApproveStatus convertApproveStatus =
-                        ApproveStatus.fromString(chosenApproveStatus);
+                        ApproveStatus.fromInputFormString(chosenResponse);
                     updateOnChange("defaultApproveStatus",
                         value: convertApproveStatus);
                   },
-                  defaultOption: currentApproveStatus.value),
+                  defaultOption:
+                      ApproveStatus.toInputFormString(currentApproveStatus)),
               const SizedBox(height: 20),
               PrimaryButton(title: "Confirm", onPressed: _trySubmit)
             ],
