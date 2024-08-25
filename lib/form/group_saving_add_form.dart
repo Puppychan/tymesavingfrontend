@@ -8,7 +8,7 @@ void showGroupSavingFormA(BuildContext context) {
   // because this sheet open from another sheet -> we need to pop the current sheet
   showStyledBottomSheet(
     context: context,
-    title: 'New GroupSaving Group',
+    title: 'New Saving Group',
     subTitle: 'Define your goal group',
     contentWidget: const GroupSavingFormMain(
       type: FormStateType.groupSaving,
