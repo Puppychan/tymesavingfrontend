@@ -7,6 +7,7 @@ import 'package:tymesavingfrontend/common/enum/page_location_enum.dart';
 import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
 import 'package:tymesavingfrontend/components/common/dialog/date_picker_dialog.dart';
 import 'package:tymesavingfrontend/components/common/dialog/time_picker_dialog.dart';
+import 'package:tymesavingfrontend/components/common/input/multiline_text_field.dart';
 import 'package:tymesavingfrontend/components/common/input/radio_field.dart';
 import 'package:tymesavingfrontend/components/common/input/underline_text_field.dart';
 import 'package:tymesavingfrontend/components/common/multi_form_components/amount_multi_form.dart';
@@ -19,7 +20,6 @@ import 'package:tymesavingfrontend/utils/display_error.dart';
 import 'package:tymesavingfrontend/utils/display_success.dart';
 import 'package:tymesavingfrontend/utils/format_date.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
-import 'package:tymesavingfrontend/utils/input_format_currency.dart';
 import 'package:tymesavingfrontend/utils/validator.dart';
 
 class BudgetFormMain extends StatefulWidget {
@@ -93,7 +93,7 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
               .updateBudgetGroup(
             formField['id'],
             user?.id ?? "",
-            formField["defaultApproveStatus"] ?? ApproveStatus.approved,
+            formField["defaultApproveStatus"].value ?? ApproveStatus.approved.value,
             formField['name'],
             formField['description'] ?? "",
             formField['amount'],
@@ -103,7 +103,7 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
           return await Provider.of<BudgetService>(context, listen: false)
               .addBudgetGroup(
             user?.id ?? "",
-            formField["defaultApproveStatus"] ?? ApproveStatus.approved,
+            formField["defaultApproveStatus"].value ?? ApproveStatus.approved.value,
             formField['name'],
             formField['description'] ?? "",
             formField['amount'],
@@ -162,15 +162,6 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
     }
   }
 
-  // void onTransactionCategorySelected(TransactionCategory category) {
-  //   Future.microtask(() async {
-  //     if (!mounted) return;
-  //     final formStateService =
-  //         Provider.of<FormStateProvider>(context, listen: false);
-  //     formStateService.updateFormCategory(category, widget.type);
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Consumer<FormStateProvider>(
@@ -179,10 +170,7 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
           formStateService.getFormField(widget.type);
       // TransactionCategory selectedCategory =
       //     formStateService.getCategory(widget.type);
-      String formName = formFields['name'] ?? "Naming group...";
       String formattedAmount = formStateService.getFormattedAmount(widget.type);
-      String formDescription =
-          formFields['description'] ?? "Please add description";
       ApproveStatus currentApproveStatus =
           formFields['defaultApproveStatus'] ?? ApproveStatus.approved;
 
@@ -191,59 +179,21 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
       _descriptionController.text = formFields['description'] ?? "";
       _nameController.text = formFields['name'] ?? "";
 
-      // List<Widget> renderCategories(BuildContext context) {
-      //   return TransactionCategory.values.where((category) => category != TransactionCategory.all).expand((category) {
-      //     final isSelected = selectedCategory.name == category.name;
-      //     Map<String, dynamic> categoryInfo =
-      //         transactionCategoryData[category]!;
-      //     return [
-      //       Material(
-      //           color: Colors.transparent,
-      //           child: InkWell(
-      //             borderRadius: BorderRadius.circular(10),
-      //             splashColor: colorScheme.tertiary,
-      //             onTap: () async => {onTransactionCategorySelected(category)},
-      //             child: getCategoryIcon(
-      //                 currentCategoryInfo: categoryInfo,
-      //                 isSelected: isSelected,
-      //                 colorScheme: colorScheme),
-      //           )),
-      //       const SizedBox(width: 10)
-      //     ];
-      //   }).toList();
-      // }
-
       return Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ..._buildComponentGroup(
-              //     label: "CHOOSE CATEGORY",
-              //     contentWidget: SingleChildScrollView(
-              //         scrollDirection: Axis.horizontal,
-              //         child: Row(
-              //           mainAxisAlignment: MainAxisAlignment.spaceAround,
-              //           children: renderCategories(context),
-              //         ))),
+
               UnderlineTextField(
                 controller: _nameController,
                 icon: Icons.card_membership,
                 label: 'GROUP NAME',
-                placeholder: formName,
+                placeholder:  "Naming group...",
                 keyboardType: TextInputType.text,
                 onChange: (value) => updateOnChange("name"),
                 validator: Validator.validateGroupName,
               ),
-              UnderlineTextField(
-                  label: "TOTAL AMOUNT",
-                  controller: _amountController,
-                  icon: Icons.attach_money,
-                  placeholder: formattedAmount,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [CurrencyInputFormatter()],
-                  onChange: (value) => updateOnChange("amount"),
-                  validator: Validator.validateAmount),
               AmountMultiForm(
                   formattedAmount: formattedAmount,
                   updateOnChange: updateOnChange,
@@ -292,24 +242,26 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
                   }
                 },
               ),
-              UnderlineTextField(
+              MultilineTextField(
                 label: 'DESCRIPTION',
                 controller: _descriptionController,
-                icon: Icons.description,
-                placeholder: formDescription,
-                keyboardType: TextInputType.text,
+                placeholder: "Please add description",
+                keyboardType: TextInputType.multiline,
+                minLines: 3,
+                maxLines: null,
                 onChange: (value) => updateOnChange("description"),
               ),
               RadioField(
-                  label: "Budget Transaction Approval Status: ",
+                  label: "Require Approval for Transactions:",
                   options: ApproveStatus.inputFormList,
-                  onSelected: (String chosenApproveStatus) {
+                  onSelected: (String chosenResponse) {
                     ApproveStatus convertApproveStatus =
-                        ApproveStatus.fromString(chosenApproveStatus);
+                        ApproveStatus.fromInputFormString(chosenResponse);
                     updateOnChange("defaultApproveStatus",
                         value: convertApproveStatus);
                   },
-                  defaultOption: currentApproveStatus.value),
+                  defaultOption:
+                      ApproveStatus.toInputFormString(currentApproveStatus)),
               const SizedBox(height: 20),
               PrimaryButton(title: "Confirm", onPressed: _trySubmit)
             ],

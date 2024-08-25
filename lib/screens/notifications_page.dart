@@ -91,7 +91,7 @@ class _NotificationsPageState extends State<NotificationsPage>
     });
     _fetchInvitations();
   }
-
+  
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
@@ -129,15 +129,18 @@ class _NotificationsPageState extends State<NotificationsPage>
                     return const Center(child: CircularProgressIndicator());
                   }
                   return invitations.isNotEmpty
-                      ? ListView.builder(
-                          padding: AppPaddingStyles.pagePadding,
-                          itemCount: invitations.length,
-                          itemBuilder: (context, index) {
-                            final invitation = invitations[index];
-                            return AuthUserInvitationCard(
-                                invitation: invitation);
-                          },
-                        )
+                      ? RefreshIndicator(
+                        onRefresh: _pullRefresh,
+                        child: ListView.builder(
+                            padding: AppPaddingStyles.pagePadding,
+                            itemCount: invitations.length,
+                            itemBuilder: (context, index) {
+                              final invitation = invitations[index];
+                              return AuthUserInvitationCard(
+                                  invitation: invitation);
+                            },
+                          ),
+                      )
                       : buildNoInvitation(textTheme, colorScheme);
                 },
               ),
@@ -148,15 +151,18 @@ class _NotificationsPageState extends State<NotificationsPage>
                     return const Center(child: CircularProgressIndicator());
                   }
                   return invitations.isNotEmpty
-                      ? ListView.builder(
-                          padding: AppPaddingStyles.pagePadding,
-                          itemCount: invitations.length,
-                          itemBuilder: (context, index) {
-                            final invitation = invitations[index];
-                            return AuthUserInvitationCard(
-                                invitation: invitation);
-                          },
-                        )
+                      ? RefreshIndicator(
+                        onRefresh: _pullRefresh,
+                        child: ListView.builder(
+                            padding: AppPaddingStyles.pagePadding,
+                            itemCount: invitations.length,
+                            itemBuilder: (context, index) {
+                              final invitation = invitations[index];
+                              return AuthUserInvitationCard(
+                                  invitation: invitation);
+                            },
+                          ),
+                      )
                       : buildNoInvitation(textTheme, colorScheme);
                 },
               ),

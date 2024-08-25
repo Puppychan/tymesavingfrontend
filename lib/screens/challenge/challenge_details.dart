@@ -77,6 +77,18 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
     });
   }
 
+  Future<void> _publishChallenge(String? challengeId) async {
+    Future.microtask(() async {
+      if(!mounted) return;
+      final challengeService = Provider.of<ChallengeService>(context, listen: false);
+      await handleMainPageApi(context, () async {
+        return await challengeService.publishChallenge(challengeId!);
+      }, () async {
+        if (!mounted) return;
+      });
+    });
+  }
+
   Future<void> _loadChallengeProgress(String? challengeId, String? userId) async {
     Future.microtask(() async {
       if(!mounted) return;
@@ -285,6 +297,9 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
                                     "Milestones",
                                     style: Theme.of(context).textTheme.headlineMedium,
                                   ),
+                            if (!widget.isForListing && _checkPointModelList!.isNotEmpty)
+                            Padding(padding: const EdgeInsets.symmetric(horizontal: 50,vertical: 10),
+                            child: PrimaryButton(title: 'Publish Milestone', onPressed: () => _showPublishPrompt(context)),),
                             !widget.isForListing && _checkPointModelList!.length < 5 ?
                             Padding(padding: const EdgeInsets.symmetric(horizontal: 50,vertical: 10),
                             child: PrimaryButton(title: 'Create milestones', onPressed: (){
@@ -423,6 +438,35 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
               child: Text('Delete', style: Theme.of(context).textTheme.labelLarge,),
               onPressed: () {
                 _deleteChallenge(_challengeModel!.id);
+                Navigator.pushAndRemoveUntil(context,
+                MaterialPageRoute(builder: (context) => ChallengePage(userId: _currentUser!.id,)),(_) => false);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showPublishPrompt(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Publish this challenge', style: Theme.of(context).textTheme.headlineSmall,),
+          content: Text('After publishing, you cannot edit milestone!'
+          ,style: Theme.of(context).textTheme.bodyLarge, overflow: TextOverflow.visible,),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancel',style: Theme.of(context).textTheme.labelLarge,),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Publish', style: Theme.of(context).textTheme.labelLarge,),
+              onPressed: () {
+                _publishChallenge(_challengeModel!.id);
                 Navigator.pushAndRemoveUntil(context,
                 MaterialPageRoute(builder: (context) => ChallengePage(userId: _currentUser!.id,)),(_) => false);
               },

@@ -55,7 +55,7 @@ class _CategoryCardItemState extends State<CategoryCardItem> {
     final Color color = category['color'];
     return Card.outlined(
       color: colorScheme.onPrimary,
-      margin: const EdgeInsets.symmetric(horizontal: 100, vertical: 10),
+      margin: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width*0.2, vertical: 10),
       child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Row(

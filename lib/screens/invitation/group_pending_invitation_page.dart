@@ -98,6 +98,13 @@ class _GroupPendingInvitationPageState extends State<GroupPendingInvitationPage>
     _fetchInvitations();
   }
 
+  Future<void> _pullRefresh() async {
+    setState(() {
+      _isDataFetched = false;
+    });
+    _fetchInvitations();
+  }
+
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
@@ -147,14 +154,17 @@ class _GroupPendingInvitationPageState extends State<GroupPendingInvitationPage>
                     return const Center(child: CircularProgressIndicator());
                   }
                   return invitations.isNotEmpty
-                      ? ListView.builder(
-                          padding: AppPaddingStyles.pagePadding,
-                          itemCount: invitations.length,
-                          itemBuilder: (context, index) {
-                            final invitation = invitations[index];
-                            return GroupInvitationCard(invitation: invitation);
-                          },
-                        )
+                      ? RefreshIndicator(
+                        onRefresh: _pullRefresh,
+                        child: ListView.builder(
+                            padding: AppPaddingStyles.pagePadding,
+                            itemCount: invitations.length,
+                            itemBuilder: (context, index) {
+                              final invitation = invitations[index];
+                              return GroupInvitationCard(invitation: invitation);
+                            },
+                          ),
+                      )
                       : buildNoInvitation(textTheme, colorScheme);
                 },
               ),
@@ -165,14 +175,17 @@ class _GroupPendingInvitationPageState extends State<GroupPendingInvitationPage>
                     return const Center(child: CircularProgressIndicator());
                   }
                   return invitations.isNotEmpty
-                      ? ListView.builder(
-                          padding: AppPaddingStyles.pagePadding,
-                          itemCount: invitations.length,
-                          itemBuilder: (context, index) {
-                            final invitation = invitations[index];
-                            return GroupInvitationCard(invitation: invitation);
-                          },
-                        )
+                      ? RefreshIndicator(
+                        onRefresh: _pullRefresh,
+                        child: ListView.builder(
+                            padding: AppPaddingStyles.pagePadding,
+                            itemCount: invitations.length,
+                            itemBuilder: (context, index) {
+                              final invitation = invitations[index];
+                              return GroupInvitationCard(invitation: invitation);
+                            },
+                          ),
+                      )
                       : buildNoInvitation(textTheme, colorScheme);
                 },
               ),

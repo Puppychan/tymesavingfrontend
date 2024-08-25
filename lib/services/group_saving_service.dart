@@ -35,7 +35,7 @@ class GroupSavingService extends ChangeNotifier {
     // if (userId == null) return {'response': 'User ID is required.', 'statusCode': 400};
     String endpoint =
         "${BackendEndpoints.groupSaving}/${BackendEndpoints.groupSavingsGetByUserId}/$userId";
-    if (name != null) {
+    if (name != null && name != "") {
       endpoint += "?name=$name";
     }
 

@@ -4,11 +4,12 @@ import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_group_type_enum.dart';
+import 'package:tymesavingfrontend/components/category_list/category_short_selection.dart';
 import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
 import 'package:tymesavingfrontend/components/common/dialog/date_picker_dialog.dart';
 import 'package:tymesavingfrontend/components/common/dialog/time_picker_dialog.dart';
+import 'package:tymesavingfrontend/components/common/input/multiline_text_field.dart';
 import 'package:tymesavingfrontend/components/common/input/underline_text_field.dart';
-import 'package:tymesavingfrontend/components/category_list/category_icon.dart';
 import 'package:tymesavingfrontend/components/common/multi_form_components/amount_multi_form.dart';
 import 'package:tymesavingfrontend/components/common/multi_form_components/assign_group_multi_form.dart';
 import 'package:tymesavingfrontend/components/common/multi_form_components/comonent_multi_form.dart';
@@ -52,6 +53,7 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
     // get the form fields
     final formFields = Provider.of<FormStateProvider>(context, listen: false)
         .getFormField(widget.type);
+        print("Form Fields: $formFields");
     final authService = Provider.of<AuthService>(context, listen: false);
     // get current logged in user
     setState(() {
@@ -155,10 +157,12 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
             (formField['transactionImages'] ?? []).whereType<String>().toList(),
             savingGroupId: formField['savingGroupId'],
             budgetGroupId: formField['budgetGroupId'],
+            approveStatus: formField['defaultApproveStatus'],
           );
         }
       }, () async {
         context.loaderOverlay.hide();
+
         if (!mounted) return;
         Provider.of<FormStateProvider>(context, listen: false)
             .resetForm(widget.type);
@@ -201,18 +205,12 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
     }
   }
 
-  void onTransactionCategorySelected(TransactionCategory category) {
-    Future.microtask(() async {
-      if (!mounted) return;
-      final formStateService =
-          Provider.of<FormStateProvider>(context, listen: false);
-      formStateService.updateFormCategory(category, widget.type);
-    });
-  }
+
 
   TransactionGroupType getGroupType(Map<String, dynamic> formFields) {
     TransactionGroupType? type = formFields['groupType'];
     if (type == null) {
+      // check if the transaction belongs to a group by checking the group id
       if (formFields['budgetGroupId'] != null) {
         type = TransactionGroupType.budget;
       } else if (formFields['savingGroupId'] != null) {
@@ -226,7 +224,6 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
 
     return Consumer<FormStateProvider>(
         builder: (context, formStateService, child) {
@@ -249,37 +246,6 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
       _descriptionController.text = formFields['description'] ?? "";
       _payByController.text = formFields['payBy'] ?? "";
 
-      List<Widget> renderCategories(BuildContext context) {
-        List<TransactionCategory> categories = [];
-        if (widget.type == FormStateType.income ||
-            widget.type == FormStateType.updateIncome) {
-          categories = TransactionCategory.incomeCategories;
-        } else if (widget.type == FormStateType.expense ||
-            widget.type == FormStateType.updateExpense) {
-          categories = TransactionCategory.expenseCategories;
-        }
-        return categories.expand((category) {
-          final isSelected = selectedCategory.name == category.name;
-          Map<String, dynamic> categoryInfo =
-              transactionCategoryData[category]!;
-
-          return [
-            Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(10),
-                  splashColor: colorScheme.tertiary,
-                  onTap: () async => {onTransactionCategorySelected(category)},
-                  child: getCategoryIcon(
-                      currentCategoryInfo: categoryInfo,
-                      isSelected: isSelected,
-                      colorScheme: colorScheme),
-                )),
-            const SizedBox(width: 10)
-          ];
-        }).toList();
-      }
-
       return Form(
           key: _formKey,
           child: Column(
@@ -288,12 +254,9 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
               ...buildComponentGroup(
                   context: context,
                   label: "CHOOSE CATEGORY",
-                  contentWidget: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: renderCategories(context),
-                      ))),
+                  contentWidget: CategoryShortSelection(
+                      type: widget.type,
+                      selectedCategory: selectedCategory,)),
               if (widget.isFromGroupDetail == true) ...[
                 ShortGroupInfoMultiForm(
                     chosenGroupType: chosenGroupType,
@@ -381,14 +344,13 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
                   }
                 },
               ),
-              UnderlineTextField(
+              MultilineTextField(
                 label: 'DESCRIPTION',
                 controller: _descriptionController,
-                icon: Icons.description,
                 placeholder: "Please add description",
                 keyboardType: TextInputType.multiline,
-                minLines: 1,
-                maxLines: 5,
+                minLines: 3,
+                maxLines: null,
                 onChange: (value) => updateOnChange("description"),
               ),
               UnderlineTextField(

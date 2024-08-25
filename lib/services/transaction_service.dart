@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:tymesavingfrontend/common/enum/approve_status_enum.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_type_enum.dart';
@@ -137,15 +138,18 @@ class TransactionService extends ChangeNotifier {
       TransactionCategory category,
       List<String> transactionImages,
       {String? savingGroupId,
-      String? budgetGroupId}) async {
-        // Prepare the list of MultipartFiles or just image URLs
-    List<dynamic> imageFiles = await Future.wait(transactionImages.map((imagePath) async {
+      String? budgetGroupId,
+      ApproveStatus? approveStatus}) async {
+    // Prepare the list of MultipartFiles or just image URLs
+    List<dynamic> imageFiles =
+        await Future.wait(transactionImages.map((imagePath) async {
       if (imagePath.startsWith('http')) {
         // If it's a URL, send it as is
         return imagePath;
       } else {
         // If it's a file path, convert it to a MultipartFile
-        return await MultipartFile.fromFile(imagePath, filename: imagePath.split('/').last);
+        return await MultipartFile.fromFile(imagePath,
+            filename: imagePath.split('/').last);
       }
     }).toList());
 
@@ -158,12 +162,17 @@ class TransactionService extends ChangeNotifier {
       "category": category.name,
       if (savingGroupId != null) "savingGroupId": savingGroupId,
       if (budgetGroupId != null) "budgetGroupId": budgetGroupId,
-      // "approveStatus": 
+      "approveStatus": approveStatus?.value ?? ApproveStatus.approved.value,
       "createdDate": createdDate,
       "image": imageFiles, // This is the key your backend expects for images
     });
     final response = await NetworkService.instance
         .postFormData(BackendEndpoints.transaction, data: formData);
+    if (response['response'] != null && response['statusCode'] == 200) {
+      final responseData = response['response'];
+      _detailedTransaction = Transaction.fromJson(responseData);
+      notifyListeners();
+    }
     return response;
   }
 
