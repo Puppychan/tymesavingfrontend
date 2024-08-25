@@ -46,7 +46,7 @@ class _MoMoPaymentPageState extends State<MoMoPaymentPage> {
           setState(() {
             isHaveMomo = true;
           });
-          await launchUrl(linkUri);
+          await launchUrl(linkUri, mode: LaunchMode.externalApplication);
         } else {
           print("MoMo app is not available. Loading payment URL in WebView...");
           setState(() {
