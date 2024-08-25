@@ -208,7 +208,7 @@ class UserService extends ChangeNotifier {
       CancelToken? cancelToken}) async {
     // define the endpoint
     String endpoint =
-        "${BackendEndpoints.user}/${BackendEndpoints.userSearch}/$username";
+        "${BackendEndpoints.user}/${BackendEndpoints.userSearch}/${username.isEmpty ? "''" : username}";
     // add the query parameters to the endpoint
     if (exceptGroupId != null && type != null) {
       if (type == InvitationType.budget) {
@@ -220,6 +220,7 @@ class UserService extends ChangeNotifier {
 
     final response =
         await NetworkService.instance.get(endpoint, cancelToken: cancelToken);
+    print("Response in search users $response, $endpoint, ${_currentFetchUser?.username}");
     if (response['response'] != null) {
       if (response['statusCode'] == 200) {
         final responseBody = response['response'];
