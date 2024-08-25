@@ -299,7 +299,7 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
                                   ),
                             if (!widget.isForListing && _checkPointModelList!.isNotEmpty)
                             Padding(padding: const EdgeInsets.symmetric(horizontal: 50,vertical: 10),
-                            child: PrimaryButton(title: 'Publish Milestone', onPressed: () => _publishChallenge),),
+                            child: PrimaryButton(title: 'Publish Milestone', onPressed: () => _showPublishPrompt(context)),),
                             !widget.isForListing && _checkPointModelList!.length < 5 ?
                             Padding(padding: const EdgeInsets.symmetric(horizontal: 50,vertical: 10),
                             child: PrimaryButton(title: 'Create milestones', onPressed: (){
