@@ -139,7 +139,8 @@ class TransactionService extends ChangeNotifier {
       List<String> transactionImages,
       {String? savingGroupId,
       String? budgetGroupId,
-      ApproveStatus? approveStatus}) async {
+      ApproveStatus? approveStatus,
+      bool? isMomo}) async {
     // Prepare the list of MultipartFiles or just image URLs
     List<dynamic> imageFiles =
         await Future.wait(transactionImages.map((imagePath) async {
@@ -165,6 +166,7 @@ class TransactionService extends ChangeNotifier {
       "approveStatus": approveStatus?.value ?? ApproveStatus.approved.value,
       "createdDate": createdDate,
       "image": imageFiles, // This is the key your backend expects for images
+      "isMomo": isMomo ?? false,
     });
     final response = await NetworkService.instance
         .postFormData(BackendEndpoints.transaction, data: formData);

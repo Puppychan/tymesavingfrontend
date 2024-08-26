@@ -3,12 +3,10 @@ import 'package:loader_overlay/loader_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
-import 'package:tymesavingfrontend/common/enum/transaction_type_enum.dart';
 import 'package:tymesavingfrontend/components/category_list/category_selection.dart';
 import 'package:tymesavingfrontend/components/category_list/category_short_selection.dart';
 import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
 import 'package:tymesavingfrontend/components/common/input/multiline_text_field.dart';
-import 'package:tymesavingfrontend/components/common/input/underline_text_field.dart';
 import 'package:tymesavingfrontend/components/common/multi_form_components/amount_multi_form.dart';
 import 'package:tymesavingfrontend/components/common/multi_form_components/comonent_multi_form.dart';
 import 'package:tymesavingfrontend/components/common/sheet/bottom_sheet.dart';
@@ -22,10 +20,9 @@ import 'package:tymesavingfrontend/utils/display_success.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 import 'package:tymesavingfrontend/utils/validator.dart';
 
-const defaultMomoFormType = FormStateType.income;
-
 class MomoTransactionForm extends StatefulWidget {
-  const MomoTransactionForm({super.key});
+  final FormStateType formType;
+  const MomoTransactionForm({super.key, required this.formType});
 
   @override
   State<MomoTransactionForm> createState() => _MomoTransactionFormState();
@@ -43,23 +40,23 @@ class _MomoTransactionFormState extends State<MomoTransactionForm> {
     switch (type) {
       case "amount":
         formStateService.updateFormField(
-            "amount", _amountController.text, defaultMomoFormType);
+            "amount", _amountController.text, widget.formType);
         break;
       case "description":
         formStateService.updateFormField(
-            "description", _descriptionController.text, defaultMomoFormType);
+            "description", _descriptionController.text, widget.formType);
         break;
       // case "date":
       //   final formattedDateTime =
       //       combineDateAndTime(_selectedDate, _selectedTime);
       //   formStateService.updateFormField(
-      //       "createdDate", formattedDateTime ?? "", defaultMomoFormType);
+      //       "createdDate", formattedDateTime ?? "", widget.formType);
       //   break;
       // case "groupType":
-      //   formStateService.updateFormField("groupType", value, defaultMomoFormType);
+      //   formStateService.updateFormField("groupType", value, widget.formType);
       //   break;
       default:
-        formStateService.updateFormField(type, value, defaultMomoFormType);
+        formStateService.updateFormField(type, value, widget.formType);
         break;
     }
   }
@@ -88,7 +85,7 @@ class _MomoTransactionFormState extends State<MomoTransactionForm> {
 
     // render necessary data
     final formField = Provider.of<FormStateProvider>(context, listen: false)
-        .getFormField(defaultMomoFormType);
+        .getFormField(widget.formType);
     final user = Provider.of<AuthService>(context, listen: false).user;
     Future.microtask(() async {
       await handleMainPageApi(context, () async {
@@ -100,7 +97,7 @@ class _MomoTransactionFormState extends State<MomoTransactionForm> {
           user?.id ?? "",
           formField['createdDate'] ?? "",
           formField['description'] ?? "",
-          defaultMomoFormType,
+          widget.formType,
           formField['amount'],
           formField['payBy'] ?? "",
           formField['category'],
@@ -108,6 +105,7 @@ class _MomoTransactionFormState extends State<MomoTransactionForm> {
           savingGroupId: formField['savingGroupId'],
           budgetGroupId: formField['budgetGroupId'],
           approveStatus: formField['defaultApproveStatus'],
+          isMomo: true,
         );
       }, () async {
         dynamic momoResponse;
@@ -121,7 +119,7 @@ class _MomoTransactionFormState extends State<MomoTransactionForm> {
         }, () async {
           debugPrint("Success payment response: $momoResponse");
           Provider.of<FormStateProvider>(context, listen: false)
-              .resetForm(defaultMomoFormType);
+              .resetForm(widget.formType);
           if (!mounted) return;
           Navigator.of(context).pop();
           Navigator.of(context).push(MaterialPageRoute(
@@ -133,7 +131,7 @@ class _MomoTransactionFormState extends State<MomoTransactionForm> {
 
           
           SuccessDisplay.showSuccessToast(
-              "Create new $defaultMomoFormType successfully", context);
+              "Create new $widget.formType successfully", context);
         });
       });
     });
@@ -145,14 +143,14 @@ class _MomoTransactionFormState extends State<MomoTransactionForm> {
     return Consumer<FormStateProvider>(builder: (context, value, child) {
       final formStateService = Provider.of<FormStateProvider>(context);
       final TransactionCategory selectedCategory =
-          formStateService.getCategory(defaultMomoFormType);
+          formStateService.getCategory(widget.formType);
       Map<String, dynamic> formFields =
-          formStateService.getFormField(defaultMomoFormType);
+          formStateService.getFormField(widget.formType);
       String formattedAmount =
-          formStateService.getFormattedAmount(defaultMomoFormType);
+          formStateService.getFormattedAmount(widget.formType);
 
       _amountController.text =
-          formStateService.getFormattedAmount(defaultMomoFormType);
+          formStateService.getFormattedAmount(widget.formType);
       _descriptionController.text = formFields['description'] ?? "";
 
       return Form(
@@ -174,7 +172,7 @@ class _MomoTransactionFormState extends State<MomoTransactionForm> {
                       context: context,
                       title: "Category Selection",
                       contentWidget: CategorySelectionPage(
-                          type: defaultMomoFormType,
+                          type: widget.formType,
                           onNavigateToNext: () => Navigator.pop(context)));
                 },
                 child: Text(
@@ -185,7 +183,7 @@ class _MomoTransactionFormState extends State<MomoTransactionForm> {
                 context: context,
                 label: "CHOOSE CATEGORY",
                 contentWidget: CategoryShortSelection(
-                    type: defaultMomoFormType,
+                    type: widget.formType,
                     selectedCategory: selectedCategory)),
             AmountMultiForm(
                 formattedAmount: formattedAmount,
