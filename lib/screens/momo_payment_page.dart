@@ -25,19 +25,22 @@ class _MoMoPaymentPageState extends State<MoMoPaymentPage> {
   }
 
   void _defineWebViewController() {
-    controller = WebViewController()
-      ..loadRequest(
+    controller = WebViewController();
+    // Attempt to load the page after WebView is initialized
+    Future.microtask(() {
+      controller.loadRequest(
         Uri.parse(widget.paymentUrl),
       );
+    });
   }
 
   void _launchMoMoApp() {
     Future.microtask(() async {
       print("Launching MoMo app...");
       try {
-        // Attempt to launch the MoMo app using the deeplink
-        final linkUri = Uri.parse(widget.deeplink);
-        print("Launching MoMo app with deeplink: $linkUri");
+        // // Attempt to launch the MoMo app using the deeplink
+        final linkUri = Uri.parse(widget.paymentUrl);
+        // print("Launching MoMo app with deeplink: $linkUri");
         if (await canLaunchUrl(linkUri)) {
           print("MoMo app is available. Launching...");
           setState(() {
@@ -52,6 +55,12 @@ class _MoMoPaymentPageState extends State<MoMoPaymentPage> {
           // If MoMo app is not available, load the payment URL in WebView
           _defineWebViewController();
         }
+        // print("MoMo app is not available. Loading payment URL in WebView...");
+        // setState(() {
+        //   isHaveMomo = false;
+        // });
+        // If MoMo app is not available, load the payment URL in WebView
+        // _defineWebViewController();
       } catch (e) {
         print("Error launching MoMo app: $e");
         setState(() {

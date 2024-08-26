@@ -24,8 +24,9 @@ class _ViewAllTransactionsPageState extends State<ViewAllTransactionsPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   List<Transaction>? _transactions = [];
-  String _sortOption = 'sortDateCreated'; // Default sort option
-  String _sortOrder = 'ascending'; // Default sort order
+  String _sortOption = 'sortDateCreated'; 
+  String _sortOrder = 'ascending'; 
+  bool isLoading = true;
 
   void _fetchTransactions() async {
     final transactionService =
@@ -43,7 +44,15 @@ class _ViewAllTransactionsPageState extends State<ViewAllTransactionsPage>
 
     setState(() {
       _transactions = transactions;
+      isLoading = false;
     });
+  }
+
+  Future<void> _pullRefresh() async {
+    setState(() {
+      isLoading = true;
+    });
+    _fetchTransactions();
   }
 
   @override
@@ -130,12 +139,14 @@ class _ViewAllTransactionsPageState extends State<ViewAllTransactionsPage>
           ),
         ],
       ),
-      body: TabBarView(
+      body: isLoading ? 
+      const Center(child: CircularProgressIndicator()) :
+      TabBarView(
         controller: _tabController,
         children: TransactionType.list
             .map((_) => _transactions == null || _transactions!.isEmpty
                 ? _buildNoTransactionsMessage()
-                : TransactionList(transactions: _transactions!))
+                : RefreshIndicator(onRefresh: _pullRefresh,child: TransactionList(transactions: _transactions!)))
             .toList(),
       ),
     );
