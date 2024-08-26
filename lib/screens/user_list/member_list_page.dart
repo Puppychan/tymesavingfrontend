@@ -42,7 +42,6 @@ class _MemberListPageState extends State<MemberListPage> {
     _fetchMembers();
   }
 
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,21 +51,27 @@ class _MemberListPageState extends State<MemberListPage> {
         ),
         body: Consumer<UserService>(builder: (context, memberService, child) {
           final members = memberService.members;
-          return Column(
+          return SingleChildScrollView(
+              child: Column(
             children: [
               SizedBox(
                 height: 35,
-                child: Text('Tips: You can view contribution of each member by clicking on the member card', 
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontStyle: FontStyle.italic),
-                overflow: TextOverflow.visible,
-                textAlign: TextAlign.center,),
+                child: Text(
+                  'Tips: You can view contribution of each member by clicking on the member card',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(fontStyle: FontStyle.italic),
+                  overflow: TextOverflow.visible,
+                  textAlign: TextAlign.center,
+                ),
               ),
               Padding(
                 padding: AppPaddingStyles.pagePadding,
                 child: members.isNotEmpty
                     ? SizedBox(
-                      height: MediaQuery.of(context).size.height - 200,
-                      child: ListView.separated(
+                        height: MediaQuery.of(context).size.height - 200,
+                        child: ListView.separated(
                           itemCount: members.length,
                           separatorBuilder: (context, index) =>
                               const SizedBox(height: 15),
@@ -79,13 +84,13 @@ class _MemberListPageState extends State<MemberListPage> {
                             );
                           },
                         ),
-                    )
+                      )
                     : const Center(
                         child: CircularProgressIndicator(),
                       ),
               ),
             ],
-          );
+          ));
         }));
   }
 }
