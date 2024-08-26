@@ -429,4 +429,10 @@ class TransactionService extends ChangeNotifier {
         "${BackendEndpoints.transaction}/$transactionId/${BackendEndpoints.cancelledTransaction}");
     return response;
   }
+
+  Future<Map<String, dynamic>> deleteTransaction(String transactionId) async {
+    final response = await NetworkService.instance
+        .delete("${BackendEndpoints.transaction}/$transactionId");
+    return response;
+  }
 }

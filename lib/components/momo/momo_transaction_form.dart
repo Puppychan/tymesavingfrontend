@@ -127,7 +127,7 @@ class _MomoTransactionFormState extends State<MomoTransactionForm> {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => MoMoPaymentPage(
                     paymentUrl: momoResponse['response']['payUrl'],
-                    deeplink: momoResponse['response']['deeplink'] ?? "",
+                    transactionId: momoResponse['response']['orderId'],
                   )));
           context.loaderOverlay.hide();
 

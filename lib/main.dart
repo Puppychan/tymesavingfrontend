@@ -4,7 +4,9 @@ import 'package:loader_overlay/loader_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/styles/app_color.dart';
 import 'package:tymesavingfrontend/common/styles/app_theme.dart';
+import 'package:tymesavingfrontend/models/momo/momo_payment_response_model.dart';
 import 'package:tymesavingfrontend/screens/main_page_layout.dart';
+import 'package:tymesavingfrontend/screens/momo_payment_result_page.dart';
 import 'package:tymesavingfrontend/screens/splash_screen.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/budget_service.dart';
@@ -73,12 +75,25 @@ class _MyAppState extends State<MyApp> {
     super.dispose();
   }
 
-    void _handleIncomingLinks() {
+  void _handleIncomingLinks() {
     // Handle incoming deep links
-    _sub = uriLinkStream.listen((Uri? uri) {
-      if (uri != null) {
+    _sub = uriLinkStream.listen((Uri? listenedUri) {
+      if (listenedUri != null) {
         // Check if the URI matches the success path
-        print("URI Path is: ${uri}");
+        print(
+            "URI Path is: ${listenedUri} - ${listenedUri.host} - ${listenedUri.path} - ${listenedUri.query}");
+        // Check if the URI path matches 'payment/momo'
+        if (listenedUri.host == 'payment' && listenedUri.path == '/momo') {
+          final momoResult =
+              MomoPaymentResponse.fromMap(listenedUri.queryParameters);
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    MomoPaymentResultPage(momoResponse: momoResult),
+              ),
+              (_) => false);
+        }
       }
     }, onError: (err) {
       // Handle errors by showing an error screen, etc.
@@ -101,9 +116,7 @@ class _MyAppState extends State<MyApp> {
       //   child: const SplashScreen(),
       // ),
       home: const SplashScreen(),
-      routes: {
-        '/payment':(context) => const MainPageLayout()
-      },
+      routes: {'/payment/momo': (context) => const MainPageLayout()},
     );
   }
 }
