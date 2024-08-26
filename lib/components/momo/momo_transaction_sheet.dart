@@ -42,7 +42,7 @@ void showMomoTransaction(BuildContext context, FormStateType formType) {
   final selectedCategory = TransactionCategory.incomeCategories[0];
   formStateService.updateFormCategory(selectedCategory, formType);
   formStateService.updateWholeForm({
-    "description": "Topup Wallet",
+    "description": formType == FormStateType.income ? "Topup Wallet" : "Withdraw Wallet",
     "payBy": "Momo",
     "groupType": null,
     "budgetGroupId": null,
