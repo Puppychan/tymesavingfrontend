@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 enum MomoPaymentStatus {
   success(0),
   timeout(5),
@@ -21,6 +23,67 @@ enum MomoPaymentStatus {
         return "Error";
       default:
         return "Unknown";
+    }
+  }
+
+  static List<Widget> toWidgetList(BuildContext context, int value) {
+    MomoPaymentStatus status = fromInt(value);
+    switch (status) {
+      case MomoPaymentStatus.success:
+        return [
+          const Icon(Icons.check_circle, size: 70, color: Colors.green),
+          const SizedBox(height: 15),
+          Text("Payment Success", style: Theme.of(context).textTheme.titleLarge),
+          const SizedBox(height: 7),
+          Text("Your payment was successful. You can now close this page.",
+              style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontFamily: 'Merriweather'),
+              textAlign: TextAlign.center,
+              maxLines: 2,)
+        ];
+      case MomoPaymentStatus.timeout:
+        return [
+          Icon(Icons.timer, size: 70, color: Colors.yellow[700]),
+          const SizedBox(height: 15),
+          Text("Request Timeout", style: Theme.of(context).textTheme.titleLarge),
+          const SizedBox(height: 7),
+          Text("Your payment was not completed in time. Please try again.",
+              style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontFamily: 'Merriweather'),
+              textAlign: TextAlign.center,
+              maxLines: 2,)
+        ];
+      case MomoPaymentStatus.cancel:
+        return [
+          const Icon(Icons.cancel, size: 70, color: Colors.blueGrey),
+          const SizedBox(height: 15),
+          Text("Payment Cancelled", style: Theme.of(context).textTheme.titleLarge),
+          const SizedBox(height: 7),
+          Text("Your payment was cancelled. Please try again.",
+              style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontFamily: 'Merriweather'),
+              textAlign: TextAlign.center,
+              maxLines: 2,)
+        ];
+      case MomoPaymentStatus.error:
+        return [
+          Icon(Icons.error, size: 70, color: Colors.deepOrange[700]),
+          const SizedBox(height: 15),
+          Text("Payment Error", style: Theme.of(context).textTheme.titleLarge),
+          const SizedBox(height: 7),
+          Text("An error occurred while processing your payment. Please try again.",
+              style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontFamily: 'Merriweather'),
+              textAlign: TextAlign.center,
+              maxLines: 2,)
+        ];
+      default:
+        return [
+          Icon(Icons.error, size: 70, color: Colors.deepOrange[700]),
+          const SizedBox(height: 15),
+          Text("Payment Error", style: Theme.of(context).textTheme.titleLarge),
+          const SizedBox(height: 7),
+          Text("An error occurred while processing your payment. Please try again.",
+              style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontFamily: 'Merriweather'),
+              textAlign: TextAlign.center,
+              maxLines: 2,)
+        ];
     }
   }
 
