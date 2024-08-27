@@ -20,6 +20,7 @@ class TransactionService extends ChangeNotifier {
   TopCategoriesList? _topCategoriesList;
   NetSpend? _netSpend;
   Map<String, List<Transaction>>? _transactions;
+  List<Transaction> _flattenTransactions = [];
   Transaction? _detailedTransaction;
   Map<String, String> _filterOptions = {
     "getTransactionType": 'All',
@@ -40,6 +41,7 @@ class TransactionService extends ChangeNotifier {
   TopCategoriesList? get topCategoriesList => _topCategoriesList;
   NetSpend? get netSpend => _netSpend;
   Map<String, List<Transaction>>? get transactions => _transactions;
+  List<Transaction> get flattenTransactions => _flattenTransactions;
   Transaction? get detailedTransaction => _detailedTransaction;
   Map<String, String> get filterOptions => _filterOptions;
   Map<String, String> get sortOptions => _sortOptions;
@@ -140,7 +142,7 @@ class TransactionService extends ChangeNotifier {
       {String? savingGroupId,
       String? budgetGroupId,
       ApproveStatus? approveStatus,
-      bool? isMomo}) async {
+      bool isMomo = false}) async {
     // Prepare the list of MultipartFiles or just image URLs
     List<dynamic> imageFiles =
         await Future.wait(transactionImages.map((imagePath) async {
@@ -166,7 +168,7 @@ class TransactionService extends ChangeNotifier {
       "approveStatus": approveStatus?.value ?? ApproveStatus.approved.value,
       "createdDate": createdDate,
       "image": imageFiles, // This is the key your backend expects for images
-      "isMomo": isMomo ?? false,
+      "isMomo": isMomo,
     });
     final response = await NetworkService.instance
         .postFormData(BackendEndpoints.transaction, data: formData);
@@ -313,12 +315,13 @@ class TransactionService extends ChangeNotifier {
     return response;
   }
 
-  Future<List<Transaction>> fetchTransactionsSortHandler({
+  Future<dynamic> fetchTransactionsSortHandler({
     required String tab,
     required String sortOption,
     required String sortOrder,
     required String userId,
   }) async {
+    // TODO
     // Build the base endpoint URL
     String endpoint =
         "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReportByUser}/$userId";
@@ -366,18 +369,21 @@ class TransactionService extends ChangeNotifier {
       // Convert to List<Transaction>
       List<Transaction> transactions =
           allTransactions.map((data) => Transaction.fromJson(data)).toList();
-
-      return transactions;
+      _flattenTransactions = transactions;
+      notifyListeners();
     } else {
       // Handle errors appropriately
-      throw Exception(
-          'Failed to load transactions. Status code: ${response['statusCode']}');
+      debugPrint('Failed to load transactions. Status code: ${response['statusCode']}');
+      // throw Exception(
+      //     'Failed to load transactions. Status code: ${response['statusCode']}');
     }
+      return response;
   }
 
   // Get transaction list of month and year
   Future<List<Transaction>> fetchTransactionsByMonthAndYear(
       String userId, int year, int month) async {
+        // TODO
     // Ensure that month is two digits
     String monthStr = month.toString().padLeft(2, '0');
     String yearStr = year.toString();

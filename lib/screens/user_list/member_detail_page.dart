@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/styles/app_padding.dart';
 import 'package:tymesavingfrontend/components/common/animation_progress_bar.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
+import 'package:tymesavingfrontend/components/common/sheet/bottom_sheet.dart';
+import 'package:tymesavingfrontend/components/transaction/transaction_item.dart';
 import 'package:tymesavingfrontend/components/user/user_detail_widget.dart';
 import 'package:tymesavingfrontend/models/base_group_model.dart';
 import 'package:tymesavingfrontend/models/summary_user_model.dart';
@@ -175,7 +178,31 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
                         ),
                         TextButton(
                             onPressed: () {
-                              // TODO: view all transactions page
+                              showStyledBottomSheet(
+                                title: "Your transactions",
+                                subTitle: "Here are your transactions",
+                                context: context,
+                                contentWidget: Padding(
+                                    padding: const EdgeInsets.all(20),
+                                    child: Column(
+                                      children: transactions.map((transaction) {
+                                        final formattedDate =
+                                            DateFormat('MMM d, yyyy').format(
+                                                DateTime.parse(
+                                                    transaction.date));
+                                        // final randomIcon = getRandomIcon();
+                                        // final randomColor = getRandomColor();
+
+                                        return TransactionItem(
+                                          disableButton: false,
+                                          transaction: transaction,
+                                          formattedDate: formattedDate,
+                                          randomIcon: Icons.shopping_cart,
+                                          randomColor: Colors.indigo,
+                                        );
+                                      }).toList(),
+                                    )),
+                              );
                             },
                             child: Text("View History",
                                 style: Theme.of(context)
@@ -190,9 +217,11 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      widget.isBudgetGroup ? 
-                      _buildTransactionSummaryCard(
-                          false, expenseAmount, context) : _buildTransactionSummaryCard(true, incomeAmount, context),
+                      widget.isBudgetGroup
+                          ? _buildTransactionSummaryCard(
+                              false, expenseAmount, context)
+                          : _buildTransactionSummaryCard(
+                              true, incomeAmount, context),
                     ],
                   ),
                   const SizedBox(height: 20),
