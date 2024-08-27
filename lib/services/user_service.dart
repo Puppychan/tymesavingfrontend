@@ -95,7 +95,8 @@ class UserService extends ChangeNotifier {
       endpoint =
           "${BackendEndpoints.budget}/$groupId/${BackendEndpoints.budgetGetMembers}";
     } else {
-      endpoint = "${BackendEndpoints.groupSaving}/$groupId/${BackendEndpoints.groupSavingGetMembers}";
+      endpoint =
+          "${BackendEndpoints.groupSaving}/$groupId/${BackendEndpoints.groupSavingGetMembers}";
     }
     final response = await NetworkService.instance.get(endpoint);
     if (response['response'] != null && response['statusCode'] == 200) {
@@ -134,7 +135,6 @@ class UserService extends ChangeNotifier {
   }
 
   void updateSortOptions(String newSortField, String newSortValue) {
-
     String sortField = '';
 
     switch (newSortField) {
@@ -201,26 +201,29 @@ class UserService extends ChangeNotifier {
     return response;
   }
 
-  Future<dynamic> searchUsers(String username,
+  Future<dynamic> searchUsers(String? query,
       {String? exceptGroupId,
       InvitationType? type,
       List<dynamic>? exceptUsers,
       CancelToken? cancelToken}) async {
     // define the endpoint
-    String endpoint =
-        "${BackendEndpoints.user}/${BackendEndpoints.userSearch}/${username.isEmpty ? "''" : username}";
+    String endpoint = "${BackendEndpoints.user}/${BackendEndpoints.userSearch}";
+    if (query != null && query.isNotEmpty) {
+      endpoint += "?query=$query";
+    }
     // add the query parameters to the endpoint
     if (exceptGroupId != null && type != null) {
+      // Check if there is already a query parameter added
+      String separator = endpoint.contains('?') ? '&' : '?';
+
       if (type == InvitationType.budget) {
-        endpoint += "?exceptBudgetId=$exceptGroupId";
+        endpoint += "${separator}exceptBudgetId=$exceptGroupId";
       } else if (type == InvitationType.savings) {
-        endpoint += "?exceptSavingId=$exceptGroupId";
+        endpoint += "${separator}exceptSavingId=$exceptGroupId";
       }
     }
-
     final response =
         await NetworkService.instance.get(endpoint, cancelToken: cancelToken);
-    print("Response in search users $response, $endpoint, ${_currentFetchUser?.username}");
     if (response['response'] != null) {
       if (response['statusCode'] == 200) {
         final responseBody = response['response'];
