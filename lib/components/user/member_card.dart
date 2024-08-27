@@ -61,6 +61,7 @@ class MemberCard extends StatelessWidget {
               return MemberDetailPage(
                 user: user,
                 groupId: groupId,
+                isBudgetGroup: isBudgetGroup,
               );
             }));
           },

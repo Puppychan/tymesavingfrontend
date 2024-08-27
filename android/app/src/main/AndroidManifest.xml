@@ -37,7 +37,7 @@
                     <category android:name="android.intent.category.DEFAULT" />
                     <category android:name="android.intent.category.BROWSABLE" />
                     <data
-                        android:scheme="tyme_saving"
+                        android:scheme="tymesaving"
                         android:host="payment"
                         android:pathPrefix="/momo" />
                 </intent-filter>

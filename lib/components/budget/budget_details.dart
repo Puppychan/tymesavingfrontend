@@ -116,8 +116,6 @@ if (!mounted) return;
           if(_budget!.defaultApproveStatus == ApproveStatus.pending.value) {
             approval = true;
           }
-          // debugPrint(
-          //     "percentageTaken: $percentageTaken, ${percentageTaken! > 199}, $percentageLeft");
           if (percentageTaken! < 0) {
             _displayPercentageTaken = '0%';
           } else if (percentageTaken! > 199) {

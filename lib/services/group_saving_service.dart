@@ -133,6 +133,28 @@ class GroupSavingService extends ChangeNotifier {
     notifyListeners();
   }
 
+    // Fetch all transactions of a user by userID
+  Future<Map<String, dynamic>> fetchTransactionsByUserId(
+      String groupSavingId, String userId) async {
+        print("Endpoint ${"${BackendEndpoints.groupSaving}/$groupSavingId/transactions?userId=$userId"}");
+    final response = await NetworkService.instance.get(
+        "${BackendEndpoints.groupSaving}/$groupSavingId/transactions?userId=$userId");
+
+    if (response['response'] != null && response['statusCode'] == 200) {
+      final responseData = response['response'];
+      List<Transaction> transactionList = [];
+      if (responseData.isNotEmpty) {
+        for (var transaction in responseData) {
+          final tempTransaction = Transaction.fromJson(transaction);
+          transactionList.add(tempTransaction);
+        }
+      }
+      _transactions = transactionList;
+      notifyListeners();
+    }
+    return response;
+  }
+
   Future<Map<String, dynamic>> fetchGroupSavingTransactions(
       String groupSavingGroupId) async {
     final response = await NetworkService.instance.get(
