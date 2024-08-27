@@ -96,7 +96,7 @@ class _MoMoPaymentPageState extends State<MoMoPaymentPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(
-                      "assets/images/momo_logo.png",
+                      "assets/img/momo_icon.png",
                       width: 100,
                       height: 100,
                     ),
