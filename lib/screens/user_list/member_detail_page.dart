@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/styles/app_padding.dart';
 import 'package:tymesavingfrontend/components/common/animation_progress_bar.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
+import 'package:tymesavingfrontend/components/common/not_found_message.dart';
 import 'package:tymesavingfrontend/components/common/sheet/bottom_sheet.dart';
 import 'package:tymesavingfrontend/components/transaction/transaction_item.dart';
 import 'package:tymesavingfrontend/components/user/user_detail_widget.dart';
@@ -178,31 +179,7 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
                         ),
                         TextButton(
                             onPressed: () {
-                              showStyledBottomSheet(
-                                title: "Your transactions",
-                                subTitle: "Here are your transactions",
-                                context: context,
-                                contentWidget: Padding(
-                                    padding: const EdgeInsets.all(20),
-                                    child: Column(
-                                      children: transactions.map((transaction) {
-                                        final formattedDate =
-                                            DateFormat('MMM d, yyyy').format(
-                                                DateTime.parse(
-                                                    transaction.date));
-                                        // final randomIcon = getRandomIcon();
-                                        // final randomColor = getRandomColor();
-
-                                        return TransactionItem(
-                                          disableButton: false,
-                                          transaction: transaction,
-                                          formattedDate: formattedDate,
-                                          randomIcon: Icons.shopping_cart,
-                                          randomColor: Colors.indigo,
-                                        );
-                                      }).toList(),
-                                    )),
-                              );
+                              onPressViewTransactions(context, transactions);
                             },
                             child: Text("View History",
                                 style: Theme.of(context)
@@ -342,5 +319,36 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
             ],
           ),
         ));
+  }
+
+  void onPressViewTransactions(
+      BuildContext context, List<Transaction> transactions) {
+    showStyledBottomSheet(
+      title: "Your transactions",
+      subTitle: "Here are your transactions",
+      context: context,
+      contentWidget: Padding(
+          padding: const EdgeInsets.all(20),
+          child: transactions.isEmpty
+              ? const NotFoundMessage(
+                  message: "You don't have any transactions inside this group yet",
+                )
+              : Column(
+                  children: transactions.map((transaction) {
+                    final formattedDate = DateFormat('MMM d, yyyy')
+                        .format(DateTime.parse(transaction.date));
+                    // final randomIcon = getRandomIcon();
+                    // final randomColor = getRandomColor();
+
+                    return TransactionItem(
+                      disableButton: false,
+                      transaction: transaction,
+                      formattedDate: formattedDate,
+                      randomIcon: Icons.shopping_cart,
+                      randomColor: Colors.indigo,
+                    );
+                  }).toList(),
+                )),
+    );
   }
 }

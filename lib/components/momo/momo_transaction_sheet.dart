@@ -7,6 +7,7 @@ import 'package:tymesavingfrontend/components/common/input/radio_field.dart';
 import 'package:tymesavingfrontend/components/common/sheet/bottom_sheet.dart';
 import 'package:tymesavingfrontend/components/momo/momo_transaction_form.dart';
 import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
+import 'package:tymesavingfrontend/utils/navigate_between_sheet.dart';
 
 void showMomoOption(BuildContext context) {
   FormStateType formStateType = FormStateType.income;
@@ -27,7 +28,10 @@ void showMomoOption(BuildContext context) {
         PrimaryButton(
           title: 'Continue',
           onPressed: () {
-            showMomoTransaction(context, formStateType);
+            navigateSheetToSheet(
+              context,
+              () => showMomoTransaction(context, formStateType),
+            );
           },
         ),
       ],
@@ -42,7 +46,8 @@ void showMomoTransaction(BuildContext context, FormStateType formType) {
   final selectedCategory = TransactionCategory.incomeCategories[0];
   formStateService.updateFormCategory(selectedCategory, formType);
   formStateService.updateWholeForm({
-    "description": formType == FormStateType.income ? "Topup Wallet" : "Withdraw Wallet",
+    "description":
+        formType == FormStateType.income ? "Topup Wallet" : "Withdraw Wallet",
     "payBy": "Momo",
     "groupType": null,
     "budgetGroupId": null,
@@ -56,6 +61,10 @@ void showMomoTransaction(BuildContext context, FormStateType formType) {
     subTitle: 'Choose category',
     contentWidget: MomoTransactionForm(
       formType: formType,
+    ),
+    onNavigateToPreviousSheet: () => navigateSheetToSheet(
+      context,
+      () => showMomoOption(context),
     ),
   );
 }
