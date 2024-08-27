@@ -44,7 +44,7 @@ class _MileStoneCreatePageState extends State<MileStoneCreatePage> {
   Future<void> _trySubmit () async {
     final challengeService = Provider.of<ChallengeService>(context, listen: false);
     context.loaderOverlay.show();
-    await handleAuthApi(context, () async {
+    await handleMainPageApi(context, () async {
       final result = await challengeService.createMileStone(
         widget.challengeId,
         _nameController.text,

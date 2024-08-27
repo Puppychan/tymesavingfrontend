@@ -33,7 +33,7 @@ class _CustomPieChartState extends State<CustomPieChart> {
   };
 
   @override
-  void initState() {
+ void initState() {
     pieChartData = [];
     for (int i = 0; i < widget.topCategories.length; i++) {
       final category = transactionCategoryData[
@@ -43,21 +43,53 @@ class _CustomPieChartState extends State<CustomPieChart> {
         value: double.parse(widget.topCategories[i].percentages),
         color: color,
         title: '',
-        showTitle: false,
+        showTitle: false, // Hide title on the chart
       ));
     }
 
     super.initState();
   }
 
-  @override
+@override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(),
-      child: SizedBox(
-        height: 200,
-        child: PieChart(PieChartData(sections: pieChartData)),
-      ),
+    return Column(
+      children: [
+        SizedBox(
+          height: 200,
+          child: PieChart(
+            PieChartData(
+              sections: pieChartData,
+              startDegreeOffset: 90,
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+        // Custom Legend
+        Wrap(
+          spacing: 8,
+          runSpacing: 4,
+          children: List.generate(widget.topCategories.length, (index) {
+            final category = transactionCategoryData[
+                TransactionCategory.fromString(widget.topCategories[index].category)];
+            final Color color = category?['color'];
+            return Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 16,
+                  height: 16,
+                  color: color,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  '${widget.topCategories[index].percentages}%',
+                  style: Theme.of(context).textTheme.labelLarge,
+                ),
+              ],
+            );
+          }),
+        ),
+      ],
     );
   }
 }
