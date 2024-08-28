@@ -31,6 +31,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
   @override
   void initState() {
     super.initState();
+    _precacheAvatar();
     _loadData();
   }
 
@@ -40,11 +41,19 @@ class _HomePageState extends State<HomePage> with RouteAware {
     super.dispose();
   }
 
+  Future<void> _precacheAvatar() async {
+    setState(() {
+      precacheImage(NetworkImage(widget.user!.avatar!), context).then((_) {
+      }).catchError((error) {
+        debugPrint("Failed to preload image: $error");
+      });
+    });
+  }
+
   Future<void> _loadData() async {
     Future.microtask(() async {
       final transactionService =
           Provider.of<TransactionService>(context, listen: false);
-
       if (widget.user != null) {
         await handleMainPageApi(context, () async {
           return await transactionService.getBothChartReport(widget.user!.id);
@@ -54,7 +63,6 @@ class _HomePageState extends State<HomePage> with RouteAware {
             chartReportSecondary = transactionService.chartReportSecondary;
           });
         });
-
         if (!mounted) return;
       }
 

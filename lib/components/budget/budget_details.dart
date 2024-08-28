@@ -13,12 +13,10 @@ import 'package:tymesavingfrontend/components/transaction/transaction_list.dart'
 import 'package:tymesavingfrontend/form/transaction_add_form.dart';
 import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/budget_model.dart';
-import 'package:tymesavingfrontend/models/summary_user_model.dart';
 import 'package:tymesavingfrontend/models/transaction_model.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/budget_service.dart';
 import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
-import 'package:tymesavingfrontend/services/user_service.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
@@ -63,7 +61,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
   }
 
   void _loadTransactionForm() {
-if (!mounted) return;
+          if (!mounted) return;
             final formStateProvider =
                 Provider.of<FormStateProvider>(context, listen: false);
             formStateProvider.resetForm(FormStateType.expense);
