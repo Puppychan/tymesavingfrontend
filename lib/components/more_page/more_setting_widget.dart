@@ -17,52 +17,34 @@ class MoreMenuSetting extends StatefulWidget {
 }
 
 class _MoreMenuSettingState extends State<MoreMenuSetting> {
-  /*
-  PlaceHolder function, when merge replace it with function to redirect to 
-  other screen (Settings, Wallet?, Help Center, Feedback, Contact us, About)
-  */
-  Future<void> placeHolderFunction() async {
-    //Debug here
-    debugPrint('function tapped!');
-  }
 
   Future<void> sandBox() async {
-    //Debug here
     if (!mounted) return;
   }
 
   Future<void> settingFunction() async {
-    //Debug here
     if (!mounted) return;
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => const SettingPage()));
   }
 
   Future<void> myWalletRoute() async {
-    //Debug here
     if (!mounted) return;
-    debugPrint('Tracking page tapped!');
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => const SpendTracking()));
   }
 
   Future<void> myReport() async {
-    //Debug here
-    debugPrint('Report page tapped!');
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => const ReportPage()));
   }
 
   Future<void> about() async {
-    //Debug here
-    debugPrint('About us tapped!');
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => const AboutUs()));
   }
 
   Future<void> logoutFunction() async {
-    //Debug here
-    debugPrint('logout tapped!');
     final authService = Provider.of<AuthService>(context, listen: false);
     await authService.signOut();
     if (!mounted) return;
