@@ -89,7 +89,8 @@ class _TransactionMonthlyTabBarState extends State<TransactionMonthlyTabBar>
     setState(() {
       transactions =
           fetchedTransactions.isNotEmpty ? fetchedTransactions : null;
-      isLoading = false; // Hide loading indicator
+      isLoading = false;
+      debugPrint(transactions.toString());
     });
   }
 

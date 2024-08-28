@@ -23,7 +23,7 @@ class _ChallengeCardState extends State<ChallengeCard> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.tertiaryContainer,
+          color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(8),
         ),
         child: InkWell(
@@ -82,6 +82,7 @@ class _ChallengeCardState extends State<ChallengeCard> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 mainAxisSize: MainAxisSize.max,
                 children: [
+                  Icon(Icons.perm_identity_sharp, weight: 0.5, size: 20,color: Theme.of(context).colorScheme.primary,),
                   Text(
                     "By ${widget.challengeModel!.createdBy}",
                     style: Theme.of(context)
