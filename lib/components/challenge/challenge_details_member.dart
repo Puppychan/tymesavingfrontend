@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:tymesavingfrontend/common/enum/rank_color_enum.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
 
@@ -39,8 +40,28 @@ class UserCard extends StatelessWidget {
             Text(rank, 
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Rank.getRankColor(rank))
             ),
-            Text("Progress ${formatAmountToVnd(double.parse(progressAmount.toString()))}"),
-            Text("MileStone $checkpointReached")
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: "Total Achieved: ",
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  TextSpan(
+                    text: formatAmountToVnd(double.parse(progressAmount.toString())),
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: colorScheme.primary, // Example of custom styling
+                        ),
+                  ),
+                ],
+              ),
+            ),
+            Text(checkpointReached == 0 ?
+              "No milestone reached" :
+              "Reached milestone $checkpointReached",
+            style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontStyle: FontStyle.italic,)
+            )
           ],
         ),
       ),

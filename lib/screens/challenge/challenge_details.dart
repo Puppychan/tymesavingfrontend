@@ -343,7 +343,7 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
                         children: [
                           const SizedBox(height: 20,),
                           Text(
-                              "Member participating",
+                              "Leaderboards",
                               style: Theme.of(context).textTheme.headlineMedium,
                             ),
                           Container(
