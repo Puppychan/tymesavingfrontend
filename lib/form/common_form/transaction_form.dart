@@ -53,7 +53,7 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
     // get the form fields
     final formFields = Provider.of<FormStateProvider>(context, listen: false)
         .getFormField(widget.type);
-        print("Form Fields: $formFields");
+    print("Form Fields: $formFields");
     final authService = Provider.of<AuthService>(context, listen: false);
     // get current logged in user
     setState(() {
@@ -205,8 +205,6 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
     }
   }
 
-
-
   TransactionGroupType getGroupType(Map<String, dynamic> formFields) {
     TransactionGroupType? type = formFields['groupType'];
     if (type == null) {
@@ -224,7 +222,6 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
 
   @override
   Widget build(BuildContext context) {
-
     return Consumer<FormStateProvider>(
         builder: (context, formStateService, child) {
       Map<String, dynamic> formFields =
@@ -239,6 +236,11 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
               widget.type == FormStateType.updateIncome);
       List<String> transactionImages =
           (formFields['transactionImages'] ?? []).whereType<String>().toList();
+      bool isFromGroup = widget.isFromGroupDetail == true ||
+          (formFields['budgetGroupId'] != null &&
+              formFields['budgetGroupId'] != "") ||
+          (formFields['savingGroupId'] != null &&
+              formFields['savingGroupId'] != "");
 
       // update text to controller
       _amountController.text = formStateService.getFormattedAmount(widget.type);
@@ -255,9 +257,10 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
                   context: context,
                   label: "CHOOSE CATEGORY",
                   contentWidget: CategoryShortSelection(
-                      type: widget.type,
-                      selectedCategory: selectedCategory,)),
-              if (widget.isFromGroupDetail == true) ...[
+                    type: widget.type,
+                    selectedCategory: selectedCategory,
+                  )),
+              if (isFromGroup) ...[
                 ShortGroupInfoMultiForm(
                     chosenGroupType: chosenGroupType,
                     chosenResult: chosenResult),

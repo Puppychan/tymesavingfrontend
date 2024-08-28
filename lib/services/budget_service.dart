@@ -86,6 +86,7 @@ class BudgetService extends ChangeNotifier {
   Future<Map<String, dynamic>> fetchBudgetDetails(id) async {
     final response = await NetworkService.instance
         .get("${BackendEndpoints.budget}/$id/info");
+    debugPrint("RESPONSE DATA: $response");
     if (response['response'] != null && response['statusCode'] == 200) {
       _currentBudget = Budget.fromMap(response['response']);
       notifyListeners();
@@ -178,6 +179,7 @@ class BudgetService extends ChangeNotifier {
       final responseData = response['response'];
       List<Transaction> transactionPendingList = [];
       List<Transaction> transactionCancelledList = [];
+      List<Transaction> approvedTransactionList = [];
       if (responseData.isNotEmpty) {
         for (var transaction in responseData) {
           if(transaction['approveStatus'] == ApproveStatus.pending.value) {
@@ -186,9 +188,13 @@ class BudgetService extends ChangeNotifier {
           } else if (transaction['approveStatus'] == 'Declined') {
             final tempTransaction = Transaction.fromJson(transaction);
             transactionCancelledList.add(tempTransaction);
+          } else if (transaction['approveStatus'] == 'Approved') {
+            final tempTransaction = Transaction.fromJson(transaction);
+            approvedTransactionList.add(tempTransaction);
           }
         }
       }
+      _transactions = approvedTransactionList;
       _awaitingApprovalTransaction = transactionPendingList;
       _cancelledTransaction = transactionCancelledList;
       notifyListeners();

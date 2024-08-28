@@ -76,6 +76,9 @@ class ChallengeDetailMemberModel {
   final String phone;
   final String? avatar;
   final String? tymeReward;
+  final int checkpointReached;
+  final int progressAmount;
+  
 
   ChallengeDetailMemberModel({
     required this.id,
@@ -83,6 +86,8 @@ class ChallengeDetailMemberModel {
     required this.email,
     required this.fullname,
     required this.phone,
+    required this.checkpointReached,
+    required this.progressAmount,
     this.avatar,
     this.tymeReward,
   });
@@ -96,6 +101,8 @@ class ChallengeDetailMemberModel {
       phone: map['phone'] as String,
       avatar: map['avatar'] as String?,
       tymeReward: map['tymeReward'] as String?,
+      checkpointReached: map['numCheckpointPassed'] ?? 0,
+      progressAmount: map['currentProgress'] ?? 0,
     );
   }
 

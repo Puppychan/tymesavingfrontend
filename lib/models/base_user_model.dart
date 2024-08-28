@@ -7,6 +7,8 @@ class UserBase {
   final String fullname;
   final String phone;
   final String? avatar;
+  final String rank;
+  final int userPoint;
 
   UserBase.fromMap(Map<String, dynamic> user)
       : id = user['_id'],
@@ -14,7 +16,9 @@ class UserBase {
         email = user['email'],
         fullname = user['fullname'],
         phone = user['phone'],
-        avatar = user['avatar'] ?? TEMP_AVATAR_IMAGE;
+        avatar = user['avatar'] ?? TEMP_AVATAR_IMAGE,
+        rank = user['tymeReward'],
+        userPoint = user['userPoints'];
 
 
   Map<String, dynamic> toMap() {

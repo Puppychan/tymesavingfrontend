@@ -38,7 +38,6 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
   double? percentageLeft;
   DateTime? endDate;
   int? daysLeft;
-  SummaryUser? _user;
   bool isMember = false;
   bool approval = false;
   bool isLoading = true;
@@ -47,21 +46,6 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
 
   List<Transaction> _transactions = [];
   List<Transaction> _awaitingApprovalTransaction = [];
-
-  Future<void> _renderUser(String? userId) async {
-    Future.microtask(() async {
-      if (!mounted) return;
-      final userService = Provider.of<UserService>(context, listen: false);
-      await handleMainPageApi(context, () async {
-        return await userService.getOtherUserInfo(userId);
-      }, () async {
-        if (!mounted) return;
-        setState(() {
-          _user = userService.summaryUser;
-        });
-      });
-    });
-  }
 
   Future<void> _loadTransactions() async {
     if (!mounted) return;
@@ -125,8 +109,6 @@ if (!mounted) return;
           }
         });
       });
-
-      await _renderUser(_budget?.hostedBy);
       await _loadTransactions();
     });
   }
@@ -232,7 +214,7 @@ if (!mounted) return;
                                                 fontStyle: FontStyle.italic),
                                       ),
                                       TextSpan(
-                                        text: _user?.fullname ?? 'Loading..',
+                                        text: _budget!.hostedBy,
                                         style: Theme.of(context)
                                             .textTheme
                                             .titleSmall!
