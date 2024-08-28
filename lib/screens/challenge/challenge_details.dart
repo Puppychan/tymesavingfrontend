@@ -73,6 +73,8 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
         return await challengeService.deleteChallenge(challengeId!);
       }, () async {
         if (!mounted) return;
+        Navigator.pushAndRemoveUntil(context,
+                MaterialPageRoute(builder: (context) => ChallengePage(userId: _currentUser!.id,)),(_) => false);
       });
     });
   }
@@ -153,8 +155,8 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
       super.didPopNext();
       isLoading = true;
       loadUser();
-      
   }
+  
   @override
     void didChangeDependencies() {
       super.didChangeDependencies();
@@ -170,7 +172,8 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
   @override
   Widget build(BuildContext context) {
   final colorScheme = Theme.of(context).colorScheme;
-
+  double sizeHeight = MediaQuery.of(context).size.height;
+  double sizeWidth = MediaQuery.of(context).size.width;
   return Scaffold(
     backgroundColor: colorScheme.tertiaryContainer,
       body: isLoading 
@@ -181,7 +184,7 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
               slivers: [
                 SliverAppBar(
                   backgroundColor: colorScheme.surface,
-                  expandedHeight: 100.0,
+                  expandedHeight: sizeHeight * 0.15,
                   floating: false,
                   pinned: true,
                   flexibleSpace: FlexibleSpaceBar(
@@ -438,8 +441,6 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
               child: Text('Delete', style: Theme.of(context).textTheme.labelLarge,),
               onPressed: () {
                 _deleteChallenge(_challengeModel!.id);
-                Navigator.pushAndRemoveUntil(context,
-                MaterialPageRoute(builder: (context) => ChallengePage(userId: _currentUser!.id,)),(_) => false);
               },
             ),
           ],
