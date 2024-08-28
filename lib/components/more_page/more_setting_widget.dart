@@ -6,6 +6,8 @@ import 'package:tymesavingfrontend/screens/setting_page.dart';
 import 'package:tymesavingfrontend/screens/tracking_report/spend_tracking.dart';
 import 'package:tymesavingfrontend/screens/tracking_report/report_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class MoreMenuSetting extends StatefulWidget {
   const MoreMenuSetting({super.key});
@@ -15,52 +17,34 @@ class MoreMenuSetting extends StatefulWidget {
 }
 
 class _MoreMenuSettingState extends State<MoreMenuSetting> {
-  /*
-  PlaceHolder function, when merge replace it with function to redirect to 
-  other screen (Settings, Wallet?, Help Center, Feedback, Contact us, About)
-  */
-  Future<void> placeHolderFunction() async {
-    //Debug here
-    debugPrint('function tapped!');
-  }
 
   Future<void> sandBox() async {
-    //Debug here
     if (!mounted) return;
   }
 
   Future<void> settingFunction() async {
-    //Debug here
     if (!mounted) return;
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => const SettingPage()));
   }
 
   Future<void> myWalletRoute() async {
-    //Debug here
     if (!mounted) return;
-    debugPrint('Tracking page tapped!');
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => const SpendTracking()));
   }
 
   Future<void> myReport() async {
-    //Debug here
-    debugPrint('Report page tapped!');
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => const ReportPage()));
   }
 
   Future<void> about() async {
-    //Debug here
-    debugPrint('About us tapped!');
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => const AboutUs()));
   }
 
   Future<void> logoutFunction() async {
-    //Debug here
-    debugPrint('logout tapped!');
     final authService = Provider.of<AuthService>(context, listen: false);
     await authService.signOut();
     if (!mounted) return;
@@ -70,6 +54,19 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
           builder: (context) => const SignInView(),
         ),
         (route) => false);
+  }
+
+  Future<void> _launchContact() async {
+    final Uri phone = Uri(
+      scheme: 'https',
+      path: "//www.rmit.edu.vn/students/support"
+    );
+    if (await canLaunchUrl(phone)){
+      await launchUrl(phone,
+      mode: LaunchMode.externalApplication);
+    } else {
+      debugPrint("Launch Phone failed");
+    }
   }
 
   @override
@@ -91,11 +88,11 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
                 const Icon(Icons.wallet),
                 myWalletRoute),
             RowSettingTemplate('My Report', 'Understand your cashflow',
-                const Icon(Icons.help), myReport),
+                const Icon(Icons.report), myReport),
             RowSettingTemplate('Setting', 'Change setting and preference',
                 const Icon(Icons.settings), settingFunction),
-            RowSettingTemplate('Contact us', 'Call the hotline',
-                const Icon(Icons.phone), sandBox),
+            RowSettingTemplate('Contact us', 'Student support',
+                const Icon(Icons.help), _launchContact),
             RowSettingTemplate('About', 'Some information about the project',
                 const Icon(Icons.info), about),
             RowSettingTemplate('Logout', 'Logout your account here',

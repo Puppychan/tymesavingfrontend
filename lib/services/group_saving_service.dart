@@ -159,17 +159,24 @@ class GroupSavingService extends ChangeNotifier {
       String groupSavingGroupId) async {
     final response = await NetworkService.instance.get(
         "${BackendEndpoints.groupSaving}/$groupSavingGroupId/transactions");
-
+    debugPrint("${BackendEndpoints.groupSaving}/$groupSavingGroupId/transactions");
     if (response['response'] != null && response['statusCode'] == 200) {
       final responseData = response['response'];
       List<Transaction> transactionList = [];
+      List<Transaction> awaitingApprovalTransaction= [];
       if (responseData.isNotEmpty) {
         for (var transaction in responseData) {
-          final tempTransaction = Transaction.fromJson(transaction);
-          transactionList.add(tempTransaction);
+          if(transaction['approveStatus'] == 'Approved') {
+            final tempTransaction = Transaction.fromJson(transaction);
+            transactionList.add(tempTransaction);
+          } else if (transaction['approveStatus'] == ApproveStatus.pending.value) {
+            final tempTransaction = Transaction.fromJson(transaction);
+            awaitingApprovalTransaction.add(tempTransaction);
+          }
         }
       }
       _transactions = transactionList;
+      _awaitingApprovalTransaction = awaitingApprovalTransaction;
       notifyListeners();
     }
     return response;
@@ -179,10 +186,12 @@ class GroupSavingService extends ChangeNotifier {
       String savingGroupId) async {
     final response = await NetworkService.instance
         .get("${BackendEndpoints.groupSaving}/$savingGroupId/transactions");
+    debugPrint("${BackendEndpoints.groupSaving}/$savingGroupId/transactions");
     if (response['response'] != null && response['statusCode'] == 200) {
       final responseData = response['response'];
       List<Transaction> transactionPendingList = [];
       List<Transaction> transactionCancelledList = [];
+      List<Transaction> approvedTransactionList = [];
       if (responseData.isNotEmpty) {
         for (var transaction in responseData) {
           if(transaction['approveStatus'] == ApproveStatus.pending.value) {
@@ -191,11 +200,15 @@ class GroupSavingService extends ChangeNotifier {
           } else if (transaction['approveStatus'] == 'Declined') {
             final tempTransaction = Transaction.fromJson(transaction);
             transactionCancelledList.add(tempTransaction);
+          } else if (transaction['approveStatus'] == 'Approved') {
+            final tempTransaction = Transaction.fromJson(transaction);
+            approvedTransactionList.add(tempTransaction);
           }
         }
       }
       _awaitingApprovalTransaction = transactionPendingList;
       _cancelledTransaction = transactionCancelledList;
+      _transactions = approvedTransactionList;
       notifyListeners();
     }
     return response;
