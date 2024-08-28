@@ -85,7 +85,6 @@ if (!mounted) return;
             formStateProvider.resetForm(FormStateType.expense);
             formStateProvider.updateFormField("groupType", TransactionGroupType.budget, FormStateType.expense);
             formStateProvider.updateFormField("budgetGroupId", widget.budgetId, FormStateType.expense);
-            formStateProvider.updateFormField("tempChosenGroup", _budget, FormStateType.expense);
   }
 
   Future<void> _loadData() async {

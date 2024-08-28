@@ -3,6 +3,7 @@ import 'package:loader_overlay/loader_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
+import 'package:tymesavingfrontend/common/enum/transaction_form_write_policy_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_group_type_enum.dart';
 import 'package:tymesavingfrontend/components/category_list/category_short_selection.dart';
 import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
@@ -14,8 +15,6 @@ import 'package:tymesavingfrontend/components/common/multi_form_components/amoun
 import 'package:tymesavingfrontend/components/common/multi_form_components/assign_group_multi_form.dart';
 import 'package:tymesavingfrontend/components/common/multi_form_components/comonent_multi_form.dart';
 import 'package:tymesavingfrontend/components/common/multi_form_components/images_uploading_multi_form.dart';
-import 'package:tymesavingfrontend/components/common/multi_form_components/short_group_info_multi_form.dart';
-import 'package:tymesavingfrontend/models/base_group_model.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
@@ -25,13 +24,6 @@ import 'package:tymesavingfrontend/utils/display_success.dart';
 import 'package:tymesavingfrontend/utils/format_date.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 import 'package:tymesavingfrontend/utils/validator.dart';
-
-enum FormWritePolicy {
-  createForm,
-  updateForm,
-  createFormFromGroup,
-  updateFormFromGroup
-}
 
 class TransactionFormMain extends StatefulWidget {
   final FormStateType type;
@@ -228,25 +220,6 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
   }
 
   // update - personal, update image - group, create - all
-  FormWritePolicy renderWritePermission(bool isFromGroup) {
-    if (widget.type == FormStateType.updateExpense ||
-        widget.type == FormStateType.updateIncome) {
-      if (isFromGroup) {
-        // only allow to update images
-        return FormWritePolicy.updateFormFromGroup;
-      }
-      // if not from group, allow to update all except group field
-      return FormWritePolicy.updateForm;
-    }
-    // return FormWritePermission.viewOnly;
-    if (widget.isFromGroupDetail == true) {
-      // if create form from group detail page,
-      // not allow to edit group
-      return FormWritePolicy.createFormFromGroup;
-    }
-    // allow to edit all
-    return FormWritePolicy.createForm;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -257,11 +230,7 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
       TransactionCategory selectedCategory =
           formStateService.getCategory(widget.type);
       TransactionGroupType chosenGroupType = getGroupType(formFields);
-      BaseGroup? chosenResult = formFields["tempChosenGroup"];
       String formattedAmount = formStateService.getFormattedAmount(widget.type);
-      // bool isBelongToGroup = chosenGroupType != TransactionGroupType.none &&
-      //     (widget.type == FormStateType.updateExpense ||
-      //         widget.type == FormStateType.updateIncome);
       List<String> transactionImages =
           (formFields['transactionImages'] ?? []).whereType<String>().toList();
       bool isFromGroup = widget.isFromGroupDetail == true ||
@@ -269,11 +238,14 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
               formFields['budgetGroupId'] != "") ||
           (formFields['savingGroupId'] != null &&
               formFields['savingGroupId'] != "");
-      FormWritePolicy writePermission = renderWritePermission(isFromGroup);
+      String? groupId =
+          formFields['budgetGroupId'] ?? formFields['savingGroupId'];
+      TransactionFormWritePolicy writePermission = renderWritePermission(
+          widget.type, widget.isFromGroupDetail, isFromGroup);
       bool isEditableOtherFields = [
-        FormWritePolicy.createForm,
-        FormWritePolicy.createFormFromGroup,
-        FormWritePolicy.updateForm
+        TransactionFormWritePolicy.createForm,
+        TransactionFormWritePolicy.createFormFromGroup,
+        TransactionFormWritePolicy.updateForm
       ].contains(writePermission);
 
       // update text to controller
@@ -294,48 +266,32 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
                     type: widget.type,
                     selectedCategory: selectedCategory,
                   )),
-              if (writePermission == FormWritePolicy.createFormFromGroup ||
-                  writePermission == FormWritePolicy.updateFormFromGroup)
-                // if from group, including both update transaction or create transaction
-                // only display group info, not editable
+              if (writePermission != TransactionFormWritePolicy.updateForm)
+                // if in update form for personal transaction, do not allow to change group
                 ...buildComponentGroup(
                     context: context,
-                    label: "GROUP INFO",
-                    contentWidget: ShortGroupInfoMultiForm(
-                      chosenGroupType: chosenGroupType,
-                      defaultGroupId:
-                          chosenGroupType == TransactionGroupType.budget
-                              ? formFields['budgetGroupId']
-                              : formFields['savingGroupId'],
-                    ))
-              else if (writePermission == FormWritePolicy.createForm)
-                // can only choose group if in create form and click on global creating option
-                ...buildComponentGroup(
-                  context: context,
-                  label: "ASSIGN TO",
-                  contentWidget: AssignGroupMultiForm(
-                      updateOnChange: updateOnChange,
-                      userId: _user?.id ?? "",
-                      // formFields: formFields,
-                      chosenResult: chosenResult,
-                      chosenGroupType: chosenGroupType,
-                      transactionType: widget.type),
-                )
-              else
-                const SizedBox(height: 0),
+                    label: "ASSIGN TO",
+                    contentWidget: AssignGroupMultiForm(
+                        updateOnChange: updateOnChange,
+                        userId: _user?.id ?? "",
+                        // formFields: formFields,
+                        // chosenResult: chosenResult,
+                        writePolicy: writePermission,
+                        groupId: groupId,
+                        chosenGroupType: chosenGroupType,
+                        transactionType: widget.type)),
               AmountMultiForm(
                   formattedAmount: formattedAmount,
                   updateOnChange: updateOnChange,
-                  isEditable: isEditableOtherFields, // only allow to edit amount if user has permission
+                  isEditable:
+                      isEditableOtherFields, // only allow to edit amount if user has permission
                   amountController: _amountController),
               UnderlineTextField(
                 icon: Icons.calendar_today,
                 label: 'DATE',
                 placeholder: convertDateTimeToReadableString(_selectedDate),
                 readOnly: true,
-                suffixIcon: isEditableOtherFields
-                    ? Icons.edit
-                    : null,
+                suffixIcon: isEditableOtherFields ? Icons.edit : null,
                 onTap: () async {
                   if (!isEditableOtherFields) return;
                   DateTime? pickedDate = await showCustomDatePickerDialog(
@@ -357,9 +313,7 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
                 placeholder:
                     convertTimeDayToReadableString(context, _selectedTime),
                 readOnly: true,
-                suffixIcon: isEditableOtherFields
-                    ? Icons.edit
-                    : null,
+                suffixIcon: isEditableOtherFields ? Icons.edit : null,
                 onTap: () async {
                   if (!isEditableOtherFields) return;
                   // Show the time picker dialog

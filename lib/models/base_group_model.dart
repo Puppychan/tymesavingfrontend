@@ -1,3 +1,5 @@
+import 'package:tymesavingfrontend/common/enum/approve_status_enum.dart';
+
 class BaseGroup {
   final String id;
   final String hostedBy;
@@ -7,7 +9,7 @@ class BaseGroup {
   final double concurrentAmount;
   final String createdDate;
   final String endDate;
-  final String defaultApproveStatus;
+  final ApproveStatus defaultApproveStatus;
   final bool isClosedOrExpired;
 
 
@@ -20,7 +22,7 @@ class BaseGroup {
       concurrentAmount = (map['concurrentAmount'] as num?)?.toDouble() ?? 0.0,
       createdDate = map['createdDate'] ?? '',
       endDate = map['endDate'] ?? '',
-      defaultApproveStatus = map['defaultApproveStatus'] ?? false,
+      defaultApproveStatus = ApproveStatus.fromString(map['defaultApproveStatus']),
       isClosedOrExpired = map['isClosedOrExpired'] ?? false;
 
   Map<String, dynamic> toMapForForm() {

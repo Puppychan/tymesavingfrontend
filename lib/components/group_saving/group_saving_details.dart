@@ -198,8 +198,6 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails>
                           _groupSaving!.id, FormStateType.income);
                       // render group
                       if (!mounted) return;
-                      formStateProvider.updateFormField("tempChosenGroup",
-                          _groupSaving, FormStateType.income);
                       showTransactionFormA(context, true,
                           isFromGroupDetail: true);
                     },
