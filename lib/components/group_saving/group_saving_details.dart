@@ -41,7 +41,7 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails>
   DateTime? endDate;
   int? daysLeft;
   String? endDay;
-  SummaryUser? _user;
+  // SummaryUser? _user;
   bool isMember = false;
   bool isLoading = true;
   bool approval = false;
@@ -50,20 +50,16 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails>
   List<Transaction> _transactions = [];
   List<Transaction> _awaitingApprovalTransaction = [];
 
-  Future<void> _renderUser(String? userId) async {
-    Future.microtask(() async {
-      if (!mounted) return;
-      final userService = Provider.of<UserService>(context, listen: false);
-      await handleMainPageApi(context, () async {
-        return await userService.getOtherUserInfo(userId);
-      }, () async {
-        if (!mounted) return;
-        setState(() {
-          _user = userService.summaryUser;
-        });
-      });
-    });
-  }
+  // Future<void> _renderUser(String? userId) async {
+  //   Future.microtask(() async {
+  //     if (!mounted) return;
+  //     final userService = Provider.of<UserService>(context, listen: false);
+  //       if (!mounted) return;
+  //       setState(() {
+  //         _user = userService.summaryUser;
+  //     });
+  //   });
+  // }
 
   Future<void> _loadTransactions() async {
     if (!mounted) return;
@@ -128,8 +124,6 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails>
           }
         });
       });
-
-      await _renderUser(_groupSaving?.hostedBy);
       await _loadTransactions();
     });
   }
@@ -253,7 +247,7 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails>
                                                 fontStyle: FontStyle.italic),
                                       ),
                                       TextSpan(
-                                        text: _user?.fullname ?? 'Loading..',
+                                        text: _groupSaving!.hostedBy,
                                         style: Theme.of(context)
                                             .textTheme
                                             .titleSmall!
