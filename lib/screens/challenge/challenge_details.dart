@@ -29,7 +29,6 @@ class ChallengeDetails extends StatefulWidget {
 
 class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
   ChallengeModel? _challengeModel;
-  SummaryUser? _challengeOwner;
   ChallengeProgress? _challengeProgress;
   List<ChallengeDetailMemberModel>? _challengeDetailMemberModelList;
   List<CheckPointModel>? _checkPointModelList;
@@ -60,8 +59,7 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
           _checkPointModelList = challengeService.checkPointModelList;
           createdDate = formatDate(_challengeModel!.startDate);
       });
-      // debugPrint(_challengeModel!.toString());
-      await _loadChallengeUser(_challengeModel?.createdBy);
+      await _loadChallengeProgress(widget.challengeId, _currentUser!.id);
     });
   }
 
@@ -101,7 +99,6 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
         if (!mounted) return;
         setState(() {
           _challengeProgress = challengeService.challengeProgress;
-          // debugPrint(_challengeProgress!.currentProgress.toString());
           _currentProgress = _challengeProgress!.reachedMilestone;
 
         if (_currentStep >= _checkPointModelList!.length) {
@@ -115,23 +112,6 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
     });
   }
 
-  Future<void> _loadChallengeUser(String? userId) async {
-    Future.microtask(() async {
-      if(!mounted) return;
-      final userService = Provider.of<UserService>(context, listen: false);
-      await handleMainPageApi(context, () async {
-        // debugPrint("USER ID FOR CHALLENGE IS: $userId");
-        return await userService.getOtherUserInfo(userId);
-      }, () async {
-        if (!mounted) return;
-        setState(() {
-          _challengeOwner = userService.summaryUser;
-        });
-      });
-      await _loadChallengeProgress(widget.challengeId, _currentUser!.id);
-    });
-  }
-
   Future<void> loadData() async {
     await _loadChallenge(widget.challengeId);
   }
@@ -140,12 +120,8 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
     Future.microtask(() async {
       if (!mounted) return;
       final authService = Provider.of<AuthService>(context, listen: false);
-      await handleMainPageApi(context, () async {
-        return await authService.getCurrentUserData();
-      }, () async {
         setState(() {
           _currentUser = authService.user;
-        });
       });
       await loadData();
     });
@@ -173,7 +149,6 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
   Widget build(BuildContext context) {
   final colorScheme = Theme.of(context).colorScheme;
   double sizeHeight = MediaQuery.of(context).size.height;
-  double sizeWidth = MediaQuery.of(context).size.width;
   return Scaffold(
     backgroundColor: colorScheme.tertiaryContainer,
       body: isLoading 
@@ -254,7 +229,7 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
                                     style: Theme.of(context).textTheme.labelMedium,
                                   ),
                                   Text(
-                                    "By ${_challengeOwner!.fullname}",
+                                    "By ${_challengeModel!.createdBy}",
                                     style: Theme.of(context).textTheme.labelMedium,
                                   ),
                                 ],
