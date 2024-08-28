@@ -383,7 +383,6 @@ class TransactionService extends ChangeNotifier {
   // Get transaction list of month and year
   Future<List<Transaction>> fetchTransactionsByMonthAndYear(
       String userId, int year, int month) async {
-        // TODO
     // Ensure that month is two digits
     String monthStr = month.toString().padLeft(2, '0');
     String yearStr = year.toString();
@@ -394,7 +393,6 @@ class TransactionService extends ChangeNotifier {
 
     // Add the filter for the specified month and year
     endpoint += "?createdDate=$yearStr-$monthStr";
-
     // Convert any sort and filter options to query parameters
     endpoint += _convertOptionsToParams();
 

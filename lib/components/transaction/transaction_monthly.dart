@@ -69,7 +69,7 @@ class _TransactionMonthlyTabBarState extends State<TransactionMonthlyTabBar>
   }
 
   // Method to fetch transactions based on the selected month and year
-  void _fetchTransactionsForSelectedMonth() async {
+  Future<void> _fetchTransactionsForSelectedMonth() async {
     setState(() {
       isLoading = true; // Show loading indicator
     });
@@ -160,7 +160,13 @@ class _TransactionMonthlyTabBarState extends State<TransactionMonthlyTabBar>
               controller: _tabController,
               children: months.map((month) {
                 return transactions != null
-                    ? TransactionList(transactions: transactions!)
+                    ? RefreshIndicator(onRefresh: () async {
+                      setState(() {
+                        isLoading = true;
+                      });
+                      _fetchTransactionsForSelectedMonth();
+                    },
+                    child: TransactionList(transactions: transactions!))
                     : const NotFoundMessage(message: 'No transactions found');
               }).toList(),
             ),
