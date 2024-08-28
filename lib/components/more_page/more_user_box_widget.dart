@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:tymesavingfrontend/common/constant/temp_constant.dart';
+import 'package:tymesavingfrontend/common/enum/rank_color_enum.dart';
 import 'package:tymesavingfrontend/components/common/images/circle_network_image.dart';
 import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/base_user_model.dart';
@@ -24,13 +25,8 @@ class _UserBoxState extends State<UserBox> with RouteAware {
     super.initState();
     Future.microtask(() async {
       final authService = Provider.of<AuthService>(context, listen: false);
-      await handleMainPageApi(context, () async {
-        return await authService.getCurrentUserData();
-        // return result;
-      }, () async {
         setState(() {
           user = authService.user;
-        });
       });
     });
   }
@@ -92,8 +88,17 @@ class _UserBoxState extends State<UserBox> with RouteAware {
                         CustomCircleImage(imagePath: user?.avatar ?? TEMP_AVATAR_IMAGE),
                     title: Text(user?.fullname ?? 'Loading...',
                         style: Theme.of(context).textTheme.titleMedium!),
-                    subtitle: Text(user?.email ?? 'Loading mail...',
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(user?.rank ?? 'Loading rank...',
+                        style: user == null ? 
+                        Theme.of(context).textTheme.bodyMedium :
+                        Theme.of(context).textTheme.bodyMedium!.copyWith(color: Rank.getRankColor(user!.rank))),
+                        Text(user?.email ?? 'Loading mail...',
                         style: Theme.of(context).textTheme.bodyMedium!),
+                      ],
+                    )
                   )
                 ],
               ),
