@@ -164,7 +164,7 @@ class _AssignGroupMultiFormState extends State<AssignGroupMultiForm> {
         const Divider(),
         ShortGroupInfoMultiForm(
             chosenGroupType: _currentChosenGroupType,
-            chosenResult: _currentChosenResult),
+            defaultGroupId: _currentChosenResult?.id,),
       ] else
         Container(),
     ]);

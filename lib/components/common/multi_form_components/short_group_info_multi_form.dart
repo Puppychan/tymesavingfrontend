@@ -7,15 +7,12 @@ import 'package:tymesavingfrontend/services/group_saving_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
 class ShortGroupInfoMultiForm extends StatefulWidget {
+  //
   final TransactionGroupType chosenGroupType;
-  final BaseGroup? chosenResult;
   final String? defaultGroupId;
 
   const ShortGroupInfoMultiForm(
-      {super.key,
-      this.chosenResult,
-      required this.chosenGroupType,
-      this.defaultGroupId});
+      {super.key, required this.chosenGroupType, this.defaultGroupId});
 
   @override
   State<ShortGroupInfoMultiForm> createState() =>
@@ -58,12 +55,7 @@ class _ShortGroupInfoMultiFormState extends State<ShortGroupInfoMultiForm> {
           });
         });
       });
-    } else {
-      setState(() {
-        _displayGroup = widget.chosenResult!;
-      });
     }
-
   }
 
   @override
@@ -73,7 +65,7 @@ class _ShortGroupInfoMultiFormState extends State<ShortGroupInfoMultiForm> {
       return const SizedBox();
     }
 
-    if (widget.chosenResult != null || widget.defaultGroupId != null) {
+    if (_displayGroup != null) {
       return SizedBox(
           width: double.infinity,
           child: Card(

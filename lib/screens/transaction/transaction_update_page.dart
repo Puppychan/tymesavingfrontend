@@ -79,7 +79,7 @@ class _TransactionUpdatePageState extends State<TransactionUpdatePage> {
     final textTheme = Theme.of(context).textTheme;
     return Scaffold(
         appBar: const Heading(
-          title: "Update Transaction",
+          title: "Transaction Details",
           showBackButton: true,
         ),
         body: SingleChildScrollView(

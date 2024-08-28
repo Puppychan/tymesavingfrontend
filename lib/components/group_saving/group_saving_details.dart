@@ -463,7 +463,7 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails>
                         child: RefreshIndicator(
                             onRefresh: _pullRefresh,
                             child:
-                                TransactionList(transactions: _transactions)),
+                                TransactionList(transactions: _transactions, disableButton: true,)),
                       ),
                     ],
                   ),

@@ -426,7 +426,7 @@ if (!mounted) return;
                       const SizedBox(height: 20,),
                       SizedBox(
                         height: 500,
-                        child: RefreshIndicator(onRefresh: _pullRefresh, child: TransactionList(transactions: _transactions)),
+                        child: RefreshIndicator(onRefresh: _pullRefresh, child: TransactionList(transactions: _transactions, disableButton: true,)),
                       ),
                     ],
                   ),
