@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/full_screen_image.dart';
@@ -82,7 +83,7 @@ class _BudgetApprovePageState extends State<BudgetApprovePage> with RouteAware {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: const Heading(title: "Approval page"),
+      appBar: const Heading(title: "Budget Approval page"),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -159,109 +160,115 @@ class _BudgetApprovePageState extends State<BudgetApprovePage> with RouteAware {
             ) :
             Expanded(
               child: showingPending ?
-              ListView.builder(
-                itemCount: _awaitingApprovalTransaction.length,
-                itemBuilder: (context, index) {
-                  final transaction = _awaitingApprovalTransaction[index];
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ListTile(
-                      onTap: () => _showAcceptDeclinePrompt(context, this, transaction.transactionImages, transaction.id),
-                      tileColor: colorScheme.tertiary,
-                      title: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 5),
-                        child: Text.rich(
-                          TextSpan(
-                            text: 'Transaction', // Default text style
-                            style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.w500),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: ' Pending',
-                                style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.green, fontWeight: FontWeight.w500),
+              RefreshIndicator(
+                onRefresh: _pullRefresh,
+                child: ListView.builder(
+                  itemCount: _awaitingApprovalTransaction.length,
+                  itemBuilder: (context, index) {
+                    final transaction = _awaitingApprovalTransaction[index];
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ListTile(
+                        onTap: () => _showAcceptDeclinePrompt(context, this, transaction.transactionImages, transaction.id),
+                        tileColor: colorScheme.tertiary,
+                        title: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: Text.rich(
+                            TextSpan(
+                              text: 'Transaction', // Default text style
+                              style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.w500),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: ' Pending',
+                                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.green, fontWeight: FontWeight.w500),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        subtitle: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('${transaction.user!.fullname} (${transaction.user!.username})', style: Theme.of(context).textTheme.bodyMedium),
+                              Text('${transaction.category} (category)', style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontStyle: FontStyle.italic)),
+                              Text.rich(
+                                TextSpan(
+                                  text: 'Amount ', // Default text style
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text: formatAmountToVnd(transaction.amount),
+                                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: colorScheme.primary, fontWeight: FontWeight.w500),
+                                    ),
+                                  ],
+                                ),
                               ),
+                              Text(transaction.description ?? '', style: Theme.of(context).textTheme.bodyMedium, overflow: TextOverflow.visible,),
+                          
                             ],
                           ),
                         ),
                       ),
-                      subtitle: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('${transaction.user!.fullname} (${transaction.user!.username})', style: Theme.of(context).textTheme.bodyMedium),
-                            Text('${transaction.category} (category)', style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontStyle: FontStyle.italic)),
-                            Text.rich(
-                              TextSpan(
-                                text: 'Amount ', // Default text style
-                                style: Theme.of(context).textTheme.bodyMedium,
-                                children: <TextSpan>[
-                                  TextSpan(
-                                    text: formatAmountToVnd(transaction.amount),
-                                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: colorScheme.primary, fontWeight: FontWeight.w500),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Text(transaction.description ?? '', style: Theme.of(context).textTheme.bodyMedium, overflow: TextOverflow.visible,),
-                        
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               )
-              : ListView.builder(
-                itemCount: _cancelledTransaction.length,
-                itemBuilder: (context, index) {
-                  final transaction = _cancelledTransaction[index];
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ListTile(
-                      tileColor: colorScheme.tertiary,
-                      title: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 5),
-                        child: Text.rich(
-                          TextSpan(
-                            text: 'Transaction', // Default text style
-                            style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.w500),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: ' Cancelled',
-                                style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.redAccent, fontWeight: FontWeight.w500),
+              : RefreshIndicator(
+                onRefresh: _pullRefresh,
+                child: ListView.builder(
+                  itemCount: _cancelledTransaction.length,
+                  itemBuilder: (context, index) {
+                    final transaction = _cancelledTransaction[index];
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ListTile(
+                        tileColor: colorScheme.tertiary,
+                        title: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: Text.rich(
+                            TextSpan(
+                              text: 'Transaction', // Default text style
+                              style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.w500),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: ' Cancelled',
+                                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.redAccent, fontWeight: FontWeight.w500),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        subtitle: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('${transaction.user!.fullname} (${transaction.user!.username})', style: Theme.of(context).textTheme.bodyMedium),
+                              Text('${transaction.category} (category)', style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontStyle: FontStyle.italic)),
+                              Text.rich(
+                                TextSpan(
+                                  text: 'Amount ', // Default text style
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text: formatAmountToVnd(transaction.amount),
+                                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: colorScheme.primary, fontWeight: FontWeight.w500),
+                                    ),
+                                  ],
+                                ),
                               ),
+                              Text(transaction.description ?? '', style: Theme.of(context).textTheme.bodyMedium, overflow: TextOverflow.visible,),
                             ],
                           ),
                         ),
                       ),
-                      subtitle: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('${transaction.user!.fullname} (${transaction.user!.username})', style: Theme.of(context).textTheme.bodyMedium),
-                            Text('${transaction.category} (category)', style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontStyle: FontStyle.italic)),
-                            Text.rich(
-                              TextSpan(
-                                text: 'Amount ', // Default text style
-                                style: Theme.of(context).textTheme.bodyMedium,
-                                children: <TextSpan>[
-                                  TextSpan(
-                                    text: formatAmountToVnd(transaction.amount),
-                                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: colorScheme.primary, fontWeight: FontWeight.w500),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Text(transaction.description ?? '', style: Theme.of(context).textTheme.bodyMedium, overflow: TextOverflow.visible,),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ) 
           ],
@@ -270,78 +277,129 @@ class _BudgetApprovePageState extends State<BudgetApprovePage> with RouteAware {
     );
   }
 
-  void _showAcceptDeclinePrompt(BuildContext context, _BudgetApprovePageState state, List<String> transactionImages, String transactionId) {
-    final transactionService = Provider.of<TransactionService>(context, listen: false);
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Confirm", style: Theme.of(context).textTheme.headlineSmall),
-          content: Text("Do you approve or decline this transaction?", style: Theme.of(context).textTheme.bodyMedium, overflow: TextOverflow.visible),
-          actions: <Widget>[
-            if (transactionImages.isEmpty)
-            ListView.builder(
-              itemCount: transactionImages.length,
-              itemBuilder: (context, index){
-                final imageUrl = transactionImages[index];
-                return Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Column(
-                    children: [
-                      Text('Picture ${index+1}', style: Theme.of(context).textTheme.headlineMedium,),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => FullScreenImage(imageUrl: imageUrl),
+void _showAcceptDeclinePrompt(BuildContext context, _BudgetApprovePageState state, List<String> transactionImages, String transactionId) {
+  final transactionService = Provider.of<TransactionService>(context, listen: false);
+  
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return Dialog(
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.8,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  "Confirm",
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Text(
+                  "Do you approve or decline this transaction?",
+                  style: Theme.of(context).textTheme.bodyMedium,
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.clip,
+                ),
+              ),
+              const SizedBox(height: 16),
+              if (transactionImages.isNotEmpty)
+                SizedBox(
+                  height: 180, // Set the height for the container holding the images
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal, // Horizontal scrolling
+                    itemCount: transactionImages.length,
+                    itemBuilder: (context, index) {
+                      final imageUrl = transactionImages[index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Column(
+                          children: [
+                            Text(
+                              'Picture ${index + 1}',
+                              style: Theme.of(context).textTheme.bodyMedium,
                             ),
-                          );
-                        },
-                        child: Image.network(imageUrl),
-                      )
-                    ],
+                            const SizedBox(height: 8),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => FullScreenImage(imageUrl: imageUrl),
+                                  ),
+                                );
+                              },
+                              child: Image.network(
+                                imageUrl,
+                                height: 120, // Adjust the height as needed
+                                width: 120, // Adjust the width as needed
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
                   ),
-                );
-              }
-            )
-            else
-              const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextButton(
-                  child: Text(
-                    "Accept",
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w500),
-                  ),
-                  onPressed: () async {
-                    Navigator.of(context).pop();
-                    _changeLoading();
-                    await transactionService.approveTransaction(transactionId);
-                    await _loadTransactions();
-                    _showSuccess('Successfully approve transaction');
-                  },
+                )
+              else
+                const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    TextButton(
+                      child: Text(
+                        "Accept",
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      onPressed: () async {
+                        Navigator.of(context).pop();
+                        _changeLoading();
+                        await transactionService.approveTransaction(transactionId);
+                        await _loadTransactions();
+                        _showSuccess('Successfully approved transaction');
+                      },
+                    ),
+                    TextButton(
+                      child: Text(
+                        "Decline",
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      onPressed: () async {
+                        Navigator.of(context).pop();
+                        _changeLoading();
+                        await transactionService.cancelledTransaction(transactionId);
+                        await _loadTransactions();
+                        _showSuccess('Successfully declined transaction');
+                      },
+                    ),
+                  ],
                 ),
-                TextButton(
-                  child: Text(
-                    "Decline",
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w500),
-                  ),
-                  onPressed: () async {
-                    Navigator.of(context).pop();
-                    _changeLoading();
-                    await transactionService.cancelledTransaction(transactionId);
-                    await _loadTransactions();
-                    _showSuccess('Successfully decline transaction');
-                  },
-                ),
-              ],
-            ),
-          ],
-        );
-      },
-    );
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
+  Future<void> _pullRefresh() async {
+    setState(() {
+      isLoading = true;
+    });
+    _loadTransactions();
   }
 }
 

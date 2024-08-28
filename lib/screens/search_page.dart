@@ -42,21 +42,21 @@ class _SearchPageState extends State<SearchPage> {
   // Declare a CancelToken variable for canceling the search request
   CancelToken? _cancelToken;
 
+  @override
+  void initState() {
+    super.initState();
+    _noSearchResults();
+  }
+
   void _noSearchResults() {
     Future.microtask(() async {
-      await widget.searchCallback('', (results) {
+      await widget.searchCallback("", (results) {
         if (!mounted) return;
         setState(() {
           _results = results;
         });
       }, _cancelToken);
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _noSearchResults();
   }
 
   @override
@@ -123,17 +123,16 @@ class _SearchPageState extends State<SearchPage> {
         _input = value;
       });
 
-      if (value.isEmpty || value.trim() == '') {
-        // null is a sentinal value that allows us more control the UI
-        // for a better user experience. instead of showing 'No results for ''",
-        // if this is null, it will just show nothing
-        if (!mounted) return;
-        // setState(() {
-        //   _results = null;
-        // });
-        _noSearchResults();
-        return;
-      }
+      // if (value.isEmpty || value.trim() == '') {
+      //   // null is a sentinal value that allows us more control the UI
+      //   // for a better user experience. instead of showing 'No results for ''",
+      //   // if this is null, it will just show nothing
+      //   if (!mounted) return;
+      //   // setState(() {
+      //   //   _results = null;
+      //   // });
+      //   return;
+      // }
 
       _cancelToken = CancelToken();
 

@@ -32,7 +32,8 @@ class GroupSavingDetails extends StatefulWidget {
   State<GroupSavingDetails> createState() => _GroupSavingDetailsState();
 }
 
-class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware {
+class _GroupSavingDetailsState extends State<GroupSavingDetails>
+    with RouteAware {
   FormStateProvider? _formStateProvider;
   GroupSaving? _groupSaving;
   double? percentageTaken;
@@ -66,14 +67,17 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
 
   Future<void> _loadTransactions() async {
     if (!mounted) return;
-    final groupSavingService = Provider.of<GroupSavingService>(context, listen: false);
+    final groupSavingService =
+        Provider.of<GroupSavingService>(context, listen: false);
     await handleMainPageApi(context, () async {
-      return await groupSavingService.fetchGroupSavingTransactions(widget.groupSavingId);
+      return await groupSavingService
+          .fetchGroupSavingTransactions(widget.groupSavingId);
     }, () async {
       if (!mounted) return;
       setState(() {
         _transactions = groupSavingService.transactions;
-        _awaitingApprovalTransaction = groupSavingService.awaitingApprovalTransaction;
+        _awaitingApprovalTransaction =
+            groupSavingService.awaitingApprovalTransaction;
         isLoading = false;
       });
     });
@@ -82,9 +86,11 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
   Future<void> _loadData() async {
     Future.microtask(() async {
       if (!mounted) return;
-      final groupSavingService = Provider.of<GroupSavingService>(context, listen: false);
+      final groupSavingService =
+          Provider.of<GroupSavingService>(context, listen: false);
       await handleMainPageApi(context, () async {
-        return await groupSavingService.fetchGroupSavingDetails(widget.groupSavingId);
+        return await groupSavingService
+            .fetchGroupSavingDetails(widget.groupSavingId);
       }, () async {
         if (!mounted) return;
         final tempGroupSaving = groupSavingService.currentGroupSaving;
@@ -95,7 +101,8 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
         // set state for groupSaving details
         setState(() {
           _groupSaving = tempGroupSaving;
-          percentageTaken = _groupSaving!.concurrentAmount / _groupSaving!.amount * 100;
+          percentageTaken =
+              _groupSaving!.concurrentAmount / _groupSaving!.amount * 100;
           percentageLeft =
               percentageTaken!.isInfinite ? 100.0 : 100.0 - percentageTaken!;
           endDate = DateTime.parse(_groupSaving!.endDate);
@@ -105,7 +112,8 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
           isMember = _groupSaving!.hostedBy.toString() !=
               Provider.of<AuthService>(context, listen: false).user?.id;
           // check group status
-          if(_groupSaving!.defaultApproveStatus == ApproveStatus.pending.value) {
+          if (_groupSaving!.defaultApproveStatus ==
+              ApproveStatus.pending.value) {
             approval = true;
           }
           // set display string
@@ -145,7 +153,7 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
     isLoading = true;
     _loadData();
     super.didChangeDependencies();
-    final route = ModalRoute.of(context);
+    final ModalRoute? route = ModalRoute.of(context);
     if (route is PageRoute) {
       routeObserver.subscribe(this, route);
     }
@@ -153,8 +161,8 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
 
   @override
   void didPopNext() {
-    _loadData();
     super.didPopNext();
+    _loadData();
   }
 
   int calculateDaysLeft(DateTime endDate) {
@@ -163,30 +171,39 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
     return difference.inDays;
   }
 
-  String formatDate(DateTime endDate){
+  String formatDate(DateTime endDate) {
     String formattedDate = DateFormat('MMMM d, y').format(endDate);
     return formattedDate;
   }
 
   @override
   Widget build(BuildContext context) {
-    
-    
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
         appBar: Heading(title: 'Group Saving', showBackButton: true, actions: [
-          IconButton(onPressed: () {
-            if (!mounted) return; 
-            final formStateProvider =
-                Provider.of<FormStateProvider>(context, listen: false);
-            formStateProvider.resetForm(FormStateType.income);
-            formStateProvider.updateFormField("groupType", TransactionGroupType.savings, FormStateType.income);
-            formStateProvider.updateFormField("savingGroupId", _groupSaving!.id, FormStateType.income);
-                        // render group
-            if (!mounted) return;
-            formStateProvider.updateFormField("tempChosenGroup", _groupSaving, FormStateType.income);
-            showTransactionFormA(context, true, isFromGroupDetail: true);
-          }, icon: const Icon(FontAwesomeIcons.moneyCheckDollar)),
+          IconButton(
+              color: colorScheme.primary,
+              disabledColor: colorScheme.onPrimary.withOpacity(0.5),
+              onPressed: isLoading
+                  ? null
+                  : () async {
+                      if (!mounted) return;
+                      final formStateProvider = Provider.of<FormStateProvider>(
+                          context,
+                          listen: false);
+                      formStateProvider.resetForm(FormStateType.income);
+                      formStateProvider.updateFormField("groupType",
+                          TransactionGroupType.savings, FormStateType.income);
+                      formStateProvider.updateFormField("savingGroupId",
+                          _groupSaving!.id, FormStateType.income);
+                      // render group
+                      if (!mounted) return;
+                      formStateProvider.updateFormField("tempChosenGroup",
+                          _groupSaving, FormStateType.income);
+                      showTransactionFormA(context, true,
+                          isFromGroupDetail: true);
+                    },
+              icon: const Icon(FontAwesomeIcons.moneyCheckDollar)),
           IconButton(
             icon: const Icon(FontAwesomeIcons.ellipsis),
             onPressed: () {
@@ -198,9 +215,9 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
         body: isLoading
             ? const Center(child: CircularProgressIndicator())
             : RefreshIndicator(
-              onRefresh: () => _pullRefreshAll(),
-              child: SingleChildScrollView(
-                child: Column(
+                onRefresh: () => _pullRefreshAll(),
+                child: SingleChildScrollView(
+                  child: Column(
                     children: [
                       Center(
                         child: Card.filled(
@@ -252,39 +269,51 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
                                   height: 20,
                                 ),
                                 GroupSavingHalfProgressBar(
-                                amount:
-                                    percentageTaken!.isInfinite ? 0 : percentageTaken!,
-                                concurrent: percentageLeft!),                           
+                                    amount: percentageTaken!.isInfinite
+                                        ? 0
+                                        : percentageTaken!,
+                                    concurrent: percentageLeft!),
                                 const SizedBox(
                                   height: 10,
                                 ),
-                                if (percentageTaken! > 100) 
-                                Column(
-                                  children: [
-                                    Text (' You have reached your goal and beyond!', style:Theme.of(context).textTheme.bodyMedium?.copyWith(fontStyle: FontStyle.italic,fontWeight: FontWeight.bold),),
-                                    const SizedBox(height: 5,),
-                                  ],
-                                ),
+                                if (percentageTaken! > 100)
+                                  Column(
+                                    children: [
+                                      Text(
+                                        ' You have reached your goal and beyond!',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium
+                                            ?.copyWith(
+                                                fontStyle: FontStyle.italic,
+                                                fontWeight: FontWeight.bold),
+                                      ),
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
+                                    ],
+                                  ),
                                 Text.rich(
                                   softWrap: true,
                                   overflow: TextOverflow.visible,
                                   textAlign: TextAlign.center,
                                   TextSpan(
-                                    text: '$daysLeft day${daysLeft != 1 ? 's' : ''}',
-                                    style: Theme.of(context).textTheme.bodyMedium,
+                                    text:
+                                        '$daysLeft day${daysLeft != 1 ? 's' : ''}',
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium,
                                     children: [
-                                      if(daysLeft! > 0)
-                                      TextSpan(
-                                        text:
-                                            ' left until $endDay', 
-                                        style:
-                                            Theme.of(context).textTheme.bodyLarge,
-                                      ),
+                                      if (daysLeft! > 0)
+                                        TextSpan(
+                                          text: ' left until $endDay',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge,
+                                        ),
                                     ],
                                   ),
                                 ),
-                                if(daysLeft! < 0)
-                                Text('$endDay'),
+                                if (daysLeft! < 0) Text('$endDay'),
                                 const SizedBox(
                                   height: 30,
                                 ),
@@ -292,54 +321,87 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
                                       children: [
-                                        Text('You have saved', style: Theme.of(context).textTheme.bodyMedium,),
+                                        Text(
+                                          'You have saved',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium,
+                                        ),
                                         const Expanded(child: SizedBox()),
-                                        Text(formatAmountToVnd(_groupSaving!.concurrentAmount), style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontSize: 15),),
-                                      ],  
+                                        Text(
+                                          formatAmountToVnd(
+                                              _groupSaving!.concurrentAmount),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headlineMedium!
+                                              .copyWith(fontSize: 15),
+                                        ),
+                                      ],
                                     ),
                                     Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
                                       children: [
-                                        Text('Goal target', style: Theme.of(context).textTheme.bodyMedium,),
+                                        Text(
+                                          'Goal target',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium,
+                                        ),
                                         const Expanded(child: SizedBox()),
-                                        Text(formatAmountToVnd(_groupSaving!.amount), style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontSize: 15),),
+                                        Text(
+                                          formatAmountToVnd(
+                                              _groupSaving!.amount),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headlineMedium!
+                                              .copyWith(fontSize: 15),
+                                        ),
                                       ],
                                     ),
                                   ],
                                 ),
                                 const SizedBox(height: 30),
                                 Container(
-                                  margin: const EdgeInsets.symmetric(horizontal: 15),
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 15),
                                   child: InkWell(
-                                    onTap: () {
-                                      // Action to view the rest of the description. This could open a dialog, a new page, or expand the text in place.
-                                      setState(() {
+                                      onTap: () {
+                                        // Action to view the rest of the description. This could open a dialog, a new page, or expand the text in place.
+                                        setState(() {
                                           _isDisplayRestDescription =
                                               !_isDisplayRestDescription;
                                         });
-                                    },
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          _groupSaving!.description,
-                                          style: Theme.of(context).textTheme.bodyMedium,
-                                          textAlign: TextAlign.justify,
-                                          maxLines: _isDisplayRestDescription ? null : 2,
-                                          overflow: _isDisplayRestDescription
-                                              ? TextOverflow.visible
-                                              : TextOverflow.fade,
-                                        ),
-                                        if (!_isDisplayRestDescription)
-                                        Text(
-                                          "Tap for more",
-                                          style: Theme.of(context).textTheme.labelMedium,
-                                        )
-                                      ],
-                                    )
-                                  ),
+                                      },
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            _groupSaving!.description,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium,
+                                            textAlign: TextAlign.justify,
+                                            maxLines: _isDisplayRestDescription
+                                                ? null
+                                                : 2,
+                                            overflow: _isDisplayRestDescription
+                                                ? TextOverflow.visible
+                                                : TextOverflow.fade,
+                                          ),
+                                          if (!_isDisplayRestDescription)
+                                            Text(
+                                              "Tap for more",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .labelMedium,
+                                            )
+                                        ],
+                                      )),
                                 ),
                               ],
                             ),
@@ -349,7 +411,10 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
                       const SizedBox(
                         height: 10,
                       ),
-                      Text('Transaction history', style: Theme.of(context).textTheme.headlineMedium,),
+                      Text(
+                        'Transaction history',
+                        style: Theme.of(context).textTheme.headlineMedium,
+                      ),
                       if (approval)
                         Text.rich(
                           TextSpan(
@@ -357,38 +422,53 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails> with RouteAware
                             children: [
                               const TextSpan(text: 'Currently there are '),
                               TextSpan(
-                                text: _awaitingApprovalTransaction.length.toString(),
-                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  color: colorScheme.primary, // Customize the color here
-                                  fontWeight: FontWeight.w500, // Optional: make the number bold
-                                ),
+                                text: _awaitingApprovalTransaction.length
+                                    .toString(),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                      color: colorScheme
+                                          .primary, // Customize the color here
+                                      fontWeight: FontWeight
+                                          .w500, // Optional: make the number bold
+                                    ),
                               ),
                               const TextSpan(text: ' request'),
                             ],
                           ),
                         ),
-                        if (approval && !isMember)
-                        const SizedBox(height: 20,),
-                        if (approval && !isMember)
+                      if (approval && !isMember)
+                        const SizedBox(
+                          height: 20,
+                        ),
+                      if (approval && !isMember)
                         SizedBox(
-                              width: 225,
-                              height: 50,
-                              child: SecondaryButton(onPressed: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                    return SavingApprovePage(savingId: widget.groupSavingId,);
-                                  }));
-                              } 
-                              , title: "Approving transaction",
-                            ),
+                          width: 225,
+                          height: 50,
+                          child: SecondaryButton(
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return SavingApprovePage(
+                                  savingId: widget.groupSavingId,
+                                );
+                              }));
+                            },
+                            title: "Approving transaction",
                           ),
+                        ),
                       SizedBox(
                         height: 500,
-                        child: RefreshIndicator(onRefresh: _pullRefresh, child: TransactionList(transactions: _transactions)),
+                        child: RefreshIndicator(
+                            onRefresh: _pullRefresh,
+                            child:
+                                TransactionList(transactions: _transactions, disableButton: true,)),
                       ),
                     ],
                   ),
-              ),
-            ));
+                ),
+              ));
   }
 
   Future<void> _pullRefresh() async {

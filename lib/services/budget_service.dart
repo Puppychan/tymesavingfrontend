@@ -36,11 +36,12 @@ class BudgetService extends ChangeNotifier {
     String endpoint =
         "${BackendEndpoints.budget}/${BackendEndpoints.budgetsGetByUserId}/$userId";
 
-    if (name != null || name != "") {
+    if (name != null && name != "") {
       endpoint += "?name=$name";
     }
 
     final response = await NetworkService.instance.get(endpoint, cancelToken: cancelToken);
+    print("Endpoint $endpoint - Repsonse budget list $response");
     if (response['response'] != null && response['statusCode'] == 200) {
       final responseData = response['response'];
       List<Budget> budgetList = [];
@@ -58,7 +59,7 @@ class BudgetService extends ChangeNotifier {
 
   Future<Map<String, dynamic>> addBudgetGroup(
     String hostedBy,
-    ApproveStatus defaultApproveStatus,
+    String defaultApproveStatus,
     String name,
     String description,
     double amount,
@@ -71,7 +72,7 @@ class BudgetService extends ChangeNotifier {
       body: {
         'hostedBy': hostedBy,
         'name': name,
-        'defaultApproveStatus': defaultApproveStatus.toString(),
+        'defaultApproveStatus': defaultApproveStatus,
         'description': description,
         'amount': amount,
         'concurrentAmount': concurrentAmount,
@@ -105,7 +106,7 @@ class BudgetService extends ChangeNotifier {
   Future<Map<String, dynamic>> updateBudgetGroup(
     String budgetGroupId,
     String hostedBy,
-    ApproveStatus defaultApproveStatus,
+    String defaultApproveStatus,
     String name,
     String description,
     double amount,
@@ -118,7 +119,7 @@ class BudgetService extends ChangeNotifier {
           'description': description,
           'amount': amount,
           'endDate': endDate,
-          'defaultApproveStatus': defaultApproveStatus.toString(),
+          'defaultApproveStatus': defaultApproveStatus,
         });
     return response;
   }

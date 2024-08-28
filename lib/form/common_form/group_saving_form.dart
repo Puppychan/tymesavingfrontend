@@ -7,6 +7,7 @@ import 'package:tymesavingfrontend/common/enum/page_location_enum.dart';
 import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
 import 'package:tymesavingfrontend/components/common/dialog/date_picker_dialog.dart';
 import 'package:tymesavingfrontend/components/common/dialog/time_picker_dialog.dart';
+import 'package:tymesavingfrontend/components/common/input/multiline_text_field.dart';
 import 'package:tymesavingfrontend/components/common/input/radio_field.dart';
 import 'package:tymesavingfrontend/components/common/input/underline_text_field.dart';
 import 'package:tymesavingfrontend/components/common/multi_form_components/amount_multi_form.dart';
@@ -92,7 +93,7 @@ class _GroupSavingFormMainState extends State<GroupSavingFormMain> {
               .updateGroupSavingGroup(
             formField['id'],
             user?.id ?? "",
-            formField["defaultApproveStatus"] ?? ApproveStatus.approved,
+            formField["defaultApproveStatus"].value ?? ApproveStatus.approved.value,
             formField['name'],
             formField['description'] ?? "",
             formField['amount'],
@@ -102,7 +103,7 @@ class _GroupSavingFormMainState extends State<GroupSavingFormMain> {
           return await Provider.of<GroupSavingService>(context, listen: false)
               .addGroupSavingGroup(
             user?.id ?? "",
-            formField["defaultApproveStatus"] ?? ApproveStatus.approved,
+            formField["defaultApproveStatus"].value ?? ApproveStatus.approved.value,
             formField['name'],
             formField['description'] ?? "",
             formField['amount'],
@@ -169,12 +170,9 @@ class _GroupSavingFormMainState extends State<GroupSavingFormMain> {
           formStateService.getFormField(widget.type);
       // TransactionCategory selectedCategory =
       //     formStateService.getCategory(widget.type);
-      String formName = formFields['name'] ?? "Naming group...";
       String formattedAmount = formStateService.getFormattedAmount(widget.type);
-      String formDescription =
-          formFields['description'] ?? "Please add description";
       ApproveStatus currentApproveStatus =
-          formFields['defaultApproveStatus'] ?? ApproveStatus.approved;
+          ApproveStatus.fromString(formFields['defaultApproveStatus']) ?? ApproveStatus.approved;
 
       // update text to controller
       _amountController.text = formStateService.getFormattedAmount(widget.type);
@@ -190,7 +188,7 @@ class _GroupSavingFormMainState extends State<GroupSavingFormMain> {
                 controller: _nameController,
                 icon: Icons.card_membership,
                 label: 'GROUP NAME',
-                placeholder: formName,
+                placeholder:  "Naming group...",
                 keyboardType: TextInputType.text,
                 validator: Validator.validateGroupName,
                 onChange: (value) => updateOnChange("name"),
@@ -243,12 +241,13 @@ class _GroupSavingFormMainState extends State<GroupSavingFormMain> {
                   }
                 },
               ),
-              UnderlineTextField(
+              MultilineTextField(
                 label: 'DESCRIPTION',
                 controller: _descriptionController,
-                icon: Icons.description,
-                placeholder: formDescription,
-                keyboardType: TextInputType.text,
+                placeholder:  "Please add description",
+                keyboardType: TextInputType.multiline,
+                minLines: 3,
+                maxLines: 5,
                 onChange: (value) => updateOnChange("description"),
               ),
               RadioField(

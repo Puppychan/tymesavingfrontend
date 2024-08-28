@@ -230,6 +230,20 @@ class ChallengeService extends ChangeNotifier {
     }
   }
 
+  Future<dynamic> publishChallenge(String challengeId,)async {
+    String endpoint = '${BackendEndpoints.challenge}/$challengeId';
+    debugPrint("End point is $endpoint");
+    try {
+      final response = await NetworkService.instance.put(endpoint, body: {
+        "isPublished" : "true"
+      });
+      notifyListeners();
+      return response;
+    } catch (e) {
+      debugPrint("Error creating challenge: $e");
+    }
+  }
+
   Future<dynamic> deleteChallenge(String challengeId,)async {
     String endpoint = '${BackendEndpoints.challenge}/$challengeId';
     debugPrint("End point is $endpoint");

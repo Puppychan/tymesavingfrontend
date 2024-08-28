@@ -35,7 +35,7 @@ class GroupSavingService extends ChangeNotifier {
     // if (userId == null) return {'response': 'User ID is required.', 'statusCode': 400};
     String endpoint =
         "${BackendEndpoints.groupSaving}/${BackendEndpoints.groupSavingsGetByUserId}/$userId";
-    if (name != null || name != "") {
+    if (name != null && name != "") {
       endpoint += "?name=$name";
     }
 
@@ -58,7 +58,7 @@ class GroupSavingService extends ChangeNotifier {
 
   Future<Map<String, dynamic>> addGroupSavingGroup(
     String hostedBy,
-    ApproveStatus defaultApproveStatus,
+    String defaultApproveStatus,
     String name,
     String description,
     double amount,
@@ -70,7 +70,7 @@ class GroupSavingService extends ChangeNotifier {
       body: {
         'hostedBy': hostedBy,
         'name': name,
-        'defaultApproveStatus': defaultApproveStatus.toString(),
+        'defaultApproveStatus': defaultApproveStatus,
         'description': description,
         'amount': amount,
         'concurrentAmount': concurrentAmount,
@@ -103,7 +103,7 @@ class GroupSavingService extends ChangeNotifier {
   Future<Map<String, dynamic>> updateGroupSavingGroup(
     String groupSavingGroupId,
     String hostedBy,
-    ApproveStatus defaultApproveStatus,
+    String defaultApproveStatus,
     String name,
     String description,
     double amount,
@@ -116,7 +116,7 @@ class GroupSavingService extends ChangeNotifier {
           'description': description,
           'amount': amount,
           'endDate': endDate,
-          'defaultApproveStatus': defaultApproveStatus.toString(),
+          'defaultApproveStatus': defaultApproveStatus,
         });
     return response;
   }
@@ -131,6 +131,28 @@ class GroupSavingService extends ChangeNotifier {
     _currentGroupSaving = null;
     _transactions = [];
     notifyListeners();
+  }
+
+    // Fetch all transactions of a user by userID
+  Future<Map<String, dynamic>> fetchTransactionsByUserId(
+      String groupSavingId, String userId) async {
+        print("Endpoint ${"${BackendEndpoints.groupSaving}/$groupSavingId/transactions?userId=$userId"}");
+    final response = await NetworkService.instance.get(
+        "${BackendEndpoints.groupSaving}/$groupSavingId/transactions?userId=$userId");
+
+    if (response['response'] != null && response['statusCode'] == 200) {
+      final responseData = response['response'];
+      List<Transaction> transactionList = [];
+      if (responseData.isNotEmpty) {
+        for (var transaction in responseData) {
+          final tempTransaction = Transaction.fromJson(transaction);
+          transactionList.add(tempTransaction);
+        }
+      }
+      _transactions = transactionList;
+      notifyListeners();
+    }
+    return response;
   }
 
   Future<Map<String, dynamic>> fetchGroupSavingTransactions(

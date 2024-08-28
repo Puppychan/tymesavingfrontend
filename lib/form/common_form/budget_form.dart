@@ -7,6 +7,7 @@ import 'package:tymesavingfrontend/common/enum/page_location_enum.dart';
 import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
 import 'package:tymesavingfrontend/components/common/dialog/date_picker_dialog.dart';
 import 'package:tymesavingfrontend/components/common/dialog/time_picker_dialog.dart';
+import 'package:tymesavingfrontend/components/common/input/multiline_text_field.dart';
 import 'package:tymesavingfrontend/components/common/input/radio_field.dart';
 import 'package:tymesavingfrontend/components/common/input/underline_text_field.dart';
 import 'package:tymesavingfrontend/components/common/multi_form_components/amount_multi_form.dart';
@@ -19,7 +20,6 @@ import 'package:tymesavingfrontend/utils/display_error.dart';
 import 'package:tymesavingfrontend/utils/display_success.dart';
 import 'package:tymesavingfrontend/utils/format_date.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
-import 'package:tymesavingfrontend/utils/input_format_currency.dart';
 import 'package:tymesavingfrontend/utils/validator.dart';
 
 class BudgetFormMain extends StatefulWidget {
@@ -93,7 +93,7 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
               .updateBudgetGroup(
             formField['id'],
             user?.id ?? "",
-            formField["defaultApproveStatus"] ?? ApproveStatus.approved,
+            formField["defaultApproveStatus"].value ?? ApproveStatus.approved.value,
             formField['name'],
             formField['description'] ?? "",
             formField['amount'],
@@ -103,7 +103,7 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
           return await Provider.of<BudgetService>(context, listen: false)
               .addBudgetGroup(
             user?.id ?? "",
-            formField["defaultApproveStatus"] ?? ApproveStatus.approved,
+            formField["defaultApproveStatus"].value ?? ApproveStatus.approved.value,
             formField['name'],
             formField['description'] ?? "",
             formField['amount'],
@@ -170,12 +170,9 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
           formStateService.getFormField(widget.type);
       // TransactionCategory selectedCategory =
       //     formStateService.getCategory(widget.type);
-      String formName = formFields['name'] ?? "Naming group...";
       String formattedAmount = formStateService.getFormattedAmount(widget.type);
-      String formDescription =
-          formFields['description'] ?? "Please add description";
       ApproveStatus currentApproveStatus =
-          formFields['defaultApproveStatus'] ?? ApproveStatus.approved;
+          ApproveStatus.fromString(formFields['defaultApproveStatus']) ?? ApproveStatus.approved;
 
       // update text to controller
       _amountController.text = formStateService.getFormattedAmount(widget.type);
@@ -187,32 +184,16 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ..._buildComponentGroup(
-              //     label: "CHOOSE CATEGORY",
-              //     contentWidget: SingleChildScrollView(
-              //         scrollDirection: Axis.horizontal,
-              //         child: Row(
-              //           mainAxisAlignment: MainAxisAlignment.spaceAround,
-              //           children: renderCategories(context),
-              //         ))),
+
               UnderlineTextField(
                 controller: _nameController,
                 icon: Icons.card_membership,
                 label: 'GROUP NAME',
-                placeholder: formName,
+                placeholder:  "Naming group...",
                 keyboardType: TextInputType.text,
                 onChange: (value) => updateOnChange("name"),
                 validator: Validator.validateGroupName,
               ),
-              UnderlineTextField(
-                  label: "TOTAL AMOUNT",
-                  controller: _amountController,
-                  icon: Icons.attach_money,
-                  placeholder: formattedAmount,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [CurrencyInputFormatter()],
-                  onChange: (value) => updateOnChange("amount"),
-                  validator: Validator.validateAmount),
               AmountMultiForm(
                   formattedAmount: formattedAmount,
                   updateOnChange: updateOnChange,
@@ -261,12 +242,13 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
                   }
                 },
               ),
-              UnderlineTextField(
+              MultilineTextField(
                 label: 'DESCRIPTION',
                 controller: _descriptionController,
-                icon: Icons.description,
-                placeholder: formDescription,
-                keyboardType: TextInputType.text,
+                placeholder: "Please add description",
+                keyboardType: TextInputType.multiline,
+                minLines: 3,
+                maxLines: null,
                 onChange: (value) => updateOnChange("description"),
               ),
               RadioField(

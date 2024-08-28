@@ -9,6 +9,7 @@ class TransactionItem extends StatelessWidget {
   final String formattedDate;
   final IconData randomIcon;
   final Color randomColor;
+  final bool disableButton;
 
   const TransactionItem({
     super.key,
@@ -16,6 +17,7 @@ class TransactionItem extends StatelessWidget {
     required this.formattedDate,
     required this.randomIcon,
     required this.randomColor,
+    required this.disableButton
   });
 
   @override
@@ -135,7 +137,7 @@ class TransactionItem extends StatelessWidget {
             context: context,
             builder: (BuildContext context) {
               return TransactionDialog(
-                  transaction: transaction, formattedDate: formattedDate);
+                  transaction: transaction, formattedDate: formattedDate, disableButton: disableButton);
             },
           );
         },

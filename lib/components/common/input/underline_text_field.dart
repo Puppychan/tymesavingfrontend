@@ -19,27 +19,25 @@ class UnderlineTextField extends StatefulWidget {
   final bool? readOnly;
   final void Function(String)? onChange;
   final List<TextInputFormatter>? inputFormatters;
-  // for multiline text field
-  final int? minLines;
-  final int? maxLines;
 
-  const UnderlineTextField({
-    super.key,
-    required this.label,
-    required this.placeholder,
-    this.controller,
-    this.isPasswordField = false,
-    this.keyboardType,
-    this.enabled = true,
-    this.obscureText = false,
-    this.validator,
-    this.componentHeight = 58,
-    this.suffixIcon,
-    this.icon,
-    this.onTap,
-    this.readOnly,
-    this.onChange, this.defaultValue, this.inputFormatters, this.minLines, this.maxLines,
-  });
+  const UnderlineTextField(
+      {super.key,
+      required this.label,
+      required this.placeholder,
+      this.controller,
+      this.isPasswordField = false,
+      this.keyboardType,
+      this.enabled = true,
+      this.obscureText = false,
+      this.validator,
+      this.componentHeight = 58,
+      this.suffixIcon,
+      this.icon,
+      this.onTap,
+      this.readOnly,
+      this.onChange,
+      this.defaultValue,
+      this.inputFormatters});
 
   @override
   State<UnderlineTextField> createState() => _UnderlineTextFieldState();
@@ -53,6 +51,7 @@ class _UnderlineTextFieldState extends State<UnderlineTextField> {
       widget.controller!.text = widget.defaultValue!;
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
@@ -62,8 +61,8 @@ class _UnderlineTextFieldState extends State<UnderlineTextField> {
       Text(widget.label, style: textTheme.titleSmall),
       const SizedBox(height: 10),
       TextFormField(
-        minLines: widget.minLines,
-        maxLines: widget.maxLines,
+        maxLines: 1,
+        onTap: widget.onTap,
         controller: widget.controller,
         onChanged: widget.onChange,
         validator: widget.validator,
@@ -92,12 +91,8 @@ class _UnderlineTextFieldState extends State<UnderlineTextField> {
           prefixIcon: Icon(widget.icon),
           enabled: widget.enabled,
           errorStyle: textTheme.bodySmall!.copyWith(color: colorScheme.onError),
-          suffixIcon: widget.suffixIcon != null
-              ? IconButton(
-                  icon: Icon(widget.suffixIcon),
-                  onPressed: widget.onTap,
-                )
-              : null,
+          suffixIcon:
+              widget.suffixIcon != null ? Icon(widget.suffixIcon) : null,
         ),
       ),
       const SizedBox(height: 30),

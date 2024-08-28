@@ -18,7 +18,7 @@ class _ExpenseCardState extends State<ExpenseCard> {
     final textTheme = Theme.of(context).textTheme;
     return Card.filled(
       color: Colors.transparent.withOpacity(0),
-      margin: const EdgeInsets.symmetric(horizontal: 20,vertical: 5),
+      margin: const EdgeInsets.symmetric(horizontal: 5,vertical: 5),
       child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
           child: Row(

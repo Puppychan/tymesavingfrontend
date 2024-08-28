@@ -8,8 +8,8 @@ import 'package:tymesavingfrontend/components/category_list/category_short_selec
 import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
 import 'package:tymesavingfrontend/components/common/dialog/date_picker_dialog.dart';
 import 'package:tymesavingfrontend/components/common/dialog/time_picker_dialog.dart';
+import 'package:tymesavingfrontend/components/common/input/multiline_text_field.dart';
 import 'package:tymesavingfrontend/components/common/input/underline_text_field.dart';
-import 'package:tymesavingfrontend/components/category_list/category_icon.dart';
 import 'package:tymesavingfrontend/components/common/multi_form_components/amount_multi_form.dart';
 import 'package:tymesavingfrontend/components/common/multi_form_components/assign_group_multi_form.dart';
 import 'package:tymesavingfrontend/components/common/multi_form_components/comonent_multi_form.dart';
@@ -17,9 +17,7 @@ import 'package:tymesavingfrontend/components/common/multi_form_components/image
 import 'package:tymesavingfrontend/components/common/multi_form_components/short_group_info_multi_form.dart';
 import 'package:tymesavingfrontend/models/base_group_model.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
-import 'package:tymesavingfrontend/screens/momo_payment_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
-import 'package:tymesavingfrontend/services/momo_payment_service.dart';
 import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
 import 'package:tymesavingfrontend/services/transaction_service.dart';
 import 'package:tymesavingfrontend/utils/display_error.dart';
@@ -27,6 +25,13 @@ import 'package:tymesavingfrontend/utils/display_success.dart';
 import 'package:tymesavingfrontend/utils/format_date.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 import 'package:tymesavingfrontend/utils/validator.dart';
+
+enum FormWritePolicy {
+  createForm,
+  updateForm,
+  createFormFromGroup,
+  updateFormFromGroup
+}
 
 class TransactionFormMain extends StatefulWidget {
   final FormStateType type;
@@ -55,6 +60,7 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
     // get the form fields
     final formFields = Provider.of<FormStateProvider>(context, listen: false)
         .getFormField(widget.type);
+    print("Form Fields: $formFields");
     final authService = Provider.of<AuthService>(context, listen: false);
     // get current logged in user
     setState(() {
@@ -206,11 +212,10 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
     }
   }
 
-
-
   TransactionGroupType getGroupType(Map<String, dynamic> formFields) {
     TransactionGroupType? type = formFields['groupType'];
     if (type == null) {
+      // check if the transaction belongs to a group by checking the group id
       if (formFields['budgetGroupId'] != null) {
         type = TransactionGroupType.budget;
       } else if (formFields['savingGroupId'] != null) {
@@ -222,9 +227,29 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
     return type;
   }
 
+  // update - personal, update image - group, create - all
+  FormWritePolicy renderWritePermission(bool isFromGroup) {
+    if (widget.type == FormStateType.updateExpense ||
+        widget.type == FormStateType.updateIncome) {
+      if (isFromGroup) {
+        // only allow to update images
+        return FormWritePolicy.updateFormFromGroup;
+      }
+      // if not from group, allow to update all except group field
+      return FormWritePolicy.updateForm;
+    }
+    // return FormWritePermission.viewOnly;
+    if (widget.isFromGroupDetail == true) {
+      // if create form from group detail page,
+      // not allow to edit group
+      return FormWritePolicy.createFormFromGroup;
+    }
+    // allow to edit all
+    return FormWritePolicy.createForm;
+  }
+
   @override
   Widget build(BuildContext context) {
-
     return Consumer<FormStateProvider>(
         builder: (context, formStateService, child) {
       Map<String, dynamic> formFields =
@@ -234,11 +259,22 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
       TransactionGroupType chosenGroupType = getGroupType(formFields);
       BaseGroup? chosenResult = formFields["tempChosenGroup"];
       String formattedAmount = formStateService.getFormattedAmount(widget.type);
-      bool isBelongToGroup = chosenGroupType != TransactionGroupType.none &&
-          (widget.type == FormStateType.updateExpense ||
-              widget.type == FormStateType.updateIncome);
+      // bool isBelongToGroup = chosenGroupType != TransactionGroupType.none &&
+      //     (widget.type == FormStateType.updateExpense ||
+      //         widget.type == FormStateType.updateIncome);
       List<String> transactionImages =
           (formFields['transactionImages'] ?? []).whereType<String>().toList();
+      bool isFromGroup = widget.isFromGroupDetail == true ||
+          (formFields['budgetGroupId'] != null &&
+              formFields['budgetGroupId'] != "") ||
+          (formFields['savingGroupId'] != null &&
+              formFields['savingGroupId'] != "");
+      FormWritePolicy writePermission = renderWritePermission(isFromGroup);
+      bool isEditableOtherFields = [
+        FormWritePolicy.createForm,
+        FormWritePolicy.createFormFromGroup,
+        FormWritePolicy.updateForm
+      ].contains(writePermission);
 
       // update text to controller
       _amountController.text = formStateService.getFormattedAmount(widget.type);
@@ -255,22 +291,25 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
                   context: context,
                   label: "CHOOSE CATEGORY",
                   contentWidget: CategoryShortSelection(
-                      type: widget.type,
-                      selectedCategory: selectedCategory,)),
-              if (widget.isFromGroupDetail == true) ...[
-                ShortGroupInfoMultiForm(
-                    chosenGroupType: chosenGroupType,
-                    chosenResult: chosenResult),
-                const Divider(),
-              ] else if (isBelongToGroup == true) ...[
-                ShortGroupInfoMultiForm(
-                  chosenGroupType: chosenGroupType,
-                  defaultGroupId: chosenGroupType == TransactionGroupType.budget
-                      ? formFields['budgetGroupId']
-                      : formFields['savingGroupId'],
-                ),
-                const Divider(),
-              ] else
+                    type: widget.type,
+                    selectedCategory: selectedCategory,
+                  )),
+              if (writePermission == FormWritePolicy.createFormFromGroup ||
+                  writePermission == FormWritePolicy.updateFormFromGroup)
+                // if from group, including both update transaction or create transaction
+                // only display group info, not editable
+                ...buildComponentGroup(
+                    context: context,
+                    label: "GROUP INFO",
+                    contentWidget: ShortGroupInfoMultiForm(
+                      chosenGroupType: chosenGroupType,
+                      defaultGroupId:
+                          chosenGroupType == TransactionGroupType.budget
+                              ? formFields['budgetGroupId']
+                              : formFields['savingGroupId'],
+                    ))
+              else if (writePermission == FormWritePolicy.createForm)
+                // can only choose group if in create form and click on global creating option
                 ...buildComponentGroup(
                   context: context,
                   label: "ASSIGN TO",
@@ -281,30 +320,24 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
                       chosenResult: chosenResult,
                       chosenGroupType: chosenGroupType,
                       transactionType: widget.type),
-                ),
-              if (isBelongToGroup == true) ...[
-                const SizedBox(height: 10),
-                Text("TOTAL AMOUNT",
-                    style: Theme.of(context).textTheme.titleSmall),
-                const SizedBox(height: 10),
-                Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Text(formattedAmount,
-                        style: Theme.of(context).textTheme.bodyLarge)),
-                const SizedBox(height: 10),
-                const Divider()
-              ] else
-                AmountMultiForm(
-                    formattedAmount: formattedAmount,
-                    updateOnChange: updateOnChange,
-                    amountController: _amountController),
+                )
+              else
+                const SizedBox(height: 0),
+              AmountMultiForm(
+                  formattedAmount: formattedAmount,
+                  updateOnChange: updateOnChange,
+                  isEditable: isEditableOtherFields, // only allow to edit amount if user has permission
+                  amountController: _amountController),
               UnderlineTextField(
                 icon: Icons.calendar_today,
                 label: 'DATE',
                 placeholder: convertDateTimeToReadableString(_selectedDate),
                 readOnly: true,
-                suffixIcon: Icons.edit,
+                suffixIcon: isEditableOtherFields
+                    ? Icons.edit
+                    : null,
                 onTap: () async {
+                  if (!isEditableOtherFields) return;
                   DateTime? pickedDate = await showCustomDatePickerDialog(
                       context: context,
                       initialDate: _selectedDate,
@@ -324,8 +357,11 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
                 placeholder:
                     convertTimeDayToReadableString(context, _selectedTime),
                 readOnly: true,
-                suffixIcon: Icons.edit,
+                suffixIcon: isEditableOtherFields
+                    ? Icons.edit
+                    : null,
                 onTap: () async {
+                  if (!isEditableOtherFields) return;
                   // Show the time picker dialog
                   final TimeOfDay? pickedTime =
                       await showCustomTimePickerDialog(
@@ -344,20 +380,21 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
                   }
                 },
               ),
-              UnderlineTextField(
+              MultilineTextField(
                 label: 'DESCRIPTION',
+                readOnly: !isEditableOtherFields,
                 controller: _descriptionController,
-                icon: Icons.description,
                 placeholder: "Please add description",
                 keyboardType: TextInputType.multiline,
-                minLines: 1,
-                maxLines: 5,
+                minLines: 3,
+                maxLines: null,
                 onChange: (value) => updateOnChange("description"),
               ),
               UnderlineTextField(
                 controller: _payByController,
                 icon: Icons.payment,
                 label: 'PAID BY',
+                readOnly: !isEditableOtherFields,
                 placeholder: "Pay by cash?",
                 keyboardType: TextInputType.text,
                 onChange: (value) => updateOnChange("payBy"),

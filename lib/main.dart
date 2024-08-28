@@ -4,7 +4,6 @@ import 'package:loader_overlay/loader_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/styles/app_color.dart';
 import 'package:tymesavingfrontend/common/styles/app_theme.dart';
-import 'package:tymesavingfrontend/screens/main_page_layout.dart';
 import 'package:tymesavingfrontend/screens/splash_screen.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/budget_service.dart';
@@ -17,7 +16,6 @@ import 'package:tymesavingfrontend/services/transaction_service.dart';
 import 'package:tymesavingfrontend/services/user_service.dart';
 import 'package:tymesavingfrontend/services/utils/network_service.dart';
 import 'package:tymesavingfrontend/utils/global_keys.dart';
-import 'package:uni_links/uni_links.dart';
 import 'dart:async';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
@@ -47,48 +45,20 @@ Future<void> main() async {
       child: GlobalLoaderOverlay(
         useDefaultLoading: true,
         overlayColor: AppColors.primaryBlue.withOpacity(0.5),
-        child: MyApp(),
+        child: const MyApp(),
       ),
     ),
   );
 }
 
-class MyApp extends StatefulWidget {
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  StreamSubscription? _sub;
-
-  @override
-  void initState() {
-    super.initState();
-    _handleIncomingLinks();
-  }
-
-  @override
-  void dispose() {
-    _sub?.cancel();
-    super.dispose();
-  }
-
-    void _handleIncomingLinks() {
-    // Handle incoming deep links
-    _sub = uriLinkStream.listen((Uri? uri) {
-      if (uri != null) {
-        // Check if the URI matches the success path
-        print("URI Path is: ${uri}");
-      }
-    }, onError: (err) {
-      // Handle errors by showing an error screen, etc.
-    });
-  }
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'My App',
+      debugShowCheckedModeBanner: false,
       scaffoldMessengerKey: scaffoldMessengerKey,
       theme: AppThemes.lightTheme,
       darkTheme: AppThemes.darkTheme,
@@ -100,9 +70,21 @@ class _MyAppState extends State<MyApp> {
       //   child: const SplashScreen(),
       // ),
       home: const SplashScreen(),
-      routes: {
-        '/payment':(context) => const MainPageLayout()
-      },
+      // home: MomoPaymentResultPage(momoResponse: MomoPaymentResponse.fromMap(
+      //   {
+      //     "partnerCode": "MOMO",
+      //     "orderId": "123456",
+      //     "requestId": "123456",
+      //     "amount": "1000",
+      //     "orderInfo": "Payment for goods",
+      //     "orderType": "goods",
+      //     "transId": "123456",
+      //     "resultCode": "0",
+      //     "message": "Success",
+      //     "payType": "momo",
+      //     "responseTime": "12345678"
+      //   }
+      // ),),
     );
   }
 }

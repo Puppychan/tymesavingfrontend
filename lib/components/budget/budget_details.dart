@@ -78,6 +78,16 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
     });
   }
 
+  void _loadTransactionForm() {
+if (!mounted) return;
+            final formStateProvider =
+                Provider.of<FormStateProvider>(context, listen: false);
+            formStateProvider.resetForm(FormStateType.expense);
+            formStateProvider.updateFormField("groupType", TransactionGroupType.budget, FormStateType.expense);
+            formStateProvider.updateFormField("budgetGroupId", widget.budgetId, FormStateType.expense);
+            formStateProvider.updateFormField("tempChosenGroup", _budget, FormStateType.expense);
+  }
+
   Future<void> _loadData() async {
     Future.microtask(() async {
       if (!mounted) return;
@@ -106,8 +116,6 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
           if(_budget!.defaultApproveStatus == ApproveStatus.pending.value) {
             approval = true;
           }
-          // debugPrint(
-          //     "percentageTaken: $percentageTaken, ${percentageTaken! > 199}, $percentageLeft");
           if (percentageTaken! < 0) {
             _displayPercentageTaken = '0%';
           } else if (percentageTaken! > 199) {
@@ -139,10 +147,10 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
 
   @override
   void didChangeDependencies() {
+    super.didChangeDependencies();
     isLoading = true;
     _loadData();
-    super.didChangeDependencies();
-    final route = ModalRoute.of(context);
+    final ModalRoute? route = ModalRoute.of(context);
     if (route is PageRoute) {
       routeObserver.subscribe(this, route);
     }
@@ -150,9 +158,8 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
 
   @override
   void didPopNext() {
-    isLoading = true;
-    _loadData();
     super.didPopNext();
+    _loadData();
   }
 
   int calculateDaysLeft(DateTime endDate) {
@@ -166,16 +173,13 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
         appBar: Heading(title: 'Budget Group', showBackButton: true, actions: [
-          IconButton(onPressed: () async {
-            if (!mounted) return;
-            final formStateProvider =
-                Provider.of<FormStateProvider>(context, listen: false);
-            formStateProvider.resetForm(FormStateType.expense);
-            formStateProvider.updateFormField("groupType", TransactionGroupType.budget, FormStateType.expense);
-            formStateProvider.updateFormField("budgetGroupId", widget.budgetId, FormStateType.expense);
+          IconButton(
+            color: colorScheme.primary,
+            disabledColor: colorScheme.onPrimary.withOpacity(0.5),
+            onPressed: isLoading ? null : () async {
+            _loadTransactionForm();
             // render group
             if (!mounted) return;
-            formStateProvider.updateFormField("tempChosenGroup", _budget, FormStateType.expense);
             showTransactionFormA(context, false, isFromGroupDetail: true);
             
           }, icon: const Icon(FontAwesomeIcons.moneyCheckDollar)),
@@ -422,7 +426,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                       const SizedBox(height: 20,),
                       SizedBox(
                         height: 500,
-                        child: RefreshIndicator(onRefresh: _pullRefresh, child: TransactionList(transactions: _transactions)),
+                        child: RefreshIndicator(onRefresh: _pullRefresh, child: TransactionList(transactions: _transactions, disableButton: true,)),
                       ),
                     ],
                   ),

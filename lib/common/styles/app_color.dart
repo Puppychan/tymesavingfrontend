@@ -25,7 +25,7 @@ class AppColors {
   static const Color secondaryDark = Color(0xffEEEDFF);
   static const Color tertiaryDark = Color(0xff2D2F45);
   static const Color quaternaryDark = Color(0xff46485F);
-  static const Color dividerDark = Color.fromARGB(49, 3, 2, 2);
+  static const Color dividerDark = Color(0xffACA79D);
   static const Color navBackgroundDark = Color(0xff181304);
   static const Color navBackgroundShadowDark = Color(0xff464236);
   static const Color primaryTextDark = cream;

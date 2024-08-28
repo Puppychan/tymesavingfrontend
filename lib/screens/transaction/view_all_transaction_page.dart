@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_type_enum.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
-import 'package:tymesavingfrontend/components/common/sheet/bottom_sheet.dart';
-import 'package:tymesavingfrontend/components/transaction/transaction_sort_filter.dart';
 import 'package:tymesavingfrontend/models/transaction_model.dart';
 import 'package:tymesavingfrontend/components/transaction/transaction_list.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
@@ -24,8 +21,9 @@ class _ViewAllTransactionsPageState extends State<ViewAllTransactionsPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   List<Transaction>? _transactions = [];
-  String _sortOption = 'sortDateCreated'; // Default sort option
-  String _sortOrder = 'ascending'; // Default sort order
+  String _sortOption = 'sortDateCreated';
+  String _sortOrder = 'ascending';
+  bool isLoading = true;
 
   void _fetchTransactions() async {
     final transactionService =
@@ -33,17 +31,27 @@ class _ViewAllTransactionsPageState extends State<ViewAllTransactionsPage>
     final user = Provider.of<AuthService>(context, listen: false).user;
 
     String tab = TransactionType.list[_tabController.index];
-    List<Transaction> transactions =
-        await transactionService.fetchTransactionsSortHandler(
-      tab: tab,
-      sortOption: _sortOption,
-      sortOrder: _sortOrder,
-      userId: user!.id,
-    );
-
-    setState(() {
-      _transactions = transactions;
+    await handleMainPageApi(context, () async {
+      return await transactionService.fetchTransactionsSortHandler(
+        tab: tab,
+        sortOption: _sortOption,
+        sortOrder: _sortOrder,
+        userId: user!.id,
+      );
+    }, () async {
+      setState(() {
+        _transactions =
+            Provider.of<TransactionService>(context, listen: false).flattenTransactions;
+        isLoading = false;
+      });
     });
+  }
+
+  Future<void> _pullRefresh() async {
+    setState(() {
+      isLoading = true;
+    });
+    _fetchTransactions();
   }
 
   @override
@@ -130,14 +138,18 @@ class _ViewAllTransactionsPageState extends State<ViewAllTransactionsPage>
           ),
         ],
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: TransactionType.list
-            .map((_) => _transactions == null || _transactions!.isEmpty
-                ? _buildNoTransactionsMessage()
-                : TransactionList(transactions: _transactions!))
-            .toList(),
-      ),
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : TabBarView(
+              controller: _tabController,
+              children: TransactionType.list
+                  .map((_) => _transactions == null || _transactions!.isEmpty
+                      ? _buildNoTransactionsMessage()
+                      : RefreshIndicator(
+                          onRefresh: _pullRefresh,
+                          child: TransactionList(transactions: _transactions!)))
+                  .toList(),
+            ),
     );
   }
 }
@@ -151,7 +163,7 @@ extension StringExtension on String {
 class ListItems extends StatelessWidget {
   final Function(String) onItemSelected;
 
-  const ListItems({Key? key, required this.onItemSelected}) : super(key: key);
+  const ListItems({super.key, required this.onItemSelected});
 
   @override
   Widget build(BuildContext context) {

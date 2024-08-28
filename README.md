@@ -1,5 +1,25 @@
 # TymeX Project Front-end
 
+## Deploying - Hosting on Firebase
+- Run `flutter build web` to build the web version of the app.
+- Get android sha256 key
+```bash
+keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android
+```
+- Create ./web/.well-known/assetlink.json:
+```json
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.tyme.tymesaving",
+    "sha256_cert_fingerprints": ["<SHA256_KEY>"]
+  }
+}]
+```
+
+sudo gem install cocoapods
+
 Momo sample response
 https://webhook.site/04561cd2-489b-4982-9e68-5111a84a097a?partnerCode=MOMOBKUN20180529
 orderId=OD1724389775564
@@ -14,6 +34,8 @@ payType=
 responseTime=1724389788018
 extraData=
 signature=2b419c014d9f8b7d80228c6ee4b26991d09e6538ca8a5077464d94dec723fc08
+
+tymesaving://payment/momo?partnerCode=MOMO&orderId=66cadc7f5a82191b533164a1&requestId=MOMO1724570752146&amount=2000000&orderInfo=Pay+with+MoMo+66cadc7f5a82191b533164a1+Topup+Wallet&orderType=momo_wallet&transId=4106436272&resultCode=0&message=Successful.&payType=napas&responseTime=1724570893342&extraData=&signature=60259330d208594a1e848332d664584a55fdf943f59c966587640489c8223f58
 
 ## Install For Deep Link
 flutter clean
@@ -155,7 +177,19 @@ flutter run
 ```
 - If you encounter issues:
   - Messsage of the issues to be "... is not available because it is unpaired." -> Unplug the device and plug it back in until there is modal pop up on the device asking for trust the computer. Trust the computer and run the command again.
+  - Message is about "...is not available. Please unlock..." -> Unlock the device and rerun the command again.
+  - Message is about "Could not build ... because the following modules are missing:..." -> Run the command:
+    - flutter pub upgrade
+    - flutter clean
+    - flutter pub get
+    - ```
+      cd ios
+      rm -rf Pods
+      rm -rf Podfile.lock
+      pod install
+    ```
   - Rerun the command again.
   - Message is about "...enable Developer Mode in Settings → Privacy & Security.":
     - In the device: Go to Settings -> General -> Device Management -> Developer App -> Trust the app.
     - The app is restarted -> Confirm "On" for developer mode -> rerun the command again.
+  

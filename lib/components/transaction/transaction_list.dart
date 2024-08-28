@@ -7,8 +7,9 @@ import 'package:tymesavingfrontend/models/transaction_model.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> transactions;
+  final bool disableButton;
 
-  TransactionList({super.key, required this.transactions});
+  TransactionList({super.key, required this.transactions, this.disableButton = false});
 
   final List<IconData> icons = [
     Icons.shopping_cart,
@@ -53,6 +54,7 @@ class TransactionList extends StatelessWidget {
         final randomColor = getRandomColor();
 
         return TransactionItem(
+          disableButton: disableButton,
           transaction: transaction,
           formattedDate: formattedDate,
           randomIcon: randomIcon,
