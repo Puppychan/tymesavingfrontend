@@ -8,7 +8,7 @@ enum TransactionFormWritePolicy {
   viewOnly, //  use when user only can view the form - group case
 }
 
-  TransactionFormWritePolicy renderWritePermission(FormStateType formType, bool isFromGroupDetailPage, bool isTransactionFromGroup) {
+  TransactionFormWritePolicy renderWritePermission(FormStateType formType, bool? isFromGroupDetailPage, bool isTransactionFromGroup) {
     if (formType == FormStateType.updateExpense ||
         formType == FormStateType.updateIncome) {
       if (isTransactionFromGroup == true) {

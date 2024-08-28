@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tymesavingfrontend/common/enum/transaction_form_write_policy_enum.dart';
 import 'package:tymesavingfrontend/components/full_screen_image.dart';
 import 'package:tymesavingfrontend/models/transaction_model.dart';
 import 'package:tymesavingfrontend/components/transaction/infor_row.dart';
@@ -10,18 +11,26 @@ class TransactionDialog extends StatefulWidget {
   final String formattedDate;
   final bool disableButton;
 
-  const TransactionDialog({
-    super.key,
-    required this.transaction,
-    required this.formattedDate,
-    required this.disableButton
-  });
+  const TransactionDialog(
+      {super.key,
+      required this.transaction,
+      required this.formattedDate,
+      required this.disableButton});
   @override
   State<TransactionDialog> createState() => _TransactionDialogState();
 }
 
 class _TransactionDialogState extends State<TransactionDialog> {
   bool _isDisplayRestDescription = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // if (!widget.disableButton) {
+    //   _writePolicy = TransactionFormWritePolicy.editable;
+    // }
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -86,80 +95,105 @@ class _TransactionDialogState extends State<TransactionDialog> {
                               !_isDisplayRestDescription;
                         });
                       },
-                      child: widget.transaction.description!.isEmpty ?
-                      Text('This transaction has no description!'
-                      , style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontStyle: FontStyle.italic),)
-                      : Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            widget.transaction.description!,
-                            style: Theme.of(context).textTheme.bodyMedium,
-                            textAlign: TextAlign.justify,
-                            maxLines: _isDisplayRestDescription ? null : 2,
-                            overflow: _isDisplayRestDescription
-                                ? TextOverflow.visible
-                                : TextOverflow.fade,
-                          ),
-                          if (!_isDisplayRestDescription)
-                            Text(
-                              "Tap for more",
-                              style: Theme.of(context).textTheme.labelMedium,
+                      child: widget.transaction.description!.isEmpty
+                          ? Text(
+                              'This transaction has no description!',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(fontStyle: FontStyle.italic),
                             )
-                        ],
-                      )),
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  widget.transaction.description!,
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                  textAlign: TextAlign.justify,
+                                  maxLines:
+                                      _isDisplayRestDescription ? null : 2,
+                                  overflow: _isDisplayRestDescription
+                                      ? TextOverflow.visible
+                                      : TextOverflow.fade,
+                                ),
+                                if (!_isDisplayRestDescription)
+                                  Text(
+                                    "Tap for more",
+                                    style:
+                                        Theme.of(context).textTheme.labelMedium,
+                                  )
+                              ],
+                            )),
                 ),
                 if (widget.transaction.transactionImages.isNotEmpty)
-                SizedBox(
-                  height: 200,
-                  child: ListView.builder(
-                    itemCount: widget.transaction.transactionImages.length,
-                    itemBuilder: (context, index) {
-                      final imageURL = widget.transaction.transactionImages[index];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 5),
-                        child: Column(
-                          children: [
-                            Text('Receipt image ${index+1}', style: Theme.of(context).textTheme.headlineMedium,),
-                            const SizedBox(height: 5),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => FullScreenImage(imageUrl: imageURL),
+                  SizedBox(
+                    height: 200,
+                    child: ListView.builder(
+                        itemCount: widget.transaction.transactionImages.length,
+                        itemBuilder: (context, index) {
+                          final imageURL =
+                              widget.transaction.transactionImages[index];
+                          return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 5),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    'Receipt image ${index + 1}',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineMedium,
                                   ),
-                                );
-                              },
-                              child: Image.network(
-                              imageURL,
-                              loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                                if (loadingProgress == null) {
-                                  return child; // The image has finished loading.
-                                } else {
-                                  return Center(
-                                    child: CircularProgressIndicator(
-                                      value: loadingProgress.expectedTotalBytes != null
-                                          ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
-                                          : null,
+                                  const SizedBox(height: 5),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => FullScreenImage(
+                                              imageUrl: imageURL),
+                                        ),
+                                      );
+                                    },
+                                    child: Image.network(
+                                      imageURL,
+                                      loadingBuilder: (BuildContext context,
+                                          Widget child,
+                                          ImageChunkEvent? loadingProgress) {
+                                        if (loadingProgress == null) {
+                                          return child; // The image has finished loading.
+                                        } else {
+                                          return Center(
+                                            child: CircularProgressIndicator(
+                                              value: loadingProgress
+                                                          .expectedTotalBytes !=
+                                                      null
+                                                  ? loadingProgress
+                                                          .cumulativeBytesLoaded /
+                                                      (loadingProgress
+                                                              .expectedTotalBytes ??
+                                                          1)
+                                                  : null,
+                                            ),
+                                          );
+                                        }
+                                      },
+                                      errorBuilder: (BuildContext context,
+                                          Object error,
+                                          StackTrace? stackTrace) {
+                                        return const Center(
+                                          child: Icon(Icons
+                                              .error), // You can show an error icon if the image fails to load.
+                                        );
+                                      },
                                     ),
-                                  );
-                                }
-                              },
-                              errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
-                                return const Center(
-                                  child: Icon(Icons.error), // You can show an error icon if the image fails to load.
-                                );
-                              },
-                              ),
-                            ),
-                            const SizedBox(height: 10,),
-                          ],
-                        )
-                      );
-                    }
-                  ),
-                )
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                ],
+                              ));
+                        }),
+                  )
               ],
             ),
           ),
@@ -168,28 +202,31 @@ class _TransactionDialogState extends State<TransactionDialog> {
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                if(!widget.disableButton)
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => TransactionUpdatePage(
-                                  transactionId: widget.transaction.id,
-                                )));
-                    // Add your edit functionality here
-                  },
-                  child: const Text('Edit'),
-                ),
-                if(!widget.disableButton)
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    // Add your delete functionality here
-                  },
-                  child: const Text('Delete'),
-                ),
+                if (!widget.disableButton)
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => TransactionUpdatePage(
+                                    transactionId: widget.transaction.id,
+                                  )));
+                      // Add your edit functionality here
+                    },
+                    child: Text(widget.transaction.savingGroupId == null &&
+                            widget.transaction.budgetGroupId == null
+                        ? 'Edit'
+                        : 'Details'),
+                  ),
+                if (!widget.disableButton)
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      // Add your delete functionality here
+                    },
+                    child: const Text('Delete'),
+                  ),
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
