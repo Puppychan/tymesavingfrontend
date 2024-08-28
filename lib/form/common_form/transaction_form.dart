@@ -355,10 +355,11 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
               ),
               ImagesUploadingMultiForm(
                 images: transactionImages,
+                isEditable: isEditableOtherFields,
                 formType: widget.type,
               ),
               const SizedBox(height: 30),
-              PrimaryButton(title: "Add", onPressed: _trySubmit)
+              isEditableOtherFields ? PrimaryButton(title: "Add", onPressed: _trySubmit) : const SizedBox(),
             ],
           ));
     });
