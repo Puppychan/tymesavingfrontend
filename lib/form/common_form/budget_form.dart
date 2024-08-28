@@ -93,7 +93,8 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
               .updateBudgetGroup(
             formField['id'],
             user?.id ?? "",
-            formField["defaultApproveStatus"].value ?? ApproveStatus.approved.value,
+            formField["defaultApproveStatus"].value ??
+                ApproveStatus.approved.value,
             formField['name'],
             formField['description'] ?? "",
             formField['amount'],
@@ -103,7 +104,8 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
           return await Provider.of<BudgetService>(context, listen: false)
               .addBudgetGroup(
             user?.id ?? "",
-            formField["defaultApproveStatus"].value ?? ApproveStatus.approved.value,
+            formField["defaultApproveStatus"].value ??
+                ApproveStatus.approved.value,
             formField['name'],
             formField['description'] ?? "",
             formField['amount'],
@@ -171,8 +173,7 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
       // TransactionCategory selectedCategory =
       //     formStateService.getCategory(widget.type);
       String formattedAmount = formStateService.getFormattedAmount(widget.type);
-      ApproveStatus currentApproveStatus =
-          ApproveStatus.fromString(formFields['defaultApproveStatus']) ?? ApproveStatus.approved;
+      ApproveStatus currentApproveStatus = formFields['defaultApproveStatus'];
 
       // update text to controller
       _amountController.text = formStateService.getFormattedAmount(widget.type);
@@ -184,12 +185,11 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               UnderlineTextField(
                 controller: _nameController,
                 icon: Icons.card_membership,
                 label: 'GROUP NAME',
-                placeholder:  "Naming group...",
+                placeholder: "Naming group...",
                 keyboardType: TextInputType.text,
                 onChange: (value) => updateOnChange("name"),
                 validator: Validator.validateGroupName,

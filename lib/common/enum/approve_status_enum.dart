@@ -19,7 +19,7 @@ enum ApproveStatus {
       }
     }
     // default to pending
-    return ApproveStatus.pending;
+    return ApproveStatus.approved;
   }
 
   static List<String> get list {
