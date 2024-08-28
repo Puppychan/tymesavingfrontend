@@ -359,6 +359,8 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
                                         fullname: member.fullname,
                                         avatar: member.avatar,
                                         rank: member.tymeReward ?? '',
+                                        progressAmount: member.progressAmount,
+                                        checkpointReached: member.checkpointReached,
                                       );
                                     },
                                   ),
