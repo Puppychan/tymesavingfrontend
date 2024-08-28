@@ -90,7 +90,6 @@ class _TransactionMonthlyTabBarState extends State<TransactionMonthlyTabBar>
       transactions =
           fetchedTransactions.isNotEmpty ? fetchedTransactions : null;
       isLoading = false;
-      debugPrint(transactions.toString());
     });
   }
 
