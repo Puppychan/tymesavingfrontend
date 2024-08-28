@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
+import 'package:tymesavingfrontend/common/enum/transaction_form_write_policy_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_group_type_enum.dart';
 import 'package:tymesavingfrontend/components/common/input/radio_field.dart';
 import 'package:tymesavingfrontend/components/common/multi_form_components/group_tile.dart';
 import 'package:tymesavingfrontend/components/common/multi_form_components/short_group_info_multi_form.dart';
-import 'package:tymesavingfrontend/models/base_group_model.dart';
 import 'package:tymesavingfrontend/screens/search_page.dart';
 import 'package:tymesavingfrontend/services/budget_service.dart';
 import 'package:tymesavingfrontend/services/group_saving_service.dart';
@@ -18,7 +18,8 @@ class AssignGroupMultiForm extends StatefulWidget {
   final String userId;
   final void Function(String, {dynamic value}) updateOnChange;
   final TransactionGroupType chosenGroupType;
-  final BaseGroup? chosenResult;
+  final String? groupId;
+  final TransactionFormWritePolicy writePolicy;
 
   const AssignGroupMultiForm(
       {super.key,
@@ -26,7 +27,8 @@ class AssignGroupMultiForm extends StatefulWidget {
       required this.transactionType,
       required this.chosenGroupType,
       required this.userId,
-      required this.chosenResult});
+      required this.writePolicy,
+      this.groupId});
 
   @override
   State<AssignGroupMultiForm> createState() => _AssignGroupMultiFormState();
@@ -35,7 +37,7 @@ class AssignGroupMultiForm extends StatefulWidget {
 class _AssignGroupMultiFormState extends State<AssignGroupMultiForm> {
   // Define your state variables and methods here
   TransactionGroupType _currentChosenGroupType = TransactionGroupType.none;
-  BaseGroup? _currentChosenResult;
+  String? _currentChosenGroupId;
 
   String _renderFormKeyGroup() {
     return _isBudget() ? "budgetGroupId" : "savingGroupId";
@@ -45,7 +47,7 @@ class _AssignGroupMultiFormState extends State<AssignGroupMultiForm> {
   void initState() {
     super.initState();
     _currentChosenGroupType = widget.chosenGroupType;
-    _currentChosenResult = widget.chosenResult;
+    _currentChosenGroupId = widget.groupId;
   }
 
   bool _isBudget() {
@@ -83,7 +85,6 @@ class _AssignGroupMultiFormState extends State<AssignGroupMultiForm> {
 
     widget.updateOnChange("groupType", value: _currentChosenGroupType);
     widget.updateOnChange(updateFieldKey, value: result.id);
-    widget.updateOnChange("tempChosenGroup", value: result);
     Navigator.pop(context);
   }
 
@@ -96,20 +97,42 @@ class _AssignGroupMultiFormState extends State<AssignGroupMultiForm> {
         _currentChosenGroupType = widget.chosenGroupType;
       });
     }
-    if (widget.chosenResult != oldWidget.chosenResult) {
+
+    if (widget.groupId != oldWidget.groupId) {
       if (!mounted) return;
       setState(() {
-        _currentChosenResult = widget.chosenResult;
+        _currentChosenGroupId = widget.groupId;
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
     return Column(children: [
-      RadioField(
+      // input to choose whether the transaction is for personal or group
+      buildChooseBelongToGroup(),
+      buildSearchTap(context),
+      // if has chosen group, display group info
+      // or if policy is to create form from group, display group info
+      if (_currentChosenGroupId != null ||
+          widget.writePolicy ==
+              TransactionFormWritePolicy.createFormFromGroup ||
+          widget.writePolicy ==
+              TransactionFormWritePolicy.viewOnly) ...[
+        const Divider(),
+        ShortGroupInfoMultiForm(
+          chosenGroupType: _currentChosenGroupType,
+          defaultGroupId: _currentChosenGroupId,
+        ),
+      ] else
+        Container(),
+    ]);
+  }
+
+  Widget buildChooseBelongToGroup() {
+    if (!mounted) return const SizedBox();
+    if (widget.writePolicy == TransactionFormWritePolicy.createForm) {
+      return RadioField(
           label: "This transaction is for: ",
           options: widget.transactionType == FormStateType.expense
               ? TransactionGroupType.formattedExpenseList
@@ -121,52 +144,52 @@ class _AssignGroupMultiFormState extends State<AssignGroupMultiForm> {
             if (convertGroupType != _currentChosenGroupType) {
               String updateFieldKey = _renderFormKeyGroup();
               widget.updateOnChange(updateFieldKey, value: null);
-              widget.updateOnChange("tempChosenGroup", value: null);
             }
             widget.updateOnChange("groupType", value: convertGroupType);
           },
-          defaultOption: _currentChosenGroupType.toStringFormatted()),
-      _currentChosenGroupType != TransactionGroupType.none
-          ? InkWell(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SearchPage(
-                          title: "Search Group",
-                          searchLabel: "Search using name",
-                          searchPlaceholder: "Search group name here...",
-                          customResultSize: (1 / 1.2),
-                          searchCallback: (value, updateResults,
-                                  cancelToken) async =>
-                              searchCallback(value, updateResults, cancelToken),
-                          resultWidgetFunction: (result) => GroupTile(
-                              type: _currentChosenGroupType,
-                              baseGroup: result,
-                              onTap: () {
-                                onTapSearchResult(result);
-                              })),
-                    ));
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("Find to Add Group",
-                      style: textTheme.titleSmall!
-                          .copyWith(fontWeight: FontWeight.w700)),
-                  Icon(FontAwesomeIcons.searchengin,
-                      color: colorScheme.primary),
-                ],
-              ),
-            )
-          : Container(),
-      if (_currentChosenResult != null) ...[
-        const Divider(),
-        ShortGroupInfoMultiForm(
-            chosenGroupType: _currentChosenGroupType,
-            chosenResult: _currentChosenResult),
-      ] else
-        Container(),
-    ]);
+          defaultOption: _currentChosenGroupType.toStringFormatted());
+    }
+    return const SizedBox();
+  }
+
+  Widget buildSearchTap(BuildContext context) {
+    if (!mounted) return const SizedBox();
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+    if (_currentChosenGroupType != TransactionGroupType.none &&
+        widget.writePolicy == TransactionFormWritePolicy.createForm) {
+      // if belongs to group and policy must be able to create form, display search bar
+      return InkWell(
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SearchPage(
+                    title: "Search Group",
+                    searchLabel: "Search using name",
+                    searchPlaceholder: "Search group name here...",
+                    customResultSize: (1 / 1.2),
+                    searchCallback: (value, updateResults, cancelToken) async =>
+                        searchCallback(value, updateResults, cancelToken),
+                    resultWidgetFunction: (result) => GroupTile(
+                        type: _currentChosenGroupType,
+                        baseGroup: result,
+                        onTap: () {
+                          onTapSearchResult(result);
+                        })),
+              ));
+        },
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text("Find to Add Group",
+                style: textTheme.titleSmall!
+                    .copyWith(fontWeight: FontWeight.w700)),
+            Icon(FontAwesomeIcons.searchengin, color: colorScheme.primary),
+          ],
+        ),
+      );
+    }
+    return const SizedBox();
   }
 }

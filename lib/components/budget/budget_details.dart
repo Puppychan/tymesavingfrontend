@@ -69,7 +69,6 @@ if (!mounted) return;
             formStateProvider.resetForm(FormStateType.expense);
             formStateProvider.updateFormField("groupType", TransactionGroupType.budget, FormStateType.expense);
             formStateProvider.updateFormField("budgetGroupId", widget.budgetId, FormStateType.expense);
-            formStateProvider.updateFormField("tempChosenGroup", _budget, FormStateType.expense);
   }
 
   Future<void> _loadData() async {
@@ -408,7 +407,7 @@ if (!mounted) return;
                       const SizedBox(height: 20,),
                       SizedBox(
                         height: 500,
-                        child: RefreshIndicator(onRefresh: _pullRefresh, child: TransactionList(transactions: _transactions)),
+                        child: RefreshIndicator(onRefresh: _pullRefresh, child: TransactionList(transactions: _transactions, disableButton: true,)),
                       ),
                     ],
                   ),

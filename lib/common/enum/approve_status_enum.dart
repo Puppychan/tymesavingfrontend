@@ -11,7 +11,7 @@ enum ApproveStatus {
 
   String toStringLower() => value.toLowerCase();
 
-  static ApproveStatus fromString(String value) {
+  static ApproveStatus fromString(String? value) {
     // get the approve status from the value
     for (var status in ApproveStatus.values) {
       if (status.value == value) {
@@ -19,7 +19,7 @@ enum ApproveStatus {
       }
     }
     // default to pending
-    return ApproveStatus.pending;
+    return ApproveStatus.approved;
   }
 
   static List<String> get list {

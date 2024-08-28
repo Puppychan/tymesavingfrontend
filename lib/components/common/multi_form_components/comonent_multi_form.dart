@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 List<Widget> buildComponentGroup(
     {required BuildContext context, required dynamic contentWidget, String? label}) {
+      // this is for form component
+      // include group of widgets with label and divider
   final textTheme = Theme.of(context).textTheme;
   return [
     if (label != null) Text(label, style: textTheme.titleSmall),

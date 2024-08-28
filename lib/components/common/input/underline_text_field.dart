@@ -20,23 +20,24 @@ class UnderlineTextField extends StatefulWidget {
   final void Function(String)? onChange;
   final List<TextInputFormatter>? inputFormatters;
 
-  const UnderlineTextField({
-    super.key,
-    required this.label,
-    required this.placeholder,
-    this.controller,
-    this.isPasswordField = false,
-    this.keyboardType,
-    this.enabled = true,
-    this.obscureText = false,
-    this.validator,
-    this.componentHeight = 58,
-    this.suffixIcon,
-    this.icon,
-    this.onTap,
-    this.readOnly,
-    this.onChange, this.defaultValue, this.inputFormatters
-  });
+  const UnderlineTextField(
+      {super.key,
+      required this.label,
+      required this.placeholder,
+      this.controller,
+      this.isPasswordField = false,
+      this.keyboardType,
+      this.enabled = true,
+      this.obscureText = false,
+      this.validator,
+      this.componentHeight = 58,
+      this.suffixIcon,
+      this.icon,
+      this.onTap,
+      this.readOnly,
+      this.onChange,
+      this.defaultValue,
+      this.inputFormatters});
 
   @override
   State<UnderlineTextField> createState() => _UnderlineTextFieldState();
@@ -50,6 +51,7 @@ class _UnderlineTextFieldState extends State<UnderlineTextField> {
       widget.controller!.text = widget.defaultValue!;
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
@@ -60,6 +62,7 @@ class _UnderlineTextFieldState extends State<UnderlineTextField> {
       const SizedBox(height: 10),
       TextFormField(
         maxLines: 1,
+        onTap: widget.onTap,
         controller: widget.controller,
         onChanged: widget.onChange,
         validator: widget.validator,
@@ -88,12 +91,8 @@ class _UnderlineTextFieldState extends State<UnderlineTextField> {
           prefixIcon: Icon(widget.icon),
           enabled: widget.enabled,
           errorStyle: textTheme.bodySmall!.copyWith(color: colorScheme.onError),
-          suffixIcon: widget.suffixIcon != null
-              ? IconButton(
-                  icon: Icon(widget.suffixIcon),
-                  onPressed: widget.onTap,
-                )
-              : null,
+          suffixIcon:
+              widget.suffixIcon != null ? Icon(widget.suffixIcon) : null,
         ),
       ),
       const SizedBox(height: 30),

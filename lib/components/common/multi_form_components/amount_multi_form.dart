@@ -9,12 +9,13 @@ class AmountMultiForm extends StatelessWidget {
   final TextEditingController amountController;
   final String formattedAmount;
   final Function updateOnChange;
+  final bool isEditable;
 
   const AmountMultiForm(
       {super.key,
       required this.amountController,
       required this.formattedAmount,
-      required this.updateOnChange});
+      required this.updateOnChange, this.isEditable = true});
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +30,10 @@ class AmountMultiForm extends StatelessWidget {
             inputFormatters: [CurrencyInputFormatter()],
             placeholder: formattedAmount,
             keyboardType: TextInputType.number,
+            readOnly: !isEditable,
             onChange: (value) => updateOnChange("amount"),
             validator: Validator.validateAmount),
+        if (isEditable)
         ...buildComponentGroup(context: context, contentWidget: [
           // SizedBox(height: 10),
           SingleChildScrollView(

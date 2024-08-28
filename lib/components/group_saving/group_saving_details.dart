@@ -192,8 +192,6 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails>
                           _groupSaving!.id, FormStateType.income);
                       // render group
                       if (!mounted) return;
-                      formStateProvider.updateFormField("tempChosenGroup",
-                          _groupSaving, FormStateType.income);
                       showTransactionFormA(context, true,
                           isFromGroupDetail: true);
                     },
@@ -457,7 +455,7 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails>
                         child: RefreshIndicator(
                             onRefresh: _pullRefresh,
                             child:
-                                TransactionList(transactions: _transactions)),
+                                TransactionList(transactions: _transactions, disableButton: true,)),
                       ),
                     ],
                   ),
