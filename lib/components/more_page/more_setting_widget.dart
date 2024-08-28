@@ -6,6 +6,8 @@ import 'package:tymesavingfrontend/screens/setting_page.dart';
 import 'package:tymesavingfrontend/screens/tracking_report/spend_tracking.dart';
 import 'package:tymesavingfrontend/screens/tracking_report/report_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class MoreMenuSetting extends StatefulWidget {
   const MoreMenuSetting({super.key});
@@ -72,6 +74,19 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
         (route) => false);
   }
 
+  Future<void> _launchContact() async {
+    final Uri phone = Uri(
+      scheme: 'https',
+      path: "//www.rmit.edu.vn/students/support"
+    );
+    if (await canLaunchUrl(phone)){
+      await launchUrl(phone,
+      mode: LaunchMode.externalApplication);
+    } else {
+      debugPrint("Launch Phone failed");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -91,11 +106,11 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
                 const Icon(Icons.wallet),
                 myWalletRoute),
             RowSettingTemplate('My Report', 'Understand your cashflow',
-                const Icon(Icons.help), myReport),
+                const Icon(Icons.report), myReport),
             RowSettingTemplate('Setting', 'Change setting and preference',
                 const Icon(Icons.settings), settingFunction),
-            RowSettingTemplate('Contact us', 'Call the hotline',
-                const Icon(Icons.phone), sandBox),
+            RowSettingTemplate('Contact us', 'Student support',
+                const Icon(Icons.help), _launchContact),
             RowSettingTemplate('About', 'Some information about the project',
                 const Icon(Icons.info), about),
             RowSettingTemplate('Logout', 'Logout your account here',
