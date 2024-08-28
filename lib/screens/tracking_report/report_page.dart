@@ -23,39 +23,34 @@ class ReportPage extends StatefulWidget {
 class _ReportPageState extends State<ReportPage> {
   CompareToLastMonth? compareToLastMonth;
   TopCategoriesList? topCategoriesList;
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    User? user;
-    Future.microtask(() async {
-      if (mounted) {
-        final authService = Provider.of<AuthService>(context, listen: false);
+    _loadData();
+  }
 
-        await handleMainPageApi(context, () async {
-          return await authService.getCurrentUserData();
-          // return result;
-        }, () async {
-          setState(() {
-            user = authService.user;
-          });
+  Future<void> _loadData() async {
+    Future.microtask(() async {
+          final authService = Provider.of<AuthService>(context, listen: false);
+          User? user = authService.user;
+          if (mounted) {
+            final transactionService =
+                Provider.of<TransactionService>(context, listen: false);
+            await handleMainPageApi(context, () async {
+              return await transactionService.getReportDetail(user?.id);
+              // return result;
+            }, () async {
+              setState(() {
+                // Compare to last month
+                compareToLastMonth = transactionService.compareToLastMonth;
+                topCategoriesList = transactionService.topCategoriesList;
+                isLoading = false;
+              });
+            });
+          }
         });
-      }
-      if (mounted) {
-        final transactionService =
-            Provider.of<TransactionService>(context, listen: false);
-        await handleMainPageApi(context, () async {
-          return await transactionService.getReportDetail(user?.id);
-          // return result;
-        }, () async {
-          setState(() {
-            // Compare to last month
-            compareToLastMonth = transactionService.compareToLastMonth;
-            topCategoriesList = transactionService.topCategoriesList;
-          });
-        });
-      }
-    });
   }
 
   @override
@@ -66,32 +61,40 @@ class _ReportPageState extends State<ReportPage> {
         showBackButton: true,
       ),
       body: Skeletonizer(
-        enabled: compareToLastMonth == null, // Show skeleton if user is null
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              ReportFlow(
-                  inflowCurrent: compareToLastMonth?.currentIncome ?? 0,
-                  inflowPercentage: compareToLastMonth?.incomePercentage ?? '0',
-                  outflowCurrent: compareToLastMonth?.currentExpense ?? 0,
-                  outflowPercentage:
-                      compareToLastMonth?.expensePercentage ?? '0'),
-              const SizedBox(
-                height: 20,
-              ),
-              const OutflowHeader(),
-              if (topCategoriesList == null)
-                const EmptyCaseOutFlow()
-              else
-                CustomPieChart(topCategories: topCategoriesList!.topCategory),
-              const SizedBox(
-                height: 20,
-              ),
-              if (topCategoriesList == null)
-                const SizedBox()
-              else
-                ReportDetail(topCategories: topCategoriesList!.topCategory),
-            ],
+        enabled: isLoading, // Show skeleton if user is null
+        child: RefreshIndicator(
+          onRefresh: () async {
+            setState(() {
+              isLoading = true;
+            });
+            _loadData();
+          },
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                ReportFlow(
+                    inflowCurrent: compareToLastMonth?.currentIncome ?? 0,
+                    inflowPercentage: compareToLastMonth?.incomePercentage ?? '0',
+                    outflowCurrent: compareToLastMonth?.currentExpense ?? 0,
+                    outflowPercentage:
+                        compareToLastMonth?.expensePercentage ?? '0'),
+                const SizedBox(
+                  height: 20,
+                ),
+                const OutflowHeader(),
+                if (topCategoriesList == null)
+                  const EmptyCaseOutFlow()
+                else
+                  CustomPieChart(topCategories: topCategoriesList!.topCategory),
+                const SizedBox(
+                  height: 20,
+                ),
+                if (topCategoriesList == null)
+                  const SizedBox()
+                else
+                  ReportDetail(topCategories: topCategoriesList!.topCategory),
+              ],
+            ),
           ),
         ),
       ),
