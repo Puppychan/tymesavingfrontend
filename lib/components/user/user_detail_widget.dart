@@ -64,7 +64,10 @@ class UserDetailWidget extends StatelessWidget {
                   )),
           const SizedBox(height: 10),
           const Divider(),
-
+          BuildInfo('Rank', fetchedUser?.rank ?? "Loading...",
+              const Icon(Icons.star_border_outlined)),
+          BuildInfo('Total point', fetchedUser?.userPoint.toString() ?? "Loading...",
+              const Icon(Icons.account_balance_wallet_outlined)),
           BuildInfo('Full name', fetchedUser?.fullname ?? "Loading...",
               const Icon(Icons.badge_outlined)),
           BuildInfo('User name', fetchedUser?.username ?? "Loading...",

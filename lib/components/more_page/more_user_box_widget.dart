@@ -70,7 +70,6 @@ class _UserBoxState extends State<UserBox> with RouteAware {
     final colorScheme = Theme.of(context).colorScheme;
     return GestureDetector(
       onTap: () {
-        debugPrint('profile tapped');
         goToProfile();
       },
       child: Skeletonizer(
