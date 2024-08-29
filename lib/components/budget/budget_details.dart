@@ -93,7 +93,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
           daysLeft = calculateDaysLeft(endDate!);
           // check if user is member or host
           isMember = _budget!.hostedBy !=
-              Provider.of<AuthService>(context, listen: false).user?.fullname;
+              Provider.of<AuthService>(context, listen: false).user?.id;
               debugPrint(isMember.toString());
           if(_budget!.defaultApproveStatus.value == ApproveStatus.pending.value ) {
             approval = true;
@@ -212,7 +212,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                                                 fontStyle: FontStyle.italic),
                                       ),
                                       TextSpan(
-                                        text: _budget!.hostedBy,
+                                        text: _budget!.hostByFullName,
                                         style: Theme.of(context)
                                             .textTheme
                                             .titleSmall!

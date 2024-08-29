@@ -93,7 +93,7 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails>
           isMember = _groupSaving!.hostedBy.toString() !=
               Provider.of<AuthService>(context, listen: false).user?.id;
           // check group status
-          if (_groupSaving!.defaultApproveStatus ==
+          if (_groupSaving!.defaultApproveStatus.value ==
               ApproveStatus.pending.value) {
             approval = true;
           }
@@ -232,7 +232,7 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails>
                                                 fontStyle: FontStyle.italic),
                                       ),
                                       TextSpan(
-                                        text: _groupSaving!.hostedBy,
+                                        text: _groupSaving!.hostByFullName,
                                         style: Theme.of(context)
                                             .textTheme
                                             .titleSmall!
