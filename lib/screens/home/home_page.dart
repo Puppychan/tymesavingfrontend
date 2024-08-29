@@ -75,16 +75,14 @@ class _HomePageState extends State<HomePage> with RouteAware {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final route = ModalRoute.of(context);
-    if (route is PageRoute) {
-      routeObserver.subscribe(this, route);
-    }
+    routeObserver.unsubscribe(this);
   }
 
   @override
   void didPopNext() {
     _loadData();
     super.didPopNext();
+    routeObserver.unsubscribe(this);
   }
 
   void _navigateToAllTransactions(BuildContext context) {
