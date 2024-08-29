@@ -10,12 +10,10 @@ import 'package:tymesavingfrontend/form/milestone_create.dart';
 import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/challenge_model.dart';
 import 'package:tymesavingfrontend/models/checkpoint_model.dart';
-import 'package:tymesavingfrontend/models/summary_user_model.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/screens/challenge/challenge_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/challenge_service.dart';
-import 'package:tymesavingfrontend/services/user_service.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
@@ -229,7 +227,7 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
                                     style: Theme.of(context).textTheme.labelMedium,
                                   ),
                                   Text(
-                                    "By ${_challengeModel!.createdBy}",
+                                    "By ${_challengeModel!.createdByFullName}",
                                     style: Theme.of(context).textTheme.labelMedium,
                                   ),
                                 ],
