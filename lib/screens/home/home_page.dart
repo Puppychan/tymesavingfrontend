@@ -31,6 +31,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
   @override
   void initState() {
     super.initState();
+    _precacheAvatar();
     _loadData();
   }
 
@@ -40,11 +41,19 @@ class _HomePageState extends State<HomePage> with RouteAware {
     super.dispose();
   }
 
-  void _loadData() async {
+  Future<void> _precacheAvatar() async {
+    setState(() {
+      precacheImage(NetworkImage(widget.user!.avatar!), context).then((_) {
+      }).catchError((error) {
+        debugPrint("Failed to preload image: $error");
+      });
+    });
+  }
+
+  Future<void> _loadData() async {
     Future.microtask(() async {
       final transactionService =
           Provider.of<TransactionService>(context, listen: false);
-
       if (widget.user != null) {
         await handleMainPageApi(context, () async {
           return await transactionService.getBothChartReport(widget.user!.id);
@@ -54,7 +63,6 @@ class _HomePageState extends State<HomePage> with RouteAware {
             chartReportSecondary = transactionService.chartReportSecondary;
           });
         });
-
         if (!mounted) return;
       }
 
@@ -67,16 +75,14 @@ class _HomePageState extends State<HomePage> with RouteAware {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final route = ModalRoute.of(context);
-    if (route is PageRoute) {
-      routeObserver.subscribe(this, route);
-    }
+    routeObserver.unsubscribe(this);
   }
 
   @override
   void didPopNext() {
     _loadData();
     super.didPopNext();
+    routeObserver.unsubscribe(this);
   }
 
   void _navigateToAllTransactions(BuildContext context) {
@@ -96,149 +102,157 @@ class _HomePageState extends State<HomePage> with RouteAware {
       return const Center(child: CircularProgressIndicator());
     }
 
-    return SingleChildScrollView(
-      padding: AppPaddingStyles.pagePaddingIncludeSubText,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          // Image.asset("assets/img/app_logo_light.svg",
-          //     width: media.width * 0.5, fit: BoxFit.contain),
-          //     width: media.width * 0.5, fit: BoxFit.contain),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              CustomAlignText(
-                text: 'Have a nice day!',
-                style: Theme.of(context).textTheme.headlineMedium!,
-              ),
-              MomoOpenButton(),
-            ],
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          if (chartReport == null && chartReportSecondary == null)
-            Column(
+    return RefreshIndicator(
+      onRefresh: () async {
+        setState(() {
+          isLoading = true;
+        });
+        await _loadData();
+      },
+      child: SingleChildScrollView(
+        padding: AppPaddingStyles.pagePaddingIncludeSubText,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // Image.asset("assets/img/app_logo_light.svg",
+            //     width: media.width * 0.5, fit: BoxFit.contain),
+            //     width: media.width * 0.5, fit: BoxFit.contain),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const SizedBox(height: 16),
-                Text("No data available for chart",
-                    style: Theme.of(context).textTheme.displayLarge),
-                const SizedBox(height: 16),
+                CustomAlignText(
+                  text: 'Have a nice day!',
+                  style: Theme.of(context).textTheme.headlineMedium!,
+                ),
+                MomoOpenButton(),
               ],
-            )
-          else
-            Container(
-              decoration: BoxDecoration(
-                color: colorScheme.tertiary,
-                borderRadius: const BorderRadius.all(Radius.circular(10)),
-                boxShadow: [
-                  BoxShadow(
-                    color: colorScheme.secondary,
-                    spreadRadius: 0.1,
-                    blurRadius: 4,
-                    offset: const Offset(0, 1), // changes position of shadow
-                  ),
-                ],
-              ),
-              child: InkWell(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const SpendTracking()));
-                },
-                child: CustomBarChart(
-                  totalsExpense: chartReport!.totals,
-                  totalsIncome: chartReportSecondary!.totals,
-                ),
-              ),
             ),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const SizedBox(width: 20),
-              Text("Annotation:",
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      fontStyle: FontStyle.italic,
-                      fontWeight: FontWeight.w500)),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const SizedBox(width: 25),
-              Text("Color ", style: Theme.of(context).textTheme.bodyMedium),
+            const SizedBox(
+              height: 10,
+            ),
+            if (chartReport == null && chartReportSecondary == null)
+              Column(
+                children: [
+                  const SizedBox(height: 16),
+                  Text("No data available for chart",
+                      style: Theme.of(context).textTheme.displayLarge),
+                  const SizedBox(height: 16),
+                ],
+              )
+            else
               Container(
-                width: 10, // Width of the color box
-                height: 10, // Height of the color box
-                color: Theme.of(context)
-                    .colorScheme
-                    .inversePrimary, // Color of the box
-                margin: const EdgeInsets.only(
-                    right: 4), // Space between the box and the text
-              ),
-              Text(
-                ' indicate total expense/month',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium, // Customize your text style
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const SizedBox(width: 25),
-              Text("Color ", style: Theme.of(context).textTheme.bodyMedium),
-              Container(
-                width: 10, // Width of the color box
-                height: 10, // Height of the color box
-                color:
-                    Theme.of(context).colorScheme.primary, // Color of the box
-                margin: const EdgeInsets.only(
-                    right: 4), // Space between the box and the text
-              ),
-              Text(
-                ' indicate total income/month',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium, // Customize your text style
-              ),
-            ],
-          ),
-          const SizedBox(height: 12), // Add some spacing between sections
-          const Divider(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'My Transactions',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              TextButton(
-                onPressed: () {
-                  _navigateToAllTransactions(context);
-                },
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Theme.of(context).colorScheme.tertiary),
-                  child: Text('View detail',
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontSize: 12, fontWeight: FontWeight.bold)),
+                decoration: BoxDecoration(
+                  color: colorScheme.tertiary,
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: colorScheme.secondary,
+                      spreadRadius: 0.1,
+                      blurRadius: 4,
+                      offset: const Offset(0, 1), // changes position of shadow
+                    ),
+                  ],
+                ),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SpendTracking()));
+                  },
+                  child: CustomBarChart(
+                    totalsExpense: chartReport!.totals,
+                    totalsIncome: chartReportSecondary!.totals,
+                  ),
                 ),
               ),
-            ],
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.4,
-            // child: TransactionSection(transactions: transactions ?? {}),
-            child: TransactionMonthlyTabBar(userId: widget.user!.id),
-          ),
-        ],
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const SizedBox(width: 20),
+                Text("Annotation:",
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        fontStyle: FontStyle.italic,
+                        fontWeight: FontWeight.w500)),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const SizedBox(width: 25),
+                Text("Color ", style: Theme.of(context).textTheme.bodyMedium),
+                Container(
+                  width: 10, // Width of the color box
+                  height: 10, // Height of the color box
+                  color: Theme.of(context)
+                      .colorScheme
+                      .inversePrimary, // Color of the box
+                  margin: const EdgeInsets.only(
+                      right: 4), // Space between the box and the text
+                ),
+                Text(
+                  ' indicate total expense/month',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium, // Customize your text style
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const SizedBox(width: 25),
+                Text("Color ", style: Theme.of(context).textTheme.bodyMedium),
+                Container(
+                  width: 10, // Width of the color box
+                  height: 10, // Height of the color box
+                  color:
+                      Theme.of(context).colorScheme.primary, // Color of the box
+                  margin: const EdgeInsets.only(
+                      right: 4), // Space between the box and the text
+                ),
+                Text(
+                  ' indicate total income/month',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium, // Customize your text style
+                ),
+              ],
+            ),
+            const SizedBox(height: 12), // Add some spacing between sections
+            const Divider(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'My Transactions',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                TextButton(
+                  onPressed: () {
+                    _navigateToAllTransactions(context);
+                  },
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Theme.of(context).colorScheme.tertiary),
+                    child: Text('View detail',
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                            fontSize: 12, fontWeight: FontWeight.bold)),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.4,
+              // child: TransactionSection(transactions: transactions ?? {}),
+              child: TransactionMonthlyTabBar(userId: widget.user!.id),
+            ),
+          ],
+        ),
       ),
     );
   }

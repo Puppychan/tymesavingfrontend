@@ -93,7 +93,8 @@ class _GroupSavingFormMainState extends State<GroupSavingFormMain> {
               .updateGroupSavingGroup(
             formField['id'],
             user?.id ?? "",
-            formField["defaultApproveStatus"].value ?? ApproveStatus.approved.value,
+            formField["defaultApproveStatus"].value ??
+                ApproveStatus.approved.value,
             formField['name'],
             formField['description'] ?? "",
             formField['amount'],
@@ -103,7 +104,8 @@ class _GroupSavingFormMainState extends State<GroupSavingFormMain> {
           return await Provider.of<GroupSavingService>(context, listen: false)
               .addGroupSavingGroup(
             user?.id ?? "",
-            formField["defaultApproveStatus"].value ?? ApproveStatus.approved.value,
+            formField["defaultApproveStatus"].value ??
+                ApproveStatus.approved.value,
             formField['name'],
             formField['description'] ?? "",
             formField['amount'],
@@ -171,8 +173,7 @@ class _GroupSavingFormMainState extends State<GroupSavingFormMain> {
       // TransactionCategory selectedCategory =
       //     formStateService.getCategory(widget.type);
       String formattedAmount = formStateService.getFormattedAmount(widget.type);
-      ApproveStatus currentApproveStatus =
-          ApproveStatus.fromString(formFields['defaultApproveStatus']) ?? ApproveStatus.approved;
+      ApproveStatus currentApproveStatus = formFields['defaultApproveStatus'] ?? ApproveStatus.approved;
 
       // update text to controller
       _amountController.text = formStateService.getFormattedAmount(widget.type);
@@ -188,7 +189,7 @@ class _GroupSavingFormMainState extends State<GroupSavingFormMain> {
                 controller: _nameController,
                 icon: Icons.card_membership,
                 label: 'GROUP NAME',
-                placeholder:  "Naming group...",
+                placeholder: "Naming group...",
                 keyboardType: TextInputType.text,
                 validator: Validator.validateGroupName,
                 onChange: (value) => updateOnChange("name"),
@@ -244,7 +245,7 @@ class _GroupSavingFormMainState extends State<GroupSavingFormMain> {
               MultilineTextField(
                 label: 'DESCRIPTION',
                 controller: _descriptionController,
-                placeholder:  "Please add description",
+                placeholder: "Please add description",
                 keyboardType: TextInputType.multiline,
                 minLines: 3,
                 maxLines: 5,
@@ -259,7 +260,8 @@ class _GroupSavingFormMainState extends State<GroupSavingFormMain> {
                     updateOnChange("defaultApproveStatus",
                         value: convertApproveStatus);
                   },
-                  defaultOption: ApproveStatus.toInputFormString(currentApproveStatus)),
+                  defaultOption:
+                      ApproveStatus.toInputFormString(currentApproveStatus)),
               const SizedBox(height: 20),
               PrimaryButton(title: "Confirm", onPressed: _trySubmit)
             ],

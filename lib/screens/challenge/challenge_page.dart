@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
 import 'package:tymesavingfrontend/components/challenge/challenge_card.dart';
 import 'package:tymesavingfrontend/components/challenge/challenge_non_listing.dart';
-import 'package:tymesavingfrontend/components/common/button/secondary_button.dart';
-
 import 'package:tymesavingfrontend/components/common/heading.dart';
+import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/challenge_model.dart';
 import 'package:tymesavingfrontend/services/challenge_service.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
@@ -20,7 +20,7 @@ class ChallengePage extends StatefulWidget {
   State<ChallengePage> createState() => _ChallengePageState();
 }
 
-class _ChallengePageState extends State<ChallengePage> {
+class _ChallengePageState extends State<ChallengePage> with RouteAware{
   List<ChallengeModel>? _challengeModelList;
   bool isLoading = true;
   String searchName = "";
@@ -52,7 +52,21 @@ class _ChallengePageState extends State<ChallengePage> {
   }
 
   @override
+    void didPopNext() {
+      super.didPopNext();
+      isLoading = true;
+      _loadChallengeList(widget.userId);
+  }
+
+  @override
+    void didChangeDependencies() {
+      super.didChangeDependencies();
+      routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute<dynamic>);
+    }
+
+  @override
   Widget build(BuildContext context) {
+    double sizeHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: Heading(
         title: "Challenges",
@@ -93,7 +107,20 @@ class _ChallengePageState extends State<ChallengePage> {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
-              child: SecondaryButton(title: 'Sorting', onPressed: () => _showSortDialog(context)),
+              child: ElevatedButton(
+                style: const ButtonStyle(
+                  alignment: Alignment.center,
+                ),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: sizeHeight * 0.02),
+                  child: Text("Sorting", 
+                    style: AppTextStyles.titleLargeBlue(context)),
+                ),
+                  onPressed: () => _showSortDialog(context),
+              ),
+            ),
+            const Divider(
+              thickness: 1.2,
             ),
             (isLoading)
                 ? const CircularProgressIndicator()

@@ -10,12 +10,10 @@ import 'package:tymesavingfrontend/form/milestone_create.dart';
 import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/challenge_model.dart';
 import 'package:tymesavingfrontend/models/checkpoint_model.dart';
-import 'package:tymesavingfrontend/models/summary_user_model.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/screens/challenge/challenge_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/challenge_service.dart';
-import 'package:tymesavingfrontend/services/user_service.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
@@ -29,7 +27,6 @@ class ChallengeDetails extends StatefulWidget {
 
 class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
   ChallengeModel? _challengeModel;
-  SummaryUser? _challengeOwner;
   ChallengeProgress? _challengeProgress;
   List<ChallengeDetailMemberModel>? _challengeDetailMemberModelList;
   List<CheckPointModel>? _checkPointModelList;
@@ -60,8 +57,7 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
           _checkPointModelList = challengeService.checkPointModelList;
           createdDate = formatDate(_challengeModel!.startDate);
       });
-      // debugPrint(_challengeModel!.toString());
-      await _loadChallengeUser(_challengeModel?.createdBy);
+      await _loadChallengeProgress(widget.challengeId, _currentUser!.id);
     });
   }
 
@@ -73,6 +69,8 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
         return await challengeService.deleteChallenge(challengeId!);
       }, () async {
         if (!mounted) return;
+        Navigator.pushAndRemoveUntil(context,
+                MaterialPageRoute(builder: (context) => ChallengePage(userId: _currentUser!.id,)),(_) => false);
       });
     });
   }
@@ -99,7 +97,6 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
         if (!mounted) return;
         setState(() {
           _challengeProgress = challengeService.challengeProgress;
-          // debugPrint(_challengeProgress!.currentProgress.toString());
           _currentProgress = _challengeProgress!.reachedMilestone;
 
         if (_currentStep >= _checkPointModelList!.length) {
@@ -113,23 +110,6 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
     });
   }
 
-  Future<void> _loadChallengeUser(String? userId) async {
-    Future.microtask(() async {
-      if(!mounted) return;
-      final userService = Provider.of<UserService>(context, listen: false);
-      await handleMainPageApi(context, () async {
-        // debugPrint("USER ID FOR CHALLENGE IS: $userId");
-        return await userService.getOtherUserInfo(userId);
-      }, () async {
-        if (!mounted) return;
-        setState(() {
-          _challengeOwner = userService.summaryUser;
-        });
-      });
-      await _loadChallengeProgress(widget.challengeId, _currentUser!.id);
-    });
-  }
-
   Future<void> loadData() async {
     await _loadChallenge(widget.challengeId);
   }
@@ -138,12 +118,8 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
     Future.microtask(() async {
       if (!mounted) return;
       final authService = Provider.of<AuthService>(context, listen: false);
-      await handleMainPageApi(context, () async {
-        return await authService.getCurrentUserData();
-      }, () async {
         setState(() {
           _currentUser = authService.user;
-        });
       });
       await loadData();
     });
@@ -153,8 +129,8 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
       super.didPopNext();
       isLoading = true;
       loadUser();
-      
   }
+  
   @override
     void didChangeDependencies() {
       super.didChangeDependencies();
@@ -170,7 +146,7 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
   @override
   Widget build(BuildContext context) {
   final colorScheme = Theme.of(context).colorScheme;
-
+  double sizeHeight = MediaQuery.of(context).size.height;
   return Scaffold(
     backgroundColor: colorScheme.tertiaryContainer,
       body: isLoading 
@@ -181,12 +157,13 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
               slivers: [
                 SliverAppBar(
                   backgroundColor: colorScheme.surface,
-                  expandedHeight: 100.0,
+                  expandedHeight: sizeHeight * 0.15,
                   floating: false,
                   pinned: true,
+                  centerTitle: true,
                   flexibleSpace: FlexibleSpaceBar(
                     title: Text(
-                      "Challenges detail",
+                      "Challenges Detail",
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     background: Container(
@@ -225,7 +202,9 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
                                 ),
                             Text(
                                   _challengeModel!.groupName,
-                                  style: Theme.of(context).textTheme.labelLarge,
+                                  style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                                    color: colorScheme.primary,
+                                  ),
                                   textAlign: TextAlign.center,
                                   overflow: TextOverflow.visible,
                                 ),
@@ -238,7 +217,9 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
                                 ),
                             Text(
                               _challengeModel!.category,
-                              style: Theme.of(context).textTheme.labelLarge,
+                              style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                                    color: colorScheme.primary,
+                                  ),
                             ),
                             const SizedBox(height: 10),
                             Container(
@@ -248,20 +229,28 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
                                 children: [
                                   Text(
                                     "$createdDate",
-                                    style: Theme.of(context).textTheme.labelMedium,
+                                    style: Theme.of(context).textTheme.bodyMedium,
                                   ),
-                                  Text(
-                                    "By ${_challengeOwner!.fullname}",
-                                    style: Theme.of(context).textTheme.labelMedium,
-                                  ),
+                                  Text.rich(
+                                    TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: "By ", 
+                                          style: Theme.of(context).textTheme.bodyMedium,
+                                        ),
+                                        TextSpan(
+                                          text: _challengeModel!.createdByFullName, 
+                                          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                                fontWeight: FontWeight.w500,
+                                                color: colorScheme.primary,
+                                              ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
                                 ],
                               ),
                             ),
-                            const SizedBox(height: 10),
-                            // Text(
-                            //   "${_challengeModel!.scope} ${_challengeModel!.budgetGroupId}",
-                            //   style: Theme.of(context).textTheme.labelLarge,
-                            // ),
                             const SizedBox(height: 10),
                             InkWell(
                               onTap: () {
@@ -295,7 +284,13 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
                             const SizedBox(height: 20),
                             Text(
                                     "Milestones",
-                                    style: Theme.of(context).textTheme.headlineMedium,
+                                    style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                                      color: Color.alphaBlend(
+                                        Colors.black.withOpacity(0.2), // Increase opacity to make it darker
+                                        colorScheme.inversePrimary,
+                                      ),
+                                      fontWeight: FontWeight.w500
+                                    ),
                                   ),
                             if (!widget.isForListing && _checkPointModelList!.isNotEmpty)
                             Padding(padding: const EdgeInsets.symmetric(horizontal: 50,vertical: 10),
@@ -365,8 +360,14 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
                         children: [
                           const SizedBox(height: 20,),
                           Text(
-                              "Member participating",
-                              style: Theme.of(context).textTheme.headlineMedium,
+                              "Leaderboards",
+                              style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                                      color: Color.alphaBlend(
+                                        Colors.black.withOpacity(0.2), // Increase opacity to make it darker
+                                        colorScheme.inversePrimary,
+                                      ),
+                                      fontWeight: FontWeight.w500
+                                    ),
                             ),
                           Container(
                                   margin: const EdgeInsets.symmetric(vertical: 10),
@@ -381,6 +382,8 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
                                         fullname: member.fullname,
                                         avatar: member.avatar,
                                         rank: member.tymeReward ?? '',
+                                        progressAmount: member.progressAmount,
+                                        checkpointReached: member.checkpointReached,
                                       );
                                     },
                                   ),
@@ -405,7 +408,10 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
       int index = e.key;
       final entry = e.value;
       return Step(
-        title: Text("Milestone ${index+1}"),
+        title: Text("Milestone ${index+1}", 
+          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+            color: Theme.of(context).colorScheme.primary,
+            fontWeight: FontWeight.w500)),
         subtitle:  Text(entry.name, style: Theme.of(context).textTheme.bodyMedium, overflow: TextOverflow.visible,),
         content: Column(
           children: [
@@ -438,8 +444,6 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
               child: Text('Delete', style: Theme.of(context).textTheme.labelLarge,),
               onPressed: () {
                 _deleteChallenge(_challengeModel!.id);
-                Navigator.pushAndRemoveUntil(context,
-                MaterialPageRoute(builder: (context) => ChallengePage(userId: _currentUser!.id,)),(_) => false);
               },
             ),
           ],

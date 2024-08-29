@@ -13,12 +13,10 @@ import 'package:tymesavingfrontend/components/transaction/transaction_list.dart'
 import 'package:tymesavingfrontend/form/transaction_add_form.dart';
 import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/budget_model.dart';
-import 'package:tymesavingfrontend/models/summary_user_model.dart';
 import 'package:tymesavingfrontend/models/transaction_model.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/budget_service.dart';
 import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
-import 'package:tymesavingfrontend/services/user_service.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
@@ -38,7 +36,6 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
   double? percentageLeft;
   DateTime? endDate;
   int? daysLeft;
-  SummaryUser? _user;
   bool isMember = false;
   bool approval = false;
   bool isLoading = true;
@@ -47,21 +44,6 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
 
   List<Transaction> _transactions = [];
   List<Transaction> _awaitingApprovalTransaction = [];
-
-  Future<void> _renderUser(String? userId) async {
-    Future.microtask(() async {
-      if (!mounted) return;
-      final userService = Provider.of<UserService>(context, listen: false);
-      await handleMainPageApi(context, () async {
-        return await userService.getOtherUserInfo(userId);
-      }, () async {
-        if (!mounted) return;
-        setState(() {
-          _user = userService.summaryUser;
-        });
-      });
-    });
-  }
 
   Future<void> _loadTransactions() async {
     if (!mounted) return;
@@ -79,13 +61,12 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
   }
 
   void _loadTransactionForm() {
-if (!mounted) return;
+          if (!mounted) return;
             final formStateProvider =
                 Provider.of<FormStateProvider>(context, listen: false);
             formStateProvider.resetForm(FormStateType.expense);
             formStateProvider.updateFormField("groupType", TransactionGroupType.budget, FormStateType.expense);
             formStateProvider.updateFormField("budgetGroupId", widget.budgetId, FormStateType.expense);
-            formStateProvider.updateFormField("tempChosenGroup", _budget, FormStateType.expense);
   }
 
   Future<void> _loadData() async {
@@ -111,9 +92,10 @@ if (!mounted) return;
           endDate = DateTime.parse(_budget!.endDate);
           daysLeft = calculateDaysLeft(endDate!);
           // check if user is member or host
-          isMember = _budget!.hostedBy.toString() !=
+          isMember = _budget!.hostedBy !=
               Provider.of<AuthService>(context, listen: false).user?.id;
-          if(_budget!.defaultApproveStatus == ApproveStatus.pending.value) {
+              debugPrint(isMember.toString());
+          if(_budget!.defaultApproveStatus.value == ApproveStatus.pending.value ) {
             approval = true;
           }
           if (percentageTaken! < 0) {
@@ -125,8 +107,6 @@ if (!mounted) return;
           }
         });
       });
-
-      await _renderUser(_budget?.hostedBy);
       await _loadTransactions();
     });
   }
@@ -232,7 +212,7 @@ if (!mounted) return;
                                                 fontStyle: FontStyle.italic),
                                       ),
                                       TextSpan(
-                                        text: _user?.fullname ?? 'Loading..',
+                                        text: _budget!.hostByFullName,
                                         style: Theme.of(context)
                                             .textTheme
                                             .titleSmall!
@@ -426,7 +406,7 @@ if (!mounted) return;
                       const SizedBox(height: 20,),
                       SizedBox(
                         height: 500,
-                        child: RefreshIndicator(onRefresh: _pullRefresh, child: TransactionList(transactions: _transactions)),
+                        child: RefreshIndicator(onRefresh: _pullRefresh, child: TransactionList(transactions: _transactions, disableButton: true,)),
                       ),
                     ],
                   ),

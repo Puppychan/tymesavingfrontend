@@ -22,7 +22,10 @@ class BudgetApprovePage extends StatefulWidget {
 class _BudgetApprovePageState extends State<BudgetApprovePage> with RouteAware {
   List<Transaction> _awaitingApprovalTransaction = [];
   List<Transaction> _cancelledTransaction = [];
+  List<Transaction> _approvedTransaction = [];
   bool showingPending = true;
+  bool showingCanceled = false;
+  bool showingApproved = false;
   bool isLoading = true;
 
   Future<void> _loadTransactions() async {
@@ -35,6 +38,7 @@ class _BudgetApprovePageState extends State<BudgetApprovePage> with RouteAware {
       setState(() {
         _awaitingApprovalTransaction = budgetService.awaitingApprovalTransaction;
         _cancelledTransaction = budgetService.cancelledTransaction;
+        _approvedTransaction = budgetService.transactions;
         isLoading = false;
       });
     });
@@ -90,7 +94,7 @@ class _BudgetApprovePageState extends State<BudgetApprovePage> with RouteAware {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              (showingPending) ? "Pending Transaction" : "Declined Transaction",
+              (showingPending) ? "Pending Transaction" : (showingApproved? "Approved Transaction" : "Declined Transaction"),
               style: Theme.of(context).textTheme.headlineLarge,
             ),
             const SizedBox(height: 8),
@@ -100,7 +104,38 @@ class _BudgetApprovePageState extends State<BudgetApprovePage> with RouteAware {
                   child: GestureDetector(
                     onTap: () {
                       setState(() {
+                        showingCanceled = false;
+                        showingPending = false;
+                        showingApproved = true;
+                      });
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      color: showingApproved
+                          ? Theme.of(context).primaryColor
+                          : Colors.grey[300],
+                      child: Text(
+                        'Approved',
+                        style: TextStyle(
+                          color: showingApproved
+                              ? Colors.white
+                              : Colors.black,
+                          fontWeight: showingApproved
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
                         showingPending = true;
+                        showingApproved = false;
+                        showingCanceled = false;
                       });
                     },
                     child: Container(
@@ -128,20 +163,22 @@ class _BudgetApprovePageState extends State<BudgetApprovePage> with RouteAware {
                     onTap: () {
                       setState(() {
                         showingPending = false;
+                        showingCanceled = true;
+                        showingApproved = false;
                       });
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 15),
-                      color: !showingPending
+                      color: showingCanceled
                           ? Theme.of(context).primaryColor
                           : Colors.grey[300],
                       child: Text(
                         'Canceled',
                         style: TextStyle(
-                          color: !showingPending
+                          color: showingCanceled
                               ? Colors.white
                               : Colors.black,
-                          fontWeight: !showingPending
+                          fontWeight: showingCanceled
                               ? FontWeight.bold
                               : FontWeight.normal,
                         ),
@@ -216,7 +253,7 @@ class _BudgetApprovePageState extends State<BudgetApprovePage> with RouteAware {
                   },
                 ),
               )
-              : RefreshIndicator(
+              : (showingCanceled ? RefreshIndicator(
                 onRefresh: _pullRefresh,
                 child: ListView.builder(
                   itemCount: _cancelledTransaction.length,
@@ -269,7 +306,60 @@ class _BudgetApprovePageState extends State<BudgetApprovePage> with RouteAware {
                     );
                   },
                 ),
-              ),
+              ): RefreshIndicator(
+                onRefresh: _pullRefresh,
+                child: ListView.builder(
+                  itemCount: _approvedTransaction.length,
+                  itemBuilder: (context, index) {
+                    final transaction = _approvedTransaction[index];
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ListTile(
+                        tileColor: colorScheme.tertiary,
+                        title: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: Text.rich(
+                            TextSpan(
+                              text: 'Transaction', // Default text style
+                              style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.w500),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: ' Cancelled',
+                                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: colorScheme.primary, fontWeight: FontWeight.w500),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        subtitle: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('${transaction.user!.fullname} (${transaction.user!.username})', style: Theme.of(context).textTheme.bodyMedium),
+                              Text('${transaction.category} (category)', style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontStyle: FontStyle.italic)),
+                              Text.rich(
+                                TextSpan(
+                                  text: 'Amount ', // Default text style
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text: formatAmountToVnd(transaction.amount),
+                                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: colorScheme.primary, fontWeight: FontWeight.w500),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Text(transaction.description ?? '', style: Theme.of(context).textTheme.bodyMedium, overflow: TextOverflow.visible,),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ))
             ) 
           ],
         ),

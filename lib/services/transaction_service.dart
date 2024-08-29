@@ -383,7 +383,6 @@ class TransactionService extends ChangeNotifier {
   // Get transaction list of month and year
   Future<List<Transaction>> fetchTransactionsByMonthAndYear(
       String userId, int year, int month) async {
-        // TODO
     // Ensure that month is two digits
     String monthStr = month.toString().padLeft(2, '0');
     String yearStr = year.toString();
@@ -391,15 +390,17 @@ class TransactionService extends ChangeNotifier {
     // Construct the endpoint with the provided year and month
     String endpoint =
         "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReportByUser}/$userId";
-
+    
     // Add the filter for the specified month and year
     endpoint += "?createdDate=$yearStr-$monthStr";
-
+    // debugPrint("Endpoint pre-param: $endpoint");
     // Convert any sort and filter options to query parameters
-    endpoint += _convertOptionsToParams();
+    // This param convert is not working and producing error
+    // endpoint += _convertOptionsToParams();
+    // debugPrint("Endpoint post param convert: $endpoint");
 
     final response = await NetworkService.instance.get(endpoint);
-
+    // debugPrint("API RESPONSE: ${response.toString()}");
     if (response['response'] != null && response['statusCode'] == 200) {
       final responseData = response['response'] as Map<String, dynamic>;
 

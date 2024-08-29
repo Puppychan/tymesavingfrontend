@@ -54,7 +54,7 @@ class _BudgetReportState extends State<BudgetReport> {
     }
 
   String formatDate(DateTime date){
-    String formattedDate = DateFormat('d-M, y').format(date);
+    String formattedDate = DateFormat('dd/MM/yyyy').format(date);
     return formattedDate;
   }
 
@@ -159,7 +159,7 @@ class _BudgetReportState extends State<BudgetReport> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Top transaction by", style: textTheme.headlineMedium!.copyWith(fontSize: 18),),
+                    Text("Top 10 transaction by", style: textTheme.headlineMedium!.copyWith(fontSize: 18),),
                     const SizedBox(width: 5,),
                     DropdownButton<String>(
                       value: filter,

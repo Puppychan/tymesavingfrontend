@@ -16,6 +16,8 @@ class BudgetListPage extends StatefulWidget {
 
 class _BudgetListPageState extends State<BudgetListPage> with RouteAware {
   bool _isLoading = false;
+  String searchName = "";
+
   void _fetchBudgets() async {
     Future.microtask(() async {
       if (!mounted) return;
@@ -25,7 +27,7 @@ class _BudgetListPageState extends State<BudgetListPage> with RouteAware {
       if (!mounted) return;
       final budgetService = Provider.of<BudgetService>(context, listen: false);
       await handleMainPageApi(context, () async {
-        return await budgetService.fetchBudgetList(widget.user?.id);
+        return await budgetService.fetchBudgetList(widget.user?.id, searchName: searchName);
       }, () async {
       });
       if (!mounted) return;
@@ -63,20 +65,53 @@ class _BudgetListPageState extends State<BudgetListPage> with RouteAware {
             )
           : Padding(
               padding: AppPaddingStyles.pagePadding,
-              child: budgets.isNotEmpty
-                  ? RefreshIndicator(
-                    onRefresh: () =>
-                      _pullRefresh(),
-                    child: ListView.separated(
-                        itemCount: budgets.length,
-                        separatorBuilder: (context, index) =>
-                            const SizedBox(height: 15),
-                        itemBuilder: (context, index) {
-                          return BudgetCard(budget: budgets[index]);
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    child: SizedBox(
+                      child: TextField(
+                        decoration: InputDecoration(
+                          icon: const Icon(Icons.search),
+                          labelText: 'Search',
+                          labelStyle: Theme.of(context).textTheme.labelMedium!.copyWith(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w300,
+                            fontStyle: FontStyle.normal
+                          ),
+                          border: InputBorder.none
+                        ),
+                        onSubmitted: (String value) {
+                          setState(() {
+                            searchName = value.toString().trimRight();
+                            _isLoading = true;
+                            _fetchBudgets();
+                          });
                         },
                       ),
+                    ),
+                  ),
+                  const Divider(
+                    thickness: 0.5,
+                  ),
+                  budgets.isNotEmpty
+                  ? Flexible(
+                    child: RefreshIndicator(
+                      onRefresh: () =>
+                        _pullRefresh(),
+                      child: ListView.separated(
+                          itemCount: budgets.length,
+                          separatorBuilder: (context, index) =>
+                              const SizedBox(height: 15),
+                          itemBuilder: (context, index) {
+                            return BudgetCard(budget: budgets[index]);
+                          },
+                        ),
+                    ),
                   )
-                  : const NotFoundMessage(message: "No budgets found"));
+                  : const NotFoundMessage(message: "No budgets found")
+                ],
+              ));
     });
   }
   Future<void> _pullRefresh() async {

@@ -80,6 +80,7 @@ class _MoMoPaymentPageState extends State<MoMoPaymentPage> {
         //
         Provider.of<TransactionService>(context, listen: false)
             .deleteTransaction(widget.transactionId);
+        print("Error launching MoMo app: $e");
         ErrorDisplay.showErrorToast("Error launching Momo page", context);
       }
     });

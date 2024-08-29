@@ -19,11 +19,12 @@ class _ChallengeCardState extends State<ChallengeCard> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Card.outlined(
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.tertiaryContainer,
+          color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(8),
         ),
         child: InkWell(
@@ -52,14 +53,15 @@ class _ChallengeCardState extends State<ChallengeCard> {
                   Row(
                     children: [
                       Icon(
-                        Icons.calendar_today, // You can choose any icon that suits your design
-                        size: 15, // Adjust the size according to your need
-                        color: Theme.of(context).colorScheme.primary, // Adjust color if needed
+                        Icons.calendar_month, 
+                        size: 15,
+                        color: colorScheme.primary,
                       ),
-                      const SizedBox(width: 8.0), // Add some space between the icon and the text
+                      const SizedBox(width: 8.0), 
                       Text(
                         DateFormat('EEEE, dd/MM/yyyy').format(widget.challengeModel!.endDate),
-                        style: Theme.of(context).textTheme.bodyMedium,
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: colorScheme.primary, fontWeight: FontWeight.w400, fontStyle: FontStyle.italic),
                         textAlign: TextAlign.left,
                         maxLines: 3,
                         softWrap: true,
@@ -82,11 +84,23 @@ class _ChallengeCardState extends State<ChallengeCard> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  Text(
-                    "By ${widget.challengeModel!.createdBy}",
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall!.copyWith(fontStyle: FontStyle.italic)
+                  Icon(Icons.perm_identity_sharp, weight: 0.5, size: 20,color: colorScheme.primary,),
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "By ", 
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                        TextSpan(
+                          text: widget.challengeModel!.createdByFullName, 
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall!
+                              .copyWith(fontStyle: FontStyle.italic, fontWeight: FontWeight.w500, color: colorScheme.primary ), // Applying different style
+                        ),
+                      ],
+                    ),
                   )
                 ],
               ),

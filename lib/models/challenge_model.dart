@@ -9,6 +9,7 @@ class ChallengeModel {
   final DateTime startDate;
   final DateTime endDate;
   final String createdBy;
+  final String createdByFullName;
   final bool isPublished;
 
   ChallengeModel({
@@ -22,7 +23,8 @@ class ChallengeModel {
     required this.startDate,
     required this.endDate,
     required this.createdBy,
-    required this.isPublished
+    required this.isPublished,
+    required this.createdByFullName,
   });
 
   factory ChallengeModel.fromMap(Map<String, dynamic> map) {
@@ -39,6 +41,7 @@ class ChallengeModel {
     endDate: DateTime.tryParse(map['endDate'] as String? ?? '') ?? DateTime.now(), 
     createdBy: map['createdBy'] as String? ?? '', 
     isPublished: map['isPublished'] as bool? ?? false, 
+    createdByFullName: map['createdByFullName'] ?? '',
   );
 }
 
@@ -76,6 +79,9 @@ class ChallengeDetailMemberModel {
   final String phone;
   final String? avatar;
   final String? tymeReward;
+  final int checkpointReached;
+  final int progressAmount;
+  
 
   ChallengeDetailMemberModel({
     required this.id,
@@ -83,6 +89,8 @@ class ChallengeDetailMemberModel {
     required this.email,
     required this.fullname,
     required this.phone,
+    required this.checkpointReached,
+    required this.progressAmount,
     this.avatar,
     this.tymeReward,
   });
@@ -96,6 +104,8 @@ class ChallengeDetailMemberModel {
       phone: map['phone'] as String,
       avatar: map['avatar'] as String?,
       tymeReward: map['tymeReward'] as String?,
+      checkpointReached: map['numCheckpointPassed'] ?? 0,
+      progressAmount: map['currentProgress'] ?? 0,
     );
   }
 
