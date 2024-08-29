@@ -16,6 +16,8 @@ class BudgetListPage extends StatefulWidget {
 
 class _BudgetListPageState extends State<BudgetListPage> with RouteAware {
   bool _isLoading = false;
+  String searchName = "";
+
   void _fetchBudgets() async {
     Future.microtask(() async {
       if (!mounted) return;
@@ -25,7 +27,7 @@ class _BudgetListPageState extends State<BudgetListPage> with RouteAware {
       if (!mounted) return;
       final budgetService = Provider.of<BudgetService>(context, listen: false);
       await handleMainPageApi(context, () async {
-        return await budgetService.fetchBudgetList(widget.user?.id);
+        return await budgetService.fetchBudgetList(widget.user?.id, searchName: searchName);
       }, () async {
       });
       if (!mounted) return;
@@ -81,8 +83,9 @@ class _BudgetListPageState extends State<BudgetListPage> with RouteAware {
                         ),
                         onSubmitted: (String value) {
                           setState(() {
-                            // searchName = value.toString().trimRight();
-                            // isLoading = true;
+                            searchName = value.toString().trimRight();
+                            _isLoading = true;
+                            _fetchBudgets();
                           });
                         },
                       ),

@@ -17,6 +17,8 @@ class GroupSavingListPage extends StatefulWidget {
 class _GroupSavingListPageState extends State<GroupSavingListPage>
     with RouteAware {
   bool _isLoading = false;
+  String searchName = "";
+
   void _fetchGroupSavings() async {
     Future.microtask(() async {
       if (!mounted) return;
@@ -27,7 +29,7 @@ class _GroupSavingListPageState extends State<GroupSavingListPage>
       final goalService =
           Provider.of<GroupSavingService>(context, listen: false);
       await handleMainPageApi(context, () async {
-        return await goalService.fetchGroupSavingList(widget.user?.id);
+        return await goalService.fetchGroupSavingList(widget.user?.id, searchName: searchName);
       }, () async {});
       if (!mounted) return;
       setState(() {
@@ -81,8 +83,9 @@ class _GroupSavingListPageState extends State<GroupSavingListPage>
                         ),
                         onSubmitted: (String value) {
                           setState(() {
-                            // searchName = value.toString().trimRight();
-                            // isLoading = true;
+                            searchName = value.toString().trimRight();
+                            _isLoading = true;
+                            _fetchGroupSavings();
                           });
                         },
                       ),

@@ -31,7 +31,7 @@ class GroupSavingService extends ChangeNotifier {
   List<Transaction> get awaitingApprovalTransaction => _awaitingApprovalTransaction;
   List<Transaction> get cancelledTransaction => _cancelledTransaction;
 
-  Future<dynamic> fetchGroupSavingList(String? userId, {String? name, CancelToken? cancelToken}) async {
+  Future<dynamic> fetchGroupSavingList(String? userId, {String? searchName, String? name, CancelToken? cancelToken}) async {
     // if (userId == null) return {'response': 'User ID is required.', 'statusCode': 400};
     String endpoint =
         "${BackendEndpoints.groupSaving}/${BackendEndpoints.groupSavingsGetByUserId}/$userId";
@@ -39,7 +39,9 @@ class GroupSavingService extends ChangeNotifier {
       endpoint += "?name=$name";
     }
 
-    final response = await NetworkService.instance.get(endpoint, cancelToken: cancelToken);
+    final response = await NetworkService.instance.get(endpoint, cancelToken: cancelToken, queryParameters: {
+      'name': searchName,
+    });
     if (response['response'] != null && response['statusCode'] == 200) {
       final responseData = response['response'];
       List<GroupSaving> groupSavingList = [];
@@ -83,7 +85,7 @@ class GroupSavingService extends ChangeNotifier {
   Future<Map<String, dynamic>> fetchGroupSavingDetails(id) async {
     final response = await NetworkService.instance
         .get("${BackendEndpoints.groupSaving}/$id/info");
-        debugPrint("RESPONSE FETCH GROUP SAVING: $response");
+        // debugPrint("RESPONSE FETCH GROUP SAVING: $response");
     if (response['response'] != null && response['statusCode'] == 200) {
       _currentGroupSaving = GroupSaving.fromMap(response['response']);
       notifyListeners();
