@@ -32,6 +32,7 @@ class _TransactionDialogState extends State<TransactionDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
     return LayoutBuilder(
       builder: (context, constraints) {
         return AlertDialog(
@@ -41,7 +42,8 @@ class _TransactionDialogState extends State<TransactionDialog> {
           title: Text(widget.transaction.category,
               style: Theme.of(context).textTheme.headlineMedium),
           content: SizedBox(
-            width: constraints.maxWidth * 0.8, // 80% of screen width
+            width: screenHeight * 0.8,
+            height: screenHeight * 0.6,
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,

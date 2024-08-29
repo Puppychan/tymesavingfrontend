@@ -408,7 +408,10 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
       int index = e.key;
       final entry = e.value;
       return Step(
-        title: Text("Milestone ${index+1}"),
+        title: Text("Milestone ${index+1}", 
+          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+            color: Theme.of(context).colorScheme.primary,
+            fontWeight: FontWeight.w500)),
         subtitle:  Text(entry.name, style: Theme.of(context).textTheme.bodyMedium, overflow: TextOverflow.visible,),
         content: Column(
           children: [
