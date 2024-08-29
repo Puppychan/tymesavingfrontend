@@ -83,7 +83,6 @@ class GroupSavingService extends ChangeNotifier {
   Future<Map<String, dynamic>> fetchGroupSavingDetails(id) async {
     final response = await NetworkService.instance
         .get("${BackendEndpoints.groupSaving}/$id/info");
-        debugPrint("${BackendEndpoints.groupSaving}/$id/info");
         debugPrint("RESPONSE FETCH GROUP SAVING: $response");
     if (response['response'] != null && response['statusCode'] == 200) {
       _currentGroupSaving = GroupSaving.fromMap(response['response']);
