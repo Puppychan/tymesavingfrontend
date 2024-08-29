@@ -76,9 +76,6 @@ class UserDetailWidget extends StatelessWidget {
               const Icon(Icons.contact_phone_outlined)),
           BuildInfo('Email', fetchedUser?.email ?? "Loading...",
               const Icon(Icons.email_outlined)),
-          // const Expanded( // cannot use along with SingleChildScrollView
-          //   child: SizedBox(),
-          // ),
           const SizedBox(
             height: 30,
           ),
