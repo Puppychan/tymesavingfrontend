@@ -115,7 +115,7 @@ class _BudgetApprovePageState extends State<BudgetApprovePage> with RouteAware {
                           ? Theme.of(context).primaryColor
                           : Colors.grey[300],
                       child: Text(
-                        'Pending',
+                        'Approved',
                         style: TextStyle(
                           color: showingApproved
                               ? Colors.white
