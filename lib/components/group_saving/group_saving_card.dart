@@ -97,6 +97,23 @@ class _GroupSavingCardState extends State<GroupSavingCard> with SingleTickerProv
                     ),
                     maxLines: 2,
                   ),
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "By ", 
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        TextSpan(
+                          text: widget.groupSaving.hostByFullName, 
+                          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                fontWeight: FontWeight.w400, 
+                                color: colorScheme.primary
+                              ),
+                        ),
+                      ],
+                    ),
+                  ),
                   CustomAlignText(
                     text: "Created $formattedDate",
                     alignment: Alignment.center,
@@ -158,7 +175,6 @@ class _GroupSavingCardState extends State<GroupSavingCard> with SingleTickerProv
                 ],
               ),
             ),
-            
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
               child: Stack(
