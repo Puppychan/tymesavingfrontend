@@ -9,21 +9,22 @@ class CategoryShortSelection extends StatelessWidget {
   final FormStateType type;
   final TransactionCategory selectedCategory;
 
-  const CategoryShortSelection(
-      {super.key,
-      required this.type,
-      required this.selectedCategory,});
-
+  const CategoryShortSelection({
+    super.key,
+    required this.type,
+    required this.selectedCategory,
+  });
 
   @override
   Widget build(BuildContext context) {
-  void onTransactionCategorySelected(TransactionCategory category) {
-    Future.microtask(() async {
-      final formStateService =
-          Provider.of<FormStateProvider>(context, listen: false);
-      formStateService.updateFormCategory(category, type);
-    });
-  }
+    void onTransactionCategorySelected(TransactionCategory category) {
+      Future.microtask(() async {
+        final formStateService =
+            Provider.of<FormStateProvider>(context, listen: false);
+        formStateService.updateFormCategory(category, type);
+      });
+    }
+
     final colorScheme = Theme.of(context).colorScheme;
     List<TransactionCategory> categories = [];
     if (type == FormStateType.income || type == FormStateType.updateIncome) {
@@ -36,24 +37,35 @@ class CategoryShortSelection extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: categories.expand((category) {
               final isSelected = selectedCategory.name == category.name;
               Map<String, dynamic> categoryInfo =
                   transactionCategoryData[category]!;
 
               return [
-                Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(10),
-                      splashColor: colorScheme.tertiary,
-                      onTap: () async =>
-                          {onTransactionCategorySelected(category)},
-                      child: getCategoryIcon(
-                          currentCategoryInfo: categoryInfo,
-                          isSelected: isSelected,
-                          colorScheme: colorScheme),
-                    )),
+                SizedBox(
+                    width: 98, // Limit the width of each item
+                    child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(10),
+                          splashColor: colorScheme.tertiary,
+                          onTap: () async =>
+                              {onTransactionCategorySelected(category)},
+                          child: Column(children: [
+                            getCategoryIcon(
+                                currentCategoryInfo: categoryInfo,
+                                isSelected: isSelected,
+                                colorScheme: colorScheme),
+                            Text(
+                              category.name,
+                              style: Theme.of(context).textTheme.bodySmall,
+                              maxLines: 2,
+                              textAlign: TextAlign.center,
+                            )
+                          ]),
+                        ))),
                 const SizedBox(width: 10)
               ];
             }).toList()));

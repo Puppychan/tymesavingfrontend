@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
@@ -68,9 +69,9 @@ class _CategorySelectionPageState extends State<CategorySelectionPage> {
                     title: Text(category.name, style: textTheme.bodyLarge),
                     trailing: isSelected
                         ? RoundedIcon(
-                            iconData: Icons.approval_rounded,
-                            backgroundColor: colorScheme.success,
-                            iconColor: colorScheme.onSuccess)
+                            iconData: FontAwesomeIcons.sun,
+                            backgroundColor: colorScheme.primary,
+                            iconColor: colorScheme.onPrimary)
                         : null,
                   ))),
 
