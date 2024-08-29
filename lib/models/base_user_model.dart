@@ -30,6 +30,8 @@ class UserBase {
       "fullname": fullname,
       "phone": phone,
       "avatar": avatar,
+      "tymeReward": rank,
+      "userPoints": userPoint,
       // "contribution": contribution,
     };
   }
