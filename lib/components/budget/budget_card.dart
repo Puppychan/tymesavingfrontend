@@ -71,6 +71,7 @@ class _BudgetCardState extends State<BudgetCard> {
                 ],
               ),
             ),
+            Text(widget.budget.hostByFullName),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
