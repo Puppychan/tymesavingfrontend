@@ -63,20 +63,52 @@ class _GroupSavingListPageState extends State<GroupSavingListPage>
           ? const Center(child: CircularProgressIndicator())
           : Padding(
               padding: AppPaddingStyles.pagePadding,
-              child: groupSavings.isNotEmpty
-                  ? RefreshIndicator(
-                    onRefresh: () => _pullRefresh(),
-                    child: ListView.separated(
-                        itemCount: groupSavings.length,
-                        separatorBuilder: (context, index) =>
-                            const SizedBox(height: 15),
-                        itemBuilder: (context, index) {
-                          return GroupSavingCard(
-                              groupSaving: groupSavings[index]);
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    child: SizedBox(
+                      child: TextField(
+                        decoration: InputDecoration(
+                          icon: const Icon(Icons.search),
+                          labelText: 'Search',
+                          labelStyle: Theme.of(context).textTheme.labelMedium!.copyWith(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w300,
+                            fontStyle: FontStyle.normal
+                          ),
+                          border: InputBorder.none
+                        ),
+                        onSubmitted: (String value) {
+                          setState(() {
+                            // searchName = value.toString().trimRight();
+                            // isLoading = true;
+                          });
                         },
                       ),
-                  )
-                  : const NotFoundMessage(message: "No group savings found"),
+                    ),
+                  ),
+                  const Divider(
+                    thickness: 0.5,
+                  ),
+                  groupSavings.isNotEmpty
+                      ? Flexible(
+                        child: RefreshIndicator(
+                          onRefresh: () => _pullRefresh(),
+                          child: ListView.separated(
+                              itemCount: groupSavings.length,
+                              separatorBuilder: (context, index) =>
+                                  const SizedBox(height: 15),
+                              itemBuilder: (context, index) {
+                                return GroupSavingCard(
+                                    groupSaving: groupSavings[index]);
+                              },
+                            ),
+                        ),
+                      )
+                      : const NotFoundMessage(message: "No group savings found"),
+                ],
+              ),
             );
     });
   }

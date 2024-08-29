@@ -160,6 +160,7 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
                   expandedHeight: sizeHeight * 0.15,
                   floating: false,
                   pinned: true,
+                  centerTitle: true,
                   flexibleSpace: FlexibleSpaceBar(
                     title: Text(
                       "Challenges Detail",
