@@ -110,6 +110,7 @@ class _ViewAllTransactionsPageState extends State<ViewAllTransactionsPage>
     return Scaffold(
       appBar: Heading(
         title: 'All Transactions',
+        showBackButton: true,
         bottom: TabBar(
           controller: _tabController,
           tabs: TransactionType.list.map((val) => Tab(text: val)).toList(),

@@ -83,11 +83,11 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
                 Containing place holder function for development! Do change it in merge !
               */
             RowSettingTemplate(
-                'Spending tracking',
+                'Cashflow tracking',
                 'Analytic of your expense & income',
                 const Icon(Icons.wallet),
                 myWalletRoute),
-            RowSettingTemplate('My Report', 'Understand your cashflow',
+            RowSettingTemplate('Monthly report', 'Your monthly report into your transaction',
                 const Icon(Icons.report), myReport),
             RowSettingTemplate('Setting', 'Change setting and preference',
                 const Icon(Icons.settings), settingFunction),
