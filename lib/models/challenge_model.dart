@@ -41,7 +41,7 @@ class ChallengeModel {
     endDate: DateTime.tryParse(map['endDate'] as String? ?? '') ?? DateTime.now(), 
     createdBy: map['createdBy'] as String? ?? '', 
     isPublished: map['isPublished'] as bool? ?? false, 
-    createdByFullName: map['createdByFullname'] ?? '',
+    createdByFullName: map['createdByFullName'] ?? '',
   );
 }
 

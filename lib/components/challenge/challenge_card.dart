@@ -89,11 +89,11 @@ class _ChallengeCardState extends State<ChallengeCard> {
                     TextSpan(
                       children: [
                         TextSpan(
-                          text: "By ", // First part of the text
+                          text: "By ", 
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                         TextSpan(
-                          text: widget.challengeModel!.createdBy, // Second part of the text
+                          text: widget.challengeModel!.createdByFullName, 
                           style: Theme.of(context)
                               .textTheme
                               .bodySmall!
