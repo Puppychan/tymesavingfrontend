@@ -69,9 +69,10 @@ class _CategorySelectionPageState extends State<CategorySelectionPage> {
                     title: Text(category.name, style: textTheme.bodyLarge),
                     trailing: isSelected
                         ? RoundedIcon(
-                            iconData: FontAwesomeIcons.sun,
-                            backgroundColor: colorScheme.primary,
-                            iconColor: colorScheme.onPrimary)
+                          hasShadow: false,
+                            iconData: FontAwesomeIcons.circleCheck,
+                            backgroundColor: colorScheme.inversePrimary.withOpacity(0.6),
+                            iconColor: colorScheme.primary.withOpacity(0.6))
                         : null,
                   ))),
 
