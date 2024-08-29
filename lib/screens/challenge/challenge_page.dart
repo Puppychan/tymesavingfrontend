@@ -119,6 +119,9 @@ class _ChallengePageState extends State<ChallengePage> with RouteAware{
                   onPressed: () => _showSortDialog(context),
               ),
             ),
+            const Divider(
+              thickness: 1.2,
+            ),
             (isLoading)
                 ? const CircularProgressIndicator()
                 : Expanded(
