@@ -50,7 +50,11 @@ class _GroupPendingInvitationPageState extends State<GroupPendingInvitationPage>
 
         return await invitationService
             .fetchInvitationsByGroupId(widget.groupId);
-      }, () async {});
+      }, () async {
+        setState(() {
+          _isDataFetched = true;
+        });
+      });
     });
   }
 
@@ -72,9 +76,6 @@ class _GroupPendingInvitationPageState extends State<GroupPendingInvitationPage>
     _tabController.addListener(_handleTabSelection);
     _fetchInvitations();
     _startPolling();
-    setState(() {
-      _isDataFetched = true;
-    });
   }
 
   @override
@@ -116,6 +117,10 @@ class _GroupPendingInvitationPageState extends State<GroupPendingInvitationPage>
                 title: "Invitations",
                 showBackButton: true,
                 actions: [
+                  IconButton(
+                    icon: const Icon(Icons.qr_code_2_outlined),
+                    onPressed: () {}, 
+                  ),
                   IconButton(
                     icon: const Icon(FontAwesomeIcons.userPlus),
                     onPressed: () {

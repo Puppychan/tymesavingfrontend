@@ -127,7 +127,7 @@ class _ViewAllTransactionsPageState extends State<ViewAllTransactionsPage>
                       _handleSortOptionSelection(result);
                     },
                   ),
-                  onPop: () => print('Popover was popped!'),
+                  onPop: () => debugPrint('Popover was popped!'),
                   direction: PopoverDirection.bottom,
                   width: 200,
                   height: 220,

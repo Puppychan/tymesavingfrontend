@@ -81,7 +81,6 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
         // // set budget to update form
         _formStateProvider?.setUpdateBudgetFormFields(tempBudget);
         // render host user
-
         // set state for budget details
         if (!mounted) return;
         setState(() {
@@ -94,7 +93,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
           // check if user is member or host
           isMember = _budget!.hostedBy !=
               Provider.of<AuthService>(context, listen: false).user?.id;
-              debugPrint(isMember.toString());
+              // debugPrint(isMember.toString());
           if(_budget!.defaultApproveStatus.value == ApproveStatus.pending.value ) {
             approval = true;
           }

@@ -776,13 +776,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.1"
+  qr_code_scanner:
+    dependency: "direct main"
+    description:
+      name: qr_code_scanner
+      sha256: "24250bf4874679b60abf7cb4b92cd62dbdc08a3081773bed234b4fbc31baa81c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.0"
   qr_flutter:
     dependency: "direct main"
     description:
-      name: qr_flutter
-      sha256: "5095f0fc6e3f71d08adef8feccc8cea4f12eec18a2e31c2e8d82cb6019f4b097"
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: HEAD
+      resolved-ref: d5e7206396105d643113618290bbcc755d05f492
+      url: "https://github.com/theyakka/qr.flutter.git"
+    source: git
     version: "4.1.0"
   retry:
     dependency: "direct main"
