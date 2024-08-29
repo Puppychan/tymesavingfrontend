@@ -55,6 +55,7 @@ class FormStateProvider with ChangeNotifier {
     formData.forEach((key, value) {
       if (key == "amount") {
         value = convertFormattedAmountToNumber(value);
+        // value = convertFormattedNoCurrencyAmountToNumber(value);
       }
 
       if (type == FormStateType.income) {
@@ -81,8 +82,8 @@ class FormStateProvider with ChangeNotifier {
   }
 
   String getFormattedAmount(FormStateType type) {
-    final NumberFormat formatter =
-        NumberFormat.currency(locale: 'vi_VN', symbol: '₫');
+    // final NumberFormat formatter =
+    //     NumberFormat.currency(locale: 'vi_VN', symbol: '₫');
     double amount = 0.0;
     if (type == FormStateType.income) {
       amount = _validateFieldNull('amount', _incomeFormFields, 0.0) as double;
@@ -105,7 +106,7 @@ class FormStateProvider with ChangeNotifier {
     } else {
       amount = _validateFieldNull('amount', _budgetFormFields, 0.0) as double;
     }
-    return formatter.format(amount);
+    return formatAmountWithCommas(amount);
   }
 
   Map<String, dynamic> getFormField(FormStateType type) {
@@ -162,6 +163,12 @@ class FormStateProvider with ChangeNotifier {
 
   void updateFormField(String key, dynamic value, FormStateType type) {
     if (key == "amount") {
+      print("Value before convert $value");
+      // // Remove any commas from the string
+      // String cleanedString = value.replaceAll(',', '');
+
+      // // Convert the cleaned string to an integer
+      // value = double.tryParse(cleanedString) ?? 0;
       value = convertFormattedAmountToNumber(value);
     }
 

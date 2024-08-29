@@ -15,3 +15,12 @@ String formatAmountToVnd(double amount) {
       // #,###,### ₫
   return formatter.format(amount);
 }
+
+
+String formatAmountWithCommas(double amount) {
+  // Initialize a NumberFormat instance for formatting with commas
+  final NumberFormat formatter = NumberFormat('#,##0', 'en_US');
+
+  // Format the amount and add the currency symbol (₫)
+  return formatter.format(amount);
+}

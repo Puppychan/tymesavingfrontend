@@ -2,43 +2,69 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 class CurrencyInputFormatter extends TextInputFormatter {
-  final NumberFormat currencyFormatter = NumberFormat.currency(locale: 'vi_VN', symbol: '₫');
+  final NumberFormat _formatter;
+
+  CurrencyInputFormatter({String locale = 'en_US'})
+      : _formatter = NumberFormat.currency(locale: locale, symbol: '', decimalDigits: 0);
 
   @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
     if (newValue.text.isEmpty) {
       return newValue.copyWith(text: '');
     }
 
-    double value = convertFormattedAmountToNumber(newValue.text);
-    final newText = formatAmountToVnd(value);
+    // Remove any non-digit characters
+    String newText = newValue.text.replaceAll(RegExp(r'[^\d]'), '');
 
-    // Calculate the cursor position adjustment
-    int cursorPosition = newValue.selection.end;
-    int diff = newValue.text.length - oldValue.text.length;
+    // Parse the cleaned string to a number
+    final num parsedNumber = int.parse(newText.isNotEmpty ? newText : '0');
 
-    // Adjust the cursor position after formatting
-    cursorPosition -= diff;
+    // Format the number as a currency string without a symbol
+    final String newFormattedText = _formatter.format(parsedNumber);
 
-    // Ensure the cursor position is not out of bounds
-    cursorPosition = cursorPosition.clamp(0, newText.length);
+    // Calculate the new cursor position
+    int newSelectionIndex = _calculateNewCursorIndex(oldValue, newValue, newFormattedText);
 
-    return newValue.copyWith(
-      text: newText,
-      selection: TextSelection.collapsed(offset: cursorPosition),
+    // Return the formatted value, with the updated cursor position
+    return TextEditingValue(
+      text: newFormattedText,
+      selection: TextSelection.collapsed(offset: newSelectionIndex),
     );
   }
 
-  double convertFormattedAmountToNumber(String formattedAmount) {
-    String numericString = formattedAmount.replaceAll(RegExp(r'[^\d]'), '');
-    double? amount = double.tryParse(numericString);
-    if (amount == null) {
-      return 0.0;
-    }
-    return double.parse(amount.toStringAsFixed(2));
-  }
+  int _calculateNewCursorIndex(TextEditingValue oldValue, TextEditingValue newValue, String newFormattedText) {
+    // Get the original cursor position and the difference in length from non-digit character removal
+    int oldCursorIndex = oldValue.selection.baseOffset;
+    int cursorIndexAfterDigitRemoval = newValue.selection.baseOffset;
 
-  String formatAmountToVnd(double amount) {
-    return currencyFormatter.format(amount);
+    // 50,0|00 500,0|00 -> 50,000
+
+    print("Old cursor index: ${oldValue.selection}");
+
+    // Factor in the removal of non-digits up to the cursor position
+    String oldTextUpToCursor = oldValue.text.substring(0, oldCursorIndex);
+    int nonDigitsBeforeCursor = RegExp(r'[^\d]').allMatches(oldTextUpToCursor).length;
+    cursorIndexAfterDigitRemoval -= nonDigitsBeforeCursor;
+
+    // If backspacing right after a comma, adjust cursor to skip comma
+    if (oldValue.text.length > newValue.text.length && // If text length reduced
+        oldCursorIndex > 0 && // Not at start
+        oldValue.text[oldCursorIndex - 1] == ',') { // Just deleted a comma
+      cursorIndexAfterDigitRemoval -= 1; // Skip the comma
+    }
+
+    // Adjust for the number of commas in the new formatted text before the new cursor index
+    int commasInFormattedTextBeforeCursor = RegExp(r',')
+      .allMatches(newFormattedText.substring(0, cursorIndexAfterDigitRemoval))
+      .length;
+    
+    // Adjust cursor position forward by the number of commas added in formatted text
+    int adjustedCursorIndex = cursorIndexAfterDigitRemoval + commasInFormattedTextBeforeCursor;
+    adjustedCursorIndex = adjustedCursorIndex.clamp(0, newFormattedText.length); // Ensure within bounds
+
+    return adjustedCursorIndex;
   }
 }
