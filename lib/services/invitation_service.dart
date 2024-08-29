@@ -149,6 +149,23 @@ class InvitationService extends ChangeNotifier {
     return response;
   }
 
+  Future<dynamic> sendInvitationQR(
+    String description,
+    String type,
+    String groupId,
+    String userId,
+  ) async {
+    // final String convertedUserIds = '[' + userIds.join(',') + ']';
+    final response =
+        await NetworkService.instance.post(BackendEndpoints.invitation, body: {
+      "description": description,
+      "type": type.toString(),
+      "groupId": groupId,
+      "users": [userId],
+    });
+    return response;
+  }
+
   Future<dynamic> acceptInvitation(String userId, String invitationId) async {
     final response = await NetworkService.instance.post(
         "${BackendEndpoints.invitation}/${BackendEndpoints.invitationsAccept}",

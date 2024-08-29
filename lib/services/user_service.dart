@@ -190,8 +190,9 @@ class UserService extends ChangeNotifier {
     } else if (groupSavingId != null) {
       endpoint += "?groupSavingId=$groupSavingId";
     }
-
+    
     final response = await NetworkService.instance.get(endpoint);
+    debugPrint(response.toString());
     if (response['response'] != null && response['statusCode'] == 200) {
       _summaryUser = SummaryUser.fromMap(response['response']);
       notifyListeners();

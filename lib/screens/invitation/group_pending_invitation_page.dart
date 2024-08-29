@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/enum/invitation_status_enum.dart';
 import 'package:tymesavingfrontend/common/enum/invitation_type_enum.dart';
 import 'package:tymesavingfrontend/common/styles/app_padding.dart';
+import 'package:tymesavingfrontend/components/QRcode/qr_scan_page.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/common/not_found_message.dart';
 import 'package:tymesavingfrontend/components/common/sheet/bottom_sheet.dart';
@@ -60,7 +61,7 @@ class _GroupPendingInvitationPageState extends State<GroupPendingInvitationPage>
 
   void _handleTabSelection() {
     if (_tabController.indexIsChanging) return;
-    _fetchInvitations(); // Fetch invitations when tab changes
+    _fetchInvitations(); 
   }
 
   void _startPolling() {
@@ -119,7 +120,10 @@ class _GroupPendingInvitationPageState extends State<GroupPendingInvitationPage>
                 actions: [
                   IconButton(
                     icon: const Icon(Icons.qr_code_2_outlined),
-                    onPressed: () {}, 
+                    onPressed: () {
+                      Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => QRScanPage(groupType: widget.type.value, groupId:widget.groupId)));
+                    }, 
                   ),
                   IconButton(
                     icon: const Icon(FontAwesomeIcons.userPlus),
