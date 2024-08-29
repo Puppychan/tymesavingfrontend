@@ -173,7 +173,7 @@ class _GroupSavingFormMainState extends State<GroupSavingFormMain> {
       // TransactionCategory selectedCategory =
       //     formStateService.getCategory(widget.type);
       String formattedAmount = formStateService.getFormattedAmount(widget.type);
-      ApproveStatus currentApproveStatus = formFields['defaultApproveStatus'];
+      ApproveStatus currentApproveStatus = formFields['defaultApproveStatus'] ?? ApproveStatus.approved;
 
       // update text to controller
       _amountController.text = formStateService.getFormattedAmount(widget.type);
