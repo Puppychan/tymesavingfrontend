@@ -308,6 +308,7 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
                             // Stepper for challenge
                             widget.isForListing ?
                             Stepper(
+                              physics: const NeverScrollableScrollPhysics(),
                               currentStep: _currentStep >= _checkPointModelList!.length ? _checkPointModelList!.length - 1 : _currentStep,
                               onStepTapped: (step) => setState(() => _currentStep = step),
                               onStepContinue: _currentProgress > _currentStep ?
@@ -369,10 +370,16 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
                                       fontWeight: FontWeight.w500
                                     ),
                             ),
+                          const Divider(
+                            indent: 20,
+                            endIndent: 20,
+                            thickness: 0.5,
+                          ),
                           Container(
                                   margin: const EdgeInsets.symmetric(vertical: 10),
                                   height: 350, // Specify the height here
                                   child: ListView.builder(
+                                    physics: AlwaysScrollableScrollPhysics(),
                                     padding: const EdgeInsets.all(0),
                                     itemCount: _challengeDetailMemberModelList!.length,
                                     itemBuilder: (context, index) {

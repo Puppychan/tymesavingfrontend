@@ -280,14 +280,25 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails>
                                     text:
                                         '$daysLeft day${daysLeft != 1 ? 's' : ''}',
                                     style:
-                                        Theme.of(context).textTheme.bodyMedium,
+                                        Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                          color: colorScheme.primary
+                                          ),
                                     children: [
                                       if (daysLeft! > 0)
                                         TextSpan(
-                                          text: ' left until $endDay',
+                                          text: ' left until ',
                                           style: Theme.of(context)
                                               .textTheme
                                               .bodyLarge,
+                                        ),
+                                        TextSpan(
+                                          text: '$endDay',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge!.copyWith(
+                                                fontWeight: FontWeight.w500,
+                                                color: colorScheme.primary,
+                                              ),
                                         ),
                                     ],
                                   ),
@@ -316,7 +327,10 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails>
                                           style: Theme.of(context)
                                               .textTheme
                                               .headlineMedium!
-                                              .copyWith(fontSize: 15),
+                                              .copyWith(fontSize: 15,
+                                              fontWeight: FontWeight.w400,
+                                              color: colorScheme.primary,
+                                              ),
                                         ),
                                       ],
                                     ),
@@ -337,7 +351,10 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails>
                                           style: Theme.of(context)
                                               .textTheme
                                               .headlineMedium!
-                                              .copyWith(fontSize: 15),
+                                              .copyWith(fontSize: 15,
+                                              fontWeight: FontWeight.w400,
+                                              color: colorScheme.primary,
+                                              ),
                                         ),
                                       ],
                                     ),
@@ -439,6 +456,11 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails>
                             title: "Approving transaction",
                           ),
                         ),
+                        const Divider(
+                            indent: 20,
+                            endIndent: 20,
+                            thickness: 0.5,
+                          ),
                       SizedBox(
                         height: 500,
                         child: RefreshIndicator(
