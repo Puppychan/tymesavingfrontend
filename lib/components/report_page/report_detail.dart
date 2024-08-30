@@ -55,7 +55,7 @@ class _CategoryCardItemState extends State<CategoryCardItem> {
     final Color color = category['color'];
     return Card.outlined(
       color: colorScheme.onPrimary,
-      margin: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width*0.2, vertical: 10),
+      margin: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.15, vertical: 10),
       child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Row(
@@ -68,17 +68,21 @@ class _CategoryCardItemState extends State<CategoryCardItem> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text.rich(
+                    overflow: TextOverflow.visible,
                     TextSpan(
                       text: widget.categoryName,
                       style: textTheme
-                          .bodyLarge!, // Default style for the first part
+                          .bodyLarge!.copyWith(
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w500,
+                          ), 
                     ),
                   ),
                   Text.rich(
                     TextSpan(
                       text: formatAmountToVnd(widget.amountSpend.toDouble()),
                       style: textTheme
-                          .bodyLarge!, // Default style for the first part
+                          .bodyLarge!, 
                     ),
                   ),
                 ],

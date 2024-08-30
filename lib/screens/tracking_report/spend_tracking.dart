@@ -64,6 +64,9 @@ class _SpendTrackingState extends State<SpendTracking> {
   }
 
   Future<void> _pullRefresh() async {
+    setState(() {
+      isLoading = true;
+    });
     await _loadData();
   }
 
@@ -184,7 +187,11 @@ class _SpendTrackingState extends State<SpendTracking> {
             const SizedBox(height: 10),
             Skeletonizer(
                 enabled: isLoading,
-                child: TipCard(netSpend: netSpend?.currentNetSpend ?? 0)),
+                child: TipCard(
+                  netSpend: netSpend?.currentNetSpend ?? 0,
+                  income: netSpend!.currentMonthIncome,
+                  expense: netSpend!.currentMonthExpense,
+                  )),
             const SizedBox(height: 10),
           ]),
         ),

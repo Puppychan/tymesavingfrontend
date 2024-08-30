@@ -17,7 +17,8 @@ class TransactionService extends ChangeNotifier {
   CompareToLastMonth? _compareToLastMonth;
   CurrentMonthReport? _currentMonthReportIncome;
   CurrentMonthReport? _currentMonthReportExpense;
-  TopCategoriesList? _topCategoriesList;
+  TopCategoriesList? _topCategoriesListExpense;
+  TopCategoriesList? _topCategoriesListIncome;
   NetSpend? _netSpend;
   Map<String, List<Transaction>>? _transactions;
   List<Transaction> _flattenTransactions = [];
@@ -39,7 +40,8 @@ class TransactionService extends ChangeNotifier {
   ChartReport? get chartReportSecondary => _chartReportSecondary;
   CurrentMonthReport? get currentMonthReportIncome => _currentMonthReportIncome;
   CurrentMonthReport? get currentMonthReportExpense => _currentMonthReportExpense;
-  TopCategoriesList? get topCategoriesList => _topCategoriesList;
+  TopCategoriesList? get topCategoriesListExpense => _topCategoriesListExpense;
+  TopCategoriesList? get topCategoriesListIncome => _topCategoriesListIncome;
   NetSpend? get netSpend => _netSpend;
   Map<String, List<Transaction>>? get transactions => _transactions;
   List<Transaction> get flattenTransactions => _flattenTransactions;
@@ -212,21 +214,21 @@ class TransactionService extends ChangeNotifier {
     return response;
   }
 
-  Future<Map<String, dynamic>> getReportDetail(userid) async {
+  Future<Map<String, dynamic>> getReportDetail(userId) async {
     final response = await NetworkService.instance.get(
-        "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReport}?transactionType=Expense&userId=$userid");
+        "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReport}?transactionType=Expense&userId=$userId");
     if (response['response'] != null &&
         response['response']['compareToLastMonth'] != null &&
-        response['response']['topCategories'] != null) {
-      final responseData = response['response']['compareToLastMonth'];
-      final responseCategoryData = response['response']['topCategories'];
-      _compareToLastMonth = CompareToLastMonth.fromJson(responseData);
-      _topCategoriesList = TopCategoriesList.fromJson(responseCategoryData);
+        response['response']['topIncomeCategories'] != null) {
+      final responseData = response['response'];
+      _compareToLastMonth = CompareToLastMonth.fromJson(responseData['compareToLastMonth']);
+      _topCategoriesListExpense = TopCategoriesList.fromJson(responseData['topExpenseCategories']);
+      _topCategoriesListIncome = TopCategoriesList.fromJson(responseData['topIncomeCategories']);
       notifyListeners();
     } else {
       final responseData = response['response']['compareToLastMonth'];
       _compareToLastMonth = CompareToLastMonth.fromJson(responseData);
-      _topCategoriesList = null;
+      _topCategoriesListExpense = null;
       notifyListeners();
     }
     return response;

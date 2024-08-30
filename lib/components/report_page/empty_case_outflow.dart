@@ -28,7 +28,7 @@ class _EmptyCaseOutFlowState extends State<EmptyCaseOutFlow> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Your transaction data is currently insufficient for analysis. Please make transaction and use the app further more!',
+                        'Your transaction data of this type is currently insufficient for analysis. Please make transaction and use the app further more!',
                         style: textTheme.bodyMedium,
                         overflow: TextOverflow.visible
                       )
