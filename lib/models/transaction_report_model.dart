@@ -5,7 +5,7 @@ class ChartReport {
 
   factory ChartReport.fromJson(Map<String, dynamic> json) {
     return ChartReport(
-      totals: Map<String, int>.from(json['pastMonthsTotal']),
+      totals: Map<String, int>.from(json),
     );
   }
 }

@@ -12,11 +12,11 @@ import 'package:tymesavingfrontend/services/utils/get_backend_endpoint.dart';
 import 'package:tymesavingfrontend/services/utils/network_service.dart';
 
 class TransactionService extends ChangeNotifier {
-  // Create a private transaction report variable to store report received
   ChartReport? _chartReport;
   ChartReport? _chartReportSecondary;
   CompareToLastMonth? _compareToLastMonth;
-  CurrentMonthReport? _currentMonthReport;
+  CurrentMonthReport? _currentMonthReportIncome;
+  CurrentMonthReport? _currentMonthReportExpense;
   TopCategoriesList? _topCategoriesList;
   NetSpend? _netSpend;
   Map<String, List<Transaction>>? _transactions;
@@ -37,7 +37,8 @@ class TransactionService extends ChangeNotifier {
   CompareToLastMonth? get compareToLastMonth => _compareToLastMonth;
   ChartReport? get chartReport => _chartReport;
   ChartReport? get chartReportSecondary => _chartReportSecondary;
-  CurrentMonthReport? get currrentMonthReport => _currentMonthReport;
+  CurrentMonthReport? get currentMonthReportIncome => _currentMonthReportIncome;
+  CurrentMonthReport? get currentMonthReportExpense => _currentMonthReportExpense;
   TopCategoriesList? get topCategoriesList => _topCategoriesList;
   NetSpend? get netSpend => _netSpend;
   Map<String, List<Transaction>>? get transactions => _transactions;
@@ -119,13 +120,13 @@ class TransactionService extends ChangeNotifier {
     final response = await NetworkService.instance.get(
         "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReport}?transactionType=Expense&userId=$userid");
     final responseData = response['response'];
-
-    // debugPrint("Debuging check for getChartReport $responseData");
-
     notifyListeners();
-    _chartReport = ChartReport.fromJson(responseData);
-    _currentMonthReport =
-        CurrentMonthReport.fromJson(responseData['currentMonthTotal']);
+    _chartReport = ChartReport.fromJson(responseData['pastMonthsExpenseTotal'] as Map<String, dynamic>);
+    _chartReportSecondary = ChartReport.fromJson(responseData['pastMonthsIncomeTotal'] as Map<String, dynamic>);
+    _currentMonthReportIncome =
+        CurrentMonthReport.fromJson(responseData['currentMonthIncomeTotal']);
+    _currentMonthReportExpense =
+        CurrentMonthReport.fromJson(responseData['currentMonthExpenseTotal']);
     _netSpend = NetSpend.fromJson(responseData['netSpend']);
     return response;
   }
@@ -202,17 +203,13 @@ class TransactionService extends ChangeNotifier {
     return response;
   }
 
-  Future<Map<String, dynamic>> getBothChartReport(userid) async {
-    final expenseResponse = await NetworkService.instance.get(
-        "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReport}?transactionType=Expense&userId=$userid");
-    final incomeResponse = await NetworkService.instance.get(
-        "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReport}?transactionType=Income&userId=$userid");
-    final responseDataExpense = expenseResponse['response'];
-    final responseDataIncome = incomeResponse['response'];
+  Future<Map<String, dynamic>> getBothChartReport(userId) async {
+    final response = await NetworkService.instance.get(
+        "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReport}?transactionType=Expense&userId=$userId");
     notifyListeners();
-    _chartReport = ChartReport.fromJson(responseDataExpense);
-    _chartReportSecondary = ChartReport.fromJson(responseDataIncome);
-    return expenseResponse;
+    _chartReport = ChartReport.fromJson(response['response']['pastMonthsExpenseTotal'] as Map<String, dynamic>);
+    _chartReportSecondary = ChartReport.fromJson(response['response']['pastMonthsIncomeTotal'] as Map<String, dynamic>);
+    return response;
   }
 
   Future<Map<String, dynamic>> getReportDetail(userid) async {
@@ -223,12 +220,6 @@ class TransactionService extends ChangeNotifier {
         response['response']['topCategories'] != null) {
       final responseData = response['response']['compareToLastMonth'];
       final responseCategoryData = response['response']['topCategories'];
-      // Type checking, since percentages is String but current is int
-      // debugPrint(responseData['currentIncome'].runtimeType.toString());
-      // debugPrint(responseData['incomePercentage'].runtimeType.toString());
-      // debugPrint(responseData['currentExpense'].runtimeType.toString());
-      // debugPrint(responseData['expensePercentage'].runtimeType.toString());
-
       _compareToLastMonth = CompareToLastMonth.fromJson(responseData);
       _topCategoriesList = TopCategoriesList.fromJson(responseCategoryData);
       notifyListeners();
