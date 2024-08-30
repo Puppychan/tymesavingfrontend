@@ -95,7 +95,7 @@ class _UserProfileState extends State<UserProfile> with RouteAware {
             onPressed: () {
               showStyledBottomSheet(
                   context: context,
-                  title: 'Group Actions',
+                  title: 'Personal settings',
                   contentWidget: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

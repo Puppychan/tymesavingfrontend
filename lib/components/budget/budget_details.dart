@@ -384,7 +384,9 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                                 fontWeight: FontWeight.w500, // Optional: make the number bold
                               ),
                             ),
-                            const TextSpan(text: ' request'),
+                            _awaitingApprovalTransaction.length <= 1 ?
+                            const TextSpan(text: ' request') :
+                            const TextSpan(text: ' requests')
                           ],
                         ),
                       ),

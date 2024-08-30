@@ -122,7 +122,10 @@ class _GroupPendingInvitationPageState extends State<GroupPendingInvitationPage>
                     icon: const Icon(Icons.qr_code_2_outlined),
                     onPressed: () {
                       Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => QRScanPage(groupType: widget.type.value, groupId:widget.groupId)));
+                        MaterialPageRoute(builder: (context) => QRScanPage(
+                          groupTypeString: widget.type.value, 
+                          groupId:widget.groupId,
+                          invitationType: widget.type,)));
                     }, 
                   ),
                   IconButton(

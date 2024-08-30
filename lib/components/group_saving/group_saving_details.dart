@@ -413,7 +413,9 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails>
                                           .w500, // Optional: make the number bold
                                     ),
                               ),
-                              const TextSpan(text: ' request'),
+                              _awaitingApprovalTransaction.length <= 1 ?
+                              const TextSpan(text: ' request') :
+                              const TextSpan(text: ' requests')
                             ],
                           ),
                         ),

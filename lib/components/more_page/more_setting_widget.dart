@@ -84,10 +84,10 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
               */
             RowSettingTemplate(
                 'Cashflow tracking',
-                'Analytic of your expense & income',
+                'Analytic of your expense & income trends',
                 const Icon(Icons.wallet),
                 myWalletRoute),
-            RowSettingTemplate('Monthly report', 'Your monthly report into your transaction',
+            RowSettingTemplate('Monthly report', 'Analytics of your monthly transactions',
                 const Icon(Icons.report), myReport),
             RowSettingTemplate('Setting', 'Change setting and preference',
                 const Icon(Icons.settings), settingFunction),
