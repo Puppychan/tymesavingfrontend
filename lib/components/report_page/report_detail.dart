@@ -23,12 +23,13 @@ class _ReportDetailState extends State<ReportDetail> {
     return SizedBox(
         height: 400,
         child: ListView.builder(
-            itemCount: widget.topCategories.length,
-            itemBuilder: (context, index) {
-              return CategoryCardItem(
-                  amountSpend: widget.topCategories[index].totalAmount,
-                  categoryName: widget.topCategories[index].category);
-            }));
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: widget.topCategories.length,
+          itemBuilder: (context, index) {
+            return CategoryCardItem(
+                amountSpend: widget.topCategories[index].totalAmount,
+                categoryName: widget.topCategories[index].category);
+          }));
   }
 }
 

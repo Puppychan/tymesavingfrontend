@@ -29,7 +29,6 @@ class _TipCardState extends State<TipCard> {
     if (widget.income == 0 && widget.expense == 0){
       noData = true;
     }
-
     super.initState();
   }
 
@@ -62,8 +61,9 @@ class _TipCardState extends State<TipCard> {
                         softWrap: true,
                         overflow: TextOverflow.visible,
                       )
-                    ]),
+                ]),
               )
-            ])));
+            ])
+          ));
   }
 }
