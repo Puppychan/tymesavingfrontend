@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/enum/invitation_status_enum.dart';
 import 'package:tymesavingfrontend/common/enum/invitation_type_enum.dart';
 import 'package:tymesavingfrontend/common/styles/app_padding.dart';
+import 'package:tymesavingfrontend/components/QRcode/qr_scan_page.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/common/not_found_message.dart';
 import 'package:tymesavingfrontend/components/common/sheet/bottom_sheet.dart';
@@ -50,13 +51,17 @@ class _GroupPendingInvitationPageState extends State<GroupPendingInvitationPage>
 
         return await invitationService
             .fetchInvitationsByGroupId(widget.groupId);
-      }, () async {});
+      }, () async {
+        setState(() {
+          _isDataFetched = true;
+        });
+      });
     });
   }
 
   void _handleTabSelection() {
     if (_tabController.indexIsChanging) return;
-    _fetchInvitations(); // Fetch invitations when tab changes
+    _fetchInvitations(); 
   }
 
   void _startPolling() {
@@ -72,9 +77,6 @@ class _GroupPendingInvitationPageState extends State<GroupPendingInvitationPage>
     _tabController.addListener(_handleTabSelection);
     _fetchInvitations();
     _startPolling();
-    setState(() {
-      _isDataFetched = true;
-    });
   }
 
   @override
@@ -116,6 +118,16 @@ class _GroupPendingInvitationPageState extends State<GroupPendingInvitationPage>
                 title: "Invitations",
                 showBackButton: true,
                 actions: [
+                  IconButton(
+                    icon: const Icon(Icons.qr_code_2_outlined),
+                    onPressed: () {
+                      Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => QRScanPage(
+                          groupTypeString: widget.type.value, 
+                          groupId:widget.groupId,
+                          invitationType: widget.type,)));
+                    }, 
+                  ),
                   IconButton(
                     icon: const Icon(FontAwesomeIcons.userPlus),
                     onPressed: () {

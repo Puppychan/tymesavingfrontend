@@ -3,10 +3,10 @@ import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
 
 class IncomeCard extends StatefulWidget {
-  const IncomeCard({super.key,required this.currentMonthIncome, required this.currentNetSpend});
+  const IncomeCard({super.key,required this.currentMonthIncome, required this.currentMonth});
 
   final int currentMonthIncome;
-  final int currentNetSpend;
+  final String currentMonth;
 
   @override
   State<IncomeCard> createState() => _IncomeCardState();
@@ -33,7 +33,7 @@ class _IncomeCardState extends State<IncomeCard> {
                 children: [
                   Text.rich(
                     TextSpan(
-                      text: 'Current income is ',
+                      text: '${widget.currentMonth} income is at ',
                       style: textTheme
                           .titleSmall!, // Default style for the first part
                       children: <TextSpan>[
@@ -49,21 +49,21 @@ class _IncomeCardState extends State<IncomeCard> {
                   const SizedBox(
                     height: 5,
                   ),
-                  Text.rich(
-                    TextSpan(
-                      text: 'Net spend of ',
-                      style: textTheme
-                          .titleSmall!, // Default style for the first part
-                      children: <TextSpan>[
-                        TextSpan(
-                          text: '${formatAmountToVnd(widget.currentNetSpend.toDouble())} ',
-                          style: textTheme.titleSmall!.copyWith(
-                              color: colorScheme
-                                  .primary), // Same style for the expense value
-                        ),
-                      ],
-                    ),
-                  ),
+                  // Text.rich(
+                  //   TextSpan(
+                  //     text: 'Net spend of ',
+                  //     style: textTheme
+                  //         .titleSmall!, // Default style for the first part
+                  //     children: <TextSpan>[
+                  //       TextSpan(
+                  //         text: '${formatAmountToVnd(widget.currentNetSpend.toDouble())} ',
+                  //         style: textTheme.titleSmall!.copyWith(
+                  //             color: colorScheme
+                  //                 .primary), // Same style for the expense value
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                 ],
               )
             ],

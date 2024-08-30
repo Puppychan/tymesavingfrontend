@@ -4,6 +4,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:tymesavingfrontend/components/common/chart/custom_pie_chart.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/report_page/empty_case_outflow.dart';
+import 'package:tymesavingfrontend/components/report_page/inflow_header.dart';
 import 'package:tymesavingfrontend/components/report_page/outflow_header.dart';
 import 'package:tymesavingfrontend/components/report_page/report_detail.dart';
 import 'package:tymesavingfrontend/components/report_page/report_flow.dart';
@@ -22,7 +23,8 @@ class ReportPage extends StatefulWidget {
 
 class _ReportPageState extends State<ReportPage> {
   CompareToLastMonth? compareToLastMonth;
-  TopCategoriesList? topCategoriesList;
+  TopCategoriesList? topCategoriesListIncome;
+  TopCategoriesList? topCategoriesListExpense;
   bool isLoading = true;
 
   @override
@@ -45,7 +47,8 @@ class _ReportPageState extends State<ReportPage> {
               setState(() {
                 // Compare to last month
                 compareToLastMonth = transactionService.compareToLastMonth;
-                topCategoriesList = transactionService.topCategoriesList;
+                topCategoriesListExpense = transactionService.topCategoriesListExpense;
+                topCategoriesListIncome = transactionService.topCategoriesListIncome;
                 isLoading = false;
               });
             });
@@ -72,6 +75,7 @@ class _ReportPageState extends State<ReportPage> {
           child: SingleChildScrollView(
             child: Column(
               children: [
+                // Inflow
                 ReportFlow(
                     inflowCurrent: compareToLastMonth?.currentIncome ?? 0,
                     inflowPercentage: compareToLastMonth?.incomePercentage ?? '0',
@@ -81,18 +85,35 @@ class _ReportPageState extends State<ReportPage> {
                 const SizedBox(
                   height: 20,
                 ),
-                const OutflowHeader(),
-                if (topCategoriesList == null)
+                const InflowHeader(),
+                if (topCategoriesListIncome == null)
                   const EmptyCaseOutFlow()
                 else
-                  CustomPieChart(topCategories: topCategoriesList!.topCategory),
+                  CustomPieChart(topCategories: topCategoriesListIncome!.topCategory),
                 const SizedBox(
                   height: 20,
                 ),
-                if (topCategoriesList == null)
+                if (topCategoriesListExpense == null)
                   const SizedBox()
                 else
-                  ReportDetail(topCategories: topCategoriesList!.topCategory),
+                  ReportDetail(topCategories: topCategoriesListIncome!.topCategory),
+
+                const SizedBox(
+                  height: 20,
+                ),
+                // Outflow
+                const OutflowHeader(),
+                if (topCategoriesListExpense== null)
+                  const EmptyCaseOutFlow()
+                else
+                  CustomPieChart(topCategories: topCategoriesListExpense!.topCategory),
+                const SizedBox(
+                  height: 20,
+                ),
+                if (topCategoriesListExpense == null)
+                  const SizedBox()
+                else
+                  ReportDetail(topCategories: topCategoriesListExpense!.topCategory),
               ],
             ),
           ),

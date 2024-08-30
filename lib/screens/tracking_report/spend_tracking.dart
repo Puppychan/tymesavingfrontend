@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:tymesavingfrontend/components/common/chart/custom_line_chart.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/transaction_tracking/expense_card.dart';
 import 'package:tymesavingfrontend/components/transaction_tracking/income_card.dart';
+import 'package:tymesavingfrontend/components/transaction_tracking/netspend_card.dart';
 import 'package:tymesavingfrontend/components/transaction_tracking/tip_card.dart';
 import 'package:tymesavingfrontend/models/transaction_report_model.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/transaction_service.dart';
+import 'package:tymesavingfrontend/utils/format_amount.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
 class SpendTracking extends StatefulWidget {
@@ -20,10 +23,13 @@ class SpendTracking extends StatefulWidget {
 }
 
 class _SpendTrackingState extends State<SpendTracking> {
-  ChartReport? chartReport;
-  CurrentMonthReport? currentMonthReport;
+  ChartReport? chartReportExpense;
+  ChartReport? chartReportIncome;
+  CurrentMonthReport? currentMonthReportIncome;
+  CurrentMonthReport? currentMonthReportExpense;
   NetSpend? netSpend;
   User? user;
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -47,14 +53,20 @@ class _SpendTrackingState extends State<SpendTracking> {
         return await transactionService.getChartReport(user!.id);
       }, () async {
         setState(() {
-          chartReport = transactionService.chartReport!;
-          currentMonthReport = transactionService.currrentMonthReport;
+          chartReportExpense = transactionService.chartReport!;
+          chartReportIncome = transactionService.chartReportSecondary!;
+          currentMonthReportIncome = transactionService.currentMonthReportIncome;
+          currentMonthReportExpense = transactionService.currentMonthReportExpense;
           netSpend = transactionService.netSpend;
+          isLoading = false;
         });
       });
   }
 
   Future<void> _pullRefresh() async {
+    setState(() {
+      isLoading = true;
+    });
     await _loadData();
   }
 
@@ -66,7 +78,9 @@ class _SpendTrackingState extends State<SpendTracking> {
         title: 'Tracking',
         showBackButton: true,
       ),
-      body: RefreshIndicator(
+      body: isLoading ?
+      const Center(child: CircularProgressIndicator(),) : 
+      RefreshIndicator(
         onRefresh: _pullRefresh,
         child: SingleChildScrollView(
           child: Column(children: [
@@ -74,9 +88,10 @@ class _SpendTrackingState extends State<SpendTracking> {
               height: 10,
             ),
             Text(
-              'Expense trend of past 6 month',
-              style: textTheme.titleMedium,
-              textAlign: TextAlign.start,
+              'Past 6 months cashflow trend',
+              style: textTheme.headlineMedium,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.visible,
             ),
             const SizedBox(
               height: 1.5,
@@ -84,7 +99,7 @@ class _SpendTrackingState extends State<SpendTracking> {
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 15),
               child: Text(
-                'Tips: Touching the line of each points reveal the total amount of expense for that month *wink*',
+                'Tips: Understanding your spending and earning trend can help you optimize your spending!',
                 style: textTheme.bodySmall,
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.visible,
@@ -94,35 +109,89 @@ class _SpendTrackingState extends State<SpendTracking> {
               height: 10,
             ),
             Skeletonizer(
-              enabled: chartReport == null,
+              enabled: isLoading,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: CustomLineChart(
-                  totals: chartReport?.totals ??
-                      {'JAN': 0, 'FEB': 0, 'MAR': 0, 'APR': 0, 'MAY': 0, 'JUN': 0},
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: isLoading ? 
+                null : 
+                CustomLineChart(
+                  totalsExpense: chartReportExpense!.totals,
+                  totalsIncome: chartReportIncome!.totals,
                 ),
               ),
             ),
             const SizedBox(
               height: 20,
             ),
-            if (currentMonthReport == null)
-              // Display a loading indicator or placeholder widget
-              const CircularProgressIndicator(),
-            Skeletonizer(
-              enabled: chartReport == null,
-              child: ExpenseCard(
-                  month: currentMonthReport?.currentMonth ?? '',
-                  expense: currentMonthReport?.totalAmount ?? 0),
+            Text(
+              'Past 6 months income/expense',
+              style: textTheme.headlineMedium,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.visible,
+            ),
+            SizedBox(
+              height: 450,
+              child: ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: chartReportIncome!.totals.length - 6,
+                itemBuilder: (context, index) {
+                  int changedIndex = index + 6;
+                  String month = chartReportIncome!.totals.keys.elementAt(changedIndex);
+                  int income = chartReportIncome!.totals[month]!;
+                  int expense = chartReportExpense!.totals[month]!;
+              
+                  return Padding(
+                    padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.015),
+                    child: ListTile(
+                      title: Text(
+                        month,
+                        style: textTheme.labelLarge
+                      ),
+                      subtitle: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Income: ${formatAmountToVnd(income.toDouble())}',
+                            style: textTheme.bodyMedium!.copyWith(color: Colors.green),
+                          ),
+                          Text(
+                            'Expense: ${formatAmountToVnd(expense.toDouble())}',
+                            style: textTheme.bodyMedium!.copyWith(color: Colors.red),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }),
+            ),
+            Text(
+              'This month net info',
+              style: textTheme.headlineMedium,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.visible,
             ),
             Skeletonizer(
-                enabled: chartReport == null,
+                enabled: isLoading,
                 child: IncomeCard(
                     currentMonthIncome: netSpend?.currentMonthIncome ?? 0,
-                    currentNetSpend: netSpend?.currentNetSpend ?? 0)),
+                    currentMonth: currentMonthReportIncome!.currentMonth)),
             Skeletonizer(
-                enabled: chartReport == null,
-                child: TipCard(netSpend: netSpend?.currentNetSpend ?? 0)),
+              enabled: isLoading,
+              child: ExpenseCard(
+                  month: currentMonthReportIncome?.currentMonth ?? '',
+                  expense: currentMonthReportExpense?.totalAmount ?? 0),
+            ),
+            Skeletonizer(
+                enabled: isLoading,
+                child: NetSpendCard(netSpend: netSpend?.currentNetSpend ?? 0)),
+            const SizedBox(height: 10),
+            Skeletonizer(
+                enabled: isLoading,
+                child: TipCard(
+                  netSpend: netSpend?.currentNetSpend ?? 0,
+                  income: netSpend!.currentMonthIncome,
+                  expense: netSpend!.currentMonthExpense,
+                  )),
             const SizedBox(height: 10),
           ]),
         ),

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
 
-class ExpenseCard extends StatefulWidget {
-  const ExpenseCard({super.key, required this.month, required this.expense});
-  
-  final String month;
-  final int expense;
-  
+class NetSpendCard extends StatefulWidget {
+  const NetSpendCard({super.key,required this.netSpend});
+
+  final int netSpend;
+
   @override
-  State<ExpenseCard> createState() => _ExpenseCardState();
+  State<NetSpendCard> createState() => _NetSpendCardState();
 }
 
-class _ExpenseCardState extends State<ExpenseCard> {
+class _NetSpendCardState extends State<NetSpendCard> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -23,8 +23,7 @@ class _ExpenseCardState extends State<ExpenseCard> {
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
           child: Row(
             children: [
-              Icon(Icons.money_off,
-                  color: colorScheme.error, size: 30),
+              Icon(Icons.calculate, color: colorScheme.inversePrimary, size: 30),
               const SizedBox(
                 width: 20,
               ),
@@ -33,12 +32,15 @@ class _ExpenseCardState extends State<ExpenseCard> {
                 children: [
                   Text.rich(
                     TextSpan(
-                      text: '${widget.month} expense is at ',
-                      style: textTheme.titleSmall!, // Default style for the first part
+                      text: 'Net spend of ',
+                      style: textTheme
+                          .titleSmall!, // Default style for the first part
                       children: <TextSpan>[
                         TextSpan(
-                          text: ' ${formatAmountToVnd(widget.expense.toDouble())} ',
-                          style: textTheme.titleSmall!.copyWith(color: colorScheme.primary), // Same style for the expense value
+                          text: '${formatAmountToVnd(widget.netSpend.toDouble())} ',
+                          style: textTheme.titleSmall!.copyWith(
+                              color: colorScheme
+                                  .primary), // Same style for the expense value
                         ),
                       ],
                     ),

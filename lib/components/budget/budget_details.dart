@@ -81,7 +81,6 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
         // // set budget to update form
         _formStateProvider?.setUpdateBudgetFormFields(tempBudget);
         // render host user
-
         // set state for budget details
         if (!mounted) return;
         setState(() {
@@ -94,7 +93,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
           // check if user is member or host
           isMember = _budget!.hostedBy !=
               Provider.of<AuthService>(context, listen: false).user?.id;
-              debugPrint(isMember.toString());
+              // debugPrint(isMember.toString());
           if(_budget!.defaultApproveStatus.value == ApproveStatus.pending.value ) {
             approval = true;
           }
@@ -256,25 +255,43 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                                     Row(
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
-                                        Text('Your initial budget', style: Theme.of(context).textTheme.bodyMedium,),
+                                        Text('Your initial budget', 
+                                          style: Theme.of(context).textTheme.bodyMedium,),
                                         const Expanded(child: SizedBox()),
-                                        Text(formatAmountToVnd(_budget!.amount), style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontSize: 15),),
+                                        Text(formatAmountToVnd(_budget!.amount), 
+                                          style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w500,
+                                            color: colorScheme.primary
+                                          )),
                                       ],  
                                     ),
                                     Row(
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
-                                        Text('Current budget left', style: Theme.of(context).textTheme.bodyMedium,),
+                                        Text('Current budget left', 
+                                          style: Theme.of(context).textTheme.bodyMedium,),
                                         const Expanded(child: SizedBox()),
-                                        Text(formatAmountToVnd(_budget!.concurrentAmount), style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontSize: 15),),
+                                        Text(formatAmountToVnd(_budget!.concurrentAmount), 
+                                            style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w500,
+                                            color: colorScheme.primary
+                                          )),
                                       ],
                                     ),
                                     Row(
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
-                                        Text('Budget remain', style: Theme.of(context).textTheme.bodyMedium,),
+                                        Text('Budget remain', 
+                                          style: Theme.of(context).textTheme.bodyMedium,),
                                         const Expanded(child: SizedBox()),
-                                        Text(_displayPercentageTaken, style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontSize: 15),),
+                                        Text(_displayPercentageTaken, 
+                                          style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w500,
+                                              color: colorScheme.primary,
+                                            )),
                                       ],
                                     ),
                                   ],
@@ -385,7 +402,9 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                                 fontWeight: FontWeight.w500, // Optional: make the number bold
                               ),
                             ),
-                            const TextSpan(text: ' request'),
+                            _awaitingApprovalTransaction.length <= 1 ?
+                            const TextSpan(text: ' request') :
+                            const TextSpan(text: ' requests')
                           ],
                         ),
                       ),
@@ -404,6 +423,11 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                           ),
                         ),
                       const SizedBox(height: 20,),
+                      const Divider(
+                            indent: 20,
+                            endIndent: 20,
+                            thickness: 0.5,
+                          ),
                       SizedBox(
                         height: 500,
                         child: RefreshIndicator(onRefresh: _pullRefresh, child: TransactionList(transactions: _transactions, disableButton: true,)),

@@ -1,14 +1,10 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/enum/invitation_status_enum.dart';
 import 'package:tymesavingfrontend/common/enum/invitation_type_enum.dart';
 import 'package:tymesavingfrontend/components/common/text_align.dart';
 import 'package:tymesavingfrontend/models/invitation_model.dart';
-import 'package:tymesavingfrontend/models/summary_user_model.dart';
-import 'package:tymesavingfrontend/services/user_service.dart';
-import 'package:tymesavingfrontend/utils/handling_error.dart';
+
 
 class GroupInvitationCard extends StatefulWidget {
   final Invitation invitation;
@@ -21,7 +17,6 @@ class GroupInvitationCard extends StatefulWidget {
 
 class _GroupInvitationCardState extends State<GroupInvitationCard> {
   bool _isDataFetched = false;
-  SummaryUser? summaryUser;
 
   void _fetchData() async {
     if (!_isDataFetched && mounted) {
@@ -31,17 +26,6 @@ class _GroupInvitationCardState extends State<GroupInvitationCard> {
         });
       }
     }
-  }
-
-  Future<SummaryUser?> _fetchUserData(String userId) async {
-    SummaryUser? user;
-    await handleMainPageApi(context, () async {
-      return await Provider.of<UserService>(context, listen: false)
-          .getOtherUserInfo(userId);
-    }, () async {
-      user = Provider.of<UserService>(context, listen: false).summaryUser;
-    });
-    return user;
   }
 
   @override
@@ -113,19 +97,7 @@ class _GroupInvitationCardState extends State<GroupInvitationCard> {
                     ],
                   ),
                   const SizedBox(height: 16.0),
-                  FutureBuilder<SummaryUser?>(
-                    future: _fetchUserData(widget.invitation.userId ?? ""),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Text("Loading user data...",
-                            style: Theme.of(context).textTheme.bodyMedium);
-                      } else if (snapshot.hasError) {
-                        return const Text('Error loading user data');
-                      } else if (!snapshot.hasData) {
-                        return const Text('User not found');
-                      } else {
-                        final user = snapshot.data!;
-                        return RichText(
+                  RichText(
                           textAlign: TextAlign.start,
                           text: TextSpan(
                             children: [
@@ -139,10 +111,10 @@ class _GroupInvitationCardState extends State<GroupInvitationCard> {
                                     size: 18),
                               ),
                               TextSpan(
-                                  text: "  ${user.fullname}",
+                                  text: "  ${widget.invitation.userFullName}",
                                   style: textTheme.bodyLarge),
                               TextSpan(
-                                  text: " - ${user.username}",
+                                  text: " - ${widget.invitation.userUserName}",
                                   style: textTheme.bodyLarge!.copyWith(
                                     color: colorScheme.secondary,
                                     fontStyle: FontStyle.italic,
@@ -150,10 +122,7 @@ class _GroupInvitationCardState extends State<GroupInvitationCard> {
                                   )),
                             ],
                           ),
-                        );
-                      }
-                    },
-                  ),
+                        ),
                   const SizedBox(height: 16.0),
                   CustomAlignText(
                     text: "\" ${widget.invitation.description} \"",

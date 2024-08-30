@@ -95,9 +95,7 @@ class InvitationService extends ChangeNotifier {
     // Fetch invitations from the backend
     final response = await NetworkService.instance.get(
         "${BackendEndpoints.invitation}/${BackendEndpoints.invitationsGetAll}${_convertOptionsToParams("byGroup")}${_assignGroupIdEndpoint(groupId)}");
-    // print("Filter options: ${_filterOptions.toString()}");
-    // print("Response of fetchInvitationsByGroupId: ${BackendEndpoints.invitation}/${BackendEndpoints.invitationsGetAll}${_convertOptionsToString("byGroup")}${_assignGroupIdEndpoint(groupId)}");
-
+    
     if (response['response'] != null && response['statusCode'] == 200) {
       final responseData = response['response'];
       List<Invitation> invitationList = [];
@@ -147,6 +145,23 @@ class InvitationService extends ChangeNotifier {
       "type": type.toString(),
       "groupId": groupId,
       "users": userIds,
+    });
+    return response;
+  }
+
+  Future<dynamic> sendInvitationQR(
+    String description,
+    String type,
+    String groupId,
+    String userId,
+  ) async {
+    // final String convertedUserIds = '[' + userIds.join(',') + ']';
+    final response =
+        await NetworkService.instance.post(BackendEndpoints.invitation, body: {
+      "description": description,
+      "type": type.toString(),
+      "groupId": groupId,
+      "users": [userId],
     });
     return response;
   }

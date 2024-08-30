@@ -7,7 +7,6 @@ import 'package:tymesavingfrontend/screens/tracking_report/spend_tracking.dart';
 import 'package:tymesavingfrontend/screens/tracking_report/report_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 class MoreMenuSetting extends StatefulWidget {
   const MoreMenuSetting({super.key});
@@ -84,10 +83,10 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
               */
             RowSettingTemplate(
                 'Cashflow tracking',
-                'Analytic of your expense & income',
+                'Analytic of your expense & income trends',
                 const Icon(Icons.wallet),
                 myWalletRoute),
-            RowSettingTemplate('Monthly report', 'Your monthly report into your transaction',
+            RowSettingTemplate('Monthly report', 'Analytics of your monthly transactions',
                 const Icon(Icons.report), myReport),
             RowSettingTemplate('Setting', 'Change setting and preference',
                 const Icon(Icons.settings), settingFunction),
