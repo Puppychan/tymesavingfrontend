@@ -10,6 +10,7 @@ import 'package:tymesavingfrontend/models/summary_user_model.dart';
 import 'package:tymesavingfrontend/screens/invitation/group_pending_invitation_page.dart';
 import 'package:tymesavingfrontend/services/invitation_service.dart';
 import 'package:tymesavingfrontend/services/user_service.dart';
+import 'package:tymesavingfrontend/utils/display_error.dart';
 import 'package:tymesavingfrontend/utils/display_success.dart';
 import 'package:tymesavingfrontend/utils/display_warning.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
@@ -64,8 +65,45 @@ class _QRScanPageState extends State<QRScanPage> with RouteAware{
     });
   }
 
+  Future<void> _verifyQR(String qrOutPut) async {
+    await handleMainPageApi(context, () async {
+        return await Provider.of<UserService>(context, listen: false)
+          .verifyQRScan(qrOutPut, widget.groupTypeString, widget.groupId);
+    } , () async {
+      setState(() {
+        String? result = Provider.of<UserService>(context, listen: false).result;
+        switch (result) {
+          case "existed":
+            _fetchUserData(qrOutPut);
+            break;
+          case "true":
+          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => GroupPendingInvitationPage(
+                                  groupId: widget.groupId, type: widget.invitationType),
+                            ),
+                            (route) => false);
+            WarningDisplay.showWarningToast('User has already been invited or is a member!', context);
+            break;
+          case "false":
+          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => GroupPendingInvitationPage(
+                                  groupId: widget.groupId, type: widget.invitationType),
+                            ),
+                            (route) => false);
+            ErrorDisplay.showErrorToast('Invalid QR!', context);
+            break;
+          default:
+            ErrorDisplay.showErrorToast('Unexpected response.', context);
+        }
+      });
+    });
+  }
+
   Future<void> _fetchUserData(String userId) async {
-    
     await handleMainPageApi(context, () async {
       return await Provider.of<UserService>(context, listen: false)
           .getOtherUserInfo(userId);
@@ -118,7 +156,7 @@ class _QRScanPageState extends State<QRScanPage> with RouteAware{
                     image = capture.image;
                     if (image != null) {
                       final String barCodeValue = barcodes.first.rawValue ?? "Unknown QR code";
-                      _fetchUserData(barCodeValue);
+                      _verifyQR(barCodeValue);
                     }
                   },
                 ),
