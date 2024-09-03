@@ -13,12 +13,10 @@ import 'package:tymesavingfrontend/components/transaction/transaction_list.dart'
 import 'package:tymesavingfrontend/form/transaction_add_form.dart';
 import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/budget_model.dart';
-import 'package:tymesavingfrontend/models/summary_user_model.dart';
 import 'package:tymesavingfrontend/models/transaction_model.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/budget_service.dart';
 import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
-import 'package:tymesavingfrontend/services/user_service.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
@@ -63,7 +61,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
   }
 
   void _loadTransactionForm() {
-if (!mounted) return;
+          if (!mounted) return;
             final formStateProvider =
                 Provider.of<FormStateProvider>(context, listen: false);
             formStateProvider.resetForm(FormStateType.expense);
@@ -83,7 +81,6 @@ if (!mounted) return;
         // // set budget to update form
         _formStateProvider?.setUpdateBudgetFormFields(tempBudget);
         // render host user
-
         // set state for budget details
         if (!mounted) return;
         setState(() {
@@ -94,9 +91,10 @@ if (!mounted) return;
           endDate = DateTime.parse(_budget!.endDate);
           daysLeft = calculateDaysLeft(endDate!);
           // check if user is member or host
-          isMember = _budget!.hostedBy.toString() !=
+          isMember = _budget!.hostedBy !=
               Provider.of<AuthService>(context, listen: false).user?.id;
-          if(_budget!.defaultApproveStatus == ApproveStatus.pending.value) {
+              // debugPrint(isMember.toString());
+          if(_budget!.defaultApproveStatus.value == ApproveStatus.pending.value ) {
             approval = true;
           }
           if (percentageTaken! < 0) {
@@ -213,7 +211,7 @@ if (!mounted) return;
                                                 fontStyle: FontStyle.italic),
                                       ),
                                       TextSpan(
-                                        text: _budget!.hostedBy,
+                                        text: _budget!.hostByFullName,
                                         style: Theme.of(context)
                                             .textTheme
                                             .titleSmall!
@@ -257,25 +255,43 @@ if (!mounted) return;
                                     Row(
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
-                                        Text('Your initial budget', style: Theme.of(context).textTheme.bodyMedium,),
+                                        Text('Your initial budget', 
+                                          style: Theme.of(context).textTheme.bodyMedium,),
                                         const Expanded(child: SizedBox()),
-                                        Text(formatAmountToVnd(_budget!.amount), style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontSize: 15),),
+                                        Text(formatAmountToVnd(_budget!.amount), 
+                                          style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w500,
+                                            color: colorScheme.primary
+                                          )),
                                       ],  
                                     ),
                                     Row(
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
-                                        Text('Current budget left', style: Theme.of(context).textTheme.bodyMedium,),
+                                        Text('Current budget left', 
+                                          style: Theme.of(context).textTheme.bodyMedium,),
                                         const Expanded(child: SizedBox()),
-                                        Text(formatAmountToVnd(_budget!.concurrentAmount), style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontSize: 15),),
+                                        Text(formatAmountToVnd(_budget!.concurrentAmount), 
+                                            style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w500,
+                                            color: colorScheme.primary
+                                          )),
                                       ],
                                     ),
                                     Row(
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
-                                        Text('Budget remain', style: Theme.of(context).textTheme.bodyMedium,),
+                                        Text('Budget remain', 
+                                          style: Theme.of(context).textTheme.bodyMedium,),
                                         const Expanded(child: SizedBox()),
-                                        Text(_displayPercentageTaken, style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontSize: 15),),
+                                        Text(_displayPercentageTaken, 
+                                          style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w500,
+                                              color: colorScheme.primary,
+                                            )),
                                       ],
                                     ),
                                   ],
@@ -386,7 +402,9 @@ if (!mounted) return;
                                 fontWeight: FontWeight.w500, // Optional: make the number bold
                               ),
                             ),
-                            const TextSpan(text: ' request'),
+                            _awaitingApprovalTransaction.length <= 1 ?
+                            const TextSpan(text: ' request') :
+                            const TextSpan(text: ' requests')
                           ],
                         ),
                       ),
@@ -405,6 +423,11 @@ if (!mounted) return;
                           ),
                         ),
                       const SizedBox(height: 20,),
+                      const Divider(
+                            indent: 20,
+                            endIndent: 20,
+                            thickness: 0.5,
+                          ),
                       SizedBox(
                         height: 500,
                         child: RefreshIndicator(onRefresh: _pullRefresh, child: TransactionList(transactions: _transactions, disableButton: true,)),

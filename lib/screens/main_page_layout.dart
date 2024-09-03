@@ -176,7 +176,9 @@ class _MainPageLayoutState extends State<MainPageLayout> with RouteAware {
             title: renderHeadingTitleBasedUserRoleAndLocation(
                 context, userRole, currentPageLocation, user?.username),
             actions: renderHeadingActionsBasedUserRoleAndLocation(
-                context, userRole, currentPageLocation))
+                context, userRole, currentPageLocation),
+                showBackButton: false,
+                showHomeButton: false,)
         : null;
   }
 

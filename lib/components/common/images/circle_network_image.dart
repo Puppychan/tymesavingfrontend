@@ -36,16 +36,6 @@ class CustomCircleImage extends StatelessWidget {
                 // Handle image loading errors
                 Image.asset(fallbackImagePath);
               },
-              // child: Image.network(
-              //   imagePath,
-              //   errorBuilder: (context, error, stackTrace) {
-              //     // Return a fallback widget in case of error
-              //     return CircleAvatar(
-              //       radius: radius,
-              //       backgroundImage: AssetImage(fallbackImagePath),
-              //     );
-              //   },
-              // ),
             )
           : ClipOval(
               child: Image.file(

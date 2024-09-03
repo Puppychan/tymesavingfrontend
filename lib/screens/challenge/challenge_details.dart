@@ -10,12 +10,10 @@ import 'package:tymesavingfrontend/form/milestone_create.dart';
 import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/challenge_model.dart';
 import 'package:tymesavingfrontend/models/checkpoint_model.dart';
-import 'package:tymesavingfrontend/models/summary_user_model.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/screens/challenge/challenge_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/challenge_service.dart';
-import 'package:tymesavingfrontend/services/user_service.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
@@ -162,9 +160,10 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
                   expandedHeight: sizeHeight * 0.15,
                   floating: false,
                   pinned: true,
+                  centerTitle: true,
                   flexibleSpace: FlexibleSpaceBar(
                     title: Text(
-                      "Challenges detail",
+                      "Challenges Detail",
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     background: Container(
@@ -203,7 +202,9 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
                                 ),
                             Text(
                                   _challengeModel!.groupName,
-                                  style: Theme.of(context).textTheme.labelLarge,
+                                  style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                                    color: colorScheme.primary,
+                                  ),
                                   textAlign: TextAlign.center,
                                   overflow: TextOverflow.visible,
                                 ),
@@ -216,7 +217,9 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
                                 ),
                             Text(
                               _challengeModel!.category,
-                              style: Theme.of(context).textTheme.labelLarge,
+                              style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                                    color: colorScheme.primary,
+                                  ),
                             ),
                             const SizedBox(height: 10),
                             Container(
@@ -226,20 +229,28 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
                                 children: [
                                   Text(
                                     "$createdDate",
-                                    style: Theme.of(context).textTheme.labelMedium,
+                                    style: Theme.of(context).textTheme.bodyMedium,
                                   ),
-                                  Text(
-                                    "By ${_challengeModel!.createdBy}",
-                                    style: Theme.of(context).textTheme.labelMedium,
-                                  ),
+                                  Text.rich(
+                                    TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: "By ", 
+                                          style: Theme.of(context).textTheme.bodyMedium,
+                                        ),
+                                        TextSpan(
+                                          text: _challengeModel!.createdByFullName, 
+                                          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                                fontWeight: FontWeight.w500,
+                                                color: colorScheme.primary,
+                                              ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
                                 ],
                               ),
                             ),
-                            const SizedBox(height: 10),
-                            // Text(
-                            //   "${_challengeModel!.scope} ${_challengeModel!.budgetGroupId}",
-                            //   style: Theme.of(context).textTheme.labelLarge,
-                            // ),
                             const SizedBox(height: 10),
                             InkWell(
                               onTap: () {
@@ -273,7 +284,13 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
                             const SizedBox(height: 20),
                             Text(
                                     "Milestones",
-                                    style: Theme.of(context).textTheme.headlineMedium,
+                                    style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                                      color: Color.alphaBlend(
+                                        Colors.black.withOpacity(0.2), // Increase opacity to make it darker
+                                        colorScheme.inversePrimary,
+                                      ),
+                                      fontWeight: FontWeight.w500
+                                    ),
                                   ),
                             if (!widget.isForListing && _checkPointModelList!.isNotEmpty)
                             Padding(padding: const EdgeInsets.symmetric(horizontal: 50,vertical: 10),
@@ -291,6 +308,7 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
                             // Stepper for challenge
                             widget.isForListing ?
                             Stepper(
+                              physics: const NeverScrollableScrollPhysics(),
                               currentStep: _currentStep >= _checkPointModelList!.length ? _checkPointModelList!.length - 1 : _currentStep,
                               onStepTapped: (step) => setState(() => _currentStep = step),
                               onStepContinue: _currentProgress > _currentStep ?
@@ -344,12 +362,24 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
                           const SizedBox(height: 20,),
                           Text(
                               "Leaderboards",
-                              style: Theme.of(context).textTheme.headlineMedium,
+                              style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                                      color: Color.alphaBlend(
+                                        Colors.black.withOpacity(0.2), // Increase opacity to make it darker
+                                        colorScheme.inversePrimary,
+                                      ),
+                                      fontWeight: FontWeight.w500
+                                    ),
                             ),
+                          const Divider(
+                            indent: 20,
+                            endIndent: 20,
+                            thickness: 0.5,
+                          ),
                           Container(
                                   margin: const EdgeInsets.symmetric(vertical: 10),
                                   height: 350, // Specify the height here
                                   child: ListView.builder(
+                                    physics: AlwaysScrollableScrollPhysics(),
                                     padding: const EdgeInsets.all(0),
                                     itemCount: _challengeDetailMemberModelList!.length,
                                     itemBuilder: (context, index) {
@@ -385,7 +415,10 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
       int index = e.key;
       final entry = e.value;
       return Step(
-        title: Text("Milestone ${index+1}"),
+        title: Text("Milestone ${index+1}", 
+          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+            color: Theme.of(context).colorScheme.primary,
+            fontWeight: FontWeight.w500)),
         subtitle:  Text(entry.name, style: Theme.of(context).textTheme.bodyMedium, overflow: TextOverflow.visible,),
         content: Column(
           children: [

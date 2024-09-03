@@ -9,12 +9,7 @@ import 'package:tymesavingfrontend/services/utils/get_backend_endpoint.dart';
 import 'package:tymesavingfrontend/services/utils/network_service.dart';
 
 class UserService extends ChangeNotifier {
-  //   Map<String, dynamic> _filterOptions = {
-  //   'sortBy': 'Date',
-  //   'sortRole': 'true',
-  //   'sortCreation': 'ascending',
-  //   'filterRole': 'All',
-  // };
+
 
   String _roleFilter = 'All';
   Map<String, String> _sortOption = {"sortUsername": 'ascending'};
@@ -25,6 +20,7 @@ class UserService extends ChangeNotifier {
   SummaryUser? _summaryUser;
   List<UserBase> _searchUserList = [];
   List<Member> _members = [];
+  String? _result;
 
   // List<String> get filterData => _filterData;
   String get roleFilter => _roleFilter;
@@ -34,6 +30,7 @@ class UserService extends ChangeNotifier {
   SummaryUser? get summaryUser => _summaryUser;
   List<UserBase> get searchUserList => _searchUserList;
   List<Member> get members => _members;
+  String? get result => _result;
 
   Map<String, String> _convertSortOptionToString() {
     final sortOrder = _sortOption.values.first.toLowerCase();
@@ -190,8 +187,9 @@ class UserService extends ChangeNotifier {
     } else if (groupSavingId != null) {
       endpoint += "?groupSavingId=$groupSavingId";
     }
-
+    
     final response = await NetworkService.instance.get(endpoint);
+    debugPrint(response.toString());
     if (response['response'] != null && response['statusCode'] == 200) {
       _summaryUser = SummaryUser.fromMap(response['response']);
       notifyListeners();
@@ -326,5 +324,22 @@ class UserService extends ChangeNotifier {
     _sortOption = {};
     // _filteredUsers.clear();
     notifyListeners();
+  }
+
+  Future<dynamic> verifyQRScan(
+    id, String groupType, String groupId
+  ) async {
+    final response = await NetworkService.instance
+        .get("${BackendEndpoints.user}/${BackendEndpoints.checkUserId}/$id", queryParameters: {
+          'groupType': groupType,
+          'groupId': groupId,
+        });
+    if (response['response'] != null && response['statusCode'] == 200) {
+      String value = response['response'];
+      debugPrint("VALUE FOR THE QR CHECK FUNCTION: $value");
+      notifyListeners();
+      _result = value;
+    }
+    return response;
   }
 }

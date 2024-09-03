@@ -19,14 +19,14 @@ class Heading extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    IconButton? _showLeadingButton() {
+    IconButton? showLeadingButton() {
       if (showBackButton) {
         return IconButton(
           onPressed: () {
             if (Navigator.canPop(context)) {
               Navigator.maybePop(context);
             } else {
-              print("Can't pop the route, the history stack is empty.");
+              debugPrint("Can't pop the route, the history stack is empty.");
               Navigator.push(context, MaterialPageRoute(builder: (context) {
                 return const MainPageLayout();
               }));
@@ -64,9 +64,10 @@ class Heading extends StatelessWidget implements PreferredSizeWidget {
               fontSize: 25,
               fontStyle: FontStyle.italic,
               fontWeight: FontWeight.w500)),
-      leading: _showLeadingButton(),
+      leading: showLeadingButton(),
       actions: actions,
       bottom: bottom,
+      automaticallyImplyLeading: false,
     );
   }
 

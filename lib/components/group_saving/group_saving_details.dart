@@ -14,12 +14,10 @@ import 'package:tymesavingfrontend/components/transaction/transaction_list.dart'
 import 'package:tymesavingfrontend/form/transaction_add_form.dart';
 import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/group_saving_model.dart';
-import 'package:tymesavingfrontend/models/summary_user_model.dart';
 import 'package:tymesavingfrontend/models/transaction_model.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/group_saving_service.dart';
 import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
-import 'package:tymesavingfrontend/services/user_service.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
@@ -41,7 +39,6 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails>
   DateTime? endDate;
   int? daysLeft;
   String? endDay;
-  // SummaryUser? _user;
   bool isMember = false;
   bool isLoading = true;
   bool approval = false;
@@ -49,17 +46,6 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails>
   bool _isDisplayRestDescription = false;
   List<Transaction> _transactions = [];
   List<Transaction> _awaitingApprovalTransaction = [];
-
-  // Future<void> _renderUser(String? userId) async {
-  //   Future.microtask(() async {
-  //     if (!mounted) return;
-  //     final userService = Provider.of<UserService>(context, listen: false);
-  //       if (!mounted) return;
-  //       setState(() {
-  //         _user = userService.summaryUser;
-  //     });
-  //   });
-  // }
 
   Future<void> _loadTransactions() async {
     if (!mounted) return;
@@ -91,12 +77,11 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails>
         if (!mounted) return;
         final tempGroupSaving = groupSavingService.currentGroupSaving;
         // // set groupSaving to update form
-        _formStateProvider?.setUpdateGroupSavingFormFields(tempGroupSaving);
-        // render host user
-
+        // _formStateProvider?.setUpdateGroupSavingFormFields(tempGroupSaving);
         // set state for groupSaving details
         setState(() {
-          _groupSaving = tempGroupSaving;
+          _groupSaving = groupSavingService.currentGroupSaving;
+          _formStateProvider?.setUpdateGroupSavingFormFields(_groupSaving);
           percentageTaken =
               _groupSaving!.concurrentAmount / _groupSaving!.amount * 100;
           percentageLeft =
@@ -108,7 +93,7 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails>
           isMember = _groupSaving!.hostedBy.toString() !=
               Provider.of<AuthService>(context, listen: false).user?.id;
           // check group status
-          if (_groupSaving!.defaultApproveStatus ==
+          if (_groupSaving!.defaultApproveStatus.value ==
               ApproveStatus.pending.value) {
             approval = true;
           }
@@ -192,6 +177,8 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails>
                           _groupSaving!.id, FormStateType.income);
                       // render group
                       if (!mounted) return;
+                      formStateProvider.updateFormField("tempChosenGroup",
+                          _groupSaving, FormStateType.income);
                       showTransactionFormA(context, true,
                           isFromGroupDetail: true);
                     },
@@ -245,7 +232,7 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails>
                                                 fontStyle: FontStyle.italic),
                                       ),
                                       TextSpan(
-                                        text: _groupSaving!.hostedBy,
+                                        text: _groupSaving!.hostByFullName,
                                         style: Theme.of(context)
                                             .textTheme
                                             .titleSmall!
@@ -293,14 +280,25 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails>
                                     text:
                                         '$daysLeft day${daysLeft != 1 ? 's' : ''}',
                                     style:
-                                        Theme.of(context).textTheme.bodyMedium,
+                                        Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                          color: colorScheme.primary
+                                          ),
                                     children: [
                                       if (daysLeft! > 0)
                                         TextSpan(
-                                          text: ' left until $endDay',
+                                          text: ' left until ',
                                           style: Theme.of(context)
                                               .textTheme
                                               .bodyLarge,
+                                        ),
+                                        TextSpan(
+                                          text: '$endDay',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge!.copyWith(
+                                                fontWeight: FontWeight.w500,
+                                                color: colorScheme.primary,
+                                              ),
                                         ),
                                     ],
                                   ),
@@ -329,7 +327,10 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails>
                                           style: Theme.of(context)
                                               .textTheme
                                               .headlineMedium!
-                                              .copyWith(fontSize: 15),
+                                              .copyWith(fontSize: 15,
+                                              fontWeight: FontWeight.w400,
+                                              color: colorScheme.primary,
+                                              ),
                                         ),
                                       ],
                                     ),
@@ -350,7 +351,10 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails>
                                           style: Theme.of(context)
                                               .textTheme
                                               .headlineMedium!
-                                              .copyWith(fontSize: 15),
+                                              .copyWith(fontSize: 15,
+                                              fontWeight: FontWeight.w400,
+                                              color: colorScheme.primary,
+                                              ),
                                         ),
                                       ],
                                     ),
@@ -426,7 +430,9 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails>
                                           .w500, // Optional: make the number bold
                                     ),
                               ),
-                              const TextSpan(text: ' request'),
+                              _awaitingApprovalTransaction.length <= 1 ?
+                              const TextSpan(text: ' request') :
+                              const TextSpan(text: ' requests')
                             ],
                           ),
                         ),
@@ -450,12 +456,18 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails>
                             title: "Approving transaction",
                           ),
                         ),
+                        const Divider(
+                            indent: 20,
+                            endIndent: 20,
+                            thickness: 0.5,
+                          ),
                       SizedBox(
                         height: 500,
                         child: RefreshIndicator(
                             onRefresh: _pullRefresh,
                             child:
-                                TransactionList(transactions: _transactions, disableButton: true,)),
+                                TransactionList(transactions: _transactions)
+                                ),
                       ),
                     ],
                   ),

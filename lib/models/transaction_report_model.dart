@@ -5,7 +5,7 @@ class ChartReport {
 
   factory ChartReport.fromJson(Map<String, dynamic> json) {
     return ChartReport(
-      totals: Map<String, int>.from(json['pastMonthsTotal']),
+      totals: Map<String, int>.from(json),
     );
   }
 }
@@ -97,14 +97,17 @@ class TopCategoriesList {
 }
 
 class NetSpend {
+  final int currentMonthExpense;
   final int currentMonthIncome;
   final int currentNetSpend;
 
-  NetSpend({required this.currentMonthIncome, required this.currentNetSpend});
+  NetSpend({required this.currentMonthIncome, required this.currentNetSpend, required this.currentMonthExpense});
 
   factory NetSpend.fromJson(Map<String, dynamic> json) {
     return NetSpend(
         currentMonthIncome: json['currentMonthIncome'],
-        currentNetSpend: json['netSpend']);
+        currentNetSpend: json['netSpend'],
+        currentMonthExpense: json['currentMonthExpense'],
+        );
   }
 }

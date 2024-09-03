@@ -53,7 +53,7 @@ class _GroupSavingReportState extends State<GroupSavingReport> {
     }
     
   String formatDate(DateTime date){
-    String formattedDate = DateFormat('d-M, y').format(date);
+    String formattedDate = DateFormat('dd/MM/yyyy ').format(date);
     return formattedDate;
   }
 

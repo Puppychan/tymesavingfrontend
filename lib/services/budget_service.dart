@@ -31,7 +31,7 @@ class BudgetService extends ChangeNotifier {
   List<Transaction> get transactions => _transactions;
   List<Transaction> get cancelledTransaction => _cancelledTransaction;
 
-  Future<dynamic> fetchBudgetList(String? userId, {String? name, CancelToken? cancelToken}) async {
+  Future<dynamic> fetchBudgetList(String? userId, {String? searchName, String? name, CancelToken? cancelToken}) async {
     // if (userId == null) return {'response': 'User ID is required.', 'statusCode': 400};
     String endpoint =
         "${BackendEndpoints.budget}/${BackendEndpoints.budgetsGetByUserId}/$userId";
@@ -40,8 +40,10 @@ class BudgetService extends ChangeNotifier {
       endpoint += "?name=$name";
     }
 
-    final response = await NetworkService.instance.get(endpoint, cancelToken: cancelToken);
-    print("Endpoint $endpoint - Repsonse budget list $response");
+    final response = await NetworkService.instance.get(endpoint, cancelToken: cancelToken, queryParameters: {
+      'name': searchName,
+    });
+    // debugPrint("Endpoint $endpoint - Repsonse budget list $response");
     if (response['response'] != null && response['statusCode'] == 200) {
       final responseData = response['response'];
       List<Budget> budgetList = [];
@@ -86,7 +88,7 @@ class BudgetService extends ChangeNotifier {
   Future<Map<String, dynamic>> fetchBudgetDetails(id) async {
     final response = await NetworkService.instance
         .get("${BackendEndpoints.budget}/$id/info");
-    debugPrint("RESPONSE DATA: $response");
+    // debugPrint("RESPONSE DATA: $response");
     if (response['response'] != null && response['statusCode'] == 200) {
       _currentBudget = Budget.fromMap(response['response']);
       notifyListeners();

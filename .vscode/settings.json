@@ -1,6 +1,7 @@
 {
     "java.compile.nullAnalysis.mode": "automatic",
     "cSpell.words": [
+        "barcodes",
         "comonent",
         "dotenv",
         "Duong",
@@ -13,6 +14,7 @@
         "microtask",
         "Momo",
         "Nhung",
+        "precache",
         "signin",
         "signup",
         "skeletonizer",

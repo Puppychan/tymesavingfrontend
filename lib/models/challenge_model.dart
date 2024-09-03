@@ -9,6 +9,7 @@ class ChallengeModel {
   final DateTime startDate;
   final DateTime endDate;
   final String createdBy;
+  final String createdByFullName;
   final bool isPublished;
 
   ChallengeModel({
@@ -22,7 +23,8 @@ class ChallengeModel {
     required this.startDate,
     required this.endDate,
     required this.createdBy,
-    required this.isPublished
+    required this.isPublished,
+    required this.createdByFullName,
   });
 
   factory ChallengeModel.fromMap(Map<String, dynamic> map) {
@@ -39,6 +41,7 @@ class ChallengeModel {
     endDate: DateTime.tryParse(map['endDate'] as String? ?? '') ?? DateTime.now(), 
     createdBy: map['createdBy'] as String? ?? '', 
     isPublished: map['isPublished'] as bool? ?? false, 
+    createdByFullName: map['createdByFullName'] ?? '',
   );
 }
 

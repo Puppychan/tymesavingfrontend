@@ -41,6 +41,7 @@ class BackendEndpoints {
   static String get userSearch => "search";
   static String get transactionReport => "report";
   static String get transactionReportByUser => "byUser";
+  static String get checkUserId => "checkUser";
 
   // budget specific endpoints
   static String get budgetsGetByUserId => "byUser";

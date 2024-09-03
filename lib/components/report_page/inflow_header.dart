@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class OutflowHeader extends StatefulWidget {
-  const OutflowHeader({super.key});
+class InflowHeader extends StatefulWidget {
+  const InflowHeader({super.key});
 
   @override
-  State<OutflowHeader> createState() => _OutflowHeaderState();
+  State<InflowHeader> createState() => _InflowHeaderState();
 }
 
-class _OutflowHeaderState extends State<OutflowHeader> {
+class _InflowHeaderState extends State<InflowHeader> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -16,11 +16,11 @@ class _OutflowHeaderState extends State<OutflowHeader> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            'Outflow detail',
+            'Inflow detail',
             style: Theme.of(context).textTheme.titleLarge!,
           ),
           Text(
-            'Here is a breakdown of your expense account activity so far this month.',
+            'Here is a breakdown of your income account activity so far this month.',
             style: Theme.of(context).textTheme.bodyMedium!,
             overflow: TextOverflow.visible,
             textAlign: TextAlign.center,

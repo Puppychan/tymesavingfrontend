@@ -17,6 +17,8 @@ class GroupSavingListPage extends StatefulWidget {
 class _GroupSavingListPageState extends State<GroupSavingListPage>
     with RouteAware {
   bool _isLoading = false;
+  String searchName = "";
+
   void _fetchGroupSavings() async {
     Future.microtask(() async {
       if (!mounted) return;
@@ -27,7 +29,7 @@ class _GroupSavingListPageState extends State<GroupSavingListPage>
       final goalService =
           Provider.of<GroupSavingService>(context, listen: false);
       await handleMainPageApi(context, () async {
-        return await goalService.fetchGroupSavingList(widget.user?.id);
+        return await goalService.fetchGroupSavingList(widget.user?.id, searchName: searchName);
       }, () async {});
       if (!mounted) return;
       setState(() {
@@ -63,20 +65,53 @@ class _GroupSavingListPageState extends State<GroupSavingListPage>
           ? const Center(child: CircularProgressIndicator())
           : Padding(
               padding: AppPaddingStyles.pagePadding,
-              child: groupSavings.isNotEmpty
-                  ? RefreshIndicator(
-                    onRefresh: () => _pullRefresh(),
-                    child: ListView.separated(
-                        itemCount: groupSavings.length,
-                        separatorBuilder: (context, index) =>
-                            const SizedBox(height: 15),
-                        itemBuilder: (context, index) {
-                          return GroupSavingCard(
-                              groupSaving: groupSavings[index]);
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    child: SizedBox(
+                      child: TextField(
+                        decoration: InputDecoration(
+                          icon: const Icon(Icons.search),
+                          labelText: 'Search',
+                          labelStyle: Theme.of(context).textTheme.labelMedium!.copyWith(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w300,
+                            fontStyle: FontStyle.normal
+                          ),
+                          border: InputBorder.none
+                        ),
+                        onSubmitted: (String value) {
+                          setState(() {
+                            searchName = value.toString().trimRight();
+                            _isLoading = true;
+                            _fetchGroupSavings();
+                          });
                         },
                       ),
-                  )
-                  : const NotFoundMessage(message: "No group savings found"),
+                    ),
+                  ),
+                  const Divider(
+                    thickness: 0.5,
+                  ),
+                  groupSavings.isNotEmpty
+                      ? Flexible(
+                        child: RefreshIndicator(
+                          onRefresh: () => _pullRefresh(),
+                          child: ListView.separated(
+                              itemCount: groupSavings.length,
+                              separatorBuilder: (context, index) =>
+                                  const SizedBox(height: 15),
+                              itemBuilder: (context, index) {
+                                return GroupSavingCard(
+                                    groupSaving: groupSavings[index]);
+                              },
+                            ),
+                        ),
+                      )
+                      : const NotFoundMessage(message: "No group savings found"),
+                ],
+              ),
             );
     });
   }

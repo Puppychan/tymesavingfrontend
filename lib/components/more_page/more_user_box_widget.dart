@@ -90,10 +90,15 @@ class _UserBoxState extends State<UserBox> with RouteAware {
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(user?.rank ?? 'Loading rank...',
-                        style: user == null ? 
-                        Theme.of(context).textTheme.bodyMedium :
-                        Theme.of(context).textTheme.bodyMedium!.copyWith(color: Rank.getRankColor(user!.rank))),
+                        Row(
+                          children: [
+                            Icon(Icons.grade_outlined, size: 15, color: Theme.of(context).colorScheme.primary,),
+                            Text(user?.rank ?? 'Loading rank...',
+                            style: user == null ? 
+                            Theme.of(context).textTheme.bodyMedium :
+                            Theme.of(context).textTheme.bodyMedium!.copyWith(color: Rank.getRankColor(user!.rank))),
+                          ],
+                        ),
                         Text(user?.email ?? 'Loading mail...',
                         style: Theme.of(context).textTheme.bodyMedium!),
                       ],

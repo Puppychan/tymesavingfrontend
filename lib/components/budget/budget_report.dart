@@ -54,7 +54,7 @@ class _BudgetReportState extends State<BudgetReport> {
     }
 
   String formatDate(DateTime date){
-    String formattedDate = DateFormat('d-M, y').format(date);
+    String formattedDate = DateFormat('dd/MM/yyyy').format(date);
     return formattedDate;
   }
 

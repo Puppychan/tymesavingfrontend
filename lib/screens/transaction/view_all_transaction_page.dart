@@ -110,6 +110,7 @@ class _ViewAllTransactionsPageState extends State<ViewAllTransactionsPage>
     return Scaffold(
       appBar: Heading(
         title: 'All Transactions',
+        showBackButton: true,
         bottom: TabBar(
           controller: _tabController,
           tabs: TransactionType.list.map((val) => Tab(text: val)).toList(),
@@ -126,7 +127,7 @@ class _ViewAllTransactionsPageState extends State<ViewAllTransactionsPage>
                       _handleSortOptionSelection(result);
                     },
                   ),
-                  onPop: () => print('Popover was popped!'),
+                  onPop: () => debugPrint('Popover was popped!'),
                   direction: PopoverDirection.bottom,
                   width: 200,
                   height: 220,
