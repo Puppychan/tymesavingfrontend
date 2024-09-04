@@ -42,10 +42,13 @@ class _HomePageState extends State<HomePage> with RouteAware {
   }
 
   Future<void> _precacheAvatar() async {
-    setState(() {
-      precacheImage(NetworkImage(widget.user!.avatar!), context).then((_) {
-      }).catchError((error) {
-        debugPrint("Failed to preload image: $error");
+    Future.microtask(() async {
+      setState(() {
+        precacheImage(NetworkImage(widget.user!.avatar!), context)
+            .then((_) {})
+            .catchError((error) {
+          debugPrint("Failed to preload image: $error");
+        });
       });
     });
   }
