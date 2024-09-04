@@ -11,6 +11,7 @@ import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/invitation_service.dart';
 import 'package:tymesavingfrontend/utils/display_success.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
+import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
 
 class AuthUserInvitationCard extends StatefulWidget {
   final Invitation invitation;
@@ -22,9 +23,6 @@ class AuthUserInvitationCard extends StatefulWidget {
 }
 
 class _AuthUserInvitationCardState extends State<AuthUserInvitationCard> {
-  final bool _isDataFetched = false;
-
-
   Future<void> acceptDeclineInvitation(bool isAccept) async {
     final userId = Provider.of<AuthService>(context, listen: false).user?.id;
     await handleMainPageApi(context, () async {
@@ -69,11 +67,14 @@ class _AuthUserInvitationCardState extends State<AuthUserInvitationCard> {
           showStyledBottomSheet(
             context: context,
             title: widget.invitation.type.toStringFormatted(),
-            contentWidget: detailedSummaryGroup(context, widget.invitation.summaryGroup),
+            contentWidget:
+                detailedSummaryGroup(context, widget.invitation.summaryGroup),
           );
         },
         child: Card(
-          color: colorScheme.tertiary,
+          color: widget.invitation.status == InvitationStatus.pending
+              ? colorScheme.tertiary
+              : colorScheme.background,
           margin: const EdgeInsets.only(bottom: 16.0),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12.0),
@@ -85,30 +86,19 @@ class _AuthUserInvitationCardState extends State<AuthUserInvitationCard> {
               child: Column(
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          Icon(widget.invitation.type == InvitationType.budget
-                              ? Icons.savings
-                              : Icons.assessment),
-                          const SizedBox(width: 5.0),
-                          Text(widget.invitation.type.toStringFormatted(),
-                              style: textTheme.bodyLarge)
-                        ],
-                      ),
-                      Text(widget.invitation.code,
-                          style: textTheme.bodyMedium!.copyWith(
-                            color: colorScheme.secondary,
-                            fontWeight: FontWeight.w600,
-                            fontFamily: "Merriweather",
-                            fontStyle: FontStyle.italic,
-                          )),
+                      Icon(widget.invitation.type == InvitationType.budget
+                          ? Icons.savings
+                          : Icons.assessment),
+                      const SizedBox(width: 5.0),
+                      Text(widget.invitation.type.toStringFormatted(),
+                          style: textTheme.bodyLarge)
                     ],
                   ),
                   const SizedBox(height: 8.0),
                   CustomAlignText(
-                    text: "Invite from ${widget.invitation.summaryGroup?.name ?? "Loading..."}",
+                    text:
+                        "Invite from ${widget.invitation.summaryGroup?.name ?? "Loading..."}",
                     style: textTheme.bodyLarge!.copyWith(
                       color: colorScheme.secondary,
                       fontWeight: FontWeight.w600,
@@ -126,30 +116,44 @@ class _AuthUserInvitationCardState extends State<AuthUserInvitationCard> {
                   ),
                   if (widget.invitation.status == InvitationStatus.pending)
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        TextButton(
-                          onPressed: () async {
-                            await acceptDeclineInvitation(true);
-                          },
-                          child: Text('Accept',
-                              style: textTheme.bodyMedium!.copyWith(
-                                  color: colorScheme.primary,
-                                  fontWeight: FontWeight.w600)),
-                        ),
-                        TextButton(
-                            onPressed: () async {
-                              await acceptDeclineInvitation(false);
-                            },
-                            child: Text(
-                              'Decline',
-                              style: textTheme.bodyMedium!.copyWith(
-                                  color: colorScheme.secondary,
-                                  fontWeight: FontWeight.w500),
-                            )),
+                        actionButton(textTheme, colorScheme, isAccept: true),
+                        actionButton(textTheme, colorScheme, isAccept: false)
                       ],
                     ),
                 ],
               )),
         ));
+  }
+
+  Widget actionButton(TextTheme textTheme, ColorScheme colorScheme,
+      {required bool isAccept}) {
+    final displayText = isAccept ? 'Accept' : 'Decline';
+    final displayStyle = isAccept
+        ? textTheme.bodyMedium!
+            .copyWith(color: colorScheme.primary, fontWeight: FontWeight.w600)
+        : textTheme.bodyMedium!.copyWith(
+            color: colorScheme.secondary, fontWeight: FontWeight.w500);
+    // final displayAlignment = isAccept ? Alignment.centerLeft : Alignment.centerRight;
+
+    return Expanded(
+        child: TextButton(
+            onPressed: () async {
+              if (isAccept) {
+                await acceptDeclineInvitation(true);
+              } else {
+                await acceptDeclineInvitation(false);
+              }
+            },
+            // child: CustomAlignText(
+            //   text: displayText,
+            //   style: displayStyle,
+            //   alignment: displayAlignment,
+            // )));
+            child: Text(
+              displayText,
+              style: displayStyle,
+            )));
   }
 }
