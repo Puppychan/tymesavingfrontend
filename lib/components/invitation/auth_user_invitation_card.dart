@@ -11,7 +11,6 @@ import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:tymesavingfrontend/services/invitation_service.dart';
 import 'package:tymesavingfrontend/utils/display_success.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
-import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
 
 class AuthUserInvitationCard extends StatefulWidget {
   final Invitation invitation;
