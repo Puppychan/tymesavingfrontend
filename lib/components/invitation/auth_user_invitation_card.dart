@@ -75,14 +75,14 @@ class _AuthUserInvitationCardState extends State<AuthUserInvitationCard> {
           color: widget.invitation.status == InvitationStatus.pending
               ? colorScheme.tertiary
               : colorScheme.background,
-          margin: const EdgeInsets.only(bottom: 16.0),
+          margin: const EdgeInsets.only(bottom: 24.0),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.0),
+            borderRadius: BorderRadius.circular(16.0),
           ),
           elevation: 2, // Adjust elevation for desired shadow effect
           child: Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
               child: Column(
                 children: [
                   Row(
@@ -114,14 +114,27 @@ class _AuthUserInvitationCardState extends State<AuthUserInvitationCard> {
                     ),
                     maxLines: 2,
                   ),
+                  const SizedBox(height: 12.0),
                   if (widget.invitation.status == InvitationStatus.pending)
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        const SizedBox(width: 10.0),
                         actionButton(textTheme, colorScheme, isAccept: true),
-                        actionButton(textTheme, colorScheme, isAccept: false)
+                        const SizedBox(width: 12.0),
+                        actionButton(textTheme, colorScheme, isAccept: false),
+                        const SizedBox(width: 10.0),
                       ],
-                    ),
+                    )
+                  else
+                    CustomAlignText(
+                      text: "Invitation Cancelled",
+                      style: textTheme.bodyMedium!.copyWith(
+                        color: colorScheme.onError,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      alignment: Alignment.centerLeft,
+                    )
                 ],
               )),
         ));
@@ -131,14 +144,21 @@ class _AuthUserInvitationCardState extends State<AuthUserInvitationCard> {
       {required bool isAccept}) {
     final displayText = isAccept ? 'Accept' : 'Decline';
     final displayStyle = isAccept
-        ? textTheme.bodyMedium!
-            .copyWith(color: colorScheme.primary, fontWeight: FontWeight.w600)
+        ? textTheme.bodyMedium!.copyWith(
+            color: colorScheme.onInverseSurface, fontWeight: FontWeight.w600)
         : textTheme.bodyMedium!.copyWith(
             color: colorScheme.secondary, fontWeight: FontWeight.w500);
-    // final displayAlignment = isAccept ? Alignment.centerLeft : Alignment.centerRight;
+    final displayBackground =
+        isAccept ? colorScheme.inversePrimary : colorScheme.tertiary;
 
     return Expanded(
-        child: TextButton(
+        child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: displayBackground,
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8), // Adjust vertical padding to reduce height
+            ),
             onPressed: () async {
               if (isAccept) {
                 await acceptDeclineInvitation(true);
