@@ -7,7 +7,7 @@ import 'package:tymesavingfrontend/common/enum/form_state_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_type_enum.dart';
 import 'package:tymesavingfrontend/models/transaction_model.dart';
-import 'package:tymesavingfrontend/models/transaction_report_model.dart';
+import 'package:tymesavingfrontend/models/monthly_report_model.dart';
 import 'package:tymesavingfrontend/services/utils/get_backend_endpoint.dart';
 import 'package:tymesavingfrontend/services/utils/network_service.dart';
 
@@ -217,18 +217,23 @@ class TransactionService extends ChangeNotifier {
   Future<Map<String, dynamic>> getReportDetail(userId) async {
     final response = await NetworkService.instance.get(
         "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReport}?transactionType=Expense&userId=$userId");
-    if (response['response'] != null &&
-        response['response']['compareToLastMonth'] != null &&
-        response['response']['topIncomeCategories'] != null) {
+    if (response['response'] != null) {
       final responseData = response['response'];
       _compareToLastMonth = CompareToLastMonth.fromJson(responseData['compareToLastMonth']);
-      _topCategoriesListExpense = TopCategoriesList.fromJson(responseData['topExpenseCategories']);
-      _topCategoriesListIncome = TopCategoriesList.fromJson(responseData['topIncomeCategories']);
+      if (responseData['topExpenseCategories'] != null){
+        _topCategoriesListExpense = TopCategoriesList.fromJson(responseData['topExpenseCategories']);
+      } else {
+        _topCategoriesListExpense = null;
+      }
+      if (responseData['topIncomeCategories'] != null) {
+        _topCategoriesListIncome = TopCategoriesList.fromJson(responseData['topIncomeCategories']);
+      } else {
+        _topCategoriesListIncome = null;
+      }
+      
       notifyListeners();
     } else {
-      final responseData = response['response']['compareToLastMonth'];
-      _compareToLastMonth = CompareToLastMonth.fromJson(responseData);
-      _topCategoriesListExpense = null;
+      debugPrint("Error from getReportDetails null value!");
       notifyListeners();
     }
     return response;
@@ -432,7 +437,7 @@ class TransactionService extends ChangeNotifier {
     return response;
   }
 
-  Future<Map<String, dynamic>> deleteTransaction(String transactionId) async {
+  Future<dynamic> deleteTransaction(String transactionId) async {
     final response = await NetworkService.instance
         .delete("${BackendEndpoints.transaction}/$transactionId");
     return response;

@@ -41,15 +41,13 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double screenWidth = MediaQuery.of(context).size.width;
-    final double screenHeight = MediaQuery.of(context).size.height;
     final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       body: Image.asset(
         'assets/img/${isDarkTheme ? "splash_dark" : "splash_light"}.png',
-        width: screenWidth,
-        height: screenHeight,
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
         fit: BoxFit.cover,
       )
     );

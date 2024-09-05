@@ -33,7 +33,12 @@ class _ChallengePageState extends State<ChallengePage> with RouteAware{
       final challengeService =
           Provider.of<ChallengeService>(context, listen: false);
       await handleMainPageApi(context, () async {
-        return await challengeService.fetchChallengeList(widget.userId!, name: searchName, sortCreateDate: sortCreatedDate, sortName: sortName);
+        return await challengeService.fetchChallengeList(
+            widget.userId!, 
+            name: searchName, 
+            sortCreateDate: sortCreatedDate, 
+            sortName: sortName
+          );
       }, () async {
         if (!mounted) return;
         setState(() {

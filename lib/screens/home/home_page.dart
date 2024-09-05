@@ -6,7 +6,7 @@ import 'package:tymesavingfrontend/components/common/text_align.dart';
 import 'package:tymesavingfrontend/components/momo/momo_open_buttom.dart';
 import 'package:tymesavingfrontend/components/transaction/transaction_monthly.dart';
 import 'package:tymesavingfrontend/main.dart';
-import 'package:tymesavingfrontend/models/transaction_report_model.dart';
+import 'package:tymesavingfrontend/models/monthly_report_model.dart';
 import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/screens/tracking_report/spend_tracking.dart';
 import 'package:tymesavingfrontend/services/transaction_service.dart';
@@ -42,10 +42,13 @@ class _HomePageState extends State<HomePage> with RouteAware {
   }
 
   Future<void> _precacheAvatar() async {
-    setState(() {
-      precacheImage(NetworkImage(widget.user!.avatar!), context).then((_) {
-      }).catchError((error) {
-        debugPrint("Failed to preload image: $error");
+    Future.microtask(() async {
+      setState(() {
+        precacheImage(NetworkImage(widget.user!.avatar!), context)
+            .then((_) {})
+            .catchError((error) {
+          debugPrint("Failed to preload image: $error");
+        });
       });
     });
   }
@@ -61,6 +64,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
           setState(() {
             chartReport = transactionService.chartReport;
             chartReportSecondary = transactionService.chartReportSecondary;
+            precacheImage(NetworkImage(widget.user!.avatar!), context);
           });
         });
         if (!mounted) return;

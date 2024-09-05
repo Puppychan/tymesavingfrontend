@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tymesavingfrontend/components/common/dialog/delete_confirm_dialog.dart';
 import 'package:tymesavingfrontend/components/full_screen_image.dart';
 import 'package:tymesavingfrontend/models/transaction_model.dart';
 import 'package:tymesavingfrontend/components/transaction/infor_row.dart';
+import 'package:tymesavingfrontend/screens/main_page_layout.dart';
 import 'package:tymesavingfrontend/screens/transaction/transaction_update_page.dart';
+import 'package:tymesavingfrontend/services/transaction_service.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
+import 'package:tymesavingfrontend/utils/handling_error.dart';
 
 class TransactionDialog extends StatefulWidget {
   final Transaction transaction;
@@ -110,7 +115,8 @@ class _TransactionDialogState extends State<TransactionDialog> {
                                 children: [
                                   Text(
                                     widget.transaction.description!,
-                                    style: Theme.of(context).textTheme.bodyMedium,
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium,
                                     textAlign: TextAlign.justify,
                                     maxLines:
                                         _isDisplayRestDescription ? null : 2,
@@ -121,8 +127,9 @@ class _TransactionDialogState extends State<TransactionDialog> {
                                   if (!_isDisplayRestDescription)
                                     Text(
                                       "Tap for more",
-                                      style:
-                                          Theme.of(context).textTheme.labelMedium,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelMedium,
                                     )
                                 ],
                               )),
@@ -131,12 +138,14 @@ class _TransactionDialogState extends State<TransactionDialog> {
                     SizedBox(
                       height: 300,
                       child: ListView.builder(
-                          itemCount: widget.transaction.transactionImages.length,
+                          itemCount:
+                              widget.transaction.transactionImages.length,
                           itemBuilder: (context, index) {
                             final imageURL =
                                 widget.transaction.transactionImages[index];
                             return Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 5),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 5),
                                 child: Column(
                                   children: [
                                     Text(
@@ -151,8 +160,9 @@ class _TransactionDialogState extends State<TransactionDialog> {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) => FullScreenImage(
-                                                imageUrl: imageURL),
+                                            builder: (context) =>
+                                                FullScreenImage(
+                                                    imageUrl: imageURL),
                                           ),
                                         );
                                       },
@@ -225,8 +235,24 @@ class _TransactionDialogState extends State<TransactionDialog> {
                 if (!widget.disableButton)
                   TextButton(
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      // Navigator.of(context).pop();
                       // Add your delete functionality here
+                      showCustomDeleteConfirmationDialog(context,
+                          "Are you sure you want to delete with this transaction?",
+                          () async {
+                        final transactionSerivce =
+                            Provider.of<TransactionService>(context,
+                                listen: false);
+                        await handleMainPageApi(context, () async {
+                          return await transactionSerivce
+                              .deleteTransaction(widget.transaction.id);
+                        }, () async {
+                //           Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+                //   builder: (context) => MainPageLayout(
+                //       customPageIndex: isBudget ? PageLocation.budgetPage.index : PageLocation.savingPage.index),
+                // ),, (_) => false);
+                        });
+                      });
                     },
                     child: const Text('Delete'),
                   ),

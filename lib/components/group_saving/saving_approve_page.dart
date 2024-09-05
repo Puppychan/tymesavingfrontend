@@ -86,7 +86,10 @@ class _SavingApprovePageState extends State<SavingApprovePage> with RouteAware {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: const Heading(title: "Approval page"),
+      appBar: const Heading(
+          title: "Approval page",
+          showBackButton: true,
+        ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

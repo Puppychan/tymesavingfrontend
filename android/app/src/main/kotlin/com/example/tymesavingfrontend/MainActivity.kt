@@ -1,4 +1,4 @@
-package com.example.tymesavingfrontend
+package com.ni.tymesavingfrontend
 
 import io.flutter.embedding.android.FlutterActivity
 

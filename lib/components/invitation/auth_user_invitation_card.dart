@@ -22,9 +22,6 @@ class AuthUserInvitationCard extends StatefulWidget {
 }
 
 class _AuthUserInvitationCardState extends State<AuthUserInvitationCard> {
-  final bool _isDataFetched = false;
-
-
   Future<void> acceptDeclineInvitation(bool isAccept) async {
     final userId = Provider.of<AuthService>(context, listen: false).user?.id;
     await handleMainPageApi(context, () async {
@@ -69,46 +66,38 @@ class _AuthUserInvitationCardState extends State<AuthUserInvitationCard> {
           showStyledBottomSheet(
             context: context,
             title: widget.invitation.type.toStringFormatted(),
-            contentWidget: detailedSummaryGroup(context, widget.invitation.summaryGroup),
+            contentWidget:
+                detailedSummaryGroup(context, widget.invitation.summaryGroup),
           );
         },
         child: Card(
-          color: colorScheme.tertiary,
-          margin: const EdgeInsets.only(bottom: 16.0),
+          color: widget.invitation.status == InvitationStatus.pending
+              ? colorScheme.tertiary
+              : colorScheme.background,
+          margin: const EdgeInsets.only(bottom: 24.0),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.0),
+            borderRadius: BorderRadius.circular(16.0),
           ),
           elevation: 2, // Adjust elevation for desired shadow effect
           child: Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
               child: Column(
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          Icon(widget.invitation.type == InvitationType.budget
-                              ? Icons.savings
-                              : Icons.assessment),
-                          const SizedBox(width: 5.0),
-                          Text(widget.invitation.type.toStringFormatted(),
-                              style: textTheme.bodyLarge)
-                        ],
-                      ),
-                      Text(widget.invitation.code,
-                          style: textTheme.bodyMedium!.copyWith(
-                            color: colorScheme.secondary,
-                            fontWeight: FontWeight.w600,
-                            fontFamily: "Merriweather",
-                            fontStyle: FontStyle.italic,
-                          )),
+                      Icon(widget.invitation.type == InvitationType.budget
+                          ? Icons.savings
+                          : Icons.assessment),
+                      const SizedBox(width: 5.0),
+                      Text(widget.invitation.type.toStringFormatted(),
+                          style: textTheme.bodyLarge)
                     ],
                   ),
                   const SizedBox(height: 8.0),
                   CustomAlignText(
-                    text: "Invite from ${widget.invitation.summaryGroup?.name ?? "Loading..."}",
+                    text:
+                        "Invite from ${widget.invitation.summaryGroup?.name ?? "Loading..."}",
                     style: textTheme.bodyLarge!.copyWith(
                       color: colorScheme.secondary,
                       fontWeight: FontWeight.w600,
@@ -124,32 +113,66 @@ class _AuthUserInvitationCardState extends State<AuthUserInvitationCard> {
                     ),
                     maxLines: 2,
                   ),
+                  const SizedBox(height: 12.0),
                   if (widget.invitation.status == InvitationStatus.pending)
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        TextButton(
-                          onPressed: () async {
-                            await acceptDeclineInvitation(true);
-                          },
-                          child: Text('Accept',
-                              style: textTheme.bodyMedium!.copyWith(
-                                  color: colorScheme.primary,
-                                  fontWeight: FontWeight.w600)),
-                        ),
-                        TextButton(
-                            onPressed: () async {
-                              await acceptDeclineInvitation(false);
-                            },
-                            child: Text(
-                              'Decline',
-                              style: textTheme.bodyMedium!.copyWith(
-                                  color: colorScheme.secondary,
-                                  fontWeight: FontWeight.w500),
-                            )),
+                        const SizedBox(width: 10.0),
+                        actionButton(textTheme, colorScheme, isAccept: true),
+                        const SizedBox(width: 12.0),
+                        actionButton(textTheme, colorScheme, isAccept: false),
+                        const SizedBox(width: 10.0),
                       ],
-                    ),
+                    )
+                  else
+                    CustomAlignText(
+                      text: "Invitation Cancelled",
+                      style: textTheme.bodyMedium!.copyWith(
+                        color: colorScheme.onError,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      alignment: Alignment.centerLeft,
+                    )
                 ],
               )),
         ));
+  }
+
+  Widget actionButton(TextTheme textTheme, ColorScheme colorScheme,
+      {required bool isAccept}) {
+    final displayText = isAccept ? 'Accept' : 'Decline';
+    final displayStyle = isAccept
+        ? textTheme.bodyMedium!.copyWith(
+            color: colorScheme.onInverseSurface, fontWeight: FontWeight.w600)
+        : textTheme.bodyMedium!.copyWith(
+            color: colorScheme.secondary, fontWeight: FontWeight.w500);
+    final displayBackground =
+        isAccept ? colorScheme.inversePrimary : colorScheme.tertiary;
+
+    return Expanded(
+        child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: displayBackground,
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8), // Adjust vertical padding to reduce height
+            ),
+            onPressed: () async {
+              if (isAccept) {
+                await acceptDeclineInvitation(true);
+              } else {
+                await acceptDeclineInvitation(false);
+              }
+            },
+            // child: CustomAlignText(
+            //   text: displayText,
+            //   style: displayStyle,
+            //   alignment: displayAlignment,
+            // )));
+            child: Text(
+              displayText,
+              style: displayStyle,
+            )));
   }
 }

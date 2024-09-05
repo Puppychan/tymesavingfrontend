@@ -20,7 +20,7 @@ class Invitation {
   Invitation.fromMap(Map<String, dynamic> invitation)
       : invitationId = invitation['invitationId'],
         code = invitation['code'],
-        description = invitation['description'],
+        description = invitation['description'] ?? "",
         type = InvitationType.fromString(invitation['type']),
         groupId = invitation['groupId'],
         userFullName = invitation['invitedUserFullName'] ?? '',

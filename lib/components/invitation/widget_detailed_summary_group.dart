@@ -10,19 +10,30 @@ Widget detailedSummaryGroup(BuildContext context, SummaryGroup? group) {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        RichText(
-          textAlign: TextAlign.start,
-          text: TextSpan(
+        // RichText(
+        //   textAlign: TextAlign.start,
+        //   text: TextSpan(
+        //     children: [
+        //       const WidgetSpan(
+        //         child: Icon(FontAwesomeIcons.house, size: 18),
+        //       ),
+        //       TextSpan(
+        //           text: "  ${group.hostUsername}",
+        //           style: textTheme.bodyLarge),
+        //     ],
+        //   ),
+        // ),
+        Row(
+          children: [
+          const Icon(FontAwesomeIcons.house, size: 18),
+          const SizedBox(width: 10.0),
+          Column(
             children: [
-              const WidgetSpan(
-                child: Icon(FontAwesomeIcons.house, size: 18),
-              ),
-              TextSpan(
-                  text: "  ${group.hostUsername}",
-                  style: textTheme.bodyLarge),
+              Text(group.hostFullName ?? "Loading...", style: textTheme.titleSmall),
+              Text(group.hostUsername, style: textTheme.bodyMedium),
             ],
           ),
-        ),
+        ],),
         const SizedBox(height: 4.0),
         const Divider(),
         const SizedBox(height: 4.0),

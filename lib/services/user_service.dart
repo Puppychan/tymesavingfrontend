@@ -9,8 +9,6 @@ import 'package:tymesavingfrontend/services/utils/get_backend_endpoint.dart';
 import 'package:tymesavingfrontend/services/utils/network_service.dart';
 
 class UserService extends ChangeNotifier {
-
-
   String _roleFilter = 'All';
   Map<String, String> _sortOption = {"sortUsername": 'ascending'};
 
@@ -182,12 +180,14 @@ class UserService extends ChangeNotifier {
     if (id == null) return;
     String endpoint =
         "${BackendEndpoints.user}/${BackendEndpoints.otherUserById}/$id";
+    // if have sharedBudgetId or groupSavingId, add to the endpoint
+    // response will display short info of user contribution inside that group along with the user info
     if (sharedBudgetId != null) {
       endpoint += "?sharedBudgetId=$sharedBudgetId";
     } else if (groupSavingId != null) {
       endpoint += "?groupSavingId=$groupSavingId";
     }
-    
+
     final response = await NetworkService.instance.get(endpoint);
     debugPrint(response.toString());
     if (response['response'] != null && response['statusCode'] == 200) {
@@ -326,11 +326,10 @@ class UserService extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<dynamic> verifyQRScan(
-    id, String groupType, String groupId
-  ) async {
-    final response = await NetworkService.instance
-        .get("${BackendEndpoints.user}/${BackendEndpoints.checkUserId}/$id", queryParameters: {
+  Future<dynamic> verifyQRScan(id, String groupType, String groupId) async {
+    final response = await NetworkService.instance.get(
+        "${BackendEndpoints.user}/${BackendEndpoints.checkUserId}/$id",
+        queryParameters: {
           'groupType': groupType,
           'groupId': groupId,
         });

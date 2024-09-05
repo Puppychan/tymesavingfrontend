@@ -2,6 +2,7 @@ class SummaryGroup {
   String name;
   String description;
   String hostUsername;
+  String? hostFullName;
   int memberCount;
   String createdDate;
 
@@ -11,6 +12,7 @@ class SummaryGroup {
     required this.hostUsername,
     required this.memberCount,
     required this.createdDate,
+    this.hostFullName,
   });
 
   factory SummaryGroup.fromMap(Map<String, dynamic> map) {
@@ -20,6 +22,7 @@ class SummaryGroup {
       hostUsername: map['hostUsername'],
       memberCount: map['memberCount'],
       createdDate: map['createdDate'],
+      hostFullName: map['hostFullName'] ?? '',
     );
   }
 
