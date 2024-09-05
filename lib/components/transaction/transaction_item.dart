@@ -4,6 +4,26 @@ import 'package:tymesavingfrontend/components/transaction/transaction_dialog.dar
 import 'package:tymesavingfrontend/models/transaction_model.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
 
+class CategoryDetails {
+  IconData icon;
+  Color color;
+
+  CategoryDetails(
+      String transactionCategory, IconData randomIcon, Color randomColor)
+      : icon = randomIcon,
+        color = randomColor {
+    // define the category
+    TransactionCategory category =
+        TransactionCategory.fromString(transactionCategory);
+    // get the category data for rendering the icon and color
+    final categoryData = transactionCategoryData[category];
+    if (categoryData != null) {
+      icon = categoryData['icon'] ?? randomIcon;
+      color = categoryData['color'] ?? randomColor;
+    }
+  }
+}
+
 class TransactionItem extends StatelessWidget {
   final Transaction transaction;
   final String formattedDate;
@@ -11,30 +31,18 @@ class TransactionItem extends StatelessWidget {
   final Color randomColor;
   final bool disableButton;
 
-  const TransactionItem({
-    super.key,
-    required this.transaction,
-    required this.formattedDate,
-    required this.randomIcon,
-    required this.randomColor,
-    required this.disableButton
-  });
+  const TransactionItem(
+      {super.key,
+      required this.transaction,
+      required this.formattedDate,
+      required this.randomIcon,
+      required this.randomColor,
+      required this.disableButton});
 
   @override
   Widget build(BuildContext context) {
-    // Determine the category details
-    TransactionCategory? categoryEnum;
-    try {
-      categoryEnum = TransactionCategory.fromString(transaction.category);
-    } catch (e) {
-      categoryEnum = null;
-    }
-
-    final categoryData = transactionCategoryData[categoryEnum];
-
-    // Fallback to random icon and color if category doesn't exist
-    final icon = categoryData?['icon'] ?? randomIcon;
-    final color = categoryData?['color'] ?? randomColor;
+    final displayCategoryData =
+        CategoryDetails(transaction.category, randomIcon, randomColor);
 
     // Determine title and category display
     final title = transaction.user != null
@@ -42,6 +50,17 @@ class TransactionItem extends StatelessWidget {
         : transaction.category;
     final categoryDisplay =
         transaction.user != null ? transaction.category : '';
+    final groupType = transaction.budgetGroupId != null
+        ? 'Budget Group'
+        : transaction.savingGroupId != null
+            ? 'Saving Group'
+            : 'Personal';
+    final TextStyle displayTestStyle = TextStyle(
+      color: Theme.of(context).colorScheme.secondary,
+      fontSize: 12,
+      fontWeight: FontWeight.w400,
+      fontFamily: 'Montserrat',
+    );
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
@@ -64,17 +83,17 @@ class TransactionItem extends StatelessWidget {
             ? Transform.scale(
                 scale: 1.2,
                 child: CircleAvatar(
-                  backgroundColor: color,
+                  backgroundColor: displayCategoryData.color,
                   child: Icon(
-                    icon,
+                    displayCategoryData.icon,
                     color: Colors.white,
                   ),
                 ),
               )
             : CircleAvatar(
-                backgroundColor: color,
+                backgroundColor: displayCategoryData.color,
                 child: Icon(
-                  icon,
+                  displayCategoryData.icon,
                   color: Colors.white,
                 ),
               ),
@@ -91,34 +110,23 @@ class TransactionItem extends StatelessWidget {
             if (transaction.user != null) ...[
               const SizedBox(height: 3),
               Text(
-                categoryDisplay,
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.secondary,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                  fontFamily: 'Montserrat',
-                ),
+                "$categoryDisplay - ${transaction.type}",
+                style: displayTestStyle,
               ),
             ],
             const SizedBox(height: 3),
             Text(
-              transaction.type,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.secondary,
-                fontSize: 12,
-                fontWeight: FontWeight.w400,
-                fontFamily: 'Montserrat',
-              ),
+              transaction.budgetGroupId != null
+                  ? 'Budget Group'
+                  : transaction.savingGroupId != null
+                      ? 'Saving Group'
+                      : 'Personal',
+              style: displayTestStyle,
             ),
             const SizedBox(height: 3),
             Text(
               formattedDate,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.secondary,
-                fontSize: 12,
-                fontWeight: FontWeight.w400,
-                fontFamily: 'Montserrat',
-              ),
+              style: displayTestStyle,
             ),
           ],
         ),
@@ -137,7 +145,9 @@ class TransactionItem extends StatelessWidget {
             context: context,
             builder: (BuildContext context) {
               return TransactionDialog(
-                  transaction: transaction, formattedDate: formattedDate, disableButton: disableButton);
+                  transaction: transaction,
+                  formattedDate: formattedDate,
+                  disableButton: disableButton);
             },
           );
         },

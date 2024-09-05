@@ -76,7 +76,7 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
             ? groupConcurrentAmount / groupTargetAmount
             : 0.0;
       });
-      print("Income progress: $incomeProgress");
+      // print("Income progress: $incomeProgress");
     });
   }
 
@@ -107,7 +107,7 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
           groupConcurrentAmount = group?.concurrentAmount ?? 0;
           groupTargetAmount = group?.amount ?? 0;
         });
-        print("Group concurrent amount: $groupConcurrentAmount");
+        // print("Group concurrent amount: $groupConcurrentAmount");
         await _fetchOtherUserDetails();
         await _fetchTransactions();
       });
@@ -133,7 +133,7 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
             ? budgetGroupService.transactions
             : groupSavingService.transactions;
       });
-      print("Transactions: $transactions");
+      // print("Transactions: $transactions");
     });
   }
 
@@ -341,7 +341,7 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
                     // final randomColor = getRandomColor();
 
                     return TransactionItem(
-                      disableButton: false,
+                      disableButton: true,
                       transaction: transaction,
                       formattedDate: formattedDate,
                       randomIcon: Icons.shopping_cart,
