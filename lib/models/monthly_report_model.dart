@@ -78,9 +78,10 @@ class TopCategory {
 
   factory TopCategory.fromJson(Map<String, dynamic> json) {
     return TopCategory(
-        category: json['category'],
-        totalAmount: json['totalAmount'],
-        percentages: json['percentage']);
+      category: json['category'],
+      totalAmount: json['totalAmount'],
+      percentages: json['percentage'],
+    );
   }
 }
 
@@ -89,12 +90,13 @@ class TopCategoriesList {
 
   TopCategoriesList({required this.topCategory});
 
-  factory TopCategoriesList.fromJson(List<dynamic> json) {
+   factory TopCategoriesList.fromJson(List<dynamic> json) {
     List<TopCategory> categoryList =
         json.map((e) => TopCategory.fromJson(e)).toList();
     return TopCategoriesList(topCategory: categoryList);
   }
 }
+
 
 class NetSpend {
   final int currentMonthExpense;
@@ -105,9 +107,9 @@ class NetSpend {
 
   factory NetSpend.fromJson(Map<String, dynamic> json) {
     return NetSpend(
-        currentMonthIncome: json['currentMonthIncome'],
-        currentNetSpend: json['netSpend'],
-        currentMonthExpense: json['currentMonthExpense'],
+        currentMonthIncome: json['currentMonthIncome'] ?? 0,
+        currentNetSpend: json['netSpend'] ?? 0,
+        currentMonthExpense: json['currentMonthExpense'] ?? 0,
         );
   }
 }

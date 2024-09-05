@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
-import 'package:tymesavingfrontend/models/transaction_report_model.dart';
+import 'package:tymesavingfrontend/models/monthly_report_model.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
 
 class ReportDetail extends StatefulWidget {
