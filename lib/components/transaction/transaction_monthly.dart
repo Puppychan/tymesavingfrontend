@@ -11,7 +11,7 @@ class TransactionMonthlyTabBar extends StatefulWidget {
   const TransactionMonthlyTabBar({super.key, required this.userId});
 
   @override
-  _TransactionMonthlyTabBarState createState() =>
+  State<TransactionMonthlyTabBar> createState() =>
       _TransactionMonthlyTabBarState();
 }
 
