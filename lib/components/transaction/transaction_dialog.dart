@@ -13,13 +13,12 @@ import 'package:tymesavingfrontend/utils/handling_error.dart';
 class TransactionDialog extends StatefulWidget {
   final Transaction transaction;
   final String formattedDate;
-  final bool disableButton;
 
-  const TransactionDialog(
-      {super.key,
-      required this.transaction,
-      required this.formattedDate,
-      required this.disableButton});
+  const TransactionDialog({
+    super.key,
+    required this.transaction,
+    required this.formattedDate,
+  });
   @override
   State<TransactionDialog> createState() => _TransactionDialogState();
 }
@@ -30,9 +29,6 @@ class _TransactionDialogState extends State<TransactionDialog> {
   @override
   void initState() {
     super.initState();
-    // if (!widget.disableButton) {
-    //   _writePolicy = TransactionFormWritePolicy.editable;
-    // }
   }
 
   @override
@@ -58,7 +54,7 @@ class _TransactionDialogState extends State<TransactionDialog> {
           padding: const EdgeInsets.symmetric(
               horizontal: 28.0, vertical: 32), // Padding inside the dialog
           child: Column(children: [
-            _buildDialogTitle(),
+            _buildDialogHeading(),
             const SizedBox(height: 16),
             Expanded(
                 child: SingleChildScrollView(
@@ -69,17 +65,7 @@ class _TransactionDialogState extends State<TransactionDialog> {
                   const SizedBox(height: 10),
                   const Divider(),
                   _buildDescription(),
-                  if (!isTransactionImagesEmpty)
-                    // SizedBox(
-                    //   height: 300,
-                    //   child: ListView.builder(
-                    //       itemCount: widget.transaction.transactionImages.length,
-                    //       itemBuilder: (context, index) {
-                    //         final imageURL =
-                    //             widget.transaction.transactionImages[index];
-                    //         return                       }),
-                    // )
-                    ..._buildTransactionImages(),
+                  if (!isTransactionImagesEmpty) ..._buildTransactionImages(),
                 ],
               ),
             )),
@@ -91,7 +77,7 @@ class _TransactionDialogState extends State<TransactionDialog> {
     });
   }
 
-  Widget _buildDialogTitle() {
+  Widget _buildDialogHeading() {
     String title = "";
     if (widget.transaction.savingGroupId != null) {
       title = "From Saving Group";
@@ -267,28 +253,26 @@ class _TransactionDialogState extends State<TransactionDialog> {
   }
 
   Widget _buildDialogActions() {
+    final isEditable = widget.transaction.savingGroupId == null &&
+        widget.transaction.budgetGroupId == null;
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        if (!widget.disableButton)
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => TransactionUpdatePage(
-                            transactionId: widget.transaction.id,
-                          )));
-              // Add your edit functionality here
-            },
-            child: Text(widget.transaction.savingGroupId == null &&
-                    widget.transaction.budgetGroupId == null
-                ? 'Edit'
-                : 'Details'),
-          ),
-        if (!widget.disableButton)
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => TransactionUpdatePage(
+                          transactionId: widget.transaction.id,
+                        )));
+            // Add your edit functionality here
+          },
+          child: Text(isEditable ? 'Edit' : 'Details'),
+        ),
+        if (isEditable)
           TextButton(
             onPressed: () {
               // Navigator.of(context).pop();

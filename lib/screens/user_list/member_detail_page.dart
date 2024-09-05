@@ -341,7 +341,6 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
                     // final randomColor = getRandomColor();
 
                     return TransactionItem(
-                      disableButton: true,
                       transaction: transaction,
                       formattedDate: formattedDate,
                       randomIcon: Icons.shopping_cart,

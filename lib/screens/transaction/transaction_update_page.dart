@@ -7,8 +7,8 @@ import 'package:tymesavingfrontend/components/common/sheet/bottom_sheet.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/form/common_form/transaction_form.dart';
 import 'package:tymesavingfrontend/components/category_list/category_selection.dart';
+import 'package:tymesavingfrontend/models/base_user_model.dart';
 import 'package:tymesavingfrontend/models/transaction_model.dart';
-import 'package:tymesavingfrontend/models/user_model.dart';
 import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
 import 'package:tymesavingfrontend/services/transaction_service.dart';
 import 'package:tymesavingfrontend/services/user_service.dart';
@@ -25,7 +25,7 @@ class TransactionUpdatePage extends StatefulWidget {
 
 class _TransactionUpdatePageState extends State<TransactionUpdatePage> {
   Transaction? _transaction;
-  User? _user;
+  UserBase? _user;
   bool _isLoading = true;
 
   Future<void> _renderUser(userId) async {
@@ -33,11 +33,11 @@ class _TransactionUpdatePageState extends State<TransactionUpdatePage> {
       if (!mounted) return;
       final userService = Provider.of<UserService>(context, listen: false);
       await handleMainPageApi(context, () async {
-        return await userService.getUserDataById(userId);
+        return await userService.getOtherUserInfo(userId);
       }, () async {
         if (!mounted) return;
         setState(() {
-          _user = userService.currentFetchUser;
+          _user = userService.summaryUser;
         });
       });
     });

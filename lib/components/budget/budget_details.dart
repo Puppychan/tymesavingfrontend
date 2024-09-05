@@ -430,7 +430,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                           ),
                       SizedBox(
                         height: 500,
-                        child: RefreshIndicator(onRefresh: _pullRefresh, child: TransactionList(transactions: _transactions, disableButton: true,)),
+                        child: RefreshIndicator(onRefresh: _pullRefresh, child: TransactionList(transactions: _transactions)),
                       ),
                     ],
                   ),

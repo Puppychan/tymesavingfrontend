@@ -29,15 +29,13 @@ class TransactionItem extends StatelessWidget {
   final String formattedDate;
   final IconData randomIcon;
   final Color randomColor;
-  final bool disableButton;
 
   const TransactionItem(
       {super.key,
       required this.transaction,
       required this.formattedDate,
       required this.randomIcon,
-      required this.randomColor,
-      required this.disableButton});
+      required this.randomColor});
 
   @override
   Widget build(BuildContext context) {
@@ -116,11 +114,7 @@ class TransactionItem extends StatelessWidget {
             ],
             const SizedBox(height: 3),
             Text(
-              transaction.budgetGroupId != null
-                  ? 'Budget Group'
-                  : transaction.savingGroupId != null
-                      ? 'Saving Group'
-                      : 'Personal',
+              groupType,
               style: displayTestStyle,
             ),
             const SizedBox(height: 3),
@@ -145,9 +139,7 @@ class TransactionItem extends StatelessWidget {
             context: context,
             builder: (BuildContext context) {
               return TransactionDialog(
-                  transaction: transaction,
-                  formattedDate: formattedDate,
-                  disableButton: disableButton);
+                  transaction: transaction, formattedDate: formattedDate);
             },
           );
         },
