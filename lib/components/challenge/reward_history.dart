@@ -126,6 +126,7 @@ class _RewardHistoryState extends State<RewardHistory> with RouteAware {
               );
             }).toList(),
           ),
+          const Divider(),
           Flexible(
             child: RefreshIndicator(
               onRefresh: _pullRefresh,
