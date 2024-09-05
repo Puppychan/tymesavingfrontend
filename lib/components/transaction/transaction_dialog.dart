@@ -37,97 +37,58 @@ class _TransactionDialogState extends State<TransactionDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
-    return AlertDialog(
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(10.0)),
-      ),
-      title: _buildDialogTitle(),
-      content: SizedBox(
-        width: screenHeight * 0.8,
-        height: screenHeight * 0.6,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildBasicTransactionInfo(),
-              const SizedBox(height: 10),
-              _buildDescription(),
-              if (widget.transaction.transactionImages.isNotEmpty)
-                SizedBox(
-                  height: 300,
-                  child: ListView.builder(
-                      itemCount: widget.transaction.transactionImages.length,
-                      itemBuilder: (context, index) {
-                        final imageURL =
-                            widget.transaction.transactionImages[index];
-                        return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 5),
-                            child: Column(
-                              children: [
-                                Text(
-                                  'Receipt image ${index + 1}',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headlineMedium,
-                                ),
-                                const SizedBox(height: 5),
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            FullScreenImage(imageUrl: imageURL),
-                                      ),
-                                    );
-                                  },
-                                  child: Image.network(
-                                    imageURL,
-                                    loadingBuilder: (BuildContext context,
-                                        Widget child,
-                                        ImageChunkEvent? loadingProgress) {
-                                      if (loadingProgress == null) {
-                                        return child; // The image has finished loading.
-                                      } else {
-                                        return Center(
-                                          child: CircularProgressIndicator(
-                                            value: loadingProgress
-                                                        .expectedTotalBytes !=
-                                                    null
-                                                ? loadingProgress
-                                                        .cumulativeBytesLoaded /
-                                                    (loadingProgress
-                                                            .expectedTotalBytes ??
-                                                        1)
-                                                : null,
-                                          ),
-                                        );
-                                      }
-                                    },
-                                    errorBuilder: (BuildContext context,
-                                        Object error, StackTrace? stackTrace) {
-                                      return const Center(
-                                        child: Icon(Icons
-                                            .error), // You can show an error icon if the image fails to load.
-                                      );
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                              ],
-                            ));
-                      }),
-                )
-            ],
-          ),
+    return LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+      final screenHeight = constraints.maxHeight;
+      // final screenWidth = MediaQuery.of(context).size.width;
+      final screenWidth = constraints.maxWidth;
+      final isTransactionImagesEmpty =
+          widget.transaction.transactionImages.isEmpty;
+
+      return Dialog(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10.0)),
         ),
-      ),
-      actions: [_buildDialogActions()],
-    );
+        // actions: [_buildDialogActions()],
+        child: Container(
+          width: screenWidth,
+          height: isTransactionImagesEmpty
+              ? screenHeight * 0.55
+              : screenHeight * 0.7,
+          padding: const EdgeInsets.symmetric(
+              horizontal: 28.0, vertical: 32), // Padding inside the dialog
+          child: Column(children: [
+            _buildDialogTitle(),
+            const SizedBox(height: 16),
+            Expanded(
+                child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildBasicTransactionInfo(),
+                  const SizedBox(height: 10),
+                  const Divider(),
+                  _buildDescription(),
+                  if (!isTransactionImagesEmpty)
+                    // SizedBox(
+                    //   height: 300,
+                    //   child: ListView.builder(
+                    //       itemCount: widget.transaction.transactionImages.length,
+                    //       itemBuilder: (context, index) {
+                    //         final imageURL =
+                    //             widget.transaction.transactionImages[index];
+                    //         return                       }),
+                    // )
+                    ..._buildTransactionImages(),
+                ],
+              ),
+            )),
+            const SizedBox(height: 10),
+            _buildDialogActions(),
+          ]),
+        ),
+      );
+    });
   }
 
   Widget _buildDialogTitle() {
@@ -141,7 +102,10 @@ class _TransactionDialogState extends State<TransactionDialog> {
     }
     return Text(
       title,
-      style: Theme.of(context).textTheme.headlineMedium,
+      style: Theme.of(context)
+          .textTheme
+          .headlineMedium!
+          .copyWith(fontWeight: FontWeight.w500),
     );
   }
 
@@ -187,7 +151,7 @@ class _TransactionDialogState extends State<TransactionDialog> {
       children: [
         Text(
           "Description",
-          style: textTheme.bodyLarge,
+          style: textTheme.headlineSmall!.copyWith(fontWeight: FontWeight.w500),
         ),
         const SizedBox(height: 5),
         Container(
@@ -212,7 +176,7 @@ class _TransactionDialogState extends State<TransactionDialog> {
                       Text(
                         widget.transaction.description!,
                         style: textTheme.bodyMedium,
-                        textAlign: TextAlign.justify,
+                        // textAlign: TextAlign.justify,
                         maxLines: _isDisplayRestDescription ? null : 2,
                         overflow: _isDisplayRestDescription
                             ? TextOverflow.visible
@@ -229,6 +193,77 @@ class _TransactionDialogState extends State<TransactionDialog> {
         ),
       ],
     );
+  }
+
+  List<Widget> _buildTransactionImages() {
+    int index = -1;
+    final textTheme = Theme.of(context).textTheme;
+    return [
+      const Divider(),
+      Text(
+        "Receipt Images",
+        style: textTheme.headlineSmall!.copyWith(fontWeight: FontWeight.w500),
+      ),
+      ...widget.transaction.transactionImages.map((imageURL) {
+        index++;
+        return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 5),
+            child: Column(
+              children: [
+                Text(
+                  'Receipt image ${index + 1}',
+                  style: textTheme.bodyMedium!.copyWith(
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            FullScreenImage(imageUrl: imageURL),
+                      ),
+                    );
+                  },
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(
+                        8.0), // Adjust the radius as needed
+                    child: Image.network(
+                      imageURL,
+                      loadingBuilder: (BuildContext context, Widget child,
+                          ImageChunkEvent? loadingProgress) {
+                        if (loadingProgress == null) {
+                          return child; // The image has finished loading.
+                        } else {
+                          return Center(
+                            child: CircularProgressIndicator(
+                              value: loadingProgress.expectedTotalBytes != null
+                                  ? loadingProgress.cumulativeBytesLoaded /
+                                      (loadingProgress.expectedTotalBytes ?? 1)
+                                  : null,
+                            ),
+                          );
+                        }
+                      },
+                      errorBuilder: (BuildContext context, Object error,
+                          StackTrace? stackTrace) {
+                        return const Center(
+                          child: Icon(Icons
+                              .error), // You can show an error icon if the image fails to load.
+                        );
+                      },
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+              ],
+            ));
+      })
+    ];
   }
 
   Widget _buildDialogActions() {

@@ -82,6 +82,13 @@ class AppThemes {
             color: AppColors.black,
             fontFamily: 'Montserrat',
             fontWeight: FontWeight.w400),
+        headlineSmall: TextStyle(
+            // sub display - subheading
+            fontSize: 18,
+            overflow: TextOverflow.ellipsis,
+            color: AppColors.black,
+            fontFamily: 'Montserrat',
+            fontWeight: FontWeight.w400),
         titleLarge: TextStyle(
             // heading medium
             overflow: TextOverflow.ellipsis,
@@ -277,6 +284,13 @@ class AppThemes {
             // sub display
             overflow: TextOverflow.ellipsis,
             fontSize: 22,
+            color: AppColors.cream,
+            fontFamily: 'Montserrat',
+            fontWeight: FontWeight.w400),
+        headlineSmall: TextStyle(
+            // sub display
+            overflow: TextOverflow.ellipsis,
+            fontSize: 18,
             color: AppColors.cream,
             fontFamily: 'Montserrat',
             fontWeight: FontWeight.w400),
