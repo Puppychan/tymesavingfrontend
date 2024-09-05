@@ -8,7 +8,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>com.example.tymesavingfrontend</string>
+			<string>com.ni.tymesavingfrontend</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>tymesaving</string>
