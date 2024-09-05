@@ -16,11 +16,11 @@ class _InflowHeaderState extends State<InflowHeader> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            'Inflow detail',
+            'Income detail',
             style: Theme.of(context).textTheme.titleLarge!,
           ),
           Text(
-            'Here is a breakdown of your income account activity so far this month.',
+            'Here is a breakdown of your account income so far this month.',
             style: Theme.of(context).textTheme.bodyMedium!,
             overflow: TextOverflow.visible,
             textAlign: TextAlign.center,
