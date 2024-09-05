@@ -189,7 +189,7 @@ class AppThemes {
         // change mode color
         entryModeIconColor: AppColors.primaryBlue,
         confirmButtonStyle: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(AppColors.positive),
+          // backgroundColor: MaterialStateProperty.all(AppColors.positive),
           foregroundColor: MaterialStateProperty.all(AppColors.black),
         ),
         
