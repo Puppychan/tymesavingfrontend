@@ -70,4 +70,5 @@ class BackendEndpoints {
   static String get checkpoint => "checkpoint";
   static String get challengeByUser => "byUser";
   static String get challengeProgress => "member-progress";
+  static String get rewardHistory => 'rewardHistory';
 }

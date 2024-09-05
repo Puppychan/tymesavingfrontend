@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/models/challenge_model.dart';
 import 'package:tymesavingfrontend/models/checkpoint_model.dart';
+import 'package:tymesavingfrontend/models/reward_history_model.dart';
 import 'package:tymesavingfrontend/models/reward_model.dart';
 import 'package:tymesavingfrontend/services/utils/get_backend_endpoint.dart';
 import 'package:tymesavingfrontend/services/utils/network_service.dart';
@@ -16,6 +17,7 @@ class ChallengeService extends ChangeNotifier {
   List<ChallengeDetailMemberModel>? _challengeDetailMemberModelList;
   List<CheckPointModel>? _checkPointModelList;
   List<ChallengeModel>? _challengeModelList;
+  List<RewardHistoryModel>? _rewardHistoryList;
   
   ChallengeModel? get challengeModel => _challengeModel;
   CheckPointModel? get checkPointModel => _checkPointModel;
@@ -25,6 +27,7 @@ class ChallengeService extends ChangeNotifier {
   List<ChallengeDetailMemberModel>? get challengeDetailMemberModelList => _challengeDetailMemberModelList;
   List<CheckPointModel>? get checkPointModelList => _checkPointModelList;
   List<ChallengeModel>? get challengeModelList => _challengeModelList;
+  List<RewardHistoryModel>? get rewardHistoryList => _rewardHistoryList;
 
   Future<dynamic> fetchChallengeDetails(String challengeId, {String? name, CancelToken? cancelToken}) async {
     String endpoint = "${BackendEndpoints.challenge}/$challengeId";
@@ -265,6 +268,30 @@ class ChallengeService extends ChangeNotifier {
       return response;
     } catch (e) {
       debugPrint("Error creating challenge: $e");
+    }
+  }
+
+  Future<dynamic> fetchRewardHistory(String userId, String sortDate, String sortName) async {
+    String endpoint = '${BackendEndpoints.user}/${BackendEndpoints.rewardHistory}/$userId';
+    debugPrint(endpoint);
+    try {
+      final response = await NetworkService.instance.get(endpoint, queryParameters: 
+      {
+        "sortDatePassed": sortDate,
+        "sortChallengeName": sortName,
+      });
+      debugPrint("RESPONSE IS: $response");
+      if(response != null && response['response'] != null) {
+        _rewardHistoryList = (response['response'] as List<dynamic>)
+        .map((e) => RewardHistoryModel.fromJson(e as Map<String, dynamic>))
+        .toList();
+      } else {
+      debugPrint('Response or response[\'response\'] is null.');
+    }
+      notifyListeners();
+      return response;
+    } catch (e){
+      debugPrint("Error fetching reward history: $e");
     }
   }
 }
