@@ -4,7 +4,6 @@ import 'package:tymesavingfrontend/components/common/dialog/delete_confirm_dialo
 import 'package:tymesavingfrontend/components/full_screen_image.dart';
 import 'package:tymesavingfrontend/models/transaction_model.dart';
 import 'package:tymesavingfrontend/components/transaction/infor_row.dart';
-import 'package:tymesavingfrontend/screens/main_page_layout.dart';
 import 'package:tymesavingfrontend/screens/transaction/transaction_update_page.dart';
 import 'package:tymesavingfrontend/services/transaction_service.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
@@ -286,10 +285,10 @@ class _TransactionDialogState extends State<TransactionDialog> {
                   return await transactionSerivce
                       .deleteTransaction(widget.transaction.id);
                 }, () async {
-                  //           Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-                  //   builder: (context) => MainPageLayout(
-                  //       customPageIndex: isBudget ? PageLocation.budgetPage.index : PageLocation.savingPage.index),
-                  // ),, (_) => false);
+                  // close confirm dialog
+                  Navigator.of(context).pop();
+                  // close transaction dialog
+                  Navigator.of(context).pop();
                 });
               });
             },
