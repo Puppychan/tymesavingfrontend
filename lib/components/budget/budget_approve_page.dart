@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/full_screen_image.dart';
@@ -87,7 +86,10 @@ class _BudgetApprovePageState extends State<BudgetApprovePage> with RouteAware {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: const Heading(title: "Budget Approval page"),
+      appBar: const Heading(
+          title: "Budget Approval page", 
+          showBackButton: true,
+        ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

@@ -61,6 +61,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
           setState(() {
             chartReport = transactionService.chartReport;
             chartReportSecondary = transactionService.chartReportSecondary;
+            precacheImage(NetworkImage(widget.user!.avatar!), context);
           });
         });
         if (!mounted) return;
