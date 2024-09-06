@@ -15,16 +15,18 @@ class MoreMenuState extends State<MoreMenuPage> {
   @override
   Widget build(BuildContext context) {
     return const SingleChildScrollView(
-        padding: AppPaddingStyles.pagePadding,
-        child: Column(children: [
-          SizedBox(height: 50,),
+      padding: AppPaddingStyles.pagePadding,
+      child: Column(
+        children: const [
+          SizedBox(height: 50),
           UserBox(),
-          SizedBox(height: 15,),
+          SizedBox(height: 15),
           MoreMenuChallenge(),
-          SizedBox(height: 15,),
+          SizedBox(height: 15),
           MoreMenuSetting(),
-        ],),
-      );
+        ],
+      ),
+    );
   }
 }
 

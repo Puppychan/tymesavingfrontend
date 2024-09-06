@@ -81,7 +81,7 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Card.outlined(
-      color: colorScheme.background,
+      color: Colors.transparent,
       margin: const EdgeInsets.all(0),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 15),
@@ -97,8 +97,8 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
                 myWalletRoute),
             RowSettingTemplate('Monthly report', 'Analytics of your monthly transactions',
                 const Icon(Icons.report), myReport),
-            RowSettingTemplate('Your QR', 'Your QR code for quicker inviting to group',
-                const Icon(Icons.settings), openQRPage),
+            RowSettingTemplate('Your QR code', 'Open your QR code',
+                const Icon(Icons.qr_code_2_outlined), openQRPage),
             RowSettingTemplate('Setting', 'Change setting and preference',
                 const Icon(Icons.settings), settingFunction),
             RowSettingTemplate('Contact us', 'Student support',
