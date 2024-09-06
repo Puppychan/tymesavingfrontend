@@ -74,9 +74,9 @@ class _UserBoxState extends State<UserBox> with RouteAware {
       },
       child: Skeletonizer(
           enabled: user == null, // Show the skeleton if user is null
-          child: Card.filled(
+          child: Card(
             color: colorScheme.background, // Change color if skeleton
-            elevation: 3.0,
+            elevation: 0,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),
               child: Column(

@@ -45,7 +45,7 @@ class _MoreMenuChallengeState extends State<MoreMenuChallenge> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    return Card(
+    return Card.outlined(
       color: colorScheme.background,
       child: (isLoading) ?
       const CircularProgressIndicator() : 

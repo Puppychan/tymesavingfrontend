@@ -17,7 +17,7 @@ class MoreMenuState extends State<MoreMenuPage> {
     return const SingleChildScrollView(
       padding: AppPaddingStyles.pagePadding,
       child: Column(
-        children: const [
+        children: [
           SizedBox(height: 50),
           UserBox(),
           SizedBox(height: 15),
