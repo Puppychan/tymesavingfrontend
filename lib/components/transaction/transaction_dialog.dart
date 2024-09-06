@@ -53,7 +53,7 @@ class _TransactionDialogState extends State<TransactionDialog> {
           padding: const EdgeInsets.symmetric(
               horizontal: 28.0, vertical: 32), // Padding inside the dialog
           child: Column(children: [
-            _buildDialogHeading(),
+            ..._buildDialogHeading(),
             const SizedBox(height: 16),
             Expanded(
                 child: SingleChildScrollView(
@@ -76,22 +76,42 @@ class _TransactionDialogState extends State<TransactionDialog> {
     });
   }
 
-  Widget _buildDialogHeading() {
-    String title = "";
+  List<Widget> _buildDialogHeading() {
+    String subtitle = "";
     if (widget.transaction.savingGroupId != null) {
-      title = "From Saving Group";
+      subtitle = "From Saving Group";
     } else if (widget.transaction.budgetGroupId != null) {
-      title = "From Budget Group";
+      subtitle = "From Budget Group";
     } else {
-      title = "Personal Transaction";
+      subtitle = "Personal Transaction";
     }
-    return Text(
-      title,
-      style: Theme.of(context)
-          .textTheme
-          .headlineMedium!
-          .copyWith(fontWeight: FontWeight.w500),
-    );
+    return [
+      Text(
+        "Details",
+        style: Theme.of(context)
+            .textTheme
+            .headlineMedium!
+            .copyWith(fontWeight: FontWeight.w500),
+      ),
+      Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          if (widget.transaction.isMomo != null &&
+              widget.transaction.isMomo!) ...[
+            Image.asset(
+              'assets/img/momo_icon.png',
+              width: 25,
+              height: 25,
+            ),
+            const SizedBox(width: 5),
+          ],
+          Text(
+            subtitle,
+            style: Theme.of(context).textTheme.headlineSmall!,
+          ),
+        ],
+      )
+    ];
   }
 
   Widget _buildBasicTransactionInfo() {
@@ -252,8 +272,11 @@ class _TransactionDialogState extends State<TransactionDialog> {
   }
 
   Widget _buildDialogActions() {
+    final isMomo =
+        widget.transaction.isMomo != null && widget.transaction.isMomo == true;
     final isEditable = widget.transaction.savingGroupId == null &&
-        widget.transaction.budgetGroupId == null;
+        widget.transaction.budgetGroupId == null &&
+        !isMomo;
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.center,

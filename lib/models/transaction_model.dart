@@ -14,6 +14,7 @@ class Transaction {
   final String category;
   final String approveStatus;
   final TransactionUser? user;
+  final bool? isMomo;
 
   Transaction({
     required this.id,
@@ -29,6 +30,7 @@ class Transaction {
     required this.category,
     required this.approveStatus,
     this.user,
+    this.isMomo,
   });
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
@@ -49,6 +51,7 @@ class Transaction {
       approveStatus: json['approveStatus'] ?? '',
       user:
           json['user'] != null ? TransactionUser.fromJson(json['user']) : null,
+      isMomo: json['isMomo'] ?? false,
     );
   }
 
@@ -67,6 +70,7 @@ class Transaction {
       'category': TransactionCategory.fromString(category).toString(),
       'approveStatus': approveStatus,
       'user': user?.toJson(),
+      'isMomo': isMomo ?? false,
     };
   }
 

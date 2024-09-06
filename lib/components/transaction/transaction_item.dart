@@ -95,13 +95,22 @@ class TransactionItem extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-        title: Text(
-          title,
-          style: Theme.of(context)
-              .textTheme
-              .headlineMedium
-              ?.copyWith(fontSize: 14, fontWeight: FontWeight.w500),
-        ),
+        title: Row(children: [
+          if (transaction.isMomo != null && transaction.isMomo!)
+            Image.asset(
+              'assets/img/momo_icon.png',
+              width: 15,
+              height: 15,
+            ),
+            const SizedBox(width: 5),
+          Text(
+            title,
+            style: Theme.of(context)
+                .textTheme
+                .headlineMedium
+                ?.copyWith(fontSize: 14, fontWeight: FontWeight.w500),
+          ),
+        ]),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
