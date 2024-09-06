@@ -190,19 +190,19 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
                                     )))
                       ]),
                   const Divider(),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      widget.isBudgetGroup
-                          ? _buildTransactionSummaryCard(
-                              false, expenseAmount, context)
-                          : _buildTransactionSummaryCard(
-                              true, incomeAmount, context),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  const Divider(),
+                  // const SizedBox(height: 20),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  //   children: [
+                  //     widget.isBudgetGroup
+                  //         ? _buildTransactionSummaryCard(
+                  //             false, expenseAmount, context)
+                  //         : _buildTransactionSummaryCard(
+                  //             true, incomeAmount, context),
+                  //   ],
+                  // ),
+                  // const SizedBox(height: 20),
+                  // const Divider(),
                   const SizedBox(height: 10),
                   Text("Transaction Summary",
                       style: Theme.of(context).textTheme.titleSmall),
@@ -241,7 +241,7 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
                       {
                         'progress': userGroupProgress,
                         'progressColor': colorScheme.inversePrimary,
-                        'progressText': 'User Total Progress',
+                        'progressText': 'User Total Amount',
                         'originValue': totalAmount,
                       },
                     ],
