@@ -200,10 +200,14 @@ class TransactionService extends ChangeNotifier {
     double amount,
     String payBy,
     TransactionCategory category,
-    List<String> transactionImages,
+    {List<String>? transactionImages, bool isUpdateImage = false}
   ) async {
     // Prepare the list of MultipartFiles or just image URLs
-    List<dynamic> imageFiles = await _handleImageFiles(transactionImages);
+    List<dynamic> imageFiles = [];
+    if (transactionImages != null) {
+      imageFiles = await _handleImageFiles(transactionImages);
+    }
+
     final FormData formData = FormData.fromMap({
       "createdDate": createdDate,
       "description": description,
@@ -212,6 +216,7 @@ class TransactionService extends ChangeNotifier {
       "payBy": payBy,
       "category": category.name,
       "image": imageFiles, // This is the key your backend expects for images
+      "isUpdateImage": isUpdateImage,
     });
     // print type of all
     final response = await NetworkService.instance

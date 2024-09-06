@@ -43,6 +43,8 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _selectedTime = TimeOfDay.now();
   User? _user;
+  // for handling update transaction images
+  List<String> _initialTransactionImages = [];
   // String _savingOrBudget = 'For None';
   // init state
   @override
@@ -57,6 +59,8 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
     // get current logged in user
     setState(() {
       _user = authService.user;
+      _initialTransactionImages =
+          (formFields['transactionImages'] ?? []).whereType<String>().toList();
     });
     // get default date and time
     String? formCreatedDate;
@@ -131,7 +135,27 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
         context.loaderOverlay.show();
         if (widget.type == FormStateType.updateExpense ||
             widget.type == FormStateType.updateIncome) {
-          // TODO: implement update transaction images¸
+          // only update transaction images if there is a change
+          // compare the initial images with the current images
+          List<String> currentImages = (formField['transactionImages'] ?? [])
+              .whereType<String>()
+              .toList();
+          // Function to check if lists contain the same elements in any order
+          bool areListsEqual(List list1, List list2) {
+            // Normalize the lists by trimming whitespace and sorting them
+            final normalizedList1 = list1.map((url) => url.trim()).toSet();
+            final normalizedList2 = list2.map((url) => url.trim()).toSet();
+
+            // Compare the lists based on their length and contents
+            return normalizedList1.length == normalizedList2.length &&
+                normalizedList1.containsAll(normalizedList2);
+          }
+          // if old list = new list, no need to update images
+
+          // Use the function to compare initial and current images
+          bool isUpdateImage =
+              !areListsEqual(_initialTransactionImages, currentImages);
+
           return await Provider.of<TransactionService>(context, listen: false)
               .updateTransaction(
             // user?.id ?? "",
@@ -142,9 +166,8 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
             formField['amount'],
             formField['payBy'],
             formField['category'],
-            (formField['transactionImages'] ?? [])
-                .whereType<String>()
-                .toList(),
+            transactionImages: isUpdateImage ? currentImages : null,
+            isUpdateImage: isUpdateImage,
           );
         } else {
           return await Provider.of<TransactionService>(context, listen: false)
@@ -362,7 +385,9 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
                 formType: widget.type,
               ),
               const SizedBox(height: 30),
-              isEditableOtherFields ? PrimaryButton(title: "Add", onPressed: _trySubmit) : const SizedBox(),
+              isEditableOtherFields
+                  ? PrimaryButton(title: "Add", onPressed: _trySubmit)
+                  : const SizedBox(),
             ],
           ));
     });
