@@ -39,7 +39,8 @@ class TransactionService extends ChangeNotifier {
   ChartReport? get chartReport => _chartReport;
   ChartReport? get chartReportSecondary => _chartReportSecondary;
   CurrentMonthReport? get currentMonthReportIncome => _currentMonthReportIncome;
-  CurrentMonthReport? get currentMonthReportExpense => _currentMonthReportExpense;
+  CurrentMonthReport? get currentMonthReportExpense =>
+      _currentMonthReportExpense;
   TopCategoriesList? get topCategoriesListExpense => _topCategoriesListExpense;
   TopCategoriesList? get topCategoriesListIncome => _topCategoriesListIncome;
   NetSpend? get netSpend => _netSpend;
@@ -123,14 +124,32 @@ class TransactionService extends ChangeNotifier {
         "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReport}?transactionType=Expense&userId=$userid");
     final responseData = response['response'];
     notifyListeners();
-    _chartReport = ChartReport.fromJson(responseData['pastMonthsExpenseTotal'] as Map<String, dynamic>);
-    _chartReportSecondary = ChartReport.fromJson(responseData['pastMonthsIncomeTotal'] as Map<String, dynamic>);
+    _chartReport = ChartReport.fromJson(
+        responseData['pastMonthsExpenseTotal'] as Map<String, dynamic>);
+    _chartReportSecondary = ChartReport.fromJson(
+        responseData['pastMonthsIncomeTotal'] as Map<String, dynamic>);
     _currentMonthReportIncome =
         CurrentMonthReport.fromJson(responseData['currentMonthIncomeTotal']);
     _currentMonthReportExpense =
         CurrentMonthReport.fromJson(responseData['currentMonthExpenseTotal']);
     _netSpend = NetSpend.fromJson(responseData['netSpend']);
     return response;
+  }
+
+  Future<List<dynamic>> _handleImageFiles(
+      List<String> transactionImages) async {
+    List<dynamic> imageFiles =
+        await Future.wait(transactionImages.map((imagePath) async {
+      if (imagePath.startsWith('http')) {
+        // If it's a URL, send it as is
+        return imagePath;
+      } else {
+        // If it's a file path, convert it to a MultipartFile
+        return await MultipartFile.fromFile(imagePath,
+            filename: imagePath.split('/').last);
+      }
+    }).toList());
+    return imageFiles;
   }
 
   Future<Map<String, dynamic>> createTransaction(
@@ -147,17 +166,7 @@ class TransactionService extends ChangeNotifier {
       ApproveStatus? approveStatus,
       bool isMomo = false}) async {
     // Prepare the list of MultipartFiles or just image URLs
-    List<dynamic> imageFiles =
-        await Future.wait(transactionImages.map((imagePath) async {
-      if (imagePath.startsWith('http')) {
-        // If it's a URL, send it as is
-        return imagePath;
-      } else {
-        // If it's a file path, convert it to a MultipartFile
-        return await MultipartFile.fromFile(imagePath,
-            filename: imagePath.split('/').last);
-      }
-    }).toList());
+    List<dynamic> imageFiles = await _handleImageFiles(transactionImages);
 
     final FormData formData = FormData.fromMap({
       "userId": userId,
@@ -184,23 +193,29 @@ class TransactionService extends ChangeNotifier {
   }
 
   Future<Map<String, dynamic>> updateTransaction(
-      String transactionId,
-      String createdDate,
-      String description,
-      // FormStateType type,
-      double amount,
-      String payBy,
-      TransactionCategory category) async {
+    String transactionId,
+    String createdDate,
+    String description,
+    // FormStateType type,
+    double amount,
+    String payBy,
+    TransactionCategory category,
+    List<String> transactionImages,
+  ) async {
+    // Prepare the list of MultipartFiles or just image URLs
+    List<dynamic> imageFiles = await _handleImageFiles(transactionImages);
+    final FormData formData = FormData.fromMap({
+      "createdDate": createdDate,
+      "description": description,
+      // "type": type.value,
+      "amount": amount,
+      "payBy": payBy,
+      "category": category.name,
+      "image": imageFiles, // This is the key your backend expects for images
+    });
     // print type of all
     final response = await NetworkService.instance
-        .put("${BackendEndpoints.transaction}/$transactionId", body: {
-      'createdDate': createdDate,
-      'description': description,
-      // 'type': type.value, //
-      'amount': amount,
-      'payBy': payBy,
-      'category': category.name,
-    });
+        .putFormData("${BackendEndpoints.transaction}/$transactionId", data: formData);
     print("response in updating transaction $response");
     return response;
   }
@@ -209,8 +224,10 @@ class TransactionService extends ChangeNotifier {
     final response = await NetworkService.instance.get(
         "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReport}?transactionType=Expense&userId=$userId");
     notifyListeners();
-    _chartReport = ChartReport.fromJson(response['response']['pastMonthsExpenseTotal'] as Map<String, dynamic>);
-    _chartReportSecondary = ChartReport.fromJson(response['response']['pastMonthsIncomeTotal'] as Map<String, dynamic>);
+    _chartReport = ChartReport.fromJson(
+        response['response']['pastMonthsExpenseTotal'] as Map<String, dynamic>);
+    _chartReportSecondary = ChartReport.fromJson(
+        response['response']['pastMonthsIncomeTotal'] as Map<String, dynamic>);
     return response;
   }
 
@@ -219,18 +236,21 @@ class TransactionService extends ChangeNotifier {
         "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReport}?transactionType=Expense&userId=$userId");
     if (response['response'] != null) {
       final responseData = response['response'];
-      _compareToLastMonth = CompareToLastMonth.fromJson(responseData['compareToLastMonth']);
-      if (responseData['topExpenseCategories'] != null){
-        _topCategoriesListExpense = TopCategoriesList.fromJson(responseData['topExpenseCategories']);
+      _compareToLastMonth =
+          CompareToLastMonth.fromJson(responseData['compareToLastMonth']);
+      if (responseData['topExpenseCategories'] != null) {
+        _topCategoriesListExpense =
+            TopCategoriesList.fromJson(responseData['topExpenseCategories']);
       } else {
         _topCategoriesListExpense = null;
       }
       if (responseData['topIncomeCategories'] != null) {
-        _topCategoriesListIncome = TopCategoriesList.fromJson(responseData['topIncomeCategories']);
+        _topCategoriesListIncome =
+            TopCategoriesList.fromJson(responseData['topIncomeCategories']);
       } else {
         _topCategoriesListIncome = null;
       }
-      
+
       notifyListeners();
     } else {
       debugPrint("Error from getReportDetails null value!");
@@ -371,11 +391,12 @@ class TransactionService extends ChangeNotifier {
       notifyListeners();
     } else {
       // Handle errors appropriately
-      debugPrint('Failed to load transactions. Status code: ${response['statusCode']}');
+      debugPrint(
+          'Failed to load transactions. Status code: ${response['statusCode']}');
       // throw Exception(
       //     'Failed to load transactions. Status code: ${response['statusCode']}');
     }
-      return response;
+    return response;
   }
 
   // Get transaction list of month and year
@@ -388,7 +409,7 @@ class TransactionService extends ChangeNotifier {
     // Construct the endpoint with the provided year and month
     String endpoint =
         "${BackendEndpoints.transaction}/${BackendEndpoints.transactionReportByUser}/$userId";
-    
+
     // Add the filter for the specified month and year
     endpoint += "?createdDate=$yearStr-$monthStr";
     // debugPrint("Endpoint pre-param: $endpoint");

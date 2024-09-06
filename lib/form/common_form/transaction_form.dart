@@ -142,6 +142,9 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
             formField['amount'],
             formField['payBy'],
             formField['category'],
+            (formField['transactionImages'] ?? [])
+                .whereType<String>()
+                .toList(),
           );
         } else {
           return await Provider.of<TransactionService>(context, listen: false)
