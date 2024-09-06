@@ -190,7 +190,7 @@ class _GroupSavingReportState extends State<GroupSavingReport> {
                 ),
                 SizedBox(
                   height: 500,
-                  child: TransactionList(transactions: _transactionList,disableButton: true,)
+                  child: TransactionList(transactions: _transactionList)
                 )
               ],
             )

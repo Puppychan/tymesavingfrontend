@@ -42,15 +42,22 @@ class _HomePageState extends State<HomePage> with RouteAware {
   }
 
   Future<void> _precacheAvatar() async {
-    Future.microtask(() async {
-      setState(() {
+    // Future.microtask(() async {
+    //   setState(() {
+    //     precacheImage(NetworkImage(widget.user!.avatar!), context)
+    //         .then((_) {})
+    //         .catchError((error) {
+    //       debugPrint("Failed to preload image: $error");
+    //     });
+    //   });
+    // });
+    setState(() {
         precacheImage(NetworkImage(widget.user!.avatar!), context)
             .then((_) {})
             .catchError((error) {
           debugPrint("Failed to preload image: $error");
         });
       });
-    });
   }
 
   Future<void> _loadData() async {
@@ -84,8 +91,8 @@ class _HomePageState extends State<HomePage> with RouteAware {
 
   @override
   void didPopNext() {
-    _loadData();
     super.didPopNext();
+    _loadData();
     routeObserver.unsubscribe(this);
   }
 
