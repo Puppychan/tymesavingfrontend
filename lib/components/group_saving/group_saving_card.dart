@@ -5,7 +5,7 @@ import 'package:tymesavingfrontend/components/group_saving/group_saving_details.
 import 'package:tymesavingfrontend/components/group_saving/group_saving_report.dart';
 import 'package:tymesavingfrontend/models/group_saving_model.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
-import 'package:timeago/timeago.dart' as timeago;
+// import 'package:timeago/timeago.dart' as timeago;
 
 // final tempGroupSaving = GroupSaving(
 //   id: "1",
@@ -58,11 +58,13 @@ class _GroupSavingCardState extends State<GroupSavingCard> with SingleTickerProv
         widget.groupSaving.concurrentAmount / widget.groupSaving.amount;
 
     // double progress = groupSaving.contribution / maxContribution; // Calculate the progress as a fraction
-    String formattedDate = timeago
-        .format(DateTime.parse(widget.groupSaving.createdDate.toString()));
+    // String formattedDate = timeago
+    //     .format(DateTime.parse(widget.groupSaving.createdDate.toString()));
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     final isOverFullProgress = currentProgress > 1.0;
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
     return Card(
       color: colorScheme.tertiary,
       shadowColor: colorScheme.shadow,
@@ -82,99 +84,38 @@ class _GroupSavingCardState extends State<GroupSavingCard> with SingleTickerProv
         },
         borderRadius: BorderRadius.circular(16),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Progress / done
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    widget.groupSaving.name,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    overflow: TextOverflow.clip,  
-                    ),
-                    maxLines: 2,
-                  ),
-                  Text.rich(
-                    TextSpan(
-                      children: [
-                        TextSpan(
-                          text: "By ", 
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                        TextSpan(
-                          text: widget.groupSaving.hostByFullName, 
-                          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                fontWeight: FontWeight.w400, 
-                                color: colorScheme.primary
+              padding: EdgeInsets.symmetric(horizontal: width * 0.05, vertical: height * 0.01),
+              child: Text.rich(
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          TextSpan(
+                            children: <TextSpan>[
+                              widget.groupSaving.isClosedOrExpired ?
+                              TextSpan(
+                                text: 'Group closed',
+                                style: Theme.of(context).textTheme.headlineMedium!.copyWith(color: Colors.redAccent),
+                              )
+                              :
+                              TextSpan(
+                                text: currentProgress < 1.0
+                                  ? 'Progress'
+                                  : currentProgress == 1.0
+                                      ? 'Completed'
+                                      : 'Exceeding!',
+                                style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                                  color: colorScheme.primary
+                                ),
                               ),
+                            ],
+                          ),
                         ),
-                      ],
-                    ),
-                  ),
-                  CustomAlignText(
-                    text: "Created $formattedDate",
-                    alignment: Alignment.center,
-                    style: Theme.of(context).textTheme.bodySmall!,
-                    maxLines: 2,
-                  ),
-                ],
-              ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Expanded(
-                      flex: 6,
-                      child: Text.rich(
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        TextSpan(
-                          children: <TextSpan>[
-                            widget.groupSaving.isClosedOrExpired ?
-                            TextSpan(
-                              text: 'Group closed',
-                              style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.redAccent),
-                            )
-                            :
-                            TextSpan(
-                              text: currentProgress < 1.0
-                                ? 'Progress'
-                                : currentProgress == 1.0
-                                    ? 'Completed'
-                                    : 'Exceeding!',
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                          ],
-                        ),
-                      )),
-                  const SizedBox(width: 3),
-                  Text.rich(TextSpan(children: <TextSpan>[
-                    TextSpan(
-                      text: formatAmountToVnd(
-                          widget.groupSaving.concurrentAmount),
-                      // text: "GroupSaving Contribution",
-                      style: textTheme.labelLarge,
-                    ),
-                    TextSpan(
-                      text: ' / ',
-                      style: textTheme.labelLarge!.copyWith(
-                        color: colorScheme.inversePrimary,
-                      ),
-                    ),
-                    TextSpan(
-                      text: formatAmountToVnd(widget.groupSaving.amount),
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                  ]))
-                ],
-              ),
-            ),
+
+            // Progress indicator
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
               child: Stack(
@@ -216,7 +157,72 @@ class _GroupSavingCardState extends State<GroupSavingCard> with SingleTickerProv
                       ],
               ),
             ),
-            const SizedBox(height: 10,),
+
+            // Amount indicator
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: width * 0.05, vertical: height * 0.005),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(width: 3),
+                  Text.rich(TextSpan(children: <TextSpan>[
+                    TextSpan(
+                      text: formatAmountToVnd(widget.groupSaving.concurrentAmount),
+                      style: textTheme.bodyMedium!.copyWith(
+                        color: colorScheme.primary,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    TextSpan(
+                      text: ' / ',
+                      style: textTheme.labelLarge!.copyWith(
+                        color: colorScheme.inversePrimary,
+                      ),
+                    ),
+                    TextSpan(
+                      text: formatAmountToVnd(widget.groupSaving.amount),
+                      style: Theme.of(context).textTheme.bodyMedium!,
+                    ),
+                  ]))
+                ],
+              ),
+            ),
+            // Budget name
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: width * 0.05, vertical: height * 0.005),
+              child: Text(
+                        widget.groupSaving.name,
+                        style: textTheme.headlineMedium,
+                        maxLines: 2,
+                      ),
+            ),
+            // User create name
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: width * 0.05, vertical: height * 0.005),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "By ", 
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      TextSpan(
+                        text: widget.groupSaving.hostByFullName, 
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              fontWeight: FontWeight.w400, 
+                              color: colorScheme.primary
+                            ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
           ],
         ),
       ),

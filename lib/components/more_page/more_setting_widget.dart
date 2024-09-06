@@ -79,7 +79,6 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
     return Card.outlined(
       color: Colors.transparent,
       margin: const EdgeInsets.all(0),

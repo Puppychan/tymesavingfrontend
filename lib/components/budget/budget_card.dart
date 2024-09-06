@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
 import 'package:tymesavingfrontend/components/budget/budget_details.dart';
 import 'package:tymesavingfrontend/components/budget/budget_report.dart';
-import 'package:tymesavingfrontend/components/common/text_align.dart';
 import 'package:tymesavingfrontend/models/budget_model.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
-import 'package:timeago/timeago.dart' as timeago;
-import 'dart:math' as math;
+// import 'package:timeago/timeago.dart' as timeago;
 
 class BudgetCard extends StatefulWidget {
   final Budget budget;
@@ -20,10 +18,12 @@ class _BudgetCardState extends State<BudgetCard> {
   Widget build(BuildContext context) {
     final currentProgress =
         widget.budget.concurrentAmount / widget.budget.amount;
-    String formattedDate =
-        timeago.format(DateTime.parse(widget.budget.createdDate.toString()));
+    // String formattedDate =
+    //     timeago.format(DateTime.parse(widget.budget.createdDate.toString()));
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
     return Card(
       color: colorScheme.tertiary,
       shadowColor: colorScheme.shadow,
@@ -42,37 +42,99 @@ class _BudgetCardState extends State<BudgetCard> {
         },
         borderRadius: BorderRadius.circular(16),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+
+            // Progress or Group closed text
             Padding(
-              padding: const EdgeInsets.all(8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // CustomCircleImage(imagePath: budget.avatarPath),
-                  // const SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      widget.budget.name,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+              padding: EdgeInsets.symmetric(horizontal: width * 0.05, vertical: height * 0.01),
+              child: Text.rich(
+                textAlign: TextAlign.start,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                TextSpan(
+                  children: <TextSpan>[
+                    widget.budget.isClosedOrExpired ?
+                    TextSpan(
+                      text: 'Group closed',
+                      style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                          color: const Color(0xFFF44336)
+                        ),
+                    )
+                    :
+                    TextSpan(
+                      text: 'Progress ',
+                      style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                        color: colorScheme.primary,
                       ),
-                      maxLines: 2,
                     ),
+                  ],
+                ),
+              ),
+            ),
+
+            // The line indicator
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: width * 0.05, vertical: height * 0.005),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: LinearProgressIndicator(
+                  value: currentProgress.clamp(
+                      0.0, 1.0),
+                  backgroundColor: colorScheme.quaternary,
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    currentProgress == 1 ? 
+                  const Color(0xFF4CAF50) :
+                  currentProgress < 0.30 ?
+                  const Color(0xFFF44336) : 
+                  colorScheme.primary
                   ),
-                  Expanded(
-                    child: CustomAlignText(
-                      text: "Created $formattedDate",
-                      alignment: Alignment.centerRight,
-                      style: Theme.of(context).textTheme.bodySmall!,
-                      maxLines: 2,
+                  minHeight: 8,
+                ),
+              ),
+            ),
+
+            // Amount indicator
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: width * 0.05, vertical: height * 0.005),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(width: 3),
+                  Text.rich(TextSpan(children: <TextSpan>[
+                    TextSpan(
+                      text: formatAmountToVnd(widget.budget.concurrentAmount),
+                      style: textTheme.bodyMedium!.copyWith(
+                        color: colorScheme.primary,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
-                  ),
+                    TextSpan(
+                      text: ' / ',
+                      style: textTheme.labelLarge!.copyWith(
+                        color: colorScheme.inversePrimary,
+                      ),
+                    ),
+                    TextSpan(
+                      text: formatAmountToVnd(widget.budget.amount),
+                      style: Theme.of(context).textTheme.bodyMedium!,
+                    ),
+                  ]))
                 ],
               ),
             ),
+            // Budget name
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: EdgeInsets.symmetric(horizontal: width * 0.05, vertical: height * 0.005),
+              child: Text(
+                        widget.budget.name,
+                        style: textTheme.headlineMedium,
+                        maxLines: 2,
+                      ),
+            ),
+            // User create name
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: width * 0.05, vertical: height * 0.005),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text.rich(
@@ -94,73 +156,32 @@ class _BudgetCardState extends State<BudgetCard> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Expanded(
-                      flex: 6,
-                      child: Text.rich(
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        TextSpan(
-                          children: <TextSpan>[
-                            widget.budget.isClosedOrExpired ?
-                            TextSpan(
-                              text: 'Group closed',
-                              style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.redAccent),
-                            )
-                            :
-                            TextSpan(
-                              text: 'Progress ',
-                              style: Theme.of(context).textTheme.bodyMedium!,
-                            ),
-                          ],
-                        ),
-                      )),
-                  const SizedBox(width: 3),
-                  Text.rich(TextSpan(children: <TextSpan>[
-                    TextSpan(
-                      text: formatAmountToVnd(widget.budget.concurrentAmount),
-                      // text: "Budget Contribution",
-                      style: textTheme.bodyLarge,
-                    ),
-                    TextSpan(
-                      text: ' / ',
-                      style: textTheme.labelLarge!.copyWith(
-                        color: colorScheme.inversePrimary,
-                      ),
-                    ),
-                    TextSpan(
-                      text: formatAmountToVnd(widget.budget.amount),
-                      style: Theme.of(context).textTheme.bodyMedium!,
-                    ),
-                  ]))
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: LinearProgressIndicator(
-                  value: currentProgress.clamp(
-                      0.0, 1.0), // Ensuring the value is between 0 and 1
-                  // value: 0.4, // Ensuring the value is between 0 and 1
-                  backgroundColor: colorScheme.quaternary,
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    currentProgress == 1 ? 
-                  const Color(0xFF4CAF50) :
-                  currentProgress < 0.30 ?
-                  const Color(0xFFF44336) : 
-                  colorScheme.primary
-                  ),
-                  minHeight: 8,
-                ),
-              ),
-            ),
+
+            const SizedBox(height: 10),
+            
+            // // Description
+            // Padding(
+            //   padding: EdgeInsets.symmetric(horizontal: width * 0.05, vertical: height * 0.005),
+            //   child: Text(
+            //             widget.budget.description,
+            //             style: textTheme.bodyMedium,
+            //             maxLines: 3,
+            //             overflow: TextOverflow.fade,
+            //           ),
+            // ),
+
+            // // Format date
+            //  Padding(
+            //   padding: EdgeInsets.symmetric(horizontal: width * 0.05, vertical: 10),
+            //   child: Text(
+            //             "Created $formattedDate",
+            //             style: textTheme.bodyMedium!.copyWith(
+            //               fontStyle: FontStyle.italic,
+            //               fontWeight: FontWeight.w400,
+            //             ),
+            //             maxLines: 2,
+            //           ),
+            // ),
           ],
         ),
       ),
