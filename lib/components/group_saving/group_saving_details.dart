@@ -381,7 +381,7 @@ class _GroupSavingDetailsState extends State<GroupSavingDetails>
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .bodyMedium,
-                                            textAlign: TextAlign.justify,
+                                            textAlign: TextAlign.start,
                                             maxLines: _isDisplayRestDescription
                                                 ? null
                                                 : 2,
