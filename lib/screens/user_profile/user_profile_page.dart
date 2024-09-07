@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/styles/app_padding.dart';
-import 'package:tymesavingfrontend/components/QRcode/qr_page.dart';
 import 'package:tymesavingfrontend/components/challenge/reward_history.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/common/sheet/bottom_sheet.dart';
@@ -88,13 +87,6 @@ class _UserProfileState extends State<UserProfile> with RouteAware {
     );
   }
 
-  void openQRPage() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const QRPage()),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,7 +101,6 @@ class _UserProfileState extends State<UserProfile> with RouteAware {
                       children: [
                         ...actionRow(context, FontAwesomeIcons.userPen, "Edit User", () => openUpdateForm()),
                         ...actionRow(context, FontAwesomeIcons.lock, "Change Password", () => openPasswordForm()),
-                        ...actionRow(context, Icons.qr_code_2, "Show your QR code", () => openQRPage()),
                         ...actionRow(context, Icons.history, "Your reward history", () => openRewardHistory()),
                       ]));
             },

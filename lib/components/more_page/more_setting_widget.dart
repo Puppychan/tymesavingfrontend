@@ -7,6 +7,7 @@ import 'package:tymesavingfrontend/screens/tracking_report/spend_tracking.dart';
 import 'package:tymesavingfrontend/screens/tracking_report/report_page.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:tymesavingfrontend/components/QRcode/qr_page.dart';
 
 class MoreMenuSetting extends StatefulWidget {
   const MoreMenuSetting({super.key});
@@ -55,6 +56,14 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
         (route) => false);
   }
 
+  
+  Future<void> openQRPage() async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const QRPage()),
+    );
+  }
+
   Future<void> _launchContact() async {
     final Uri phone = Uri(
       scheme: 'https',
@@ -88,6 +97,8 @@ class _MoreMenuSettingState extends State<MoreMenuSetting> {
                 myWalletRoute),
             RowSettingTemplate('Monthly report', 'Analytics of your monthly transactions',
                 const Icon(Icons.report), myReport),
+            RowSettingTemplate('Your QR', 'Your QR code for quicker inviting to group',
+                const Icon(Icons.settings), openQRPage),
             RowSettingTemplate('Setting', 'Change setting and preference',
                 const Icon(Icons.settings), settingFunction),
             RowSettingTemplate('Contact us', 'Student support',
