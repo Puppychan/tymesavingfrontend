@@ -75,15 +75,17 @@ class _GroupSavingFormMainState extends State<GroupSavingFormMain> {
       }
     }
 
+    final formField = Provider.of<FormStateProvider>(context, listen: false)
+        .getFormField(widget.type);
     updateOnChange("name");
     updateOnChange("amount");
     updateOnChange("date");
     updateOnChange("description");
+    updateOnChange("defaultApproveStatus",
+        value: formField['defaultApproveStatus'] ?? ApproveStatus.approved);
     Future.microtask(() async {
       await handleMainPageApi(context, () async {
         final authService = Provider.of<AuthService>(context, listen: false);
-        final formField = Provider.of<FormStateProvider>(context, listen: false)
-            .getFormField(widget.type);
         // return null;
         User? user = authService.user;
 
@@ -173,7 +175,8 @@ class _GroupSavingFormMainState extends State<GroupSavingFormMain> {
       // TransactionCategory selectedCategory =
       //     formStateService.getCategory(widget.type);
       String formattedAmount = formStateService.getFormattedAmount(widget.type);
-      ApproveStatus currentApproveStatus = formFields['defaultApproveStatus'] ?? ApproveStatus.approved;
+      ApproveStatus currentApproveStatus =
+          formFields['defaultApproveStatus'] ?? ApproveStatus.approved;
 
       // update text to controller
       _amountController.text = formStateService.getFormattedAmount(widget.type);

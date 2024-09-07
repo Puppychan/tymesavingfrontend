@@ -68,7 +68,6 @@ class BudgetService extends ChangeNotifier {
     double concurrentAmount,
     String endDate,
   ) async {
-    debugPrint("Before sending backend: $hostedBy, $name, $description, $amount, $concurrentAmount, $endDate");
     final response = await NetworkService.instance.post(
       BackendEndpoints.budget,
       body: {
