@@ -119,6 +119,7 @@ class _CheckPointDetailsState extends State<CheckPointDetails> {
                       _checkPointModel!.name,
                       style: Theme.of(context).textTheme.headlineSmall,
                       textAlign: TextAlign.center,
+                      overflow: TextOverflow.clip,
                     ),
                     const SizedBox(height: 10,),
                     Container(
@@ -139,7 +140,8 @@ class _CheckPointDetailsState extends State<CheckPointDetails> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                Text(_challengeOwner!.fullname, style: Theme.of(context).textTheme.bodyMedium),
+                                Text(_challengeOwner!.fullname, 
+                                  style: Theme.of(context).textTheme.bodyMedium),
                                 const SizedBox(height: 10,),
                                 Text(endDateFormatted ?? '', style: Theme.of(context).textTheme.bodyMedium),
                                 const SizedBox(height: 10,),
