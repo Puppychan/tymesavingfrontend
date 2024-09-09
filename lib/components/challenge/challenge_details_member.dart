@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:loader_overlay/loader_overlay.dart';
 import 'package:tymesavingfrontend/common/enum/rank_color_enum.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
 
