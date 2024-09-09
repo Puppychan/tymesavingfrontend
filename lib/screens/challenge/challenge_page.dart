@@ -7,6 +7,7 @@ import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/challenge_model.dart';
 import 'package:tymesavingfrontend/services/challenge_service.dart';
+import 'package:tymesavingfrontend/utils/dismiss_keyboard.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
 class ChallengePage extends StatefulWidget {
@@ -72,84 +73,91 @@ class _ChallengePageState extends State<ChallengePage> with RouteAware{
   @override
   Widget build(BuildContext context) {
     double sizeHeight = MediaQuery.of(context).size.height;
-    return Scaffold(
-      appBar: Heading(
-        title: "Challenges",
-        actions: [
-         IconButton(onPressed: () {
-          Navigator.push(
-        context, MaterialPageRoute(builder: (context) => ChallengeNonListing(userId: widget.userId!)));
-         }, icon: const Icon(Icons.pending_actions_rounded))
-        ],
-        showBackButton: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
-        child: Column(
-          children: [
-            Text(
-              "Spending money is hard, these challenges set by other user will help to reinforce your ability to spend money wisely!",
-              maxLines: 3,
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 15),
-              child: TextField(
-                decoration: const InputDecoration(
-                  icon: Icon(Icons.search),
-                  labelText: 'Search',
-                  helperText: 'Search by name',
-                  border: OutlineInputBorder(),
-                ),
-                onSubmitted: (String value) {
-                  setState(() {
-                    searchName = value.toString().trimRight();
-                    isLoading = true;
-                    _loadChallengeList(widget.userId);
-                  });
-                },
+    return GestureDetector(
+      onTap: () {
+        // dismiss keyboard
+        dismissKeyboardAndAct(context);
+      },
+      child: Scaffold(
+        appBar: Heading(
+          title: "Challenges",
+          actions: [
+           IconButton(onPressed: () {
+            Navigator.push(
+          context, MaterialPageRoute(builder: (context) => ChallengeNonListing(userId: widget.userId!)));
+           }, icon: const Icon(Icons.pending_actions_rounded))
+          ],
+          showBackButton: true,
+        ),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
+          child: Column(
+            children: [
+              Text(
+                "Spending money is hard, these challenges set by other user will help to reinforce your ability to spend money wisely!",
+                maxLines: 3,
+                style: Theme.of(context).textTheme.bodySmall,
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
-              child: ElevatedButton(
-                style: const ButtonStyle(
-                  alignment: Alignment.center,
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                child: TextField(
+                  decoration: const InputDecoration(
+                    icon: Icon(Icons.search),
+                    labelText: 'Search',
+                    helperText: 'Search by name',
+                    border: OutlineInputBorder(),
+                  ),
+                  onSubmitted: (String value) {
+                    setState(() {
+                      searchName = value.toString().trimRight();
+                      isLoading = true;
+                      _loadChallengeList(widget.userId);
+                    });
+                  },
                 ),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: sizeHeight * 0.02),
-                  child: Text("Sorting", 
-                    style: AppTextStyles.titleLargeBlue(context)),
-                ),
-                  onPressed: () => _showSortDialog(context),
               ),
-            ),
-            const Divider(
-              thickness: 1.2,
-            ),
-            (isLoading)
-                ? const CircularProgressIndicator()
-                : Expanded(
-                  child: SizedBox(
-                    child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: RefreshIndicator(
-                      onRefresh: () => _pullRefresh(),
-                      child: ListView.builder(
-                        itemCount: _challengeModelList!.length,
-                        itemBuilder: (context, index) {
-                          final challenge = _challengeModelList![index];
-                          return Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: ChallengeCard(challengeModel: challenge),
-                          );
-                        },
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+                child: ElevatedButton(
+                  style: const ButtonStyle(
+                    alignment: Alignment.center,
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: sizeHeight * 0.02),
+                    child: Text("Sorting", 
+                      style: AppTextStyles.titleLargeBlue(context)),
+                  ),
+                    onPressed: () => _showSortDialog(context),
+                ),
+              ),
+              const Divider(
+                thickness: 1.2,
+              ),
+              (isLoading)
+                  ? const CircularProgressIndicator()
+                  : Expanded(
+                    child: SizedBox(
+                      child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: RefreshIndicator(
+                        onRefresh: () => _pullRefresh(),
+                        child: ListView.builder(
+                          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                          itemCount: _challengeModelList!.length,
+                          itemBuilder: (context, index) {
+                            final challenge = _challengeModelList![index];
+                            return Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: ChallengeCard(challengeModel: challenge),
+                            );
+                          },
+                        ),
+                      ),
                       ),
                     ),
-                    ),
-                  ),
-                )
-          ],
+                  )
+            ],
+          ),
         ),
       ),
     );

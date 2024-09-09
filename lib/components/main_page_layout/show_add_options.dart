@@ -68,6 +68,7 @@ void showAddOptions(BuildContext context) {
           leadingIcon: Icons.account_balance_wallet,
           title: 'Add new budget plan',
           onTap: () {
+            Navigator.of(context).pop();
             // Handle add new budget plan
             showBudgetFormA(context);
           },

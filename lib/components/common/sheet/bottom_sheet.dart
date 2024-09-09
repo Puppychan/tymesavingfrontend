@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/components/common/text_align.dart';
+import 'package:tymesavingfrontend/utils/dismiss_keyboard.dart';
 
 void showStyledBottomSheet({
   required BuildContext context,
@@ -36,7 +37,10 @@ void showStyledBottomSheet({
                   ),
                   child: SingleChildScrollView(
                       controller: controller,
-                      padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 20),
+                      keyboardDismissBehavior:
+                          ScrollViewKeyboardDismissBehavior.onDrag,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 50, horizontal: 20),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -75,7 +79,16 @@ void showStyledBottomSheet({
 Widget makeDismissible({required Widget child, required BuildContext context}) {
   return GestureDetector(
     behavior: HitTestBehavior.opaque,
-    onTap: () => Navigator.of(context).pop(),
-    child: GestureDetector(onTap: () {}, child: child),
+    onTap: () {
+      // dismiss keyboard
+      dismissKeyboardAndAct(context);
+      Navigator.of(context).pop();
+    },
+    child: GestureDetector(
+        onTap: () {
+          // dismiss keyboard
+          dismissKeyboardAndAct(context);
+        },
+        child: child),
   );
 }

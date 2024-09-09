@@ -6,10 +6,12 @@ import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
 import 'package:tymesavingfrontend/components/common/dialog/date_picker_dialog.dart';
 import 'package:tymesavingfrontend/components/common/dialog/time_picker_dialog.dart';
+import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/common/input/multiline_text_field.dart';
 import 'package:tymesavingfrontend/components/common/input/underline_text_field.dart';
 import 'package:tymesavingfrontend/screens/challenge/challenge_details.dart';
 import 'package:tymesavingfrontend/services/challenge_service.dart';
+import 'package:tymesavingfrontend/utils/dismiss_keyboard.dart';
 import 'package:tymesavingfrontend/utils/display_error.dart';
 import 'package:tymesavingfrontend/utils/format_date.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
@@ -77,7 +79,8 @@ class _ChallengeAddFormState extends State<ChallengeAddForm> {
 
     // Custom validation
     if (endDateTime.isBefore(startDateTime)) {
-      ErrorDisplay.showErrorToast('End time cannot be before start time', context);
+      ErrorDisplay.showErrorToast(
+          'End time cannot be before start time', context);
       return;
     }
 
@@ -113,66 +116,70 @@ class _ChallengeAddFormState extends State<ChallengeAddForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-          title: const Text(
-        'Create A Challenge',
-      )),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Padding(
-              padding: const EdgeInsets.all(15),
-              child: Column(
-                children: [
-                  UnderlineTextField(
-                    controller: _nameController,
-                    icon: FontAwesomeIcons.fileSignature,
-                    label: 'CHALLENGE NAME',
-                    placeholder: 'Enter challenge name',
-                    keyboardType: TextInputType.text,
-                    validator: Validator.validateTitle,
-                    // onChange: (value) => updateOnChange("description"),
-                  ),
-                  const SizedBox(height: 10),
-                  MultilineTextField(
-                    controller: _descriptionController,
-                    // icon: FontAwesomeIcons.fileSignature,
-                    label: 'CHALLENGE DESCRIPTION',
-                    placeholder: 'Description of your challenge goes here',
-                    keyboardType: TextInputType.multiline,
-                    minLines: 5,
-                    maxLines: null,
-                    validator: Validator.validateChallengeDescription,
-                    // onChange: (value) => updateOnChange("description"),
-                  ),
-                  const SizedBox(height: 10),
-                  ..._buildDateTimeComponents(context, isStartDate: true),
-                  const SizedBox(height: 30),
-                  ..._buildDateTimeComponents(context, isStartDate: false),
-                  // TextFormField(
-                  //   controller: _startDateController,
-                  //   readOnly: true,
-                  //   decoration: const InputDecoration(
-                  //     labelText: 'Start Date',
-                  //     hintText: 'Select the start date',
-                  //   ),
-                  //   onTap: () => _selectDate(context, _startDateController),
-                  // ),
-                  // TextFormField(
-                  //   controller: _endDateController,
-                  //   readOnly: true,
-                  //   decoration: const InputDecoration(
-                  //     labelText: 'End Date',
-                  //     hintText: 'Select the end date',
-                  //   ),
-                  //   onTap: () => _selectDate(context, _endDateController),
-                  // ),
-                  const SizedBox(height: 20),
-                  PrimaryButton(title: "Confirm", onPressed: _trySubmit),
-                ],
+    return GestureDetector(
+      onTap: () {
+        // dismiss keyboard
+        dismissKeyboardAndAct(context);
+      },
+      child: Scaffold(
+        appBar: const Heading(title: "Add a Challenge", showBackButton: true,),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            child: Form(
+              key: _formKey,
+              child: Padding(
+                padding: const EdgeInsets.all(15),
+                child: Column(
+                  children: [
+                    UnderlineTextField(
+                      controller: _nameController,
+                      icon: FontAwesomeIcons.fileSignature,
+                      label: 'CHALLENGE NAME',
+                      placeholder: 'Enter challenge name',
+                      keyboardType: TextInputType.text,
+                      validator: Validator.validateTitle,
+                      // onChange: (value) => updateOnChange("description"),
+                    ),
+                    const SizedBox(height: 10),
+                    MultilineTextField(
+                      controller: _descriptionController,
+                      // icon: FontAwesomeIcons.fileSignature,
+                      label: 'CHALLENGE DESCRIPTION',
+                      placeholder: 'Description of your challenge goes here',
+                      keyboardType: TextInputType.multiline,
+                      minLines: 5,
+                      maxLines: null,
+                      validator: Validator.validateChallengeDescription,
+                      // onChange: (value) => updateOnChange("description"),
+                    ),
+                    const SizedBox(height: 10),
+                    ..._buildDateTimeComponents(context, isStartDate: true),
+                    const SizedBox(height: 30),
+                    ..._buildDateTimeComponents(context, isStartDate: false),
+                    // TextFormField(
+                    //   controller: _startDateController,
+                    //   readOnly: true,
+                    //   decoration: const InputDecoration(
+                    //     labelText: 'Start Date',
+                    //     hintText: 'Select the start date',
+                    //   ),
+                    //   onTap: () => _selectDate(context, _startDateController),
+                    // ),
+                    // TextFormField(
+                    //   controller: _endDateController,
+                    //   readOnly: true,
+                    //   decoration: const InputDecoration(
+                    //     labelText: 'End Date',
+                    //     hintText: 'Select the end date',
+                    //   ),
+                    //   onTap: () => _selectDate(context, _endDateController),
+                    // ),
+                    const SizedBox(height: 20),
+                    PrimaryButton(title: "Confirm", onPressed: _trySubmit),
+                  ],
+                ),
               ),
             ),
           ),

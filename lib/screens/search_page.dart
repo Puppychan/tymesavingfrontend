@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/components/common/input/underline_text_field.dart';
 import 'package:tymesavingfrontend/components/common/not_found_message.dart';
+import 'package:tymesavingfrontend/utils/dismiss_keyboard.dart';
 
 class SearchPage extends StatefulWidget {
   // use for return value when user select a result and close the search page
@@ -61,51 +62,58 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: Heading(
-          title: widget.title,
-        ),
-        body: Padding(
-            padding: const EdgeInsets.all(10),
-            child: Column(children: [
-              UnderlineTextField(
-                  label: widget.searchLabel,
-                  icon: FontAwesomeIcons.magnifyingGlass,
-                  placeholder: widget.searchPlaceholder,
-                  onChange: _onSearchFieldChanged),
-              if (widget.sideDisplay != null) ...[
-                widget.sideDisplay!,
-                const Divider()
-              ],
-              Expanded(
-                child: ((_results ?? []).isNotEmpty && _results != null)
-                    ? GridView.count(
-                        childAspectRatio: widget.customResultSize ?? 1.0,
-                        crossAxisCount: 2,
-                        padding: const EdgeInsets.all(2.0),
-                        mainAxisSpacing: 10.0,
-                        crossAxisSpacing: 10.0,
-                        children: _results!
-                            .map(
-                                (result) => widget.resultWidgetFunction(result))
-                            .toList())
-                    : Container(
-                        child: _results == null
-                            ? Text("Type to search...",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium!
-                                    .copyWith(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .secondary),
-                                maxLines: 2)
-                            : Center(
-                                child: NotFoundMessage(
-                                message: 'No results for "$_input"',
-                              ))),
-              )
-            ])));
+    return GestureDetector(
+      onTap: () {
+        // dismiss keyboard
+        dismissKeyboardAndAct(context);
+      },
+      child: Scaffold(
+          appBar: Heading(
+            title: widget.title,
+            showBackButton: true,
+          ),
+          body: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(children: [
+                UnderlineTextField(
+                    label: widget.searchLabel,
+                    icon: FontAwesomeIcons.magnifyingGlass,
+                    placeholder: widget.searchPlaceholder,
+                    onChange: _onSearchFieldChanged),
+                if (widget.sideDisplay != null) ...[
+                  widget.sideDisplay!,
+                  const Divider()
+                ],
+                Expanded(
+                  child: ((_results ?? []).isNotEmpty && _results != null)
+                      ? GridView.count(
+                          childAspectRatio: widget.customResultSize ?? 1.0,
+                          crossAxisCount: 2,
+                          padding: const EdgeInsets.all(2.0),
+                          mainAxisSpacing: 10.0,
+                          crossAxisSpacing: 10.0,
+                          children: _results!
+                              .map((result) =>
+                                  widget.resultWidgetFunction(result))
+                              .toList())
+                      : Container(
+                          child: _results == null
+                              ? Text("Type to search...",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium!
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondary),
+                                  maxLines: 2)
+                              : Center(
+                                  child: NotFoundMessage(
+                                  message: 'No results for "$_input"',
+                                ))),
+                )
+              ]))),
+    );
   }
 
   /// Handles user entering text into the search field. We kick off a search for
