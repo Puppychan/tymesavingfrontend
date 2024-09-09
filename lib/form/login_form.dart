@@ -5,6 +5,7 @@ import 'package:tymesavingfrontend/components/common/input/round_text_field.dart
 import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
 import 'package:tymesavingfrontend/screens/main_page_layout.dart';
 import 'package:tymesavingfrontend/services/auth_service.dart';
+import 'package:tymesavingfrontend/utils/dismiss_keyboard.dart';
 import 'package:tymesavingfrontend/utils/display_error.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 import 'package:tymesavingfrontend/utils/validator.dart';
@@ -131,6 +132,7 @@ class _LoginFormState extends State<LoginForm> {
             title: const Text("Remember me"),
             value: _rememberMe,
             onChanged: (bool? value) {
+              dismissKeyboardAndAct(context);
               setState(() {
                 _rememberMe = value!;
               });

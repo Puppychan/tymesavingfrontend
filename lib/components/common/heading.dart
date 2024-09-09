@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/components/common/text_align.dart';
 import 'package:tymesavingfrontend/screens/main_page_layout.dart';
+import 'package:tymesavingfrontend/utils/dismiss_keyboard.dart';
 
 class Heading extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -23,6 +24,7 @@ class Heading extends StatelessWidget implements PreferredSizeWidget {
       if (showBackButton) {
         return IconButton(
           onPressed: () {
+            dismissKeyboardAndAct(context);
             if (Navigator.canPop(context)) {
               Navigator.maybePop(context);
             } else {
@@ -41,6 +43,7 @@ class Heading extends StatelessWidget implements PreferredSizeWidget {
       } else if (showHomeButton) {
         return IconButton(
           onPressed: () {
+            dismissKeyboardAndAct(context);
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (context) => const MainPageLayout()),

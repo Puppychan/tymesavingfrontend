@@ -6,6 +6,7 @@ import 'package:tymesavingfrontend/main.dart';
 import 'package:tymesavingfrontend/models/transaction_model.dart';
 import 'package:tymesavingfrontend/services/budget_service.dart';
 import 'package:tymesavingfrontend/services/transaction_service.dart';
+import 'package:tymesavingfrontend/utils/dismiss_keyboard.dart';
 import 'package:tymesavingfrontend/utils/display_success.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
@@ -453,6 +454,7 @@ void _showAcceptDeclinePrompt(BuildContext context, _BudgetApprovePageState stat
                         ),
                       ),
                       onPressed: () async {
+                        dismissKeyboardAndAct(context);
                         Navigator.of(context).pop();
                         _changeLoading();
                         await transactionService.approveTransaction(transactionId);
@@ -469,6 +471,7 @@ void _showAcceptDeclinePrompt(BuildContext context, _BudgetApprovePageState stat
                         ),
                       ),
                       onPressed: () async {
+                        dismissKeyboardAndAct(context);
                         Navigator.of(context).pop();
                         _changeLoading();
                         await transactionService.cancelledTransaction(transactionId);
