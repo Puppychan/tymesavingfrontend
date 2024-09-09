@@ -1,174 +1,242 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:tymesavingfrontend/components/common/heading.dart';
+import 'package:flutter/widgets.dart';
+import 'package:tymesavingfrontend/components/common/images/circle_network_image.dart';
 
-class AboutUs extends StatefulWidget {
-  const AboutUs({super.key});
+class AboutUs extends StatelessWidget {
+  const AboutUs({Key? key}) : super(key: key);
 
-  @override
-  State<AboutUs> createState() => _AboutUsState();
-}
-
-class _AboutUsState extends State<AboutUs> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
-      appBar: const Heading(
-        title: "About Us",
-        showBackButton: true,
-        // backgroundColor: Theme.of(context).colorScheme.,
-        // textColor: AppColors.white,
+      appBar: AppBar(
+        title: const Text('About Us'),
+        centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ListView(
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Center(
-              child: Text(
-                'Engineering Journal\nBudget Management App',
-                style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                      color: Theme.of(context).colorScheme.primary,
+            // Hero image or banner
+            Container(
+              width: MediaQuery.of(context)
+                  .size
+                  .width, // Ensures it spans the full width
+              height: MediaQuery.of(context).size.height *
+                  0.2, // 30% of screen height
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: NetworkImage(
+                      'https://drive.google.com/uc?export=view&id=1cXnNS5h14Mg8MKMCd3aHbXjkzD6kSiCF'),
+                  fit: BoxFit.fitWidth,
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            // Mission Statement or Tagline
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  _buildLabel("Our Mission", context),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Our mission is to enhance financial literacy among Vietnamese Gen Y and Gen Z through an innovative, user-friendly budget management app. We aim to bridge the financial knowledge gap by offering collaborative tools for effective money management, fostering positive financial habits, and integrating with popular digital payment platforms. By empowering young adults aged 18-42 with practical financial skills, we strive to contribute to their financial well-being and success in the digital economy.",
+                    style: theme.textTheme.bodyMedium?.copyWith(height: 1.7, letterSpacing: 1.02),
+                    textAlign: TextAlign.center,
+                    maxLines: null,
+                    overflow: TextOverflow.visible,
+                  ),
+                  const SizedBox(height: 20),
+                ],
+              ),
+            ),
+            // Divider for sections
+            const Divider(thickness: 1, indent: 40, endIndent: 40),
+            const SizedBox(height: 20),
+            // Supervisor Section
+            _buildLabel("RMIT Supervisor", context),
+            _buildTeamMemberCard(
+              context,
+              'https://drive.google.com/uc?export=view&id=1j8BYbqBzCDZRgpScfYnOpdgDywZUIQMf',
+              'Anna Felipe',
+              'RMIT Supervisor',
+              'Full-time lecturer, offering coordinator, and program advisor at RMIT University',
+            ),
+
+            const SizedBox(height: 20),
+            const Divider(thickness: 1, indent: 40, endIndent: 40),
+            const SizedBox(height: 20),
+            _buildLabel("TymeX Supervisors", context),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _buildTeamMemberCard(
+                      context,
+                      'https://drive.google.com/uc?export=view&id=1cTk-48jLV8xrQsqM1CAni5tEcHIM7sUL',
+                      'Mr. Vuong Tran',
+                      'TymeX Supervisor',
+                      'Mobile Tech Lead',
                     ),
-                textAlign: TextAlign.center,
-              ),
+                    _buildTeamMemberCard(
+                      context,
+                      'https://ca.slack-edge.com/T05N3DA83HS-U072X8UFLDB-g82ba8e5573d-512',
+                      'Mr. Tung Nguyen',
+                      'TymeX Supervisor',
+                      'UI/UX Advisor',
+                    ),
+                    _buildTeamMemberCard(
+                      context,
+                      'https://drive.google.com/uc?export=view&id=1EGFt1PwhTPx0dWEB6hssFPvv03Io_Iy8',
+                      'Mr. Lanh Tran',
+                      'TymeX Supervisor',
+                      'Android Developer',
+                    ),
+                    _buildTeamMemberCard(
+                      context,
+                      'https://drive.google.com/uc?export=view&id=17rB-Cd3uJsrJ8KPXUZTdKGLeaRzEAN-P',
+                      'Mr. Long Nguyen',
+                      'TymeX Supervisor',
+                      'Mobile Engineer',
+                    ),
+                    _buildTeamMemberCard(
+                      context,
+                      'https://drive.google.com/uc?export=view&id=162RjtbQLSdKT-crv-3HW0xX3KjagwW4v',
+                      'Ms. Thuy Nguyen',
+                      'TymeX Supervisor',
+                      'DevOps Engineer',
+                    ),
+                  ]),
             ),
+            // Team Section
             const SizedBox(height: 20),
-            Text(
-              'NI – Natural Intelligence',
-              style: Theme.of(context)
-                  .textTheme
-                  .headlineMedium!
-                  .copyWith(color: Theme.of(context).colorScheme.primary),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              'Student Names & IDs:',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            const SizedBox(height: 10),
-            Card(
-              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              color: Theme.of(context).colorScheme.tertiary,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Tran Mai Nhung - s3879954',
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              fontWeight: FontWeight.bold,
-                            )),
-                    Text('Tran Nguyen Ha Khanh - s3877707',
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              fontWeight: FontWeight.bold,
-                            )),
-                    Text('Vo Thanh Thong - s3878071',
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              fontWeight: FontWeight.bold,
-                            )),
-                    Text('Giang Trong Duong - s3926135',
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              fontWeight: FontWeight.bold,
-                            )),
-                    Text('Ngo Viet Anh - s3928859',
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              fontWeight: FontWeight.bold,
-                            )),
-                  ],
-                ),
-              ),
-            ),
+            const Divider(thickness: 1, indent: 40, endIndent: 40),
             const SizedBox(height: 20),
-            Text(
-              'Academic Supervisor:',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
+            _buildLabel("Meet our Team", context),
             const SizedBox(height: 10),
-            Card(
-              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              color: Theme.of(context).colorScheme.tertiary,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text('Ms. Anna Felipe',
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          fontWeight: FontWeight.bold,
-                        )),
-              ),
-            ),
-            const SizedBox(height: 15),
-            Text(
-              'Company:',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            const SizedBox(height: 10),
-            Card(
-              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              color: Theme.of(context).colorScheme.tertiary,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text('TymeX - Tyme Group',
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          fontWeight: FontWeight.bold,
-                        )),
-              ),
-            ),
-            const SizedBox(height: 15),
-            const SizedBox(height: 10),
-            Text(
-              'Industry Supervisors:',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            const SizedBox(height: 10),
-            Card(
-              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              color: Theme.of(context).colorScheme.tertiary,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Mr. Vuong Tran',
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              fontWeight: FontWeight.bold,
-                            )),
-                    Text('Mr. Tung Nguyen',
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              fontWeight: FontWeight.bold,
-                            )),
-                    Text('Mr. Lanh Tran',
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              fontWeight: FontWeight.bold,
-                            )),
-                    Text('Mr. Long Nguyen',
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              fontWeight: FontWeight.bold,
-                            )),
-                    Text('Ms. Thuy Nguyen',
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              fontWeight: FontWeight.bold,
-                            )),
-                  ],
-                ),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _buildTeamMemberCard(
+                    context,
+                    'https://drive.google.com/uc?export=view&id=1-veQV1CAnJmBKOm91Q6JW117axEzRnmV',
+                    'Nhung Tran',
+                    'Project Team Leader, Frontend & UI/UX',
+                    'Software Engineering.',
+                    hasBorder: true,
+                  ),
+                  _buildTeamMemberCard(
+                    context,
+                    'https://drive.google.com/uc?export=view&id=1Jx91cgkQNN4mcwHqnnQJvwFIHIdpL2yV',
+                    'Duong Giang',
+                    'Project Frontend & UI/UX - Main Contact Point',
+                    'Information Technology.',
+                    hasBorder: true,
+                  ),
+                  _buildTeamMemberCard(
+                    context,
+                    'https://drive.google.com/uc?export=view&id=12rAfSJhf3sUdQDNZdxYIcJ4tv7FOWZOb',
+                    'Thong Vo',
+                    'Project Frontend & UI/UX',
+                    'Information Technology.',
+                    hasBorder: true,
+                  ),
+                  _buildTeamMemberCard(
+                    context,
+                    'https://drive.google.com/uc?export=view&id=18wfpepyhElFLO7YeGBNyegaVwxlb0uf2',
+                    'Khanh Tran',
+                    'Project Backend & Database',
+                    'Software Engineering.',
+                    hasBorder: true,
+                  ),
+                  _buildTeamMemberCard(
+                    context,
+                    'https://drive.google.com/uc?export=view&id=1ci4hB6C8JvOxyVV0jTPzuyALBv3GLUzr',
+                    'Anh Ngo',
+                    'Project Backend & Database',
+                    'Information Technology.',
+                    hasBorder: true,
+                  ),
+                  // Add more team members as needed
+                ],
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 30),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLabel(String text, BuildContext context) {
+    return Text(
+      text,
+      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+    );
+  }
+
+  Widget _buildTeamMemberCard(BuildContext context, String imagePath,
+      String name, String role, String bio,
+      {bool hasBorder = false}) {
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.63,
+      child: Card(
+        color: hasBorder ? colorScheme.background : colorScheme.tertiary,
+        elevation: 1,
+        margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          side: hasBorder
+              ? BorderSide(color: colorScheme.tertiary, width: 1.0)
+              : BorderSide.none,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30),
+          child: Column(
+            children: [
+              // Team member image
+              CustomCircleImage(
+                imagePath: imagePath,
+                radius: 50,
+              ),
+              const SizedBox(height: 7),
+              // Team member info
+              Text(
+                name,
+                style: textTheme.titleMedium,
+                maxLines: 2,
+              ),
+              const SizedBox(height: 2),
+              Text(
+                role,
+                style: textTheme.bodyLarge,
+                textAlign: TextAlign.center,
+                maxLines: null,
+                overflow: TextOverflow.visible,
+              ),
+              const SizedBox(height: 10),
+              Text(
+                bio,
+                style:
+                    textTheme.bodySmall!.copyWith(fontStyle: FontStyle.italic),
+                textAlign: TextAlign.center,
+                maxLines: null,
+                overflow: TextOverflow.visible,
+              ),
+            ],
+          ),
         ),
       ),
     );
