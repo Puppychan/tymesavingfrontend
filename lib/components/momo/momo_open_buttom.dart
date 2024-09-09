@@ -11,7 +11,7 @@ class MomoOpenButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  Material(
-      elevation: 4.0, // Adjust the elevation to control the shadow
+      elevation: 1.0, // Adjust the elevation to control the shadow
       shape: const CircleBorder(), // Shape of the button
       child: InkWell(
         onTap: () {
@@ -23,8 +23,8 @@ class MomoOpenButton extends StatelessWidget {
           padding: const EdgeInsets.all(10.0), // Adjust padding as needed
           child: Image.asset(
             "assets/img/momo_icon.png",
-            width: MediaQuery.of(context).size.width * 0.13,
-            height: MediaQuery.of(context).size.width * 0.13,
+            width: MediaQuery.of(context).size.width * 0.11,
+            height: MediaQuery.of(context).size.width * 0.11,
             fit: BoxFit.cover,
           ),
         ),

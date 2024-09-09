@@ -62,10 +62,10 @@ class _GroupTileState extends State<GroupTile> {
                 // borderRadius: borderRadius,
                 boxShadow: [
                   BoxShadow(
-                    color: colorScheme.onBackground.withOpacity(0.3),
+                    color: colorScheme.shadow.withOpacity(0.2),
                     spreadRadius: 1, // Spread radius
                     blurRadius: 1, // Blur radius
-                    offset: const Offset(1, 1), // changes position of shadow
+                    offset: const Offset(0, 1), // changes position of shadow
                   ),
                 ],
               ),
