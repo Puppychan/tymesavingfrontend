@@ -11,8 +11,15 @@ class ErrorDisplay {
     }
     // if message is not null or empty, show snackbar
     final snackBar = SnackBar(
-      backgroundColor: colorScheme.error,
-      content: Text(message, style: TextStyle(color: colorScheme.onError)),
+      backgroundColor: colorScheme.tertiary,
+      content: Row(children: [
+        Icon(Icons.error, color: colorScheme.onError),
+        const SizedBox(width: 10),
+        Text(message, style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+          color: colorScheme.onError,
+          fontWeight: FontWeight.w500,
+        )),
+      ],),
     );
     // ScaffoldMessenger.of(context).showSnackBar(snackBar);
     scaffoldMessengerKey.currentState?.showSnackBar(snackBar);

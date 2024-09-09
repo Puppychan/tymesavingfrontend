@@ -14,6 +14,7 @@ void showStyledBottomSheet({
 }) {
   final colorScheme = Theme.of(context).colorScheme;
   final textTheme = Theme.of(context).textTheme;
+  final bool isDark = Theme.of(context).brightness == Brightness.dark;
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -31,7 +32,7 @@ void showStyledBottomSheet({
                   decoration: BoxDecoration(
                     color: isTransparentBackground
                         ? Colors.transparent
-                        : colorScheme.tertiary,
+                        : isDark ? colorScheme.onPrimary : colorScheme.tertiary,
                     borderRadius:
                         const BorderRadius.vertical(top: Radius.circular(25)),
                   ),
