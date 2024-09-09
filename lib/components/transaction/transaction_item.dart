@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
+import 'package:tymesavingfrontend/components/common/rounded_icon.dart';
 import 'package:tymesavingfrontend/components/transaction/transaction_dialog.dart';
 import 'package:tymesavingfrontend/models/transaction_model.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
+import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
 
 class CategoryDetails {
   IconData icon;
@@ -39,6 +42,7 @@ class TransactionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     final displayCategoryData =
         CategoryDetails(transaction.category, randomIcon, randomColor);
 
@@ -53,106 +57,109 @@ class TransactionItem extends StatelessWidget {
         : transaction.savingGroupId != null
             ? 'Saving Group'
             : 'Personal';
-    final TextStyle displayTestStyle = TextStyle(
-      color: Theme.of(context).colorScheme.secondary,
-      fontSize: 12,
-      fontWeight: FontWeight.w400,
-      fontFamily: 'Montserrat',
-    );
 
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.tertiary,
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 1,
-            blurRadius: 5,
-            offset: const Offset(0, 3),
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return TransactionDialog(
+                transaction: transaction, formattedDate: formattedDate);
+          },
+        );
+      },
+      child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
           ),
-        ],
-      ),
-      child: ListTile(
-        contentPadding: const EdgeInsets.all(5),
-        leading: transaction.user != null
-            ? Transform.scale(
-                scale: 1.2,
-                child: CircleAvatar(
-                  backgroundColor: displayCategoryData.color,
-                  child: Icon(
-                    displayCategoryData.icon,
-                    color: Colors.white,
+          elevation: 2,
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child:
+                Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+              // Left
+              ConstrainedBox(
+                constraints: BoxConstraints.tightFor(width: 95),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      formattedDate, // Time
+                      style: textTheme.bodySmall!
+                          .copyWith(fontWeight: FontWeight.w600),
+                      maxLines: 2,
+                    ),
+                    const SizedBox(height: 5),
+                    Text(title, // Date
+                        style: textTheme.bodyMedium),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 16),
+              // Vertical Divider
+              Container(
+                width: 2,
+                height: 55,
+                color: Theme.of(context).colorScheme.divider,
+              ),
+              const SizedBox(width: 16),
+
+              // Right
+              Expanded(
+                  child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      _buildCategory(displayCategoryData),
+                      const SizedBox(width: 3),
+                      Text(
+                        transaction.type == 'Income'
+                            ? '+ ${formatAmountToVnd(transaction.amount)}'
+                            : '- ${formatAmountToVnd(transaction.amount)}',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyLarge
+                            ?.copyWith(fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+                      const Spacer(),
+                      if (transaction.isMomo != null && transaction.isMomo!)
+                        Image.asset(
+                          'assets/img/momo_icon.png',
+                          width: 25,
+                          height: 25,
+                        ),
+                    ],
                   ),
-                ),
-              )
-            : CircleAvatar(
-                backgroundColor: displayCategoryData.color,
-                child: Icon(
-                  displayCategoryData.icon,
-                  color: Colors.white,
-                ),
-              ),
-        title: Row(children: [
-          if (transaction.isMomo != null && transaction.isMomo!)
-            Image.asset(
-              'assets/img/momo_icon.png',
-              width: 15,
-              height: 15,
-            ),
-            const SizedBox(width: 5),
-          Text(
-            title,
-            style: Theme.of(context)
-                .textTheme
-                .headlineMedium
-                ?.copyWith(fontSize: 14, fontWeight: FontWeight.w500),
-          ),
-        ]),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (transaction.user != null) ...[
-              const SizedBox(height: 3),
-              Text(
-                "$categoryDisplay - ${transaction.type}",
-                style: displayTestStyle,
-              ),
-            ],
-            const SizedBox(height: 3),
-            Text(
-              groupType,
-              style: displayTestStyle,
-            ),
-            const SizedBox(height: 3),
-            Text(
-              formattedDate,
-              style: displayTestStyle,
-            ),
-          ],
-        ),
-        trailing: Text(
-          transaction.type == 'Income'
-              ? '+ ${formatAmountToVnd(transaction.amount)}'
-              : '- ${formatAmountToVnd(transaction.amount)}',
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            fontFamily: 'Montserrat',
-          ),
-        ),
-        onTap: () {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return TransactionDialog(
-                  transaction: transaction, formattedDate: formattedDate);
-            },
-          );
-        },
-      ),
+                  const SizedBox(height: 10),
+                  Text(
+                    '$categoryDisplay - $groupType',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    maxLines: null,
+                    overflow: TextOverflow.visible,
+                  ),
+                ],
+              ))
+            ]),
+          )),
     );
+  }
+
+  Widget _buildCategory(CategoryDetails displayCategoryData) {
+    return transaction.user != null
+        ? RoundedIcon(
+            backgroundColor: displayCategoryData.color,
+            iconData: displayCategoryData.icon,
+            iconColor: Colors.white,
+            size: 32,
+          )
+        : CircleAvatar(
+            backgroundColor: displayCategoryData.color,
+            child: Icon(
+              displayCategoryData.icon,
+              color: Colors.white,
+            ),
+          );
   }
 }
