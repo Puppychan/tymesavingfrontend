@@ -133,6 +133,8 @@ class _GroupPendingInvitationPageState extends State<GroupPendingInvitationPage>
                     onPressed: () {
                       showStyledBottomSheet(
                         context: context,
+                        title: "Invite Members",
+                        subTitle: "Collaborate with others by inviting them now!",
                         contentWidget: InvitationAddForm(
                             type: widget.type, groupId: widget.groupId),
                       );

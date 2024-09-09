@@ -64,8 +64,8 @@ class _GroupTileState extends State<GroupTile> {
                   BoxShadow(
                     color: colorScheme.onBackground.withOpacity(0.3),
                     spreadRadius: 1, // Spread radius
-                    blurRadius: 2, // Blur radius
-                    offset: const Offset(2, 3), // changes position of shadow
+                    blurRadius: 1, // Blur radius
+                    offset: const Offset(1, 1), // changes position of shadow
                   ),
                 ],
               ),
@@ -73,7 +73,7 @@ class _GroupTileState extends State<GroupTile> {
             SizedBox(
               width: double.infinity,
               child: Padding(
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(14),
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,

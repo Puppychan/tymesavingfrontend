@@ -63,7 +63,8 @@ void showStyledBottomSheet({
                           if (subTitle != null)
                             CustomAlignText(
                                 text: subTitle,
-                                style: textTheme.headlineMedium),
+                                style: textTheme.headlineMedium,
+                                maxLines: 2,),
                           const SizedBox(height: 12),
                           // Expanded(
                           //   child: contentWidget,

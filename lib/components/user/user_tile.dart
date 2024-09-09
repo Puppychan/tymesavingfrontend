@@ -31,10 +31,10 @@ class UserTile extends StatelessWidget {
               borderRadius: borderRadius,
               boxShadow: [
                 BoxShadow(
-                  color: colorScheme.onBackground.withOpacity(0.3),
+                  color: colorScheme.shadow,
                   spreadRadius: 1, // Spread radius
-                  blurRadius: 2, // Blur radius
-                  offset: const Offset(2, 3), // changes position of shadow
+                  blurRadius: 1, // Blur radius
+                  offset: const Offset(0, 1), // changes position of shadow
                 ),
               ],
             ),
@@ -51,6 +51,11 @@ class UserTile extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      // Text(
+                      //   user.rank,
+                      //   style: Theme.of(context).textTheme.titleSmall,
+                      //   maxLines: 2,
+                      // ),
                       CustomCircleImage(
                           imagePath: user.avatar ?? TEMP_AVATAR_IMAGE,
                           radius: 35),
@@ -62,8 +67,11 @@ class UserTile extends StatelessWidget {
                       ),
                       const SizedBox(height: 5),
                       Text(
-                        user.username.toUpperCase(),
-                        style: Theme.of(context).textTheme.bodyMedium,
+                        "@${user.username}",
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          fontWeight: FontWeight.w600,
+                          fontStyle: FontStyle.italic
+                        ),
                         maxLines: 2,
                       )
                     ])),

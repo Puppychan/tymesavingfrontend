@@ -90,8 +90,8 @@ class _SearchPageState extends State<SearchPage> {
                           childAspectRatio: widget.customResultSize ?? 1.0,
                           crossAxisCount: 2,
                           padding: const EdgeInsets.all(2.0),
-                          mainAxisSpacing: 10.0,
-                          crossAxisSpacing: 10.0,
+                          mainAxisSpacing: 20.0,
+                          crossAxisSpacing: 20.0,
                           children: _results!
                               .map((result) =>
                                   widget.resultWidgetFunction(result))
