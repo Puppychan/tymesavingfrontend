@@ -44,7 +44,8 @@ class _CategorySelectionPageState extends State<CategorySelectionPage> {
     List<Widget> renderCategories(BuildContext context) {
       List<TransactionCategory> categories = [];
       // render the categories based on the type of form
-      if (widget.type == FormStateType.income || widget.type == FormStateType.updateIncome) {
+      if (widget.type == FormStateType.income ||
+          widget.type == FormStateType.updateIncome) {
         categories = TransactionCategory.incomeCategories;
       } else {
         categories = TransactionCategory.expenseCategories;
@@ -64,19 +65,20 @@ class _CategorySelectionPageState extends State<CategorySelectionPage> {
                   onTap: () async =>
                       {await onTransactionCategorySelected(context, category)},
                   child: ListTile(
+                    contentPadding:
+                        const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                     leading: getCategoryIcon(
                         currentCategoryInfo: categoryInfo ?? {}),
                     title: Text(category.name, style: textTheme.bodyLarge),
                     trailing: isSelected
                         ? RoundedIcon(
-                          hasShadow: false,
+                            hasShadow: false,
                             iconData: FontAwesomeIcons.circleCheck,
-                            backgroundColor: colorScheme.inversePrimary.withOpacity(0.6),
-                            iconColor: colorScheme.primary.withOpacity(0.6))
+                            backgroundColor: Colors.transparent,
+                            iconColor: colorScheme.primary)
                         : null,
                   ))),
 
-          const SizedBox(height: 10),
           const Divider(), // Adds a divider below the ListTile
         ];
       }).toList();

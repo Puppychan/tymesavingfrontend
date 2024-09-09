@@ -12,7 +12,8 @@ class RoundedIcon extends StatelessWidget {
     required this.iconData,
     this.backgroundColor, // Default background color
     this.iconColor, // Default icon color
-    this.size = 50.0, this.hasShadow = true, // Default size
+    this.size = 50.0,
+    this.hasShadow = true,
   });
 
   @override
@@ -25,12 +26,10 @@ class RoundedIcon extends StatelessWidget {
         shape: BoxShape.circle,
         boxShadow: hasShadow ? [
           BoxShadow(
-            color: Theme.of(context)
-                .colorScheme
-                .shadow,
-            spreadRadius: 2, // Spread radius
-            blurRadius: 4, // Blur radius
-            offset: const Offset(0, 2),
+            color: Theme.of(context).colorScheme.shadow,
+            spreadRadius: 1, // Spread radius
+            blurRadius: 1, // Blur radius
+            offset: const Offset(0, 1),
           ),
         ] : null,
       ),
