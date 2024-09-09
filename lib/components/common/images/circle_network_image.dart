@@ -17,15 +17,15 @@ class CustomCircleImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         // color: Theme.of(context).shadowColor,
         shape: BoxShape.circle,
         boxShadow: [
-          BoxShadow(
-              blurRadius: 5,
-              color: Theme.of(context).shadowColor,
-              // spreadRadius: 2,
-              offset: const Offset(0, 3)),
+          // BoxShadow(
+          //     blurRadius: 5,
+          //     color: Theme.of(context).shadowColor,
+          //     // spreadRadius: 2,
+          //     offset: const Offset(0, 3)),
         ],
       ),
       child: imagePath.startsWith("http")

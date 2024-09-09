@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
 import 'package:tymesavingfrontend/components/common/heading.dart';
 import 'package:tymesavingfrontend/models/reward_history_model.dart';
 import 'package:tymesavingfrontend/services/challenge_service.dart';
@@ -75,8 +73,6 @@ class _RewardHistoryState extends State<RewardHistory> with RouteAware {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
       appBar: const Heading(
@@ -138,8 +134,9 @@ class _RewardHistoryState extends State<RewardHistory> with RouteAware {
                       final rewardTile = _rewardHistoryModel![index];
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          color: colorScheme.surface,
+                        child: Card(
+                          elevation: 0,
+                          color: colorScheme.tertiary,
                           child: ListTile(
                             title: Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -172,28 +169,6 @@ class _RewardHistoryState extends State<RewardHistory> with RouteAware {
                                   Text.rich(
                                     overflow: TextOverflow.visible,
                                     TextSpan(
-                                      children: [
-                                        TextSpan(
-                                          text: '${rewardTile.category} ', 
-                                          style: textTheme.bodyMedium,
-                                        ),
-                                        TextSpan(
-                                          text: 'received: ', 
-                                          style: textTheme.bodyMedium!,
-                                        ),
-                                        TextSpan(
-                                          text: '${rewardTile.value}', 
-                                          style: textTheme.bodyMedium!.copyWith(
-                                              color: Colors.green,
-                                              fontWeight: FontWeight.w500
-                                            ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Text.rich(
-                                    overflow: TextOverflow.visible,
-                                    TextSpan(
                                       text: 'From ', // Default text style
                                       style: Theme.of(context).textTheme.bodyMedium,
                                       children: <TextSpan>[
@@ -203,6 +178,29 @@ class _RewardHistoryState extends State<RewardHistory> with RouteAware {
                                               color: colorScheme.primary, 
                                               fontWeight: FontWeight.w500
                                             ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Text.rich(
+                                    textAlign: TextAlign.center,
+                                    overflow: TextOverflow.visible,
+                                    TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: 'Received ', 
+                                          style: textTheme.bodyMedium,
+                                        ),
+                                        TextSpan(
+                                          text: rewardTile.value, 
+                                          style: textTheme.headlineSmall!.copyWith(
+                                              color: Colors.green,
+                                              fontWeight: FontWeight.w500
+                                            ),
+                                        ),
+                                        TextSpan(
+                                          text: ' ${rewardTile.category.toLowerCase()} ', 
+                                          style: textTheme.headlineSmall,
                                         ),
                                       ],
                                     ),

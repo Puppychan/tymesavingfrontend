@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:loader_overlay/loader_overlay.dart';
 import 'package:tymesavingfrontend/common/enum/rank_color_enum.dart';
 import 'package:tymesavingfrontend/utils/format_amount.dart';
 
@@ -25,8 +24,9 @@ class UserCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Card(
+      color: colorScheme.tertiary,
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      elevation: 4,
+      elevation: 1,
       child: ListTile(
         leading: avatar != null
             ? CircleAvatar(backgroundImage: NetworkImage(avatar!))

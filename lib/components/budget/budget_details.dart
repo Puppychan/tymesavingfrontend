@@ -226,22 +226,23 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                                 
                                 Text.rich(
                                   TextSpan(
-                                    text: daysLeft! > 0 ? "You have " : "Budget expire by ",
+                                    text: daysLeft! > 0 ? "You have " 
+                                    : "Budget expire by ",
                                     style: Theme.of(context).textTheme.bodyMedium,
                                     children: [
                                       TextSpan(
                                         text:
-                                            '$daysLeft', // Display the daysLeft variable here
+                                            '$daysLeft', 
                                         style:
                                             Theme.of(context).textTheme.bodyLarge,
                                       ),
                                       TextSpan(
                                         text:
-                                            ' day${daysLeft != 1 ? 's' : ''}', // Pluralize based on the value of daysLeft
+                                            ' day${daysLeft != 1 ? 's' : ''}', 
                                       ),
                                       TextSpan(
                                         text:
-                                            daysLeft! > 0 ? " left" : "", // Pluralize based on the value of daysLeft
+                                            daysLeft! > 0 ? " left" : "", 
                                       ),
                                     ],
                                   ),
@@ -372,7 +373,7 @@ class _BudgetDetailsState extends State<BudgetDetails> with RouteAware {
                               Text(
                                 _budget!.description,
                                 style: Theme.of(context).textTheme.bodyMedium,
-                                textAlign: TextAlign.justify,
+                                textAlign: TextAlign.start,
                                 maxLines: _isDisplayRestDescription ? null : 2,
                                 overflow: _isDisplayRestDescription
                                     ? TextOverflow.visible

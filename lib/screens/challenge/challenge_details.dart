@@ -379,7 +379,7 @@ class _ChallengeDetailsState extends State<ChallengeDetails> with RouteAware{
                                   margin: const EdgeInsets.symmetric(vertical: 10),
                                   height: 350, // Specify the height here
                                   child: ListView.builder(
-                                    physics: AlwaysScrollableScrollPhysics(),
+                                    physics: const AlwaysScrollableScrollPhysics(),
                                     padding: const EdgeInsets.all(0),
                                     itemCount: _challengeDetailMemberModelList!.length,
                                     itemBuilder: (context, index) {
