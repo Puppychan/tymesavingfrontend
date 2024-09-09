@@ -97,7 +97,6 @@ flutter:
     - assets/img/splash_light.png
     - assets/img/checkpoint_background.png
     - assets/img/momo_icon.png
-    - assets/img/about_us_banner.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
