@@ -1,15 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:tymesavingfrontend/components/common/images/circle_network_image.dart';
 
 class AboutUs extends StatelessWidget {
-  const AboutUs({Key? key}) : super(key: key);
+  const AboutUs({super.key});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final size = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(
@@ -27,7 +24,7 @@ class AboutUs extends StatelessWidget {
                   .width, // Ensures it spans the full width
               height: MediaQuery.of(context).size.height *
                   0.2, // 30% of screen height
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: NetworkImage(
                       'https://drive.google.com/uc?export=view&id=1cXnNS5h14Mg8MKMCd3aHbXjkzD6kSiCF'),
