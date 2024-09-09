@@ -27,7 +27,7 @@ class _BudgetCardState extends State<BudgetCard> {
     return Card(
       color: colorScheme.tertiary,
       shadowColor: colorScheme.shadow,
-      elevation: 5,
+      elevation: 1,
       child: InkWell(
         splashColor: colorScheme.quaternary,
         onTap: () {

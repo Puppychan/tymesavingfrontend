@@ -25,8 +25,9 @@ class UserCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Card(
+      color: colorScheme.tertiary,
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      elevation: 4,
+      elevation: 1,
       child: ListTile(
         leading: avatar != null
             ? CircleAvatar(backgroundImage: NetworkImage(avatar!))

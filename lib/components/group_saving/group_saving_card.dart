@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
-import 'package:tymesavingfrontend/components/common/text_align.dart';
 import 'package:tymesavingfrontend/components/group_saving/group_saving_details.dart';
 import 'package:tymesavingfrontend/components/group_saving/group_saving_report.dart';
 import 'package:tymesavingfrontend/models/group_saving_model.dart';
@@ -68,7 +67,7 @@ class _GroupSavingCardState extends State<GroupSavingCard> with SingleTickerProv
     return Card(
       color: colorScheme.tertiary,
       shadowColor: colorScheme.shadow,
-      elevation: 5,
+      elevation: 1,
       child: InkWell(
         splashColor: colorScheme.quaternary,
         onTap: () {

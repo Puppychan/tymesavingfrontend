@@ -155,14 +155,6 @@ class _HomePageState extends State<HomePage> with RouteAware {
                 decoration: BoxDecoration(
                   color: colorScheme.tertiary,
                   borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: colorScheme.secondary,
-                      spreadRadius: 0.1,
-                      blurRadius: 4,
-                      offset: const Offset(0, 1), // changes position of shadow
-                    ),
-                  ],
                 ),
                 child: InkWell(
                   onTap: () {
