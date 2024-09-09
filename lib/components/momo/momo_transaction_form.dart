@@ -138,6 +138,13 @@ class _MomoTransactionFormState extends State<MomoTransactionForm> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    final formStateService = Provider.of<FormStateProvider>(context, listen: false);
+    _amountController.text = formStateService.getFormattedAmount(widget.formType);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return Consumer<FormStateProvider>(builder: (context, value, child) {
@@ -146,11 +153,6 @@ class _MomoTransactionFormState extends State<MomoTransactionForm> {
           formStateService.getCategory(widget.formType);
       Map<String, dynamic> formFields =
           formStateService.getFormField(widget.formType);
-      String formattedAmount =
-          formStateService.getFormattedAmount(widget.formType);
-
-      _amountController.text =
-          formStateService.getFormattedAmount(widget.formType);
       _descriptionController.text = formFields['description'] ?? "";
 
       return Form(
@@ -186,7 +188,6 @@ class _MomoTransactionFormState extends State<MomoTransactionForm> {
                     type: widget.formType,
                     selectedCategory: selectedCategory)),
             AmountMultiForm(
-                formattedAmount: formattedAmount,
                 updateOnChange: updateOnChange,
                 amountController: _amountController),
             MultilineTextField(
