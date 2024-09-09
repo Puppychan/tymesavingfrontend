@@ -36,7 +36,7 @@ enum MomoPaymentStatus {
           Text("Payment Success", style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 7),
           Text("Your payment was successful. You can now close this page.",
-              style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontFamily: 'Merriweather'),
+              style: Theme.of(context).textTheme.bodyLarge,
               textAlign: TextAlign.center,
               maxLines: 2,)
         ];
@@ -47,7 +47,7 @@ enum MomoPaymentStatus {
           Text("Request Timeout", style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 7),
           Text("Your payment was not completed in time. Please try again.",
-              style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontFamily: 'Merriweather'),
+              style: Theme.of(context).textTheme.bodyLarge,
               textAlign: TextAlign.center,
               maxLines: 2,)
         ];
@@ -58,7 +58,7 @@ enum MomoPaymentStatus {
           Text("Payment Cancelled", style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 7),
           Text("Your payment was cancelled. Please try again.",
-              style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontFamily: 'Merriweather'),
+              style: Theme.of(context).textTheme.bodyLarge,
               textAlign: TextAlign.center,
               maxLines: 2,)
         ];
@@ -69,7 +69,7 @@ enum MomoPaymentStatus {
           Text("Payment Error", style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 7),
           Text("An error occurred while processing your payment. Please try again.",
-              style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontFamily: 'Merriweather'),
+              style: Theme.of(context).textTheme.bodyLarge,
               textAlign: TextAlign.center,
               maxLines: 2,)
         ];
@@ -80,7 +80,7 @@ enum MomoPaymentStatus {
           Text("Payment Error", style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 7),
           Text("An error occurred while processing your payment. Please try again.",
-              style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontFamily: 'Merriweather'),
+              style: Theme.of(context).textTheme.bodyLarge,
               textAlign: TextAlign.center,
               maxLines: 2,)
         ];

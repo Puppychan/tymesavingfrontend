@@ -22,7 +22,7 @@ ListTile makeListTile({
     leading: Icon(leadingIcon, size: 30),
     title: Text(title,
         style: textTheme.bodyLarge?.copyWith(
-            fontWeight: FontWeight.w500, fontFamily: 'Merriweather')),
+            fontWeight: FontWeight.w500)),
     onTap: onTap,
   );
 }

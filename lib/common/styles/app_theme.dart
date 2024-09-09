@@ -64,7 +64,7 @@ class AppThemes {
             overflow: TextOverflow.ellipsis,
             fontSize: 28,
             color: AppColors.black,
-            fontFamily: 'Merriweather',
+            fontFamily: 'Montserrat',
             fontWeight: FontWeight.w700),
       ),
       textTheme: const TextTheme(
@@ -73,7 +73,7 @@ class AppThemes {
             overflow: TextOverflow.ellipsis,
             fontSize: 25,
             color: AppColors.black,
-            fontFamily: 'Merriweather',
+            fontFamily: 'Montserrat',
             fontWeight: FontWeight.w600),
         headlineMedium: TextStyle(
             // sub display - subheading
@@ -93,21 +93,21 @@ class AppThemes {
             // heading medium
             overflow: TextOverflow.ellipsis,
             color: AppColors.black,
-            fontFamily: 'Merriweather',
+            fontFamily: 'Montserrat',
             fontWeight: FontWeight.w700),
         titleMedium: TextStyle(
             // sub heading medium
             overflow: TextOverflow.ellipsis,
             fontSize: 18,
             color: AppColors.black,
-            fontFamily: 'Merriweather',
+            fontFamily: 'Montserrat',
             fontWeight: FontWeight.w700),
         titleSmall: TextStyle(
             // heading small
             overflow: TextOverflow.ellipsis,
             fontSize: 15,
             color: AppColors.black,
-            fontFamily: 'Merriweather',
+            fontFamily: 'Montserrat',
             fontWeight: FontWeight.w700),
         // bodyLarge: TextStyle(color: AppColors.black),
         bodyLarge: TextStyle(
@@ -175,7 +175,7 @@ class AppThemes {
         dayPeriodTextColor: AppColors.black,
         dayPeriodTextStyle: const TextStyle(
           fontSize: 16,
-          fontFamily: 'Merriweather',
+          fontFamily: 'Montserrat',
         ),
         dayPeriodBorderSide: const BorderSide(
           color: AppColors.quaternary,
@@ -190,7 +190,7 @@ class AppThemes {
         dialTextColor: AppColors.primaryBlue,
         dialTextStyle: const TextStyle(
           fontSize: 16,
-          fontFamily: 'Merriweather',
+          fontFamily: 'Montserrat',
           fontWeight: FontWeight.w700,
         ),
         // change mode color
@@ -269,7 +269,7 @@ class AppThemes {
             overflow: TextOverflow.ellipsis,
             fontSize: 28,
             color: AppColors.cream,
-            fontFamily: 'Merriweather',
+            fontFamily: 'Montserrat',
             fontWeight: FontWeight.w700),
       ),
       textTheme: const TextTheme(
@@ -278,7 +278,7 @@ class AppThemes {
             overflow: TextOverflow.ellipsis,
             fontSize: 25,
             color: AppColors.cream,
-            fontFamily: 'Merriweather',
+            fontFamily: 'Montserrat',
             fontWeight: FontWeight.w700),
         headlineMedium: TextStyle(
             // sub display
@@ -298,21 +298,21 @@ class AppThemes {
             // heading medium
             overflow: TextOverflow.ellipsis,
             color: AppColors.cream,
-            fontFamily: 'Merriweather',
+            fontFamily: 'Montserrat',
             fontWeight: FontWeight.w700),
         titleMedium: TextStyle(
             // sub heading medium
             overflow: TextOverflow.ellipsis,
             fontSize: 18,
             color: AppColors.cream,
-            fontFamily: 'Merriweather',
+            fontFamily: 'Montserrat',
             fontWeight: FontWeight.w700),
         titleSmall: TextStyle(
             // heading small
             overflow: TextOverflow.ellipsis,
             fontSize: 15,
             color: AppColors.cream,
-            fontFamily: 'Merriweather',
+            fontFamily: 'Montserrat',
             fontWeight: FontWeight.w700),
         // bodyLarge: TextStyle(color: AppColors.cream),
         bodyLarge: TextStyle(

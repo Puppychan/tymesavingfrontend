@@ -152,7 +152,7 @@ class _AnimatedProgressBarState extends State<AnimatedProgressBar>
       Text(
         widget.base['text'] + ": " + formatAmountToVnd(widget.base['value']),
         style: textTheme.bodyMedium!
-            .copyWith(fontFamily: 'Merriweather', fontWeight: FontWeight.w600),
+            .copyWith(fontWeight: FontWeight.w600),
       ),
       const SizedBox(height: 7),
       ...widget.progressList.map((progressValue) =>

@@ -109,26 +109,6 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   fonts:
-    - family: Merriweather
-      fonts:
-        - asset: assets/fonts/Merriweather/Merriweather-Regular.ttf
-        - asset: assets/fonts/Merriweather/Merriweather-Italic.ttf
-          style: italic
-        - asset: assets/fonts/Merriweather/Merriweather-Light.ttf
-          weight: 300
-        - asset: assets/fonts/Merriweather/Merriweather-LightItalic.ttf
-          weight: 300
-          style: italic
-        - asset: assets/fonts/Merriweather/Merriweather-BoldItalic.ttf
-          style: italic
-          weight: 700
-        - asset: assets/fonts/Merriweather/Merriweather-Bold.ttf
-          weight: 700
-        - asset: assets/fonts/Merriweather/Merriweather-BlackItalic.ttf
-          style: italic
-          weight: 900
-        - asset: assets/fonts/Merriweather/Merriweather-Black.ttf
-          weight: 900
     - family: Montserrat
       fonts:
         - asset: assets/fonts/Montserrat/Montserrat-Thin.ttf

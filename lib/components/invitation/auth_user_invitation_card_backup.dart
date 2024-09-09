@@ -111,7 +111,6 @@ class _AuthUserInvitationCardState extends State<AuthUserInvitationCard> {
                               style: textTheme.bodyMedium!.copyWith(
                                 color: colorScheme.secondary,
                                 fontWeight: FontWeight.w600,
-                                fontFamily: "Merriweather",
                                 fontStyle: FontStyle.italic,
                               )),
                         ],

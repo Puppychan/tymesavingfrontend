@@ -91,7 +91,6 @@ class _GroupInvitationCardState extends State<GroupInvitationCard> {
                           style: textTheme.bodyMedium!.copyWith(
                             color: colorScheme.secondary,
                             fontWeight: FontWeight.w600,
-                            fontFamily: "Merriweather",
                             fontStyle: FontStyle.italic,
                           )),
                     ],
