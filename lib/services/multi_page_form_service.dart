@@ -53,6 +53,7 @@ class FormStateProvider with ChangeNotifier {
   void updateWholeForm(Map<String, dynamic> formData, FormStateType type) {
     formData.forEach((key, value) {
       if (key == "amount") {
+        // TODO: format
         value = convertFormattedAmountToNumber(value);
         // value = convertFormattedNoCurrencyAmountToNumber(value);
       }
@@ -105,6 +106,7 @@ class FormStateProvider with ChangeNotifier {
     } else {
       amount = _validateFieldNull('amount', _budgetFormFields, 0.0) as double;
     }
+    // TODO: format
     return formatAmountWithCommas(amount);
   }
 
@@ -168,6 +170,7 @@ class FormStateProvider with ChangeNotifier {
 
       // // Convert the cleaned string to an integer
       // value = double.tryParse(cleanedString) ?? 0;
+      // TODO: format
       value = convertFormattedAmountToNumber(value);
     }
 

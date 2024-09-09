@@ -41,6 +41,7 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
   final TextEditingController _payByController = TextEditingController();
 
   DateTime _selectedDate = DateTime.now();
+  String _formattedAmount = "0";
   TimeOfDay _selectedTime = TimeOfDay.now();
   User? _user;
   // for handling update transaction images
@@ -51,29 +52,38 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
   void initState() {
     super.initState();
     if (!mounted) return;
+    // get form service
+    final formService = Provider.of<FormStateProvider>(context, listen: false);
     // get the form fields
-    final formFields = Provider.of<FormStateProvider>(context, listen: false)
-        .getFormField(widget.type);
+    final formFields = formService.getFormField(widget.type);
     print("Form Fields: $formFields");
     final authService = Provider.of<AuthService>(context, listen: false);
-    // get current logged in user
-    setState(() {
-      _user = authService.user;
-      _initialTransactionImages =
-          (formFields['transactionImages'] ?? []).whereType<String>().toList();
-    });
     // get default date and time
     String? formCreatedDate;
     formCreatedDate = formFields['createdDate'];
+    Map<String, dynamic>? dateTimeMap;
     if (formCreatedDate != null) {
-      if (!mounted) return;
-      setState(() {
-        final Map<String, dynamic> dateTimeMap =
-            setDateTimeFromTimestamp(formCreatedDate);
+      dateTimeMap = setDateTimeFromTimestamp(formCreatedDate);
+    }
+
+    // set state to update local variables
+    if (!mounted) return;
+    setState(() {
+      // get current logged in user
+      _user = authService.user;
+      // set field transaction images
+      _initialTransactionImages =
+          (formFields['transactionImages'] ?? []).whereType<String>().toList();
+      // get formatted amount
+      _formattedAmount = formService.getFormattedAmount(widget.type);
+      _amountController.text = _formattedAmount;
+
+      // set date and time if available
+      if (dateTimeMap != null) {
         _selectedDate = dateTimeMap['date'];
         _selectedTime = dateTimeMap['time'];
-      });
-    }
+      }
+    });
   }
 
   Future<void> _trySubmit() async {
@@ -256,7 +266,7 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
       TransactionCategory selectedCategory =
           formStateService.getCategory(widget.type);
       TransactionGroupType chosenGroupType = getGroupType(formFields);
-      String formattedAmount = formStateService.getFormattedAmount(widget.type);
+      // String formattedAmount = formStateService.getFormattedAmount(widget.type);
       List<String> transactionImages =
           (formFields['transactionImages'] ?? []).whereType<String>().toList();
       bool isFromGroup = widget.isFromGroupDetail == true ||
@@ -275,7 +285,7 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
       ].contains(writePermission);
 
       // update text to controller
-      _amountController.text = formStateService.getFormattedAmount(widget.type);
+      // _amountController.text = formattedAmount;
       // _amountController.text = formFields['amount'].toString() ?? 0;
       _descriptionController.text = formFields['description'] ?? "";
       _payByController.text = formFields['payBy'] ?? "";
@@ -307,7 +317,7 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
                         chosenGroupType: chosenGroupType,
                         transactionType: widget.type)),
               AmountMultiForm(
-                  formattedAmount: formattedAmount,
+                  formattedAmount: _formattedAmount,
                   updateOnChange: updateOnChange,
                   isEditable:
                       isEditableOtherFields, // only allow to edit amount if user has permission

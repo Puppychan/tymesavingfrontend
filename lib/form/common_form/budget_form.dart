@@ -37,23 +37,32 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
 
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _selectedTime = TimeOfDay.now();
+  String _formattedAmount = "0";
   // String _savingOrBudget = 'For None';
   // init state
   @override
   void initState() {
     super.initState();
-    final formFields = Provider.of<FormStateProvider>(context, listen: false)
-        .getFormField(widget.type);
+    // get form service
+    final formService = Provider.of<FormStateProvider>(context, listen: false);
+    // get the form fields
+    final formFields = formService.getFormField(widget.type);
     String? formCreatedDate;
     formCreatedDate = formFields['endDate'];
+    Map<String, dynamic>? dateTimeMap;
     if (formCreatedDate != null) {
-      setState(() {
-        final Map<String, dynamic> dateTimeMap =
-            setDateTimeFromTimestamp(formCreatedDate);
+      dateTimeMap = setDateTimeFromTimestamp(formCreatedDate);
+    }
+    setState(() {
+      // format amount
+      _formattedAmount = formService.getFormattedAmount(widget.type);
+      _amountController.text = _formattedAmount;
+      // set the date and time if it is not null
+      if (dateTimeMap != null) {
         _selectedDate = dateTimeMap['date'];
         _selectedTime = dateTimeMap['time'];
-      });
-    }
+      }
+    });
   }
 
   Future<void> _trySubmit() async {
@@ -81,7 +90,8 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
     updateOnChange("amount");
     updateOnChange("date");
     updateOnChange("description");
-    updateOnChange("defaultApproveStatus", value: formField['defaultApproveStatus'] ?? ApproveStatus.approved);
+    updateOnChange("defaultApproveStatus",
+        value: formField['defaultApproveStatus'] ?? ApproveStatus.approved);
     Future.microtask(() async {
       await handleMainPageApi(context, () async {
         final authService = Provider.of<AuthService>(context, listen: false);
@@ -173,12 +183,12 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
           formStateService.getFormField(widget.type);
       // TransactionCategory selectedCategory =
       //     formStateService.getCategory(widget.type);
-      String formattedAmount = formStateService.getFormattedAmount(widget.type);
+      // String formattedAmount = formStateService.getFormattedAmount(widget.type);
       ApproveStatus currentApproveStatus =
           formFields['defaultApproveStatus'] ?? ApproveStatus.approved;
 
       // update text to controller
-      _amountController.text = formStateService.getFormattedAmount(widget.type);
+      // _amountController.text = formStateService.getFormattedAmount(widget.type);
       _descriptionController.text = formFields['description'] ?? "";
       _nameController.text = formFields['name'] ?? "";
 
@@ -197,7 +207,7 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
                 validator: Validator.validateGroupName,
               ),
               AmountMultiForm(
-                  formattedAmount: formattedAmount,
+                  formattedAmount: _formattedAmount,
                   updateOnChange: updateOnChange,
                   amountController: _amountController),
               UnderlineTextField(

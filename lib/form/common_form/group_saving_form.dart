@@ -37,23 +37,33 @@ class _GroupSavingFormMainState extends State<GroupSavingFormMain> {
 
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _selectedTime = TimeOfDay.now();
+  String _formattedAmount = "0";
   // String _savingOrGroupSaving = 'For None';
   // init state
   @override
   void initState() {
     super.initState();
-    final formFields = Provider.of<FormStateProvider>(context, listen: false)
-        .getFormField(widget.type);
+    // get form service
+    final formService = Provider.of<FormStateProvider>(context, listen: false);
+    // get the form fields
+    final formFields = formService.getFormField(widget.type);
+    // get formatted date
     String? formCreatedDate;
     formCreatedDate = formFields['endDate'];
+    Map<String, dynamic>? dateTimeMap;
     if (formCreatedDate != null) {
-      setState(() {
-        final Map<String, dynamic> dateTimeMap =
-            setDateTimeFromTimestamp(formCreatedDate);
+      dateTimeMap = setDateTimeFromTimestamp(formCreatedDate);
+    }
+    setState(() {
+      // format amount
+      _formattedAmount = formService.getFormattedAmount(widget.type);
+      _amountController.text = _formattedAmount;
+      // set date time if available
+      if (dateTimeMap != null) {
         _selectedDate = dateTimeMap['date'];
         _selectedTime = dateTimeMap['time'];
-      });
-    }
+      }
+    });
   }
 
   Future<void> _trySubmit() async {
@@ -174,12 +184,12 @@ class _GroupSavingFormMainState extends State<GroupSavingFormMain> {
           formStateService.getFormField(widget.type);
       // TransactionCategory selectedCategory =
       //     formStateService.getCategory(widget.type);
-      String formattedAmount = formStateService.getFormattedAmount(widget.type);
+      // String formattedAmount = formStateService.getFormattedAmount(widget.type);
       ApproveStatus currentApproveStatus =
           formFields['defaultApproveStatus'] ?? ApproveStatus.approved;
 
       // update text to controller
-      _amountController.text = formStateService.getFormattedAmount(widget.type);
+      // _amountController.text = formStateService.getFormattedAmount(widget.type);
       _descriptionController.text = formFields['description'] ?? "";
       _nameController.text = formFields['name'] ?? "";
 
@@ -198,7 +208,7 @@ class _GroupSavingFormMainState extends State<GroupSavingFormMain> {
                 onChange: (value) => updateOnChange("name"),
               ),
               AmountMultiForm(
-                  formattedAmount: formattedAmount,
+                  formattedAmount: _formattedAmount,
                   updateOnChange: updateOnChange,
                   amountController: _amountController),
               UnderlineTextField(
