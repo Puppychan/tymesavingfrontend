@@ -292,7 +292,7 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
       return Form(
           key: _formKey,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               ...buildComponentGroup(
                   context: context,
