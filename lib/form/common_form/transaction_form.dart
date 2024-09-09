@@ -41,7 +41,6 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
   final TextEditingController _payByController = TextEditingController();
 
   DateTime _selectedDate = DateTime.now();
-  String _formattedAmount = "0";
   TimeOfDay _selectedTime = TimeOfDay.now();
   User? _user;
   // for handling update transaction images
@@ -57,6 +56,9 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
     // get the form fields
     final formFields = formService.getFormField(widget.type);
     print("Form Fields: $formFields");
+    // set amount controller
+    _amountController.text = formService.getFormattedAmount(widget.type);
+    // define for get current user
     final authService = Provider.of<AuthService>(context, listen: false);
     // get default date and time
     String? formCreatedDate;
@@ -74,9 +76,6 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
       // set field transaction images
       _initialTransactionImages =
           (formFields['transactionImages'] ?? []).whereType<String>().toList();
-      // get formatted amount
-      _formattedAmount = formService.getFormattedAmount(widget.type);
-      _amountController.text = _formattedAmount;
 
       // set date and time if available
       if (dateTimeMap != null) {
@@ -317,7 +316,6 @@ class _TransactionFormMainState extends State<TransactionFormMain> {
                         chosenGroupType: chosenGroupType,
                         transactionType: widget.type)),
               AmountMultiForm(
-                  formattedAmount: _formattedAmount,
                   updateOnChange: updateOnChange,
                   isEditable:
                       isEditableOtherFields, // only allow to edit amount if user has permission

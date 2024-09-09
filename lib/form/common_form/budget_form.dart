@@ -37,7 +37,6 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
 
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _selectedTime = TimeOfDay.now();
-  String _formattedAmount = "0";
   // String _savingOrBudget = 'For None';
   // init state
   @override
@@ -47,6 +46,9 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
     final formService = Provider.of<FormStateProvider>(context, listen: false);
     // get the form fields
     final formFields = formService.getFormField(widget.type);
+    // set amount controller
+    _amountController.text = formService.getFormattedAmount(widget.type);
+    // set the date and time
     String? formCreatedDate;
     formCreatedDate = formFields['endDate'];
     Map<String, dynamic>? dateTimeMap;
@@ -54,9 +56,6 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
       dateTimeMap = setDateTimeFromTimestamp(formCreatedDate);
     }
     setState(() {
-      // format amount
-      _formattedAmount = formService.getFormattedAmount(widget.type);
-      _amountController.text = _formattedAmount;
       // set the date and time if it is not null
       if (dateTimeMap != null) {
         _selectedDate = dateTimeMap['date'];
@@ -207,7 +206,6 @@ class _BudgetFormMainState extends State<BudgetFormMain> {
                 validator: Validator.validateGroupName,
               ),
               AmountMultiForm(
-                  formattedAmount: _formattedAmount,
                   updateOnChange: updateOnChange,
                   amountController: _amountController),
               UnderlineTextField(

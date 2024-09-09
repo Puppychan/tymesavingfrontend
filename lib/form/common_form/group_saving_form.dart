@@ -37,7 +37,6 @@ class _GroupSavingFormMainState extends State<GroupSavingFormMain> {
 
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _selectedTime = TimeOfDay.now();
-  String _formattedAmount = "0";
   // String _savingOrGroupSaving = 'For None';
   // init state
   @override
@@ -47,6 +46,8 @@ class _GroupSavingFormMainState extends State<GroupSavingFormMain> {
     final formService = Provider.of<FormStateProvider>(context, listen: false);
     // get the form fields
     final formFields = formService.getFormField(widget.type);
+    // set amount controller
+    _amountController.text = formService.getFormattedAmount(widget.type);
     // get formatted date
     String? formCreatedDate;
     formCreatedDate = formFields['endDate'];
@@ -55,9 +56,6 @@ class _GroupSavingFormMainState extends State<GroupSavingFormMain> {
       dateTimeMap = setDateTimeFromTimestamp(formCreatedDate);
     }
     setState(() {
-      // format amount
-      _formattedAmount = formService.getFormattedAmount(widget.type);
-      _amountController.text = _formattedAmount;
       // set date time if available
       if (dateTimeMap != null) {
         _selectedDate = dateTimeMap['date'];
@@ -208,7 +206,6 @@ class _GroupSavingFormMainState extends State<GroupSavingFormMain> {
                 onChange: (value) => updateOnChange("name"),
               ),
               AmountMultiForm(
-                  formattedAmount: _formattedAmount,
                   updateOnChange: updateOnChange,
                   amountController: _amountController),
               UnderlineTextField(

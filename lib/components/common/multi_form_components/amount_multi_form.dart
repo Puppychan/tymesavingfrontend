@@ -7,14 +7,12 @@ import 'package:tymesavingfrontend/utils/validator.dart';
 
 class AmountMultiForm extends StatelessWidget {
   final TextEditingController amountController;
-  final String formattedAmount;
   final Function updateOnChange;
   final bool isEditable;
 
   const AmountMultiForm(
       {super.key,
       required this.amountController,
-      required this.formattedAmount,
       required this.updateOnChange,
       this.isEditable = true});
 
