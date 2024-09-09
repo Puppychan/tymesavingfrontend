@@ -36,4 +36,5 @@ class AppColors {
   static const Color positive = Color.fromARGB(255, 131, 250, 135);
   static const Color positiveDark = Color.fromARGB(255, 19, 122, 22);
   static const Color negative = Color.fromARGB(255, 214, 92, 84);
+  static const Color warning = Color(0xFFc49b22);
 }
