@@ -13,6 +13,7 @@ import 'package:tymesavingfrontend/screens/search_page.dart';
 import 'package:tymesavingfrontend/services/invitation_service.dart';
 import 'package:tymesavingfrontend/services/multi_page_form_service.dart';
 import 'package:tymesavingfrontend/services/user_service.dart';
+import 'package:tymesavingfrontend/utils/display_error.dart';
 import 'package:tymesavingfrontend/utils/display_success.dart';
 import 'package:tymesavingfrontend/utils/handling_error.dart';
 
@@ -115,6 +116,11 @@ class InvitationAddForm extends StatelessWidget {
           PrimaryButton(
               title: "Send Invitation ➤",
               onPressed: () {
+                if (formUsers == null || formUsers.isEmpty) {
+                  ErrorDisplay.showErrorToast(
+                      "Please select at least one user", context);
+                  return;
+                }
                 Future.microtask(() async {
                   await handleMainPageApi(context, () async {
                     return await Provider.of<InvitationService>(context,
