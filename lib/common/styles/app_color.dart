@@ -34,5 +34,6 @@ class AppColors {
   static const Color shadowDark = Color(0xFF1b1c29);
 
   static const Color positive = Color.fromARGB(255, 131, 250, 135);
+  static const Color positiveDark = Color.fromARGB(255, 19, 122, 22);
   static const Color negative = Color.fromARGB(255, 214, 92, 84);
 }

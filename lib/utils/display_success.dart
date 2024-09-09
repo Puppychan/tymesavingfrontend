@@ -11,14 +11,18 @@ class SuccessDisplay {
     }
     // if message is not null or empty, show snackbar
     final snackBar = SnackBar(
-      backgroundColor: colorScheme.success,
-      content: CustomAlignText(
-          text: message,
-          alignment: Alignment.center,
-          style: Theme.of(context)
-              .textTheme
-              .bodySmall!
-              .copyWith(color: colorScheme.onSuccess, fontWeight: FontWeight.w500)),
+      backgroundColor: colorScheme.tertiary,
+      content: Row(
+        children: [
+          Icon(Icons.check_circle, color: colorScheme.success),
+          const SizedBox(width: 10),
+          CustomAlignText(
+              text: message,
+              alignment: Alignment.center,
+              style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                  color: colorScheme.success, fontWeight: FontWeight.w500))
+        ],
+      ),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
