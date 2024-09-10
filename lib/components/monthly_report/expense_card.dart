@@ -32,13 +32,16 @@ class _ExpenseCardState extends State<ExpenseCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text.rich(
+                    overflow: TextOverflow.visible,
                     TextSpan(
                       text: '${widget.month} expense is at ',
-                      style: textTheme.titleSmall!, // Default style for the first part
+                      style: textTheme.bodyMedium!, 
                       children: <TextSpan>[
                         TextSpan(
                           text: ' ${formatAmountToVnd(widget.expense.toDouble())} ',
-                          style: textTheme.titleSmall!.copyWith(color: colorScheme.primary), // Same style for the expense value
+                          style: textTheme.bodyMedium!.copyWith(
+                            color: colorScheme.primary,
+                            fontWeight: FontWeight.w500), 
                         ),
                       ],
                     ),

@@ -33,13 +33,14 @@ class _NetSpendCardState extends State<NetSpendCard> {
                     TextSpan(
                       text: 'Net spend of ',
                       style: textTheme
-                          .titleSmall!, // Default style for the first part
+                          .bodyMedium!, // Default style for the first part
                       children: <TextSpan>[
                         TextSpan(
                           text: '${formatAmountToVnd(widget.netSpend.toDouble())} ',
-                          style: textTheme.titleSmall!.copyWith(
+                          style: textTheme.bodyMedium!.copyWith(
                               color: colorScheme
-                                  .primary), // Same style for the expense value
+                                  .primary,
+                                  fontWeight: FontWeight.w500), 
                         ),
                       ],
                     ),

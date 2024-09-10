@@ -32,16 +32,18 @@ class _IncomeCardState extends State<IncomeCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text.rich(
+                    overflow: TextOverflow.visible,
                     TextSpan(
                       text: '${widget.currentMonth} income is at ',
                       style: textTheme
-                          .titleSmall!, // Default style for the first part
+                          .bodyMedium!, 
                       children: <TextSpan>[
                         TextSpan(
                           text: ' ${formatAmountToVnd(widget.currentMonthIncome.toDouble())} ',
-                          style: textTheme.titleSmall!.copyWith(
+                          style: textTheme.bodyMedium!.copyWith(
                               color: colorScheme
-                                  .primary), // Same style for the expense value
+                                  .primary,
+                              fontWeight: FontWeight.w500), 
                         ),
                       ],
                     ),
