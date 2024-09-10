@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/enum/invitation_status_enum.dart';
 import 'package:tymesavingfrontend/common/enum/invitation_type_enum.dart';
 import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
+import 'package:tymesavingfrontend/components/common/dialog/delete_confirm_dialog.dart';
 import 'package:tymesavingfrontend/models/invitation_model.dart';
-import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
+import 'package:tymesavingfrontend/services/invitation_service.dart';
+import 'package:tymesavingfrontend/utils/handling_error.dart';
 
 class GroupInvitationCard extends StatefulWidget {
   final Invitation invitation;
@@ -29,8 +32,17 @@ class _GroupInvitationCardState extends State<GroupInvitationCard> {
   }
 
   void _removeInvitation() {
-    Future.microtask(() async {
-
+    if (widget.invitation.status != InvitationStatus.pending) return;
+    if (widget.invitation.userId == null) return;
+    showCustomDeleteConfirmationDialog(
+        context, "Are you sure you want to remove this invitation?", () async {
+      await handleMainPageApi(context, () async {
+        return await Provider.of<InvitationService>(context, listen: false)
+            .recalInvitation(
+                widget.invitation.invitationId, widget.invitation.userId ?? "");
+      }, () async {
+        Navigator.of(context).pop();
+      });
     });
   }
 
