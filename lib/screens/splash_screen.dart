@@ -28,6 +28,9 @@ class _SplashScreenState extends State<SplashScreen> {
               context,
               MaterialPageRoute(
                   builder: (context) => const MainPageLayout()));
+                  // builder: (context) => const ErrorPage(
+                  //       errorMessage: 'An error occurred!',
+                  //       statusCode: 500,)));
         } else {
           // Navigator.pushReplacementNamed(context, '/login');
           Navigator.pushReplacement(

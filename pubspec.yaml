@@ -62,6 +62,7 @@ dependencies:
   photo_view: ^0.15.0
   mobile_scanner: ^5.1.1
   qr_flutter: ^4.1.0
+  flutter_slidable: ^3.1.1
 
 dev_dependencies:
   flutter_test:

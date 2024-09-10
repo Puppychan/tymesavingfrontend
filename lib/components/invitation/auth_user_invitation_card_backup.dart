@@ -87,7 +87,7 @@ class _AuthUserInvitationCardState extends State<AuthUserInvitationCard> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0),
               ),
-              elevation: 2, // Adjust elevation for desired shadow effect
+              elevation: 1, // Adjust elevation for desired shadow effect
               child: Padding(
                   padding: const EdgeInsets.symmetric(
                       horizontal: 16.0, vertical: 12.0),

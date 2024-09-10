@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/constant/temp_constant.dart';
 import 'package:tymesavingfrontend/common/enum/user_role_enum.dart';
@@ -24,8 +25,6 @@ class UserCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentUser = Provider.of<AuthService>(context).user;
-
     void onEdit() {
       // Implement the edit functionality
       Navigator.push(
@@ -48,14 +47,61 @@ class UserCard extends StatelessWidget {
     }
 
     // double progress = user.contribution / maxContribution; // Calculate the progress as a fraction
-    String formattedDate =
-        timeago.format(DateTime.parse(user.creationDate ?? ""));
+
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Slidable(
+      key: ValueKey(user.id),
+      startActionPane: ActionPane(
+        motion: const DrawerMotion(),
+        dismissible: DismissiblePane(
+          onDismissed: () {
+            // Perform the remove action
+            showDeleteConfirmationDialog();
+          },
+        ),
+        children: [
+          SlidableAction(
+            onPressed: (context) {
+              // Perform the remove action
+              showDeleteConfirmationDialog();
+            },
+            // backgroundColor: isDark ? colorScheme.error : colorScheme.onError,
+            backgroundColor: isDark ? colorScheme.error : colorScheme.onError,
+            foregroundColor:
+                isDark ? colorScheme.secondary : colorScheme.onPrimary,
+            icon: Icons.delete,
+            label: 'Remove',
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(12),
+              bottomLeft: Radius.circular(12),
+            ),
+          ),
+          SlidableAction(
+            onPressed: (context) {
+              onEdit();
+            },
+            backgroundColor: colorScheme.inversePrimary,
+            foregroundColor: colorScheme.onInverseSurface,
+            icon: Icons.edit,
+            label: 'Edit',
+          ),
+        ],
+      ),
+      child: _buildContent(context),
+    );
+  }
+
+  Widget _buildContent(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
+    final currentUser = Provider.of<AuthService>(context).user;
+    String formattedDate =
+        timeago.format(DateTime.parse(user.creationDate));
     return Card(
       color: colorScheme.tertiary,
       shadowColor: colorScheme.shadow,
-      elevation: 5,
+      elevation: 1,
       child: InkWell(
         splashColor: colorScheme.quaternary,
         onTap: () {
@@ -123,28 +169,10 @@ class UserCard extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               const Divider(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    "Joined $formattedDate",
-                    style: textTheme.bodyMedium!,
-                    maxLines: 2,
-                  ),
-                  Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    IconButton(
-                      icon: Icon(Icons.edit, color: colorScheme.secondary),
-                      onPressed: onEdit,
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.delete, color: colorScheme.secondary),
-                      onPressed: () async {
-                        await showDeleteConfirmationDialog();
-                      },
-                    ),
-                  ])
-                ],
+              Text(
+                "Joined $formattedDate",
+                style: textTheme.bodyMedium!,
+                maxLines: 2,
               ),
             ],
           ),

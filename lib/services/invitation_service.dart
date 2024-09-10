@@ -95,7 +95,7 @@ class InvitationService extends ChangeNotifier {
     // Fetch invitations from the backend
     final response = await NetworkService.instance.get(
         "${BackendEndpoints.invitation}/${BackendEndpoints.invitationsGetAll}${_convertOptionsToParams("byGroup")}${_assignGroupIdEndpoint(groupId)}");
-    
+
     if (response['response'] != null && response['statusCode'] == 200) {
       final responseData = response['response'];
       List<Invitation> invitationList = [];
@@ -187,6 +187,19 @@ class InvitationService extends ChangeNotifier {
     if (response['response'] != null && response['statusCode'] == 200) {
       _invitations
           .removeWhere((element) => element.invitationId == invitationId);
+      notifyListeners();
+    }
+    return response;
+  }
+
+  Future<dynamic> recalInvitation(String invitationId, String userId) async {
+    final response = await NetworkService.instance.post(
+        "${BackendEndpoints.invitation}/recallInvitation",
+        body: {"invitationId": invitationId, "userId": userId});
+
+    if (response['response'] != null && response['statusCode'] == 200) {
+      _invitations
+          .removeWhere((element) => (element.invitationId == invitationId && element.userId == userId));
       notifyListeners();
     }
     return response;

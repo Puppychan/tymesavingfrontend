@@ -30,9 +30,9 @@ class _HomePageState extends State<HomePage> with RouteAware {
 
   @override
   void initState() {
-    super.initState();
     _precacheAvatar();
     _loadData();
+    super.initState();
   }
 
   @override
@@ -52,15 +52,18 @@ class _HomePageState extends State<HomePage> with RouteAware {
     //   });
     // });
     setState(() {
-        precacheImage(NetworkImage(widget.user!.avatar!), context)
-            .then((_) {})
-            .catchError((error) {
-          debugPrint("Failed to preload image: $error");
-        });
+      precacheImage(NetworkImage(widget.user!.avatar!), context)
+          .then((_) {})
+          .catchError((error) {
+        debugPrint("Failed to preload image: $error");
       });
+    });
   }
 
-  Future<void> _loadData() async {
+  void _loadData() {
+    setState(() {
+      isLoading = true;
+    });
     Future.microtask(() async {
       final transactionService =
           Provider.of<TransactionService>(context, listen: false);
@@ -86,6 +89,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    _loadData();
     routeObserver.unsubscribe(this);
   }
 
@@ -118,7 +122,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
         setState(() {
           isLoading = true;
         });
-        await _loadData();
+        _loadData();
       },
       child: SingleChildScrollView(
         padding: AppPaddingStyles.pagePaddingIncludeSubText,
@@ -232,20 +236,19 @@ class _HomePageState extends State<HomePage> with RouteAware {
                   'My Transactions',
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
-                TextButton(
+                ElevatedButton(
                   onPressed: () {
                     _navigateToAllTransactions(context);
                   },
-                  child: Container(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.tertiary,
+                    elevation: 1,
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Theme.of(context).colorScheme.tertiary),
-                    child: Text('View detail',
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            fontSize: 12, fontWeight: FontWeight.bold)),
+                        const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                   ),
+                  child: Text('View detail',
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          fontSize: 12, fontWeight: FontWeight.bold)),
                 ),
               ],
             ),

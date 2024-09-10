@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
 import 'package:tymesavingfrontend/components/common/images/circle_network_image.dart';
 
 class AboutUs extends StatelessWidget {
@@ -128,7 +129,6 @@ class AboutUs extends StatelessWidget {
                     'Nhung Tran',
                     'Project Team Leader, Frontend & UI/UX',
                     'Software Engineering.',
-                    hasBorder: true,
                   ),
                   _buildTeamMemberCard(
                     context,
@@ -136,7 +136,6 @@ class AboutUs extends StatelessWidget {
                     'Duong Giang',
                     'Project Frontend & UI/UX - Main Contact Point',
                     'Information Technology.',
-                    hasBorder: true,
                   ),
                   _buildTeamMemberCard(
                     context,
@@ -144,7 +143,6 @@ class AboutUs extends StatelessWidget {
                     'Thong Vo',
                     'Project Frontend & UI/UX',
                     'Information Technology.',
-                    hasBorder: true,
                   ),
                   _buildTeamMemberCard(
                     context,
@@ -152,7 +150,6 @@ class AboutUs extends StatelessWidget {
                     'Khanh Tran',
                     'Project Backend & Database',
                     'Software Engineering.',
-                    hasBorder: true,
                   ),
                   _buildTeamMemberCard(
                     context,
@@ -160,7 +157,6 @@ class AboutUs extends StatelessWidget {
                     'Anh Ngo',
                     'Project Backend & Database',
                     'Information Technology.',
-                    hasBorder: true,
                   ),
                   // Add more team members as needed
                 ],
@@ -183,21 +179,19 @@ class AboutUs extends StatelessWidget {
   }
 
   Widget _buildTeamMemberCard(BuildContext context, String imagePath,
-      String name, String role, String bio,
-      {bool hasBorder = false}) {
+      String name, String role, String bio) {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.63,
       child: Card(
-        color: hasBorder ? colorScheme.background : colorScheme.tertiary,
+        color: colorScheme.background,
         elevation: 1,
         margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
-          side: hasBorder
-              ? BorderSide(color: colorScheme.tertiary, width: 1.0)
-              : BorderSide.none,
+          side: BorderSide(color: isDark ? colorScheme.tertiary : colorScheme.divider, width: 1.0),
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30),
