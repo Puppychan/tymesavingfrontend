@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tymesavingfrontend/common/styles/app_text_style.dart';
-import 'package:tymesavingfrontend/components/common/button/primary_button.dart';
-import 'package:tymesavingfrontend/common/enum/button_theme_enum.dart';
 import 'package:tymesavingfrontend/screens/authentication/sign_in_page.dart';
 import 'package:tymesavingfrontend/utils/display_error.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -147,19 +145,20 @@ class ErrorPage extends StatelessWidget {
             //   child: const Text('Retry'),
             // ),
             // const SizedBox(height: 8.0),
-            PrimaryButton(
-              onPressed: () {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const SignInView(),
-                  ),
-                  (_) => false,
-                );
-              },
-              theme: AppButtonTheme.yellowBlack,
-              title: 'Go Back To Sign In Page',
-            ),
+
+            // PrimaryButton(
+            //   onPressed: () {
+            //     Navigator.pushAndRemoveUntil(
+            //       context,
+            //       MaterialPageRoute(
+            //         builder: (context) => const SignInView(),
+            //       ),
+            //       (_) => false,
+            //     );
+            //   },
+            //   theme: AppButtonTheme.yellowBlack,
+            //   title: 'Go Back To Sign In Page',
+            // ),
             const SizedBox(height: 16.0),
             TextButton(
                 onPressed: () {
