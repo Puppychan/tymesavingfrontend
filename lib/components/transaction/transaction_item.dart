@@ -73,7 +73,7 @@ class TransactionItem extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
-          elevation: 2,
+          elevation: 1,
           child: Padding(
             padding: const EdgeInsets.all(20),
             child:
