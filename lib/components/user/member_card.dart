@@ -61,7 +61,6 @@ class MemberCard extends StatelessWidget {
               motion: const DrawerMotion(),
               dismissible: DismissiblePane(
                 onDismissed: () {
-                  // Perform the remove action
                   removeWidget();
                 },
               ),
