@@ -69,6 +69,7 @@ class TransactionItem extends StatelessWidget {
         );
       },
       child: Card(
+        color: Theme.of(context).colorScheme.tertiary,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
