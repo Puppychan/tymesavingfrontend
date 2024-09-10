@@ -30,9 +30,9 @@ class _HomePageState extends State<HomePage> with RouteAware {
 
   @override
   void initState() {
-    super.initState();
     _precacheAvatar();
     _loadData();
+    super.initState();
   }
 
   @override
@@ -60,7 +60,10 @@ class _HomePageState extends State<HomePage> with RouteAware {
     });
   }
 
-  Future<void> _loadData() async {
+  void _loadData() {
+    setState(() {
+      isLoading = true;
+    });
     Future.microtask(() async {
       final transactionService =
           Provider.of<TransactionService>(context, listen: false);
@@ -86,6 +89,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    _loadData();
     routeObserver.unsubscribe(this);
   }
 
@@ -118,7 +122,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
         setState(() {
           isLoading = true;
         });
-        await _loadData();
+        _loadData();
       },
       child: SingleChildScrollView(
         padding: AppPaddingStyles.pagePaddingIncludeSubText,
