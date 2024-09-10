@@ -68,82 +68,85 @@ class TransactionItem extends StatelessWidget {
           },
         );
       },
-      child: Card(
-        color: Theme.of(context).colorScheme.tertiary,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-          elevation: 1,
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child:
-                Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-              // Left
-              ConstrainedBox(
-                constraints: BoxConstraints.tightFor(width: 95),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      formattedDate, // Time
-                      style: textTheme.bodySmall!
-                          .copyWith(fontWeight: FontWeight.w600),
-                      maxLines: 2,
-                    ),
-                    const SizedBox(height: 5),
-                    Text(title, // Date
-                        style: textTheme.bodyMedium),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 16),
-              // Vertical Divider
-              Container(
-                width: 2,
-                height: 55,
-                color: Theme.of(context).colorScheme.divider,
-              ),
-              const SizedBox(width: 16),
-
-              // Right
-              Expanded(
+      child: SizedBox(
+        width: double.infinity,
+        child: Card(
+          color: Theme.of(context).colorScheme.tertiary,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            elevation: 1,
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child:
+                  Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+                // Left
+                ConstrainedBox(
+                  constraints: BoxConstraints.tightFor(width: 95),
                   child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildCategory(displayCategoryData),
-                      const SizedBox(width: 3),
                       Text(
-                        transaction.type == 'Income'
-                            ? '+ ${formatAmountToVnd(transaction.amount)}'
-                            : '- ${formatAmountToVnd(transaction.amount)}',
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyLarge
-                            ?.copyWith(fontWeight: FontWeight.bold, fontSize: 16),
+                        formattedDate, // Time
+                        style: textTheme.bodySmall!
+                            .copyWith(fontWeight: FontWeight.w600),
+                        maxLines: 2,
                       ),
-                      const Spacer(),
-                      if (transaction.isMomo != null && transaction.isMomo!)
-                        Image.asset(
-                          'assets/img/momo_icon.png',
-                          width: 25,
-                          height: 25,
-                        ),
+                      const SizedBox(height: 5),
+                      Text(title, // Date
+                          style: textTheme.bodyMedium),
                     ],
                   ),
-                  const SizedBox(height: 10),
-                  Text(
-                    '$categoryDisplay - $groupType',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    maxLines: null,
-                    overflow: TextOverflow.visible,
-                  ),
-                ],
-              ))
-            ]),
-          )),
+                ),
+                const SizedBox(width: 16),
+                // Vertical Divider
+                Container(
+                  width: 2,
+                  height: 55,
+                  color: Theme.of(context).colorScheme.divider,
+                ),
+                const SizedBox(width: 16),
+        
+                // Right
+                Expanded(
+                    child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        _buildCategory(displayCategoryData),
+                        const SizedBox(width: 3),
+                        Text(
+                          transaction.type == 'Income'
+                              ? '+ ${formatAmountToVnd(transaction.amount)}'
+                              : '- ${formatAmountToVnd(transaction.amount)}',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge
+                              ?.copyWith(fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                        const Spacer(),
+                        if (transaction.isMomo != null && transaction.isMomo!)
+                          Image.asset(
+                            'assets/img/momo_icon.png',
+                            width: 25,
+                            height: 25,
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      '$categoryDisplay - $groupType',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                      maxLines: null,
+                      overflow: TextOverflow.visible,
+                    ),
+                  ],
+                ))
+              ]),
+            )),
+      ),
     );
   }
 
