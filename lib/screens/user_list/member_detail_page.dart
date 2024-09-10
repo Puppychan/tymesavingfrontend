@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -283,52 +284,16 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
     );
   }
 
-  Widget _buildTransactionSummaryCard(
-      bool isIncome, double amount, BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-    return Card.filled(
-        elevation: 10,
-        color: colorScheme.onSecondary,
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              Wrap(
-                  spacing: 10,
-                  runSpacing: 5,
-                  alignment: WrapAlignment.start,
-                  children: [
-                    Icon(
-                        isIncome
-                            ? FontAwesomeIcons.anglesUp
-                            : FontAwesomeIcons.anglesDown,
-                        color:
-                            isIncome ? colorScheme.success : colorScheme.error,
-                        size: 18),
-                    Text(isIncome ? "Income" : "Expense",
-                        style: textTheme.bodyLarge!
-                            .copyWith(color: colorScheme.secondary))
-                  ]),
-              const SizedBox(height: 10),
-              Text(
-                "Amount: ${formatAmountToVnd(amount)}",
-                style: textTheme.bodyMedium,
-                maxLines: 3,
-              ),
-            ],
-          ),
-        ));
-  }
+
 
   void onPressViewTransactions(
       BuildContext context, List<Transaction> transactions) {
     showStyledBottomSheet(
-      title: "Your transactions",
-      subTitle: "Here are your transactions",
+      title: "Transaction History",
+      subTitle: "Tracking all transactions of this user inside this group",
       context: context,
       contentWidget: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: AppPaddingStyles.pagePaddingIncludeSubText, 
           child: transactions.isEmpty
               ? const NotFoundMessage(
                   message: "You don't have any transactions inside this group yet",
