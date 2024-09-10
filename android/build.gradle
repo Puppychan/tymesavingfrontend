@@ -1,4 +1,6 @@
 allprojects {
+    ext.kotlin_version = '1.8.0' // Update this line
+
     repositories {
         google()
         mavenCentral()
