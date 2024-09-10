@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tymesavingfrontend/common/styles/app_extend_theme.dart';
 import 'package:tymesavingfrontend/components/common/images/circle_network_image.dart';
 
 class AboutUs extends StatelessWidget {
@@ -181,6 +182,7 @@ class AboutUs extends StatelessWidget {
       String name, String role, String bio) {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.63,
       child: Card(
@@ -189,7 +191,7 @@ class AboutUs extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
-          side: BorderSide(color: colorScheme.tertiary, width: 1.0),
+          side: BorderSide(color: isDark ? colorScheme.tertiary : colorScheme.divider, width: 1.0),
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30),
