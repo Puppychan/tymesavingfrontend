@@ -138,6 +138,7 @@ class _GroupInvitationCardState extends State<GroupInvitationCard> {
                     // Name
                     Text(
                       widget.invitation.status.toString(),
+                      overflow: TextOverflow.fade,
                       style: textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                         color: colorScheme.onBackground,
@@ -170,12 +171,17 @@ class _GroupInvitationCardState extends State<GroupInvitationCard> {
                     ),
                     const SizedBox(height: 8.0),
                     // Content
-                    Text(
-                      "`${widget.invitation.description}`",
-                      style: textTheme.bodyMedium?.copyWith(
-                        color: colorScheme.onBackground.withOpacity(0.7),
+                    ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: 250),
+                      child: Text(
+                        "`${widget.invitation.description}`",
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: true,
+                        style: textTheme.bodyMedium?.copyWith(
+                          color: colorScheme.onBackground.withOpacity(0.7),
+                        ),
+                        maxLines: 1,
                       ),
-                      maxLines: 2,
                     ),
                   ],
                 ),
