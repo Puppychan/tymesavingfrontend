@@ -254,6 +254,7 @@ class _HomePageState extends State<HomePage> with RouteAware {
             ),
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.4,
+              width: double.infinity,
               // child: TransactionSection(transactions: transactions ?? {}),
               child: TransactionMonthlyTabBar(userId: widget.user!.id),
             ),
