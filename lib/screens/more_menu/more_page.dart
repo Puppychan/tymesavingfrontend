@@ -13,6 +13,12 @@ class MoreMenuPage extends StatefulWidget {
 
 class MoreMenuState extends State<MoreMenuPage> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+
+  @override
   Widget build(BuildContext context) {
     return const SingleChildScrollView(
       padding: AppPaddingStyles.pagePadding,

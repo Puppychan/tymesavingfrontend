@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:tymesavingfrontend/common/styles/app_padding.dart';
 import 'package:tymesavingfrontend/components/common/chart/custom_bar_chart.dart';
@@ -30,9 +31,11 @@ class _HomePageState extends State<HomePage> with RouteAware {
 
   @override
   void initState() {
-    _precacheAvatar();
     _loadData();
     super.initState();
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _precacheImages();
+    });
   }
 
   @override
@@ -41,24 +44,33 @@ class _HomePageState extends State<HomePage> with RouteAware {
     super.dispose();
   }
 
-  Future<void> _precacheAvatar() async {
-    // Future.microtask(() async {
-    //   setState(() {
-    //     precacheImage(NetworkImage(widget.user!.avatar!), context)
-    //         .then((_) {})
-    //         .catchError((error) {
-    //       debugPrint("Failed to preload image: $error");
-    //     });
-    //   });
-    // });
-    setState(() {
-      precacheImage(NetworkImage(widget.user!.avatar!), context)
-          .then((_) {})
-          .catchError((error) {
-        debugPrint("Failed to preload image: $error");
+  void _precacheImages() {
+  List<String> imageUrls = [
+    (widget.user!.avatar!),
+    'https://drive.google.com/uc?export=view&id=1cXnNS5h14Mg8MKMCd3aHbXjkzD6kSiCF',
+    'https://drive.google.com/uc?export=view&id=1j8BYbqBzCDZRgpScfYnOpdgDywZUIQMf',
+    'https://drive.google.com/uc?export=view&id=1cTk-48jLV8xrQsqM1CAni5tEcHIM7sUL',
+    'https://ca.slack-edge.com/T05N3DA83HS-U072X8UFLDB-g82ba8e5573d-512',
+    'https://drive.google.com/uc?export=view&id=1EGFt1PwhTPx0dWEB6hssFPvv03Io_Iy8',
+    'https://drive.google.com/uc?export=view&id=17rB-Cd3uJsrJ8KPXUZTdKGLeaRzEAN-P',
+    'https://drive.google.com/uc?export=view&id=162RjtbQLSdKT-crv-3HW0xX3KjagwW4v',
+    'https://drive.google.com/uc?export=view&id=1-veQV1CAnJmBKOm91Q6JW117axEzRnmV',
+    'https://drive.google.com/uc?export=view&id=1Jx91cgkQNN4mcwHqnnQJvwFIHIdpL2yV',
+    'https://drive.google.com/uc?export=view&id=12rAfSJhf3sUdQDNZdxYIcJ4tv7FOWZOb',
+    'https://drive.google.com/uc?export=view&id=18wfpepyhElFLO7YeGBNyegaVwxlb0uf2',
+    'https://drive.google.com/uc?export=view&id=1ci4hB6C8JvOxyVV0jTPzuyALBv3GLUzr',
+  ];
+
+  for (String url in imageUrls) {
+    final image = NetworkImage(url);
+      precacheImage(image, context).then((_) {
+        debugPrint('Pre-cached image: $url');
+      }).catchError((error) {
+        debugPrint('Failed to pre-cache image: $url. Error: $error');
       });
-    });
   }
+  // precacheImage(NetworkImage(), context);
+}
 
   void _loadData() {
     setState(() {
