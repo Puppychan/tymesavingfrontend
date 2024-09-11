@@ -68,7 +68,7 @@ class TransactionSection extends StatelessWidget {
                 if (transactions[month] == null) {
                   // if not found
                   return Padding(
-                      padding: const EdgeInsets.all(20),
+                      padding: const EdgeInsets.all(5),
                       child: Align(
                         alignment: Alignment.topCenter,
                         child: Text('No transactions found',
