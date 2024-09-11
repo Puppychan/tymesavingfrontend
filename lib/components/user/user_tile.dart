@@ -63,16 +63,16 @@ class UserTile extends StatelessWidget {
                       Text(
                         user.fullname.toUpperCase(),
                         style: Theme.of(context).textTheme.titleSmall,
-                        maxLines: 2,
+                        maxLines: 1,
                       ),
-                      const SizedBox(height: 5),
+                      const SizedBox(height: 2),
                       Text(
                         "@${user.username}",
                         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                           fontWeight: FontWeight.w600,
                           fontStyle: FontStyle.italic
                         ),
-                        maxLines: 2,
+                        maxLines: 1,
                       )
                     ])),
           ),

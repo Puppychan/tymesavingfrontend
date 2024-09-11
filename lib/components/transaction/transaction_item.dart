@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:tymesavingfrontend/common/enum/transaction_category_enum.dart';
 import 'package:tymesavingfrontend/components/common/rounded_icon.dart';
 import 'package:tymesavingfrontend/components/transaction/transaction_dialog.dart';
@@ -43,6 +42,7 @@ class TransactionItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
     final displayCategoryData =
         CategoryDetails(transaction.category, randomIcon, randomColor);
 
@@ -68,85 +68,87 @@ class TransactionItem extends StatelessWidget {
           },
         );
       },
-      child: SizedBox(
-        width: double.infinity,
-        child: Card(
+      child: Card(
           color: Theme.of(context).colorScheme.tertiary,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-            elevation: 1,
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child:
-                  Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-                // Left
-                ConstrainedBox(
-                  constraints: BoxConstraints.tightFor(width: 95),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          elevation: 1,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            child:
+                Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+              // Left
+              Expanded(
+                flex: 1, // 1/4
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      formattedDate, // Time
+                      style: textTheme.bodySmall!
+                          .copyWith(fontWeight: FontWeight.w600),
+                      maxLines: 2,
+                    ),
+                    const SizedBox(height: 5),
+                    Text(title, // Date
+                        style: textTheme.bodySmall),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 16),
+              // Vertical Divider
+              Container(
+                width: 2,
+                height: 55,
+                color: colorScheme.divider,
+              ),
+              const SizedBox(width: 16),
+
+              // Right
+              Expanded(
+                  flex: 3, // 3/4
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        formattedDate, // Time
-                        style: textTheme.bodySmall!
-                            .copyWith(fontWeight: FontWeight.w600),
-                        maxLines: 2,
-                      ),
-                      const SizedBox(height: 5),
-                      Text(title, // Date
-                          style: textTheme.bodyMedium),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 16),
-                // Vertical Divider
-                Container(
-                  width: 2,
-                  height: 55,
-                  color: Theme.of(context).colorScheme.divider,
-                ),
-                const SizedBox(width: 16),
-        
-                // Right
-                Expanded(
-                    child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        _buildCategory(displayCategoryData),
-                        const SizedBox(width: 3),
-                        Text(
-                          transaction.type == 'Income'
-                              ? '+ ${formatAmountToVnd(transaction.amount)}'
-                              : '- ${formatAmountToVnd(transaction.amount)}',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyLarge
-                              ?.copyWith(fontWeight: FontWeight.bold, fontSize: 16),
-                        ),
-                        const Spacer(),
-                        if (transaction.isMomo != null && transaction.isMomo!)
-                          Image.asset(
-                            'assets/img/momo_icon.png',
-                            width: 25,
-                            height: 25,
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          _buildCategory(displayCategoryData),
+                          const SizedBox(width: 3),
+                          Expanded(
+                            child: Text(
+                              transaction.type == 'Income'
+                                  ? '+ ${formatAmountToVnd(transaction.amount)}'
+                                  : '- ${formatAmountToVnd(transaction.amount)}',
+                              style: textTheme.bodyMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow
+                                  .ellipsis, // Apply ellipsis overflow
+                            ),
                           ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      '$categoryDisplay - $groupType',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                      maxLines: null,
-                      overflow: TextOverflow.visible,
-                    ),
-                  ],
-                ))
-              ]),
-            )),
-      ),
+                          
+                          if (transaction.isMomo != null && transaction.isMomo!)
+                            Image.asset(
+                              'assets/img/momo_icon.png',
+                              width: 25,
+                              height: 25,
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        '$categoryDisplay - $groupType',
+                        style: Theme.of(context).textTheme.bodySmall,
+                        maxLines: null,
+                        overflow: TextOverflow.visible,
+                      ),
+                    ],
+                  ))
+            ]),
+          )),
     );
   }
 
@@ -156,7 +158,7 @@ class TransactionItem extends StatelessWidget {
             backgroundColor: displayCategoryData.color,
             iconData: displayCategoryData.icon,
             iconColor: Colors.white,
-            size: 32,
+            size: 25,
           )
         : CircleAvatar(
             backgroundColor: displayCategoryData.color,
